@@ -4,8 +4,11 @@
 공개키 암호에서 주로 사용되는 RSA, ECC와 같은 암호 알고리즘에서 필요한 큰 수를 다루는 라이브러리인 BigNum을 이용하여 암호 알고리즘을 만들어보고, 이를 Application 단에서 활용해보는 프로젝트입니다.
 
 ## ⚙ 기술 스택
-### 🖥 Front-End
 
+### 🖥 BigNum 구현
+<img alt="Html" src ="https://img.shields.io/badge/-A8B9CC.svg?&style=for-the-badge&logo=C&logoColor=white"/>
+
+### 🖥 Front-End
 
 ### 🖥 Back-End
 
