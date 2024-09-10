@@ -1,0 +1,32 @@
+name: CI/CD for BigNum Operations
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test_main:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install SageMath
+      run: sudo apt-get update && sudo apt-get install -y sagemath
+
+    - name: Run addition test
+      run: |
+        echo "from sage.all import *" > test_addition.sage
+        echo "a = 12345678901234567890" >> test_addition.sage
+        echo "b = 98765432109876543210" >> test_addition.sage
+        echo "expected_sum = a + b" >> test_addition.sage
+        echo "from your_module import your_addition_function" >> test_addition.sage
+        echo "actual_sum = your_addition_function(a, b)" >> test_addition.sage
+        echo "assert actual_sum == expected_sum, f'Expected {expected_sum}, but got {actual_sum}'" >> test_addition.sage
+        sage test_addition.sage
