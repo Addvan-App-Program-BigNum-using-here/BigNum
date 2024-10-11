@@ -21,6 +21,10 @@
 #define RANDOM_FAIL 21 // Bigint 랜덤 할당 실패
 #define BI_SET_REFINE_SUCCESS 22 // Bigint 배열 할당 성공
 #define BI_SET_REFIEN_FAIL 23 // Bigint 배열 할당 실패
+#define DIVIDE_STRING_SUCCESS 24 // 문자열을 나누는데 실패
+#define DIVIDE_STRING_FAIL 25 // 문자열을 나누는데 실패
+#define BI_SET_STRING_SUCCESS 26 // 문자열을 Bigint로 변환 성공
+#define BI_SET_STRING_FAIL 27 // 문자열을 Bigint로 변환 실패
 
 // Print 관련 에러 메시지 : 30번대
 #define PRINT_FAIL 30 // Bigint 출력 실패

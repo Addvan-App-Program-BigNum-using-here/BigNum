@@ -52,6 +52,8 @@ int test_bi_set_from(){
     int test_size = rand() % 100 + 1;
     int result_msg = 0;
 
+    char test_string[50] = "123456789090909090908080";
+
     test_array = (word*)calloc(test_size, sizeof(word));
     if(test_array == NULL){
         return MEM_NOT_ALLOC;
@@ -103,6 +105,9 @@ int test_bi_set_from(){
 
     // string set test
     // 추후 개발
+
+    bi_set_from_string(&a, test_string, 10); // 10진수 테스트
+    // 2진수, 16진수 구현 및 테스트 필요
 
     return Test_BI_SET_FROM_SUCCESS;
 }

@@ -2,6 +2,7 @@
 
 #define big_endian 0
 #define little_endian 1
+#define WORD_BITS 32
 
 typedef uint32_t msg; // Error message control variation
 typedef uint32_t word; // Word type
