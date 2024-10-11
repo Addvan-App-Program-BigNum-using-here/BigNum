@@ -1,50 +1,44 @@
 #include "util.h"
 
 /*************************************************
- * Name:        bi_new
- *
- * Description: New allocate memory for bigint struct
- *
- * Arguments:   - bigint** dst: pointer to bigint struct
- *              - int word_len: length of bigint struct
- **************************************************/
-msg bi_new(bigint **dst, int word_len)
-{
-    if (*dst != NULL)
-    {
+* Name:        bi_new
+*
+* Description: New allocate memory for bigint struct
+*
+* Arguments:   - bigint** dst: pointer to bigint struct
+*              - int word_len: length of bigint struct
+**************************************************/
+msg bi_new(bigint** dst, int word_len){
+    if(*dst != NULL){
         bi_delete(dst);
     }
-    *dst = (bigint *)calloc(1, sizeof(bigint));
-    if (*dst == NULL)
-    {
+    *dst = (bigint*)calloc(1, sizeof(bigint));
+    if(*dst == NULL){
         return BI_ALLOC_FAIL;
     }
     (*dst)->sign = 0;
-    (*dst)->a = (word *)calloc(word_len, sizeof(word));
-    if ((*dst)->a == NULL)
-    {
+    (*dst)->a = (word*)calloc(word_len, sizeof(word));
+    if((*dst)->a == NULL){
         return BI_ALLOC_FAIL;
     }
     (*dst)->word_len = word_len;
     return BI_ALLOC_SUCCESS;
 }
 
+
 /*************************************************
- * Name:        bi_delete
- *
- * Description: Delete allocated memory for bigint struct
- *
- * Arguments:   - bigint** dst: pointer to bigint struct
- **************************************************/
-msg bi_delete(bigint **dst)
-{
-    if (*dst == NULL)
-    {
+* Name:        bi_delete
+*
+* Description: Delete allocated memory for bigint struct
+*
+* Arguments:   - bigint** dst: pointer to bigint struct
+**************************************************/
+msg bi_delete(bigint** dst){
+    if(*dst == NULL){
         return BI_FREE_SUCCESS;
     }
 
-    if ((*dst)->a == NULL)
-    {
+    if((*dst)->a == NULL){
         return MEM_NOT_ALLOC;
     }
 
@@ -58,41 +52,40 @@ msg bi_delete(bigint **dst)
 }
 
 /*************************************************
- * Name:        bi_set_from_array
- *
- * Description: Set bigint struct from array
- *
- * Arguments:   - bigint** dst: pointer to bigint struct
- *              - int sign: sign of bigint struct
- *              - int word_len: length of bigint struct
- *              - word* a: array of word
- *              - bool endian: little endian == 0, big endian == 1
- **************************************************/
-msg bi_set_from_array(bigint **dst, int sign, int word_len, word *data, int endian)
-{
-    msg result_msg = 0;
+* Name:        bi_set_from_array
+*
+* Description: Set bigint struct from array
+*
+* Arguments:   - bigint** dst: pointer to bigint struct
+*              - int sign: sign of bigint struct
+*              - int word_len: length of bigint struct
+*              - word* a: array of word
+*              - int endian: little endian == 0, big endian == 1
+**************************************************/
+msg bi_set_from_array(bigint** dst, int sign, int word_len, word* data, int endian){
+    int result_msg = 0;
     int endian_idx = endian ? 0 : word_len - 1;
     int idx = endian ? 1 : -1;
 
     result_msg = bi_new(dst, word_len);
-    if (result_msg == BI_ALLOC_FAIL)
-    {
+    if(result_msg == BI_ALLOC_FAIL){
         print_log(result_msg);
         return result_msg;
     }
 
-    if (dst == NULL)
-    {
+    if(dst == NULL){
         return MEM_NOT_ALLOC;
     }
 
     (*dst)->sign = sign;
-    for (int i = 0; i < word_len; i++)
-    {
-        if (data[endian_idx] > 0xFFFFFFFF)
-        {
+    for(int i = 0; i < word_len; i++){
+        if(data[endian_idx] > 0xFFFFFFFF){
             printf("DATA_OVERFLOW\n");
-            bi_delete(dst);
+            result_msg = bi_delete(dst);
+            if(result_msg != BI_FREE_SUCCESS){
+                print_log(result_msg);
+                return result_msg
+            }
             return BI_SET_ARRAY_FAIL;
         }
         (*dst)->a[i] = data[endian_idx];
@@ -111,7 +104,7 @@ msg bi_set_from_array(bigint **dst, int sign, int word_len, word *data, int endi
 //*              - char* int_str: string of bigint
 //*              - int base: base of string (2, 10, 16)
 //**************************************************/
-// msg bi_set_from_string(bigint** dst, char* int_str, int base){
+//msg bi_set_from_string(bigint** dst, char* int_str, int base){
 //    int result_msg = 0;
 //    int sign = 0;
 //    int word_len = 0;
@@ -145,15 +138,49 @@ msg bi_set_from_array(bigint **dst, int sign, int word_len, word *data, int endi
 //    (*dst)->sign = sign;
 //
 //}
-///*************************************************
-//* Name:        bi_assign
-//*
-//* Description: Processsing_assign bigint struct
-//*
-//* Arguments:   - bigint** dst: pointer to bigint struct
-//*              - bigint* src: source bigint struct
-//**************************************************/
-msg bi_assign(bigint **dst, bigint *src)
+
+/*************************************************
+* Name:        bi_refine
+*
+* Description: Refine bigint struct
+*
+* Arguments:   - bigint* src: pointer to bigint struct
+**************************************************/
+
+msg bi_refine(bigint* src){
+    msg result_msg = 0;
+
+    if(x == NULL){
+        return BI_SET_REFIEN_FAIL;
+    }
+
+    int new_wordlen = src->word_len;
+    while(new_wordlen > 1){
+        if(src->a[new_wordlen - 1] != 0){
+            break;
+        }
+        new_wordlen--;
+    }
+    if(src->wordlen != new_wordlen){
+        src->word_len = new_wordlen;
+        src->a = (word*)realloc(src->a, new_wordlen * sizeof(word));
+    }
+
+    if((src->word_len == 1) && (src->a[0] == 0)){
+        src->sign = 0;
+    }
+}
+
+
+/*************************************************
+* Name:        bi_assign
+*
+* Description: Processsing_assign bigint struct
+*
+* Arguments:   - bigint** dst: pointer to bigint struct
+*              - bigint* src: source bigint struct
+**************************************************/
+msg bi_assign(bigint** dst, bigint *src)
 {
     msg result_msg = 0;
     if (*dst == src)
@@ -176,9 +203,16 @@ msg bi_assign(bigint **dst, bigint *src)
     return BI_SET_ASSIGN_SUCCESS;
 }
 
-msg bi_print(bigint *dst, int base)
+/*************************************************
+* Name:        bi_print
+*
+* Description: Print bigint struct
+*
+* Arguments:   - bigint* dst: pointer to bigint struct
+*              - int base: base of bigint struct (2, 10, 16)
+**************************************************/
+msg bi_print(bigint* dst, int base)
 {
-
     if (dst == NULL || dst->a == NULL)
         return PRINT_NULL;
 

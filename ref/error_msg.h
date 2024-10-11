@@ -18,7 +18,9 @@
 
 // Random 관련 에러 메시지 : 20번대
 #define RANDOM_SUCCESS 20 // Bigint 랜덤 할당 성공
-#define RANDOM_FAIL 21    // Bigint 랜덤 할당 실패
+#define RANDOM_FAIL 21 // Bigint 랜덤 할당 실패
+#define BI_SET_REFINE_SUCCESS 22 // Bigint 배열 할당 성공
+#define BI_SET_REFIEN_FAIL 23 // Bigint 배열 할당 실패
 
 // Print 관련 에러 메시지 : 30번대
 #define PRINT_FAIL 30 // Bigint 출력 실패
