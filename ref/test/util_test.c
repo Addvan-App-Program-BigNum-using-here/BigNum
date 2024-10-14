@@ -52,7 +52,7 @@ int test_bi_set_from(){
     int test_size = rand() % 100 + 1;
     int result_msg = 0;
 
-    char test_string[50] = "123456789090909090908080";
+    char test_string[3][60] = {"0b101001010101101010111110101111001011010110101000", "123456789090909090908080", "0x1234567890abcdef"};
 
     test_array = (word*)calloc(test_size, sizeof(word));
     if(test_array == NULL){
@@ -103,11 +103,40 @@ int test_bi_set_from(){
         return result_msg;
     }
 
-    // string set test
-    // 추후 개발
+    //************************************ string set test *************************************
 
-    bi_set_from_string(&a, test_string, 10); // 10진수 테스트
-    // 2진수, 16진수 구현 및 테스트 필요
+    // 2진수 테스트
+    result_msg = bi_set_from_string(&a, test_string[0], 2); // 2진수 테스트
+    if(result_msg != BI_SET_STRING_SUCCESS){
+        print_log(result_msg);
+        return result_msg;
+    }
+
+    if(bi_delete(&a) != BI_FREE_SUCCESS){
+        return Test_BI_SET_FROM_FAIL;
+    }
+
+    // 10진수 테스트
+    result_msg = bi_set_from_string(&a, test_string[1], 10); // 10진수 테스트
+    if(result_msg != BI_SET_STRING_SUCCESS){
+        print_log(result_msg);
+        return result_msg;
+    }
+
+    if(bi_delete(&a) != BI_FREE_SUCCESS){
+        return Test_BI_SET_FROM_FAIL;
+    }
+
+    // 16진수 테스트
+    result_msg = bi_set_from_string(&a, test_string[2], 16); // 16진수 테스트
+    if(result_msg != BI_SET_STRING_SUCCESS){
+        print_log(result_msg);
+        return result_msg;
+    }
+
+    if(bi_delete(&a) != BI_FREE_SUCCESS){
+        return Test_BI_SET_FROM_FAIL;
+    }
 
     return Test_BI_SET_FROM_SUCCESS;
 }

@@ -92,12 +92,11 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, word* data, int endi
         endian_idx += idx;
     }
 
-// 확인 필요
-//    result_msg = bi_refine(*dst);
-//    if(result_msg != BI_SET_REFINE_SUCCESS){
-//        print_log(result_msg);
-//        return result_msg;
-//    }
+    result_msg = bi_refine(*dst);
+    if(result_msg != BI_SET_REFINE_SUCCESS){
+        print_log(result_msg);
+        return result_msg;
+    }
 
     return BI_SET_ARRAY_SUCCESS;
 }
@@ -114,101 +113,82 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, word* data, int endi
 **************************************************/
 msg bi_set_from_string(bigint** dst, char* int_str, int base){
     msg result_msg = 0;
-    int sign = 0, word_len = 0, word_idx = 0;
-    word remain = 0;
-    uint64_t q = 0;
+    int sign = 0, word_idx = 0;
+    word word_len = 0;
+    dword q = 0;
 
     // sign bit check
     if(int_str[0] == '-'){
         sign = 1;
         int_str++;
     }
-    // 16진수 접두사 처리
-    if (base == 16 && int_str[0] == '0' && (int_str[1] == 'x' || int_str[1] == 'X')) {
-        int_str += 2;
-    }
 
     // extract word length
     switch (base) {
         case 2:
-            word_len = (strlen(int_str) + 31) / 32; // ceil 함수 사용하지 않고 구현
+            if(int_str[0] != '0' || int_str[1] != 'b'){
+                printf("bit string Input Must be start '0b'!!\nstart: %c%c\n", int_str[0], int_str[1]);
+                return BI_SET_STRING_FAIL;
+            }
+            int_str += 2;
+            word_len = (strlen(int_str) + 31) / 32;
             break;
         case 10:
-            word_len = (strlen(int_str) + 9) / 10; // ceil 함수 사용하지 않고 구현
+            word_len = (strlen(int_str) + 9) / 10;
             break;
         case 16:
-            word_len = (strlen(int_str) + 7) / 8; // ceil 함수 사용하지 않고 구현
+            if(int_str[0] != '0' || int_str[1] != 'x'){
+                printf("hex string Input Must be start '0x'\nstart: %c%c\n", int_str[0], int_str[1]);
+                return BI_SET_STRING_FAIL;
+            }
+            int_str += 2;
+            word_len = (strlen(int_str) + 7) / 8;
             break;
         default:
-            return BI_SET_ARRAY_FAIL;
+            printf("%d base is not supported\n", base);
+            return BI_SET_STRING_FAIL;
     }
 
+    // memory allocate
     result_msg = bi_new(dst, word_len);
-    if(result_msg == BI_ALLOC_FAIL){
+    if(result_msg != BI_ALLOC_SUCCESS){
         print_log(result_msg);
         return result_msg;
     }
+    // sign bit set
     (*dst)->sign = sign;
-
-
     do{
-        result_msg = String_Divide(int_str, &remain, base);
+        result_msg = String_Divide(int_str, ((*dst)->a) + (word_idx++), base);
         if(result_msg != DIVIDE_STRING_SUCCESS){
             print_log(result_msg);
             return result_msg;
         }
-        (*dst)->a[word_idx++] = remain;
         q = string_to_int(int_str, base);
     }while(q > 0xFFFFFFFF);
-    (*dst)->a[word_idx++] = q;
+    if(q != 0)
+        (*dst)->a[word_idx++] = q;
 
-
-    for(int i = 0 ; i < word_len; i++){
-        printf("0x%08x\n", (*dst)->a[i]);
+    result_msg = bi_refine(*dst);
+    if(result_msg != BI_SET_REFINE_SUCCESS){
+        print_log(result_msg);
+        return result_msg;
     }
-
-//  확인 필요
-//    result_msg = bi_refine(*dst);
-//    if(result_msg != BI_SET_REFINE_SUCCESS){
-//        print_log(result_msg);
-//        return result_msg;
-//    }
 
         return BI_SET_STRING_SUCCESS;
-}
-
-
-/*************************************************
-* Name:        string_to_int
-*
-* Description: Convert string to integer
-*
-* Arguments:   - char* int_str: string of bigint
-*              - word* result: result of integer
-**************************************************/
-uint64_t string_to_int(char* str, int base){
-    int i = 0;
-    uint64_t num = 0;
-    while (str[i] != '\0'){
-        if (str[i] >= '0' && str[i] <= '9'){
-            num = num * base + (str[i] - '0');
-            i++;
-        }
-    }
-    return num;
 }
 
 /*************************************************
 * Name:        String_Divide
 *
-* Description: Divide string to word
+* Description: Divide string to word custom to base 10
 *
-* Arguments:   - char* int_str: string of bigint
+* Arguments:   - char* int_str: string of bigint and return quotient
+*              - word* r: return remainder
 *              - int base: base of string (2, 10, 16)
 **************************************************/
-msg String_Divide(char* int_str, word* r, int base){
-    int idx = 0;
-    uint64_t temp = 0;
+msg String_Divide(char* int_str, word* a, int base){
+    int q_idx = 0, digit = 0, a_idx = 0;
+    dword temp = 0;
     char* q = NULL;
 
     q = (char*)calloc(strlen(int_str) + 1, sizeof(char));
@@ -217,36 +197,39 @@ msg String_Divide(char* int_str, word* r, int base){
     }
 
     for (int i = 0; int_str[i] != '\0'; i++) {
-        int digit;
-        if (int_str[i] >= '0' && int_str[i] <= '9')
-                digit = int_str[i] - '0';
-        else if (int_str[i] >= 'A' && int_str[i] <= 'F')
-                digit = int_str[i] - 'A' + 10;
-        else if (int_str[i] >= 'a' && int_str[i] <= 'f')
-                digit = int_str[i] - 'a' + 10;
-        else
-                continue; // 잘못된 문자는 무시 혹은 오류 인데 일단 무시
+        digit = char_to_int(int_str[i]);
+        if(digit == -1){
+            printf("Invalid character\n");
+            return DIVIDE_STRING_FAIL;
+        }
 
         temp = temp * base + digit;
         if(temp > 0xFFFFFFFF){
-            int_to_char(temp >> WORD_BITS, q, idx++);
-            temp = temp % 0x100000000; // 나머지 가져오기
+            switch (base) {
+                case 2:
+                    *(a+(a_idx++)) = (word)(temp >> 1);
+                    temp = temp & 0x1;
+                    break;
+                case 10:
+                    int_to_char((word)(temp >> WORD_BITS), q, q_idx++);
+                    temp = temp % 0x100000000; // 나머지 가져오기
+                    break;
+                case 16:
+                    *(a+(a_idx++)) = (word)(temp >> 4);
+                    temp = temp & 0xF;
+                    break;
+                default:
+                    printf("%d base is not supported\n", base);
+                    return DIVIDE_STRING_FAIL;
+            }
         }
     }
     memset(int_str, '0', strlen(int_str));
     strncpy(int_str, q, strlen(q));
     int_str[strlen(q)] = '\0';
-    *r = (word)temp;
+    *(a+(a_idx)) = (word)temp;
 
     return DIVIDE_STRING_SUCCESS;
-}
-
-int int_to_char(int num, char *str, int idx){
-    while (num != 0){
-        str[idx] = num % 10 + '0';
-        num /= 10;
-    }
-    return 0;
 }
 
 /*************************************************

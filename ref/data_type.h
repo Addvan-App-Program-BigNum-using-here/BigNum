@@ -6,7 +6,7 @@
 
 typedef uint32_t msg; // Error message control variation
 typedef uint32_t word; // Word type
-
+typedef uint64_t dword; // Double word type
 
 /*************************************************
 * Name:        bigint
@@ -22,3 +22,8 @@ typedef struct{
     int word_len;
     word* a;
 } bigint;
+
+
+void int_to_char(word num, char *str, int idx);
+int char_to_int(char str);
+uint64_t string_to_int(char* str, int base);
