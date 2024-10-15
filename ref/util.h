@@ -11,6 +11,7 @@ msg bi_assign(bigint **dst, bigint *src);
 
 msg bi_set_from_array(bigint **dst, int sign, int word_len, word *data, int endian);
 msg bi_set_from_string(bigint **dst, char *int_str, int base);
+msg String_Divide(char* int_str, word* a, int base);
 
 msg bi_get_random(bigint **dst, int word_len);
 
