@@ -60,7 +60,9 @@ int test_bi_set_from(){
     }
 
     for(int i = 0; i < test_size; i++){
-        test_array[i] = rand() & 0xFFFFFFFF;
+        for (int j = 0; j < 4; j++) {
+            test_array[i] += (rand() & 0xff) << (8 * j);
+        }
     }
 
     // little endian set test
@@ -112,6 +114,11 @@ int test_bi_set_from(){
         return result_msg;
     }
 
+    printf("**** 2진수 테스트 ****\n");
+    for(int i = 0; i < a->word_len; i++){
+        printf("0x%08x\n", a->a[i]);
+    }
+
     if(bi_delete(&a) != BI_FREE_SUCCESS){
         return Test_BI_SET_FROM_FAIL;
     }
@@ -123,6 +130,11 @@ int test_bi_set_from(){
         return result_msg;
     }
 
+    printf("**** 10진수 테스트 ****\n");
+    for(int i = 0; i < a->word_len; i++){
+        printf("0x%08x\n", a->a[i]);
+    }
+
     if(bi_delete(&a) != BI_FREE_SUCCESS){
         return Test_BI_SET_FROM_FAIL;
     }
@@ -132,6 +144,11 @@ int test_bi_set_from(){
     if(result_msg != BI_SET_STRING_SUCCESS){
         print_log(result_msg);
         return result_msg;
+    }
+
+    printf("**** 16진수 테스트 ****\n");
+    for(int i = 0; i < a->word_len; i++){
+        printf("0x%08x\n", a->a[i]);
     }
 
     if(bi_delete(&a) != BI_FREE_SUCCESS){

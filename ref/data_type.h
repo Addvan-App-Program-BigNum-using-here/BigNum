@@ -4,6 +4,7 @@
 #define little_endian 1
 #define WORD_BITS 32
 
+typedef uint8_t byte; // Byte type
 typedef uint32_t msg; // Error message control variation
 typedef uint32_t word; // Word type
 typedef uint64_t dword; // Double word type
