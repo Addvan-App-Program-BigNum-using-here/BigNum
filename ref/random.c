@@ -10,7 +10,7 @@
 **************************************************/
 msg bi_get_random(bigint** dst, int word_len){
     msg result_msg = bi_new(dst, word_len);
-    if(result_msg == MEM_ALLOC_FAIL){
+    if(result_msg == BI_ALLOC_FAIL){
         return RANDOM_FAIL;
     }
 
