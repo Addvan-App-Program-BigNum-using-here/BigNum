@@ -8,49 +8,57 @@
 * Arguments:   - bigint** dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
 **************************************************/
-typedef uint8_t byte; // 8-bit �ڷ��� ����
-msg bi_get_random(bigint** dst, int word_len) {
-	bi_new(*dst, word_len); // word_len ���̸� ���� bigint �޸� �Ҵ�
+msg bi_get_random(bigint** dst, int wordlen){
+	bi_new(dst, wordlen);
 
-	//cnt : �ʿ��� ������ ����
-	int cnt = word_len * (sizeof(word) / sizeof(byte)); // �迭�� ������ 1byte�� ���� => �� word_len * 4�� cnt �ʿ�
+    (*dst)->sign = rand() & 1; // DRBG로 교체 필요?
+    array_rand(dst, wordlen);
 
-	(*dst)->sign = rand() & 1;
+    bi_refine(*dst);
+}
 
-	while (cnt > 0) {
-		for (int i = 0; i < 4; i++) { // word �迭�� ũ�� : 32-bit, rand() & 0xff�� ũ�� : 8-bit => �� 4�� �ݺ�
-			(*dst)->a[cnt] += (rand() & 0xff) << (8* i); 
+/*************************************************
+* Name:        array_rand
+*
+* Description: Fill word array with random values using for bi_get_random()
+*
+* Arguments:   - word* dst: pointer to word array
+*              - int word_len: length of bigint struct
+**************************************************/
+msg array_rand(word* dst, int word_len){
+	byte* p = (byte *) dst;
+    int cnt = word_len * (sizeof(word) / sizeof(byte));
+    while (cnt > 0)
+    {
+        *p = rand() & 0xff; //rand() DRBG로 교체 필요
+        p++;
+        cnt--;
+    }
+}
+
+/*************************************************
+* Name:        array_rand_ver2
+*
+* Description: Fill word array with random values using for bi_get_random()
+*
+* Arguments:   - word* dst: pointer to word array
+*              - int word_len: length of bigint struct
+**************************************************/
+msg array_rand_ver2(word* dst, int word_len){
+    int cnt = word_len * (sizeof(word) / sizeof(byte));
+
+    while (cnt > 0) {
+		for (int i = 0; i < (sizeof(word)/sizeof(byte)); i++) { 
+			dst[cnt] += (rand() & 0xff) << (8* i); 
 		}
 
 		cnt--;
 	}
-
-	bi_refine(*dst); // ���ʿ��� 0 �����ؼ� �޸� ����ȭ
 }
 
-
-msg array_rand(word* dst, int wordlen){
-	
-}
-
-msg bi_get_random_ver2(bigint** dst, int word_len){
-	(byte*)
-}
 int main()
 {	
-	srand(time(NULL));
+	srand(time(NULL)); // main 함수에서 srand 함수 호출
 
-	//puts("HELLO KMU!!");
-
-	bigint a, b, c;
-
-	bi_new(&a, 16);
-	bi_new(&b, 16);
-	bi_get_random(&a, 16);
-	bi_get_random(&b, 16);
-
-	/*bi_set_from_string(&a, "0x12321328378213", 16);
-	bi_set_from_string(&b, "0x1ffffffff78213", 16);*/
-	//bi_assign(&a, &b);
 	return 0;
 }
