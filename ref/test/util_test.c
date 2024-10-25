@@ -18,11 +18,6 @@ int main(){
     return Test_SUCCESS;
 }
 
-/*************************************************
-* Name:        test_bi_new_delete
-*
-* Description: Test bigint structure allocation and deallocation
-**************************************************/
 int test_bi_new_delete(){
     bigint* a = NULL;
     msg result_msg = 0;
@@ -40,12 +35,6 @@ int test_bi_new_delete(){
     return Test_BI_NEW_DELETE_SUCCESS;
 }
 
-
-/*************************************************
-* Name:        test_bi_set_from
-*
-* Description: Test bigint structure set content from array and string
-**************************************************/
 int test_bi_set_from(){
     bigint* a = NULL;
     word* test_array = NULL;
