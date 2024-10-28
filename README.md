@@ -23,12 +23,6 @@
 
 # 3. 👩‍👩‍👧‍👧 팀 소개
 
-| 이름            | 역할              | 주소                         |
-|---------------|-----------------|----------------------------|
-| 김찬혁(****2223) | BigNum 구현, 앱 개발 | https://github.com/BoomWin |
-| 유성환(****2240) | BigNum 구현, 앱 개발 | https://github.com/ISCMSHY |
-| 이진현(****2241) | BigNum 구현       |  https://github.com/jinhyeon721 |
-
 |이름|사진|역할|주소|
 |:---:|:---:|:---:|:---:|
 | 유성환(****2240) |<img src="https://github.com/user-attachments/assets/4559042b-bd94-4a36-846a-18116705efcb" width="110px"></img>|조장, BigNum 구현, 백엔드 개발|https://github.com/ISCMSHY|
