@@ -8,7 +8,7 @@
 * Arguments:   - char* int_str: string of bigint
 *              - word* result: result of integer
 **************************************************/
-dword string_to_int(char* str, int base){
+dword string_to_int(IN char* str, const IN int base){
     int i = 0;
     dword num = 0;
     while (str[i] != '\0'){
@@ -27,7 +27,7 @@ dword string_to_int(char* str, int base){
 *
 * Arguments:   - char str : string
 **************************************************/
-int char_to_int(char str){
+int char_to_int(IN char str){
     if (str >= '0' && str <= '9')
             return str - '0';
     else if (str >= 'A' && str <= 'F')
@@ -47,7 +47,7 @@ int char_to_int(char str){
 *              - char* str: string
 *              - int idx: index of string
 **************************************************/
-void int_to_char(word num, char *str, int idx){
+void int_to_char(IN word num, OUT char *str, IN int idx){
     while (num != 0){
         str[idx] = num % 10 + '0';
         num /= 10;

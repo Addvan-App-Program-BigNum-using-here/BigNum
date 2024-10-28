@@ -8,7 +8,7 @@
 * Arguments:   - bigint** dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
 **************************************************/
-msg bi_get_random(bigint** dst, int word_len) {
+msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 	int result_msg;
 
 	result_msg = bi_new(dst, word_len);
@@ -42,7 +42,7 @@ msg bi_get_random(bigint** dst, int word_len) {
 * Arguments:   - word* dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
 **************************************************/
-msg get_array_random(word *a, int word_len) {
+msg get_array_random(OUT word *a, const IN int word_len) {
     int cnt = word_len * (sizeof(word) / sizeof(byte));
 
     while (cnt > 0) {

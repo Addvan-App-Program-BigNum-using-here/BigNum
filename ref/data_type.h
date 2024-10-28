@@ -1,8 +1,14 @@
+#ifndef DATA_TYPE_H
+#define DATA_TYPE_H
+
 #include <stdint.h>
 
 #define big_endian 0
 #define little_endian 1
 #define WORD_BITS 32
+
+#define OUT
+#define IN
 
 typedef uint8_t byte; // Byte type
 typedef uint32_t msg; // Error message control variation
@@ -25,6 +31,8 @@ typedef struct{
 } bigint;
 
 
-void int_to_char(word num, char *str, int idx);
-int char_to_int(char str);
-uint64_t string_to_int(char* str, int base);
+void int_to_char(IN word num, OUT char *str, IN int idx);
+int char_to_int(IN char str);
+uint64_t string_to_int(IN char* str, const IN int base);
+
+#endif // DATA_TYPE_H

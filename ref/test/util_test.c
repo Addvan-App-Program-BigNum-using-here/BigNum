@@ -4,13 +4,13 @@ int main(){
     msg result_msg = 0;
 
     result_msg = test_bi_new_delete();
-    print_log(result_msg);
+    log_msg(result_msg);
     if(result_msg != Test_BI_NEW_DELETE_SUCCESS){
         return Test_FAIL;
     }
 
     result_msg = test_bi_set_from();
-    print_log(result_msg);
+    log_msg(result_msg);
     if(result_msg != Test_BI_SET_FROM_SUCCESS){
         return Test_FAIL;
     }
@@ -52,7 +52,7 @@ int test_bi_set_from(){
     int test_size = rand() % 100 + 1;
     int result_msg = 0;
 
-    char test_string[3][60] = {"0b101001010101101010111110101111001011010110101000", "123456789090909090908080", "0x1234567890abcdef"};
+    char test_string[3][60] = {"101001010101101010111110101111001011010110101000", "123456789090909090908080", "1234567890abcdef"};
 
     test_array = (word*)calloc(test_size, sizeof(word));
     if(test_array == NULL){
@@ -68,7 +68,7 @@ int test_bi_set_from(){
     // little endian set test
     result_msg = bi_set_from_array(&a, 1, test_size, test_array, little_endian);
     if(result_msg != BI_SET_ARRAY_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -81,14 +81,14 @@ int test_bi_set_from(){
 
     result_msg = bi_delete(&a);
     if(result_msg != BI_FREE_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
     // big_endian set test
     result_msg = bi_set_from_array(&a, 1, test_size, test_array, big_endian);
     if(result_msg != BI_SET_ARRAY_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -101,7 +101,7 @@ int test_bi_set_from(){
 
     result_msg = bi_delete(&a);
     if(result_msg != BI_FREE_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -110,7 +110,7 @@ int test_bi_set_from(){
     // 2진수 테스트
     result_msg = bi_set_from_string(&a, test_string[0], 2); // 2진수 테스트
     if(result_msg != BI_SET_STRING_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -126,7 +126,7 @@ int test_bi_set_from(){
     // 10진수 테스트
     result_msg = bi_set_from_string(&a, test_string[1], 10); // 10진수 테스트
     if(result_msg != BI_SET_STRING_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -142,7 +142,7 @@ int test_bi_set_from(){
     // 16진수 테스트
     result_msg = bi_set_from_string(&a, test_string[2], 16); // 16진수 테스트
     if(result_msg != BI_SET_STRING_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -154,6 +154,8 @@ int test_bi_set_from(){
     if(bi_delete(&a) != BI_FREE_SUCCESS){
         return Test_BI_SET_FROM_FAIL;
     }
+
+    free(test_array);
 
     return Test_BI_SET_FROM_SUCCESS;
 }

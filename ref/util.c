@@ -8,7 +8,7 @@
 * Arguments:   - bigint** dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
 **************************************************/
-msg bi_new(bigint** dst, int word_len){
+msg bi_new(OUT bigint** dst, const IN int word_len){
     if(*dst != NULL){
         bi_delete(dst);
     }
@@ -33,7 +33,7 @@ msg bi_new(bigint** dst, int word_len){
 *
 * Arguments:   - bigint** dst: pointer to bigint struct
 **************************************************/
-msg bi_delete(bigint** dst){
+msg bi_delete(OUT bigint** dst){
     if(*dst == NULL){
         return BI_FREE_SUCCESS;
     }
@@ -62,14 +62,14 @@ msg bi_delete(bigint** dst){
 *              - word* a: array of word
 *              - int endian: little endian == 0, big endian == 1
 **************************************************/
-msg bi_set_from_array(bigint** dst, int sign, int word_len, word* data, int endian){
+msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len, const IN word* data, const IN int endian){
     msg result_msg = 0;
     int endian_idx = endian ? 0 : word_len - 1;
     int idx = endian ? 1 : -1;
 
     result_msg = bi_new(dst, word_len);
     if(result_msg == BI_ALLOC_FAIL){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -83,7 +83,7 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, word* data, int endi
             printf("DATA_OVERFLOW\n");
             result_msg = bi_delete(dst);
             if(result_msg != BI_FREE_SUCCESS){
-                print_log(result_msg);
+                log_msg(result_msg);
                 return result_msg;
             }
             return BI_SET_ARRAY_FAIL;
@@ -94,7 +94,7 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, word* data, int endi
 
     result_msg = bi_refine(*dst);
     if(result_msg != BI_SET_REFINE_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -111,7 +111,7 @@ msg bi_set_from_array(bigint** dst, int sign, int word_len, word* data, int endi
 *              - char* int_str: string of bigint
 *              - int base: base of string (2, 10, 16)
 **************************************************/
-msg bi_set_from_string(bigint** dst, char* int_str, int base){
+msg bi_set_from_string(OUT bigint** dst, IN char* int_str, const IN int base){
     msg result_msg = 0;
     int sign = 0, word_idx = 0;
     word word_len = 0;
@@ -126,22 +126,12 @@ msg bi_set_from_string(bigint** dst, char* int_str, int base){
     // extract word length
     switch (base) {
         case 2:
-            if(int_str[0] != '0' || int_str[1] != 'b'){
-                printf("bit string Input Must be start '0b'!!\nstart: %c%c\n", int_str[0], int_str[1]);
-                return BI_SET_STRING_FAIL;
-            }
-            int_str += 2;
             word_len = (strlen(int_str) + 31) / 32;
             break;
         case 10:
             word_len = (strlen(int_str) + 9) / 10;
             break;
         case 16:
-            if(int_str[0] != '0' || int_str[1] != 'x'){
-                printf("hex string Input Must be start '0x'\nstart: %c%c\n", int_str[0], int_str[1]);
-                return BI_SET_STRING_FAIL;
-            }
-            int_str += 2;
             word_len = (strlen(int_str) + 7) / 8;
             break;
         default:
@@ -152,7 +142,7 @@ msg bi_set_from_string(bigint** dst, char* int_str, int base){
     // memory allocate
     result_msg = bi_new(dst, word_len);
     if(result_msg != BI_ALLOC_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
     // sign bit set
@@ -160,7 +150,7 @@ msg bi_set_from_string(bigint** dst, char* int_str, int base){
     do{
         result_msg = String_Divide(int_str, ((*dst)->a) + (word_idx++), base);
         if(result_msg != DIVIDE_STRING_SUCCESS){
-            print_log(result_msg);
+            log_msg(result_msg);
             return result_msg;
         }
         q = string_to_int(int_str, base);
@@ -170,7 +160,7 @@ msg bi_set_from_string(bigint** dst, char* int_str, int base){
 
     result_msg = bi_refine(*dst);
     if(result_msg != BI_SET_REFINE_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -186,7 +176,7 @@ msg bi_set_from_string(bigint** dst, char* int_str, int base){
 *              - word* r: return remainder
 *              - int base: base of string (2, 10, 16)
 **************************************************/
-msg String_Divide(char* int_str, word* a, int base){
+msg String_Divide(OUT char* int_str, IN word* a, const IN int base){
     int q_idx = 0, digit = 0, a_idx = 0;
     dword temp = 0;
     char* q = NULL;
@@ -229,6 +219,8 @@ msg String_Divide(char* int_str, word* a, int base){
     int_str[strlen(q)] = '\0';
     *(a+(a_idx)) = (word)temp;
 
+    free(q);
+
     return DIVIDE_STRING_SUCCESS;
 }
 
@@ -239,11 +231,11 @@ msg String_Divide(char* int_str, word* a, int base){
 *
 * Arguments:   - bigint* src: pointer to bigint struct
 **************************************************/
-msg bi_refine(bigint *src)
+msg bi_refine(OUT bigint *src)
 {
     if (src == NULL)
     {
-        return BI_SET_REFIEN_FAIL;
+        return BI_SET_REFINE_FAIL;
     }
 
     int new_wordlen = src->word_len;
@@ -274,17 +266,19 @@ msg bi_refine(bigint *src)
 * Arguments:   - bigint** dst: pointer to bigint struct
 *              - bigint* src: source bigint struct
 **************************************************/
-msg bi_assign(bigint** dst, bigint *src)
+msg bi_assign(OUT bigint** dst, const IN bigint *src)
 {
     msg result_msg = 0;
     if (*dst == src)
         return BI_SET_ASSIGN_SUCCESS; // 자기 자신에게 할당하는 경우
 
-    result_msg = bi_delete(dst);
-    if (result_msg != BI_FREE_SUCCESS)
-    {
-        print_log(result_msg);
-        return result_msg;
+    if (dst != NULL){
+        result_msg = bi_delete(dst);
+        if (result_msg != BI_FREE_SUCCESS)
+        {
+            log_msg(result_msg);
+            return result_msg;
+        }
     }
 
     result_msg = bi_new(dst, src->word_len);
@@ -305,7 +299,7 @@ msg bi_assign(bigint** dst, bigint *src)
 * Arguments:   - bigint* dst: pointer to bigint struct
 *              - int base: base of bigint struct (2, 10, 16)
 **************************************************/
-msg bi_print(bigint* dst, int base)
+msg bi_print(const IN bigint* dst, const IN int base)
 {
     if (dst == NULL || dst->a == NULL)
         return PRINT_NULL;

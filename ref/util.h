@@ -1,18 +1,22 @@
+#ifndef UTIL_H
+#define UTIL_H
+
 #include "data_type.h"
-#include "error_msg.h"
+#include "msg_control.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 
-msg bi_new(bigint **dst, int word_len);
-msg bi_delete(bigint **dst);
-msg bi_refine(bigint *src);
-msg bi_assign(bigint **dst, bigint *src);
+msg bi_new(OUT bigint **dst, const IN int word_len);
+msg bi_delete(OUT bigint **dst);
+msg bi_refine(OUT bigint *src);
+msg bi_assign(OUT bigint **dst, const IN bigint *src);
 
-msg bi_set_from_array(bigint **dst, int sign, int word_len, word *data, int endian);
-msg bi_set_from_string(bigint **dst, char *int_str, int base);
-msg String_Divide(char* int_str, word* a, int base);
+msg bi_set_from_array(OUT bigint **dst, const IN int sign, const IN int word_len, const IN word *data, const IN int endian);
+msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base);
+msg String_Divide(OUT char* int_str, IN word* a, const IN int base);
 
-msg bi_get_random(bigint **dst, int word_len);
+msg bi_print(const IN bigint *dst, const IN int base);
 
-msg bi_print(bigint *dst, int base);
+#endif // UTIL_H
