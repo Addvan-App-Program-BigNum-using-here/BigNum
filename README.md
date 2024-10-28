@@ -18,6 +18,7 @@
 <img alt="Html" src ="https://img.shields.io/badge/github-181717.svg?&style=for-the-badge&logo=github&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/Slack-4A154B.svg?&style=for-the-badge&logo=Slack&logoColor=white"/>
 
 ## 서비스 구조
+<img src="https://github.com/user-attachments/assets/04c2889c-797f-4016-a895-5e2713595aab" width="660px"></img>
 
 # 2. 소개 영상
 
