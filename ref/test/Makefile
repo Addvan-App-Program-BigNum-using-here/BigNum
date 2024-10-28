@@ -10,8 +10,13 @@ all: $(TARGET)
 $(TARGET):
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(SRCS)
 
+ifeq ($(OS),Windows_NT)
+run: $(TARGET)
+	$(TARGET)
+else
 run: $(TARGET)
 	leaks --atExit -- ./$(TARGET)
+endif
 
 rerun: rebuild run
 
