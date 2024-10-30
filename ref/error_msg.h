@@ -20,14 +20,16 @@
 #define BI_SET_ASSIGN_FAIL 19   ///< Bigint 할당 실패
 
 // Random 관련 에러 메시지 : 20번대
-#define RANDOM_SUCCESS 20       ///< Bigint 랜덤 할당 성공
-#define RANDOM_FAIL 21          ///< Bigint 랜덤 할당 실패
-#define BI_SET_REFINE_SUCCESS 22///< Bigint 배열 정제 성공
-#define BI_SET_REFIEN_FAIL 23   ///< Bigint 배열 정제 실패
-#define DIVIDE_STRING_SUCCESS 24///< 문자열을 나누기 성공
-#define DIVIDE_STRING_FAIL 25   ///< 문자열 나누기 실패
-#define BI_SET_STRING_SUCCESS 26///< 문자열을 Bigint로 변환 성공
-#define BI_SET_STRING_FAIL 27   ///< 문자열을 Bigint로 변환 실패
+#define GET_RANDOM_SUCCESS 20    ///< Bigint 랜덤 할당 성공
+#define GET_RANDOM_FAIL 21       ///< Bigint 랜덤 할당 실패
+#define GEN_RANDOM_SUCCESS 22    ///< 난수 생성 성공
+#define GEN_RANDOM_FAIL 23       ///< 난수 생성 실패
+#define BI_SET_REFINE_SUCCESS 24 ///< Bigint 배열 정제 성공
+#define BI_SET_REFIEN_FAIL 25    ///< Bigint 배열 정제 실패
+#define DIVIDE_STRING_SUCCESS 26 ///< 문자열을 나누기 성공
+#define DIVIDE_STRING_FAIL 27    ///< 문자열 나누기 실패
+#define BI_SET_STRING_SUCCESS 28 ///< 문자열을 Bigint로 변환 성공
+#define BI_SET_STRING_FAIL 29    ///< 문자열을 Bigint로 변환 실패
 
 // Print 관련 에러 메시지 : 30번대
 #define PRINT_FAIL 30           ///< Bigint 출력 실패

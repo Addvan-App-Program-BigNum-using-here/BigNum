@@ -4,14 +4,13 @@ msg bi_get_random(bigint** dst, int word_len){
     msg result_msg = 0;
 
 	result_msg = bi_new(dst, word_len);
-    if (result_msg != BI_ALLOC_SUCCESS){
+    if (result_msg != BI_ALLOC_SUCCESS)
         print_log(result_msg);
         return result_msg;
-    }
 
     (*dst)->sign = rand() & 1;
 
-    result_msg = array_rand((*dst)->a, word_len);
+    result_msg = array_rand(dst, word_len);
     if(result_msg != GEN_RANDOM_SUCCESS)
         return GET_RANDOM_FAIL;
 
