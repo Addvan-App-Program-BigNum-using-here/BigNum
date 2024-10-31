@@ -8,15 +8,71 @@
 #include <math.h>
 #include <string.h>
 
+/**
+ * @brief New allocate memory for bigint struct
+ *
+ * @param dst pointer to bigint struct
+ * @param word_len length of bigint struct
+ */
 msg bi_new(OUT bigint **dst, const IN int word_len);
+
+/**
+ * @brief Delete allocated memory for bigint struct
+ *
+ * @param dst pointer to bigint struct
+ */
 msg bi_delete(OUT bigint **dst);
+
+/**
+ * @brief Refine bigint struct
+ *
+ * @param src pointer to bigint struct
+ */
 msg bi_refine(OUT bigint *src);
+
+/**
+ * @brief Processing_assign bigint struct
+ *
+ * @param dst pointer to bigint struct
+ * @param src source bigint struct
+ */
 msg bi_assign(OUT bigint **dst, const IN bigint *src);
 
+/**
+ * @brief Set bigint struct from array
+ *
+ * @param dst pointer to bigint struct
+ * @param sign sign of bigint struct
+ * @param word_len length of bigint struct
+ * @param a array of word
+ * @param endian little endian == 0, big endian == 1
+ */
 msg bi_set_from_array(OUT bigint **dst, const IN int sign, const IN int word_len, const IN word *data, const IN int endian);
+
+/**
+ * @brief Set bigint struct from string
+ *
+ * @param dst pointer to bigint struct
+ * @param int_str string of bigint
+ * @param base base of string (2, 10, 16)
+ */
 msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base);
+
+/**
+ * @brief Divide string to word custom to base 10
+ *
+ * @param int_str string of bigint and return quotient
+ * @param r return remainder
+ * @param base base of string (2, 10, 16)
+ */
 msg String_Divide(OUT char* int_str, IN word* a, const IN int base);
 
+/**
+ * @brief Print bigint struct
+ *
+ * @param dst pointer to bigint struct
+ * @param base base of bigint struct (2, 10, 16)
+ */
 msg bi_print(const IN bigint *dst, const IN int base);
 
 #endif // UTIL_H

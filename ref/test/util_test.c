@@ -15,14 +15,12 @@ int main(){
         return Test_FAIL;
     }
 
+    printf("bbb");
+    result_msg = test_bi_random();
+    print_log(result_msg);
     return Test_SUCCESS;
 }
 
-/*************************************************
-* Name:        test_bi_new_delete
-*
-* Description: Test bigint structure allocation and deallocation
-**************************************************/
 int test_bi_new_delete(){
     bigint* a = NULL;
     msg result_msg = 0;
@@ -40,12 +38,6 @@ int test_bi_new_delete(){
     return Test_BI_NEW_DELETE_SUCCESS;
 }
 
-
-/*************************************************
-* Name:        test_bi_set_from
-*
-* Description: Test bigint structure set content from array and string
-**************************************************/
 int test_bi_set_from(){
     bigint* a = NULL;
     word* test_array = NULL;
@@ -159,3 +151,22 @@ int test_bi_set_from(){
 
     return Test_BI_SET_FROM_SUCCESS;
 }
+
+msg test_bi_random(){
+    bigint* dst = NULL;
+    msg result_msg = 0;
+    int word_len = 2;
+    printf("ttt\n");
+    result_msg = bi_get_random(&dst, word_len);
+    print_log(result_msg);
+    if(result_msg != BI_GET_RANDOM_SUCCESS ){
+        print_log(result_msg);
+        return Test_BI_GET_RANDOM_FAIL;
+    }
+
+    bi_print(&dst, 16);
+
+    return Test_BI_GET_RANDOM_SUCCESS;
+}
+
+    

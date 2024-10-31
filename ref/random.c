@@ -13,45 +13,43 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 
 	result_msg = bi_new(dst, word_len);
 	if (result_msg != BI_ALLOC_SUCCESS) {
+	    print_log(result_msg);
         return result_msg;
     }
 
-	int cnt = word_len * (sizeof(word) / sizeof(byte));
+    (*dst)->sign = rand() & 1;
 
-	while (cnt > 0) {
-		for (int i = 0; i < 4; i++) {
-			(*dst)->a[cnt] += (rand() & 0xff) << (8* i);
-		}
+    result_msg = array_rand((*dst)->a, word_len);
+    if(result_msg != GEN_RANDOM_SUCCESS)
+        return GEN_RANDOM_FAIL;
 
-		cnt--;
-	}
-	result_msg = bi_refine(*dst);
-	if (result_msg != BI_SET_REFINE_SUCCESS) {
+    result_msg = bi_refine(*dst);
+    if(result_msg != BI_SET_REFINE_SUCCESS){
+        print_log(result_msg);
         return result_msg;
     }
 
-    return RANDOM_SUCCESS;
-
+    return BI_GET_RANDOM_SUCCESS;
 }
 
+
 /*************************************************
-* Name:        bi_array_random
+* Name:        array_rand
 *
 * Description: Fill array with random values
 *
 * Arguments:   - word* dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
 **************************************************/
-msg get_array_random(OUT word *a, const IN int word_len) {
+msg array_rand(OUT word* a, const IN int word_len){
+    byte* p = (byte*) dst;
     int cnt = word_len * (sizeof(word) / sizeof(byte));
-
-    while (cnt > 0) {
-        for (int i = 0; i < 4; i++) {
-            a[cnt] += (rand() & 0xff) << (8* i);
-        }
-
+    while (cnt > 0)
+    {
+        *p = rand() & 0xff;
+        p++;
         cnt--;
     }
 
-    return RANDOM_SUCCESS;
+    return GEN_RANDOM_SUCCESS;
 }
