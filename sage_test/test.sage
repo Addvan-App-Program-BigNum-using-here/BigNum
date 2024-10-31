@@ -1,4 +1,4 @@
-a = 5
-b = 7
-result = a + b
-print(result)
+with open ('./output.txt', 'r') as f:
+    content = f.read()
+
+print(content)

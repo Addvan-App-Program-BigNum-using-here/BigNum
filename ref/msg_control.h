@@ -9,7 +9,8 @@
 #define MSG_TYPE_STRING     0x00020000    // 문자열 에러
 #define MSG_TYPE_IO         0x00030000    // 입출력 에러 및 랜덤
 #define MSG_TYPE_TEST       0x00040000    // 테스트 에러
-#define MSG_TYPE_OTHER      0x00050000    // 그 외 에러
+#define MSG_TYPE_OPERATE     0x00050000    // 연산 관련된 에러
+#define MSG_TYPE_OTHER      0x00060000    // 그 외 에러
 // 추가 에러 타입...
 
 // 표준 메시지
@@ -25,13 +26,15 @@ enum MemoryMSGCodes {
     BI_FREE_SUCCESS      = MSG_TYPE_MEMORY | 0x0003,  // Bigint 메모리 해제 성공
     BI_FREE_FAIL         = MSG_TYPE_MEMORY | 0x0004,  // Bigint 메모리 해제 실패
     BI_NOT_USING         = MSG_TYPE_MEMORY | 0x0005,  // 해제 시 NULL 체크를 하는데 이전에 사용 이력이 없는 경우
-    MEM_NOT_ALLOC        = MSG_TYPE_MEMORY | 0x0006,  // Bigint 구조체가 아닌 다른 동적할당에서 할당이 안될 경우
+    MEM_NOT_ALLOC        = MSG_TYPE_MEMORY | 0x0006,  // Bigint 구조체가 아닌 다른 동적 할당에서 할당이 안될 경우
     BI_SET_ARRAY_SUCCESS = MSG_TYPE_MEMORY | 0x0007,  // Bigint 배열 할당 성공
     BI_SET_ARRAY_FAIL    = MSG_TYPE_MEMORY | 0x0008,  // Bigint 배열 할당 실패
     BI_SET_ASSIGN_SUCCESS= MSG_TYPE_MEMORY | 0x0009,  // Bigint Assign 성공
     BI_SET_ASSIGN_FAIL   = MSG_TYPE_MEMORY | 0x000A,  // Bigint Assign 실패
     BI_SET_REFINE_SUCCESS= MSG_TYPE_MEMORY | 0x000B,  // Bigint Refine 성공
     BI_SET_REFINE_FAIL   = MSG_TYPE_MEMORY | 0x000C,  // Bigint Refine 실패
+    BI_EXPAND_SUCCESS    = MSG_TYPE_MEMORY | 0x000D,  // Bigint expand 성공
+    BI_EXPAND_FAIL       = MSG_TYPE_MEMORY | 0x000E,  // Bigint expand 실패
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -44,10 +47,13 @@ enum StringMSGCodes {
 };
 
 enum IOMSGCodes {
-    RANDOM_SUCCESS        = MSG_TYPE_IO | 0x0001, // Bigint 랜덤 할당 성공
-    RANDOM_FAIL           = MSG_TYPE_IO | 0x0002, // Bigint 랜덤 할당 실패
+    GEN_RANDOM_SUCCESS        = MSG_TYPE_IO | 0x0001, // Bigint 랜덤 할당 성공
+    GEN_RANDOM_FAIL           = MSG_TYPE_IO | 0x0002, // Bigint 랜덤 할당 실패
     PRINT_FAIL            = MSG_TYPE_IO | 0x0003, // print error
     PRINT_NULL            = MSG_TYPE_IO | 0x0004, // print NULL
+    BI_GET_RANDOM_SUCCESS     = MSG_TYPE_IO | 0x0005, // Bigint 랜덤 할당 성공
+    BI_GET_RANDOM_FAIL        = MSG_TYPE_IO | 0x0006, // Bigint 랜덤 할당 실패
+    PRINT_SUCCESS            = MSG_TYPE_IO | 0x0007, // print success
     // 추가 입출력 관련 에러 코드...
 };
 
@@ -59,7 +65,17 @@ enum TestMSGCodes {
     Test_BI_SET_FROM_SUCCESS    = MSG_TYPE_TEST | 0x0005,      // Test Bigint 배열 및 문자열 할당 성공
     Test_BI_SET_FROM_FAIL       = MSG_TYPE_TEST | 0x0006,      // Test Bigint 배열 및 문자열 할당 실패
     Test_MEM_ALLOC_FAIL         = MSG_TYPE_TEST | 0x0007,      // Test 메모리 할당 실패
+    Test_BI_GET_RANDOM_SUCCESS    = MSG_TYPE_TEST | 0x0008,      // Test Bigint 배열 및 문자열 할당 성공
+    Test_BI_GET_RANDOM_FAIL     = MSG_TYPE_TEST | 0x0009,      // Test Bigint 랜덤 할당 실패
+    Test_BI_OPERATE_SUCCESS     = MSG_TYPE_TEST | 0x000A,      // Test Bigint 연산 성공
+    Test_BI_OPERATE_FAIL        = MSG_TYPE_TEST | 0x000B,      // Test Bigint 연산 실패
     // 추가 테스트 관련 에러 코드...
+};
+
+enum OperateMSGCodes {
+    BI_ADD_SUCCESS              = MSG_TYPE_OPERATE | 0x0001,    // Bigint 덧셈 성공
+    BI_ADD_FAIL                 = MSG_TYPE_OPERATE | 0x0002,    // Bigint 덧셈 실패
+    // 추가 연산 관련 에러 코드...
 };
 
 // 에러 처리 함수 프로토타입

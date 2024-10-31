@@ -2,6 +2,35 @@
 
 int main(){
     msg result_msg = 0;
+    FILE *fp = NULL;
+    char result[128];
+
+//    fp = fopen("./output.txt", "w");
+//    if (fp == NULL) {
+//        printf("Failed to run command\n");
+//        return 1;
+//    }
+//
+//    const char *text = "This is test";
+//    fprintf(fp, "%s\n", text);
+//
+//    fclose(fp);
+//
+//    fp = popen("sage ../../sage_test/test.sage", "r");
+//    if (fp == NULL) {
+//        printf("Failed to run command\n");
+//        return 1;
+//    }
+//
+////     Read the output a line at a time - output it
+//    while (fgets(result, sizeof(result), fp) != NULL) {
+//        if(strstr(result, "MallocStackLogging") == NULL){
+//            printf("%s", result);
+//        }
+//    }
+//
+//    // Close the command stream
+//    pclose(fp);
 
     result_msg = test_bi_new_delete();
     log_msg(result_msg);
@@ -15,13 +44,21 @@ int main(){
         return Test_FAIL;
     }
 
-    printf("bbb");
     result_msg = test_bi_random();
-    print_log(result_msg);
-    return Test_SUCCESS;
+    log_msg(result_msg);
+    if(result_msg != Test_BI_GET_RANDOM_SUCCESS){
+        return Test_BI_GET_RANDOM_FAIL;
+    }
+
+    printf("----------- add test --------------\n");
+    result_msg = test_bi_operate();
+    log_msg(result_msg);
+    if(result_msg != Test_BI_OPERATE_SUCCESS){
+        return Test_BI_OPERATE_FAIL;
+    }
 }
 
-int test_bi_new_delete(){
+msg test_bi_new_delete(){
     bigint* a = NULL;
     msg result_msg = 0;
 
@@ -38,7 +75,7 @@ int test_bi_new_delete(){
     return Test_BI_NEW_DELETE_SUCCESS;
 }
 
-int test_bi_set_from(){
+msg test_bi_set_from(){
     bigint* a = NULL;
     word* test_array = NULL;
     int test_size = rand() % 100 + 1;
@@ -107,9 +144,7 @@ int test_bi_set_from(){
     }
 
     printf("**** 2진수 테스트 ****\n");
-    for(int i = 0; i < a->word_len; i++){
-        printf("0x%08x\n", a->a[i]);
-    }
+    bi_print(&a, 16);
 
     if(bi_delete(&a) != BI_FREE_SUCCESS){
         return Test_BI_SET_FROM_FAIL;
@@ -123,9 +158,7 @@ int test_bi_set_from(){
     }
 
     printf("**** 10진수 테스트 ****\n");
-    for(int i = 0; i < a->word_len; i++){
-        printf("0x%08x\n", a->a[i]);
-    }
+    bi_print(&a, 16);
 
     if(bi_delete(&a) != BI_FREE_SUCCESS){
         return Test_BI_SET_FROM_FAIL;
@@ -139,9 +172,7 @@ int test_bi_set_from(){
     }
 
     printf("**** 16진수 테스트 ****\n");
-    for(int i = 0; i < a->word_len; i++){
-        printf("0x%08x\n", a->a[i]);
-    }
+    bi_print(&a, 16);
 
     if(bi_delete(&a) != BI_FREE_SUCCESS){
         return Test_BI_SET_FROM_FAIL;
@@ -155,18 +186,76 @@ int test_bi_set_from(){
 msg test_bi_random(){
     bigint* dst = NULL;
     msg result_msg = 0;
-    int word_len = 2;
-    printf("ttt\n");
+    int word_len = rand() % 65;
     result_msg = bi_get_random(&dst, word_len);
-    print_log(result_msg);
+    log_msg(result_msg);
     if(result_msg != BI_GET_RANDOM_SUCCESS ){
-        print_log(result_msg);
+        log_msg(result_msg);
         return Test_BI_GET_RANDOM_FAIL;
     }
 
     bi_print(&dst, 16);
 
+    bi_delete(&dst);
+
     return Test_BI_GET_RANDOM_SUCCESS;
 }
 
+
+msg test_bi_operate(){
+    bigint* a = NULL;
+    bigint* b = NULL;
+    bigint* c = NULL;
+    msg result_msg = 0;
+
+    result_msg = bi_get_random(&a, 4);
+    if(result_msg == BI_ALLOC_FAIL || a->word_len != 4){
+        return result_msg;
+    }
+
+    result_msg = bi_get_random(&b, 4);
+    if(result_msg == BI_ALLOC_FAIL || b->word_len != 4){
+        return result_msg;
+    }
+
+    result_msg = bi_get_random(&c, 4);
+    if(result_msg == BI_ALLOC_FAIL || c->word_len != 4){
+        return result_msg;
+    }
+
+    printf("a : ");
+    bi_print(&a, 16);
+    printf("\nb : ");
+    bi_print(&b, 16);
+
+    printf("kkk");
+    result_msg = bi_add(&c, &a, &b);
+    if(result_msg != BI_ADD_SUCCESS){
+        log_msg(result_msg);
+        return result_msg;
+    }
+//
+//    printf("\nresult : ");
+//    bi_print(&c, 16);
+//
+//    result_msg = bi_delete(&a);
+//    if(result_msg != BI_FREE_SUCCESS){
+//        log_msg(result_msg);
+//        return result_msg;
+//    }
+//
+//    result_msg = bi_delete(&b);
+//    if(result_msg != BI_FREE_SUCCESS){
+//        log_msg(result_msg);
+//        return result_msg;
+//    }
+//
+//    result_msg = bi_delete(&c);
+//    if(result_msg != BI_FREE_SUCCESS){
+//        log_msg(result_msg);
+//        return result_msg;
+//    }
+//
+    return Test_SUCCESS;
+}
     

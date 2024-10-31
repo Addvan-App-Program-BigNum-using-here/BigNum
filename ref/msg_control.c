@@ -13,6 +13,8 @@ void log_msg(const IN uint32_t msg_code) {
         msg_type = "IO";
     } else if ((msg_code & MSG_TYPE_TEST) == MSG_TYPE_TEST) {
         msg_type = "TEST";
+    } else if ((msg_code & MSG_TYPE_OPERATE) == MSG_TYPE_OPERATE) {
+        msg_type = "OPERATE";
     } else if ((msg_code & MSG_TYPE_OTHER) == MSG_TYPE_OTHER) {
         msg_type = "OTHER";
     }
@@ -44,8 +46,8 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case DIVIDE_STRING_FAIL: return "String division failed";
         case BI_SET_STRING_SUCCESS: return "String to Bigint conversion successful";
         case BI_SET_STRING_FAIL: return "String to Bigint conversion failed";
-        case RANDOM_SUCCESS: return "Random Bigint generation successful";
-        case RANDOM_FAIL: return "Random Bigint generation failed";
+        case GEN_RANDOM_SUCCESS: return "Random Bigint generation successful";
+        case GEN_RANDOM_FAIL: return "Random Bigint generation failed";
         case PRINT_FAIL: return "Print error";
         case PRINT_NULL: return "Print null";
         case Test_FAIL: return "Test failed";
@@ -55,6 +57,17 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case Test_BI_SET_FROM_SUCCESS: return "Test Bigint array and string allocation successful";
         case Test_BI_SET_FROM_FAIL: return "Test Bigint array and string allocation failed";
         case Test_MEM_ALLOC_FAIL: return "Test memory allocation failed";
+        case BI_ADD_SUCCESS: return "Bigint addition successful";
+        case BI_ADD_FAIL: return "Bigint addition failed";
+        case BI_EXPAND_SUCCESS: return "Bigint expansion successful";
+        case BI_EXPAND_FAIL: return "Bigint expansion failed";
+        case BI_GET_RANDOM_SUCCESS: return "Bigint random allocation successful";
+        case BI_GET_RANDOM_FAIL: return "Bigint random allocation failed";
+        case Test_BI_GET_RANDOM_SUCCESS: return "Test Bigint random allocation successful";
+        case Test_BI_GET_RANDOM_FAIL: return "Test Bigint random allocation failed";
+        case Test_BI_OPERATE_SUCCESS: return "Test Bigint operation successful";
+        case Test_BI_OPERATE_FAIL: return "Test Bigint operation failed";
+        case PRINT_SUCCESS: return "Print successful";
         default: return "Unknown error code";
     }
 }

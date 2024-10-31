@@ -36,7 +36,15 @@ msg bi_refine(OUT bigint *src);
  * @param dst pointer to bigint struct
  * @param src source bigint struct
  */
-msg bi_assign(OUT bigint **dst, const IN bigint *src);
+msg bi_assign(OUT bigint **dst, IN bigint** src);
+
+/**
+ * @brief Expand bigint struct and fill data
+ * @param dst pointer to bigint struct
+ * @param word_len length of bigint struct
+ * @param data array of word
+ */
+msg bi_expand(OUT bigint** dst, const IN int word_len, const IN word data);
 
 /**
  * @brief Set bigint struct from array
@@ -73,6 +81,6 @@ msg String_Divide(OUT char* int_str, IN word* a, const IN int base);
  * @param dst pointer to bigint struct
  * @param base base of bigint struct (2, 10, 16)
  */
-msg bi_print(const IN bigint *dst, const IN int base);
+msg bi_print(IN bigint** dst, const IN int base);
 
 #endif // UTIL_H

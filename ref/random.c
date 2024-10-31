@@ -13,7 +13,7 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 
 	result_msg = bi_new(dst, word_len);
 	if (result_msg != BI_ALLOC_SUCCESS) {
-	    print_log(result_msg);
+	    log_msg(result_msg);
         return result_msg;
     }
 
@@ -25,7 +25,7 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 
     result_msg = bi_refine(*dst);
     if(result_msg != BI_SET_REFINE_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -41,7 +41,7 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 * Arguments:   - word* dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
 **************************************************/
-msg array_rand(OUT word* a, const IN int word_len){
+msg array_rand(OUT word* dst, const IN int word_len){
     byte* p = (byte*) dst;
     int cnt = word_len * (sizeof(word) / sizeof(byte));
     while (cnt > 0)
