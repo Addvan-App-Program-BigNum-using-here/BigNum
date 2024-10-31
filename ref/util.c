@@ -10,22 +10,22 @@
 **************************************************/
 msg bi_new(OUT bigint** dst, const IN int word_len){
     if(*dst != NULL){
-        bi_delete(dst);
+        if(bi_delete(dst) != BI_FREE_SUCCESS){
+            return BI_ALLOC_FAIL;
+        }
     }
+
     *dst = (bigint*)calloc(1, sizeof(bigint));
-    if(*dst == NULL){
-        return BI_ALLOC_FAIL;
-    }
+    if(*dst == NULL)    return BI_ALLOC_FAIL;
+
     (*dst)->sign = 0;
     (*dst)->a = (word*)calloc(word_len, sizeof(word));
-    if((*dst)->a == NULL){
-        return BI_ALLOC_FAIL;
-    }
+    if((*dst)->a == NULL)   return BI_ALLOC_FAIL;
+
     (*dst)->word_len = word_len;
 
     return BI_ALLOC_SUCCESS;
 }
-
 
 /*************************************************
 * Name:        bi_delete
@@ -297,7 +297,6 @@ msg bi_refine(OUT bigint *src)
     return BI_SET_REFINE_SUCCESS;
 }
 
-
 /*************************************************
 * Name:        bi_assign
 *
@@ -309,24 +308,14 @@ msg bi_refine(OUT bigint *src)
 msg bi_assign(OUT bigint** dst, IN bigint** src)
 {
     msg result_msg = 0;
-    if (src == NULL)
-        return BI_SET_ASSIGN_FAIL;
+    if (*src == NULL)   return BI_SET_ASSIGN_FAIL;
 
-    if (*dst == *src)
-        return BI_SET_ASSIGN_SUCCESS; // 자기 자신에게 할당하는 경우
-
-    if (dst != NULL){
-        result_msg = bi_delete(dst);
-        if (result_msg != BI_FREE_SUCCESS)
-        {
-            log_msg(result_msg);
-            return result_msg;
-        }
+    if (*dst != NULL){
+        if (*dst == *src)   return BI_SET_ASSIGN_SUCCESS; // 자기 자신에게 할당하는 경우
+        if (bi_delete(dst) != BI_FREE_SUCCESS)  return result_msg;
     }
 
-    result_msg = bi_new(dst, (*src)->word_len);
-    if (result_msg != BI_FREE_SUCCESS)
-        return result_msg;
+    if(bi_new(dst, (*src)->word_len) != BI_ALLOC_SUCCESS)    return BI_SET_ASSIGN_FAIL;
 
     (*dst)->sign = (*src)->sign;
     memcpy((*dst)->a, (*src)->a, (*src)->word_len * sizeof(word));
@@ -343,7 +332,7 @@ msg bi_assign(OUT bigint** dst, IN bigint** src)
 *              - int base: base of bigint struct (2, 10, 16)
 **************************************************/
 msg bi_print(IN bigint** dst, const IN int base){
-    if (dst == NULL || (*dst)->a == NULL)
+    if (*dst == NULL || (*dst)->a == NULL)
         return PRINT_NULL;
 
     if ((*dst)->sign)

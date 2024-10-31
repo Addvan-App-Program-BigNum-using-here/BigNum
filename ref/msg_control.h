@@ -54,6 +54,8 @@ enum IOMSGCodes {
     BI_GET_RANDOM_SUCCESS     = MSG_TYPE_IO | 0x0005, // Bigint 랜덤 할당 성공
     BI_GET_RANDOM_FAIL        = MSG_TYPE_IO | 0x0006, // Bigint 랜덤 할당 실패
     PRINT_SUCCESS            = MSG_TYPE_IO | 0x0007, // print success
+    FILE_WRITE_SUCCESS        = MSG_TYPE_IO | 0x0008, // 파일 쓰기 성공
+    FILE_WRITE_FAIL           = MSG_TYPE_IO | 0x0009, // 파일 쓰기 실패
     // 추가 입출력 관련 에러 코드...
 };
 
@@ -67,8 +69,8 @@ enum TestMSGCodes {
     Test_MEM_ALLOC_FAIL         = MSG_TYPE_TEST | 0x0007,      // Test 메모리 할당 실패
     Test_BI_GET_RANDOM_SUCCESS    = MSG_TYPE_TEST | 0x0008,      // Test Bigint 배열 및 문자열 할당 성공
     Test_BI_GET_RANDOM_FAIL     = MSG_TYPE_TEST | 0x0009,      // Test Bigint 랜덤 할당 실패
-    Test_BI_OPERATE_SUCCESS     = MSG_TYPE_TEST | 0x000A,      // Test Bigint 연산 성공
-    Test_BI_OPERATE_FAIL        = MSG_TYPE_TEST | 0x000B,      // Test Bigint 연산 실패
+    Test_BI_ADD_SUCCESS     = MSG_TYPE_TEST | 0x000A,      // Test Bigint 연산 성공
+    Test_BI_ADD_FAIL        = MSG_TYPE_TEST | 0x000B,      // Test Bigint 연산 실패
     // 추가 테스트 관련 에러 코드...
 };
 

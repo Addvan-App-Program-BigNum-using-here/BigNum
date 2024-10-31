@@ -65,9 +65,11 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case BI_GET_RANDOM_FAIL: return "Bigint random allocation failed";
         case Test_BI_GET_RANDOM_SUCCESS: return "Test Bigint random allocation successful";
         case Test_BI_GET_RANDOM_FAIL: return "Test Bigint random allocation failed";
-        case Test_BI_OPERATE_SUCCESS: return "Test Bigint operation successful";
-        case Test_BI_OPERATE_FAIL: return "Test Bigint operation failed";
+        case Test_BI_ADD_SUCCESS: return "Test Bigint Addition successful";
+        case Test_BI_ADD_FAIL: return "Test Bigint Addition failed";
         case PRINT_SUCCESS: return "Print successful";
+        case FILE_WRITE_SUCCESS: return "File write successful";
+        case FILE_WRITE_FAIL: return "File write failed";
         default: return "Unknown error code";
     }
 }

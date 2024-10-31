@@ -2,10 +2,13 @@
 #define DATA_TYPE_H
 
 #include <stdint.h>
+#include <stdio.h>
 
 #define big_endian 0              ///< big endian
 #define little_endian 1           ///< little endian
 #define WORD_BITS 32              ///< Word bits
+#define APPEND 0                  ///< File append
+#define CLEAR 1                   ///< File clear and write
 
 #define OUT
 #define IN
@@ -59,5 +62,11 @@ int char_to_int(IN char str);
  * @return result of integer
  */
 uint64_t string_to_int(IN char* str, const IN int base);
+
+// 여기 주석 추가하기
+int bigint_to_hex(IN bigint** src, OUT char* str);
+
+// 여기 주석 추가하기
+void operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigint** c, IN char operate);
 
 #endif // DATA_TYPE_H

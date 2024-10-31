@@ -3,10 +3,24 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../util.h"
 #include "../msg_control.h"
 #include "../random.h"
 #include "../operate.h"
+#include "../data_type.h"
+#include "../file_io.h"
+
+// popen에서 나오는 출력 값 예외처리
+// Windows 시스템
+#ifdef _WIN32
+#define PYTHON_REDIRECT " >nul 2>nul"
+#define PYTHON_CMD "python "
+// Unix/Linux/MacOS 시스템
+#else
+#define PYTHON_REDIRECT " >/dev/null 2>&1"
+#define PYTHON_CMD "python3 "
+#endif
 
 /**
  * @brief Test bigint structure allocation and deallocation
@@ -34,7 +48,7 @@ msg test_bi_random();
  *
  * @return msg
  */
-msg test_bi_operate();
+msg test_bi_add(int test_size);
 
 
 #endif // UTIL_TEST_H

@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -I..
 LDFLAGS =
 
-TEST_SRC = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ./util_test.c
+TEST_SRC = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ../file_io.c ./util_test.c
 TEST_TARGET = util_test
 
 all: $(TEST_TARGET)
@@ -27,5 +27,8 @@ rebuild: clean all
 
 clean:
 	rm -f $(TEST_TARGET)
+	rm -f ../../sage_test/test.sage.py
+	rm -f ./result.txt
+	touch ./result.txt
 
 .PHONY: all clean run rebuild

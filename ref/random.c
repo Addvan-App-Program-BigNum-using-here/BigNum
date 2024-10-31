@@ -17,8 +17,8 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
         return result_msg;
     }
 
-    (*dst)->sign = rand() & 1;
-
+//    (*dst)->sign = rand() & 1;
+    (*dst)->sign = 0;
     result_msg = array_rand((*dst)->a, word_len);
     if(result_msg != GEN_RANDOM_SUCCESS)
         return GEN_RANDOM_FAIL;

@@ -10,8 +10,8 @@
 *              - bigint** b: bigint struct
 **************************************************/
 msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
-    printf("aaa");
-    bigint** tmp = NULL;
+
+    bigint* tmp = NULL;
     byte carry = 0;
     msg result_msg;
     int max_word_len = 0, sign = 0;
@@ -27,23 +27,25 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
     // 상수 시간 연산을 위해 a와 b의 크기를 맞춰서 연산 수행
     if ((*a)->word_len >= (*b)->word_len){
         max_word_len = (*a)->word_len;
-        result_msg = bi_assign(tmp, b);
+        result_msg = bi_assign(&tmp, b);
     } else{
         max_word_len = (*b)->word_len;
-        result_msg = bi_assign(tmp, a);
+        result_msg = bi_assign(&tmp, a);
     }
 
-    if(result_msg != BI_SET_ASSIGN_SUCCESS)    return BI_ADD_FAIL;
-    if(bi_expand(tmp, max_word_len, 0) != BI_EXPAND_SUCCESS)    return BI_ADD_FAIL;
+    if(result_msg != BI_SET_ASSIGN_SUCCESS)    return BI_SET_ASSIGN_FAIL;
+    if(bi_expand(&tmp, max_word_len, 0) != BI_EXPAND_SUCCESS)    return BI_EXPAND_FAIL;
 
-    if(bi_new(dst, max_word_len) != BI_ALLOC_SUCCESS)    return BI_ADD_FAIL;
+    if(bi_new(dst, max_word_len + 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
 
     // 덧셈 연산 수행
     for(int i = 0; i < max_word_len; i++){
         carry = ((*a)->a[i] > 0xffffffff - ((*b)->a[i] + carry)) ? 1 : 0; // carry bit 계산
         (*dst)->a[i] = (word)((*a)->a[i] + (*b)->a[i]);
     }
+    (*dst)->a[max_word_len] = carry;
 
+    bi_delete(&tmp);
     bi_refine(*dst);
 
     return BI_ADD_SUCCESS;

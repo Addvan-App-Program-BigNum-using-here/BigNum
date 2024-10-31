@@ -3,59 +3,63 @@
 int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
-    char result[128];
+    int test_size = 1;
 
-//    fp = fopen("./output.txt", "w");
-//    if (fp == NULL) {
-//        printf("Failed to run command\n");
-//        return 1;
+//    result_msg = test_bi_new_delete();
+//    log_msg(result_msg);
+//    if(result_msg != Test_BI_NEW_DELETE_SUCCESS){
+//        return Test_FAIL;
 //    }
 //
-//    const char *text = "This is test";
-//    fprintf(fp, "%s\n", text);
-//
-//    fclose(fp);
-//
-//    fp = popen("sage ../../sage_test/test.sage", "r");
-//    if (fp == NULL) {
-//        printf("Failed to run command\n");
-//        return 1;
+//    result_msg = test_bi_set_from();
+//    log_msg(result_msg);
+//    if(result_msg != Test_BI_SET_FROM_SUCCESS){
+//        return Test_FAIL;
 //    }
 //
-////     Read the output a line at a time - output it
-//    while (fgets(result, sizeof(result), fp) != NULL) {
-//        if(strstr(result, "MallocStackLogging") == NULL){
-//            printf("%s", result);
-//        }
+//    result_msg = test_bi_random();
+//    log_msg(result_msg);
+//    if(result_msg != Test_BI_GET_RANDOM_SUCCESS){
+//        return Test_BI_GET_RANDOM_FAIL;
 //    }
 //
-//    // Close the command stream
-//    pclose(fp);
-
-    result_msg = test_bi_new_delete();
-    log_msg(result_msg);
-    if(result_msg != Test_BI_NEW_DELETE_SUCCESS){
-        return Test_FAIL;
-    }
-
-    result_msg = test_bi_set_from();
-    log_msg(result_msg);
-    if(result_msg != Test_BI_SET_FROM_SUCCESS){
-        return Test_FAIL;
-    }
-
-    result_msg = test_bi_random();
-    log_msg(result_msg);
-    if(result_msg != Test_BI_GET_RANDOM_SUCCESS){
-        return Test_BI_GET_RANDOM_FAIL;
-    }
-
     printf("----------- add test --------------\n");
-    result_msg = test_bi_operate();
+    result_msg = test_bi_add(test_size);
     log_msg(result_msg);
-    if(result_msg != Test_BI_OPERATE_SUCCESS){
-        return Test_BI_OPERATE_FAIL;
+    if(result_msg != Test_BI_ADD_SUCCESS){
+        return Test_BI_ADD_FAIL;
     }
+
+    // Sage test
+    fp = popen("sage ../../sage_test/test.sage >/dev/null 2>&1", "r");
+    if (fp == NULL) {
+        printf("Failed to run command\n");
+        return 1;
+    }
+
+    // Close the command stream
+    int status = pclose(fp);
+    if(status == -1){
+        perror("pclose failed");
+        return 1;
+    } else {
+        printf("python script exited with status %d\n", status);
+    }
+
+    return 0;
+}
+
+msg test_file(FILE* fp, char* input_data){
+
+
+    char result[128];
+    while (fgets(result, sizeof(result), fp) != NULL) {
+        if(strstr(result, "MallocStackLogging") == NULL){
+            printf("%s", result);
+        }
+    }
+    return Test_SUCCESS;
+
 }
 
 msg test_bi_new_delete(){
@@ -202,60 +206,61 @@ msg test_bi_random(){
 }
 
 
-msg test_bi_operate(){
+msg test_bi_add(int test_size){
     bigint* a = NULL;
     bigint* b = NULL;
     bigint* c = NULL;
+    char add_init[12] = "[Addition]";
+    char str[1024];
     msg result_msg = 0;
+    int test_word_size = 3, length = 0;
 
-    result_msg = bi_get_random(&a, 4);
-    if(result_msg == BI_ALLOC_FAIL || a->word_len != 4){
-        return result_msg;
+    Test_file_write(add_init, CLEAR);
+
+    for(int i = 0; i < test_size; i++){
+        result_msg = bi_get_random(&a, test_word_size);
+        if(result_msg == BI_ALLOC_FAIL || a->word_len != test_word_size){
+            return result_msg;
+        }
+
+        result_msg = bi_get_random(&b, test_word_size);
+        if(result_msg == BI_ALLOC_FAIL || b->word_len != test_word_size){
+            return result_msg;
+        }
+
+        result_msg = bi_get_random(&c, test_word_size);
+        if(result_msg == BI_ALLOC_FAIL || c->word_len != test_word_size){
+            return result_msg;
+        }
+
+        result_msg = bi_add(&c, &a, &b);
+        if(result_msg != BI_ADD_SUCCESS){
+            log_msg(result_msg);
+            return result_msg;
+        }
+
+        operate_string_cat(str, &a, &b, &c, '+'); // a + b = c을 문자열로 변환
+        Test_file_write(str, APPEND); // 파일에 문자열 저장
+
+        result_msg = bi_delete(&a);
+        if(result_msg != BI_FREE_SUCCESS){
+            log_msg(result_msg);
+            return result_msg;
+        }
+
+        result_msg = bi_delete(&b);
+        if(result_msg != BI_FREE_SUCCESS){
+            log_msg(result_msg);
+            return result_msg;
+        }
+
+        result_msg = bi_delete(&c);
+        if(result_msg != BI_FREE_SUCCESS){
+            log_msg(result_msg);
+            return result_msg;
+        }
     }
 
-    result_msg = bi_get_random(&b, 4);
-    if(result_msg == BI_ALLOC_FAIL || b->word_len != 4){
-        return result_msg;
-    }
-
-    result_msg = bi_get_random(&c, 4);
-    if(result_msg == BI_ALLOC_FAIL || c->word_len != 4){
-        return result_msg;
-    }
-
-    printf("a : ");
-    bi_print(&a, 16);
-    printf("\nb : ");
-    bi_print(&b, 16);
-
-    printf("kkk");
-    result_msg = bi_add(&c, &a, &b);
-    if(result_msg != BI_ADD_SUCCESS){
-        log_msg(result_msg);
-        return result_msg;
-    }
-//
-//    printf("\nresult : ");
-//    bi_print(&c, 16);
-//
-//    result_msg = bi_delete(&a);
-//    if(result_msg != BI_FREE_SUCCESS){
-//        log_msg(result_msg);
-//        return result_msg;
-//    }
-//
-//    result_msg = bi_delete(&b);
-//    if(result_msg != BI_FREE_SUCCESS){
-//        log_msg(result_msg);
-//        return result_msg;
-//    }
-//
-//    result_msg = bi_delete(&c);
-//    if(result_msg != BI_FREE_SUCCESS){
-//        log_msg(result_msg);
-//        return result_msg;
-//    }
-//
-    return Test_SUCCESS;
+    return Test_BI_ADD_SUCCESS;
 }
     
