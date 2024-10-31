@@ -20,8 +20,8 @@
 #define BI_SET_ASSIGN_FAIL 19   ///< Bigint 할당 실패
 
 // Random 관련 에러 메시지 : 20번대
-#define GET_RANDOM_SUCCESS 20    ///< Bigint 랜덤 할당 성공
-#define GET_RANDOM_FAIL 21       ///< Bigint 랜덤 할당 실패
+#define BI_GET_RANDOM_SUCCESS 20    ///< Bigint 랜덤 할당 성공
+#define BI_GET_RANDOM_FAIL 21       ///< Bigint 랜덤 할당 실패
 #define GEN_RANDOM_SUCCESS 22    ///< 난수 생성 성공
 #define GEN_RANDOM_FAIL 23       ///< 난수 생성 실패
 #define BI_SET_REFINE_SUCCESS 24 ///< Bigint 배열 정제 성공
@@ -43,7 +43,8 @@
 #define Test_BI_SET_FROM_SUCCESS 54  ///< Bigint 설정 테스트 성공
 #define Test_BI_SET_FROM_FAIL 55     ///< Bigint 설정 테스트 실패
 #define Test_MEM_ALLOC_FAIL 56       ///< 테스트 중 메모리 할당 실패
-
+#define Test_BI_GET_RANDOM_SUCCESS 57 ///< 테스트 중 랜덤 할당 성공
+#define Test_BI_GET_RANDOM_FAIL 58   ///< 테스트 중 랜덤 할당 실패
 /**
  * @brief 에러 코드에 따른 로그 메시지를 출력하는 함수
  *

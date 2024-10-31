@@ -14,6 +14,7 @@ msg bi_new(bigint** dst, int word_len){
         return BI_ALLOC_FAIL;
     }
     (*dst)->word_len = word_len;
+ 
     return BI_ALLOC_SUCCESS;
 }
 
@@ -235,26 +236,26 @@ msg bi_assign(bigint** dst, bigint *src)
     return BI_SET_ASSIGN_SUCCESS;
 }
 
-msg bi_print(bigint* dst, int base)
+msg bi_print(bigint** dst, int base)
 {
-    if (dst == NULL || dst->a == NULL)
+    if (dst == NULL || (*dst)->a == NULL)
         return PRINT_NULL;
 
-    if (dst->sign == 0)
+    if ((*dst)->sign == 0)
     {
         printf("0\n");
         return 0;
     }
 
-    if (dst->sign < 0)
+    if ((*dst)->sign < 0)
         printf("-");
     if (base == 16)
         printf("0x");
 
     // 간단한 16진수 출력 (10 진수는 이후 추가)
-    for (int i = dst->word_len - 1; i >= 0; i--)
+    for (int i = (*dst)->word_len - 1; i >= 0; i--)
     {
-        printf("%08x", dst->a[i]);
+        printf("%08x", (*dst)->a[i]);
     }
     printf("\n");
 

@@ -71,4 +71,4 @@ msg bi_get_random(bigint **dst, int word_len);
  * @param dst pointer to bigint struct
  * @param base base of bigint struct (2, 10, 16)
  */
-msg bi_print(bigint *dst, int base);
+msg bi_print(bigint** dst, int base);

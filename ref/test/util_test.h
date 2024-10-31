@@ -15,3 +15,10 @@ int test_bi_new_delete();
  * @return int
  */
 int test_bi_set_from();
+
+/**
+ * @brief Test bigint structure set random
+ * 
+ * @return msg
+ */
+msg test_bi_random();
