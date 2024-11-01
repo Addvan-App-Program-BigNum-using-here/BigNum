@@ -177,6 +177,7 @@ msg bi_set_from_string(OUT bigint** dst, IN char* int_str, const IN int base){
 *              - word* r: return remainder
 *              - int base: base of string (2, 10, 16)
 **************************************************/
+// 이 함수는 동작되기는 하지만 다시 살펴볼 필요가 있음
 msg String_Divide(OUT char* int_str, IN word* a, const IN int base){
     int q_idx = 0, digit = 0, a_idx = 0;
     dword temp = 0;

@@ -19,7 +19,7 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 
 //    (*dst)->sign = rand() & 1;
     (*dst)->sign = 0;
-    result_msg = array_rand((*dst)->a, word_len);
+    result_msg = array_random((*dst)->a, word_len);
     if(result_msg != GEN_RANDOM_SUCCESS)
         return GEN_RANDOM_FAIL;
 
@@ -34,14 +34,14 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 
 
 /*************************************************
-* Name:        array_rand
+* Name:        array_random
 *
 * Description: Fill array with random values
 *
 * Arguments:   - word* dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
 **************************************************/
-msg array_rand(OUT word* dst, const IN int word_len){
+msg array_random(OUT word* dst, const IN int word_len){
     byte* p = (byte*) dst;
     int cnt = word_len * (sizeof(word) / sizeof(byte));
     while (cnt > 0)
@@ -52,4 +52,53 @@ msg array_rand(OUT word* dst, const IN int word_len){
     }
 
     return GEN_RANDOM_SUCCESS;
+}
+
+
+/*************************************************
+* Name:        get_random_string
+*
+* Description: Create Random String with given length
+*
+* Arguments:   - char* str: return String
+*              - int str_len : length of return String
+*              - int base : base of return String
+**************************************************/
+msg get_random_string(OUT char* str, IN int str_len, IN int base){
+    // 초기화 -> DRBG를 적용해야 가능
+//    srand(time(NULL));
+
+    // 각 진수별 사용할 문자 배열
+    const char binary_chars[] = "01";
+    const char decimal_chars[] = "0123456789";
+    const char hex_chars[] = "0123456789abcdef";
+    const char* chars;
+    int chars_len;
+
+    switch(base) {
+        case 2:
+            chars = binary_chars;
+            chars_len = sizeof(binary_chars) - 1;
+            break;
+        case 10:
+            chars = decimal_chars;
+            chars_len = sizeof(decimal_chars) - 1;
+            break;
+        case 16:
+            chars = hex_chars;
+            chars_len = sizeof(hex_chars) - 1;
+            break;
+        default:
+            str[0] = '\0';
+            return RAND_STRING_INVALID;
+    }
+
+    for(int i = 0; i < str_len; i++) {
+        int random_index = rand() % chars_len;
+        str[i] = chars[random_index];
+    }
+
+    str[str_len] = '\0';
+
+    return RAND_STRING_SUCCESS;
 }

@@ -43,6 +43,8 @@ enum StringMSGCodes {
     DIVIDE_STRING_FAIL    = MSG_TYPE_STRING | 0x0002, // 10진수 string Bigint 변환 시 문자열 나누기 실패
     BI_SET_STRING_SUCCESS = MSG_TYPE_STRING | 0x0003, // String to Bigint 성공
     BI_SET_STRING_FAIL    = MSG_TYPE_STRING | 0x0004, // String to Binint 실패
+    RAND_STRING_SUCCESS    = MSG_TYPE_STRING | 0x0005, // 랜덤 문자열 생성 성공
+    RAND_STRING_INVALID   = MSG_TYPE_STRING | 0x0006, // 랜덤 문자열 생성 시 base가 2, 10이 아닌 경우
     // 추가 문자열 관련 에러 코드...
 };
 

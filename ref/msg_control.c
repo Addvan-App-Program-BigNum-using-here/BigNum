@@ -70,6 +70,8 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case PRINT_SUCCESS: return "Print successful";
         case FILE_WRITE_SUCCESS: return "File write successful";
         case FILE_WRITE_FAIL: return "File write failed";
+        case RAND_STRING_SUCCESS: return "Random string generation successful";
+        case RAND_STRING_INVALID: return "Invalid random string";
         default: return "Unknown error code";
     }
 }
