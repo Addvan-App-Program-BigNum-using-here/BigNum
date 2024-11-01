@@ -342,7 +342,7 @@ msg bi_print(IN bigint** dst, const IN int base){
 
     // 간단한 16진수 출력 (10 진수는 이후 추가)
     for(int i = (*dst)->word_len - 1; i >= 0 ; i--){
-        printf("%x", (*dst)->a[i]);
+        printf("%08x", (*dst)->a[i]);
     }
     printf("\n");
 

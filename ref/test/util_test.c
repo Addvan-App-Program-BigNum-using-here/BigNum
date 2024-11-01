@@ -49,19 +49,6 @@ int main(){
     return 0;
 }
 
-msg test_file(FILE* fp, char* input_data){
-
-
-    char result[128];
-    while (fgets(result, sizeof(result), fp) != NULL) {
-        if(strstr(result, "MallocStackLogging") == NULL){
-            printf("%s", result);
-        }
-    }
-    return Test_SUCCESS;
-
-}
-
 msg test_bi_new_delete(){
     bigint* a = NULL;
     msg result_msg = 0;
@@ -213,7 +200,7 @@ msg test_bi_add(int test_size){
     char add_init[12] = "[Addition]";
     char str[1024];
     msg result_msg = 0;
-    int test_word_size = 3, length = 0;
+    int test_word_size = 8;
 
     Test_file_write(add_init, CLEAR);
 

@@ -40,8 +40,8 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
 
     // 덧셈 연산 수행
     for(int i = 0; i < max_word_len; i++){
+        (*dst)->a[i] = (word)((*a)->a[i] + (*b)->a[i] + carry);
         carry = ((*a)->a[i] > 0xffffffff - ((*b)->a[i] + carry)) ? 1 : 0; // carry bit 계산
-        (*dst)->a[i] = (word)((*a)->a[i] + (*b)->a[i]);
     }
     (*dst)->a[max_word_len] = carry;
 

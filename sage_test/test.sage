@@ -3,8 +3,8 @@ def addition(add_str):
     result = int(add_str[4], 16)
     tmp = int(add_str[0], 16) + int(add_str[2], 16)
     if(result != tmp):
-        return false
-    return true
+        return false, tmp
+    return true, tmp
 
 with open('./test.txt', 'r') as f:
     with open('./result.txt', 'w') as p:
@@ -13,6 +13,8 @@ with open('./test.txt', 'r') as f:
                 addif = f.readline()
                 if addif == ' ':
                     break
-                if addition(addif) == false:
+                result, tmp = addition(addif)
+                if result == false:
                     p.write(addif)
+                    p.write(str(hex(tmp)))
                     p.write('\n')

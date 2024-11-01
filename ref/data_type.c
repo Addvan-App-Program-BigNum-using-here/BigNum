@@ -70,7 +70,7 @@ int bigint_to_hex(IN bigint** src, OUT char* str) {
     idx += ((*src)->sign == 1) ? sprintf(&str[idx], "-") : 0; // 부호 값 저장
     idx += sprintf(&str[idx], "0x");
     for (int i = (*src)->word_len - 1; i >= 0; i--) {
-        idx += sprintf(&str[idx], "%X", (*src)->a[i]);
+        idx += sprintf(&str[idx], "%08X", (*src)->a[i]);
     }
     return idx;
 }
