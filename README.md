@@ -18,15 +18,17 @@
 <img alt="Html" src ="https://img.shields.io/badge/github-181717.svg?&style=for-the-badge&logo=github&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/Slack-4A154B.svg?&style=for-the-badge&logo=Slack&logoColor=white"/>
 
 ## 서비스 구조
+<img src="https://github.com/user-attachments/assets/04c2889c-797f-4016-a895-5e2713595aab" width="660px"></img>
 
 # 2. 소개 영상
 
 # 3. 👩‍👩‍👧‍👧 팀 소개
 
-| 이름            | 역할               | 주소                         |
-|---------------|------------------|----------------------------|
-| 김찬혁(****2223) | BigNum 구현, 앱 개발  | https://github.com/BoomWin |
-| 유성환(****2240) | BigNum 구현, 앱 개발  | https://github.com/ISCMSHY |
+|이름|사진|역할|주소|
+|:---:|:---:|:---:|:---:|
+| 유성환(****2240) |<img src="https://github.com/user-attachments/assets/4559042b-bd94-4a36-846a-18116705efcb" width="110px"></img>|조장, BigNum 구현, 백엔드 개발|https://github.com/ISCMSHY|
+| 김찬혁(****2223) |<img src="https://github.com/user-attachments/assets/8df88784-1346-40fc-821d-196e392d370d" width="110px"></img>|BigNum 구현, 앱 개발|https://github.com/BoomWin|
+| 이진현(****2102) |<img src="https://github.com/user-attachments/assets/acf4db23-d0e3-4c8a-adaf-b7384c8e78ea" width="110px"></img>|BigNum 구현|https://github.com/jinhyeon721|
 
 
 # 4. 사용법
