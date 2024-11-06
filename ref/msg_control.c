@@ -72,6 +72,10 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case FILE_WRITE_FAIL: return "File write failed";
         case RAND_STRING_SUCCESS: return "Random string generation successful";
         case RAND_STRING_INVALID: return "Invalid random string";
+        case BI_SUB_SUCCESS: return "Bigint subtraction successful";
+        case BI_SUB_FAIL: return "Bigint subtraction failed";
+        case Test_BI_SUB_SUCCESS: return "Test Bigint subtraction successful";
+        case Test_BI_SUB_FAIL: return "Test Bigint subtraction failed";
         default: return "Unknown error code";
     }
 }

@@ -4,7 +4,7 @@ int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
     int test_size = 1;
-    int test_word_size = 8;
+    int test_word_size = 13;
     char TEST_init[20] = "[TEST CASE START]";
     char TEST_end[20] = "[TEST CASE END]";
 
@@ -32,6 +32,12 @@ int main(){
     log_msg(result_msg);
     if(result_msg != Test_BI_ADD_SUCCESS){
         return Test_BI_ADD_FAIL;
+    }
+
+    result_msg = test_bi_sub(test_size, test_word_size);
+    log_msg(result_msg);
+    if(result_msg != Test_BI_SUB_SUCCESS){
+        return Test_BI_SUB_FAIL;
     }
 
     Test_file_write(TEST_end, APPEND);
@@ -229,7 +235,6 @@ msg test_bi_add(const IN int test_size, const IN int test_word_size){
 
     str = (char*)calloc(test_word_size * 24 + 12, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
     if(str == NULL) return MEM_NOT_ALLOC;
-
     Test_file_write(add_init, APPEND);
 
     for(int i = 0; i < test_size; i++){
@@ -275,8 +280,70 @@ msg test_bi_add(const IN int test_size, const IN int test_word_size){
             return result_msg;
         }
     }
+    free(str);
+    return Test_BI_ADD_SUCCESS;
+}
+
+msg test_bi_sub(const IN int test_size, const IN int test_word_size){
+    bigint* a = NULL;
+    bigint* b = NULL;
+    bigint* c = NULL;
+    char sub_init[20] = "\n[Subtraction]";
+    char* str = NULL;
+    msg result_msg = 0;
+
+    str = (char*)calloc(test_word_size * 24 + 12, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
+    if(str == NULL) return MEM_NOT_ALLOC;
+
+    Test_file_write(sub_init, APPEND);
+
+    for(int i = 0; i < test_size; i++){
+        result_msg = bi_get_random(&a, test_word_size);
+        if(result_msg == BI_ALLOC_FAIL || a->word_len != test_word_size){
+            return result_msg;
+        }
+
+        result_msg = bi_get_random(&b, test_word_size);
+        if(result_msg == BI_ALLOC_FAIL || b->word_len != test_word_size){
+            return result_msg;
+        }
+
+        result_msg = bi_get_random(&c, test_word_size);
+        if(result_msg == BI_ALLOC_FAIL || c->word_len != test_word_size){
+            return result_msg;
+        }
+
+        result_msg = bi_sub(&c, &a, &b);
+        if(result_msg != BI_SUB_SUCCESS){
+            log_msg(result_msg);
+            return result_msg;
+        }
+
+        operate_string_cat(str, &a, &b, &c, '-'); // a + b = c을 문자열로 변환
+        Test_file_write(str, APPEND); // 파일에 문자열 저장
+
+
+        result_msg = bi_delete(&a);
+        if(result_msg != BI_FREE_SUCCESS){
+            log_msg(result_msg);
+            return result_msg;
+        }
+
+        result_msg = bi_delete(&b);
+        if(result_msg != BI_FREE_SUCCESS){
+            log_msg(result_msg);
+            return result_msg;
+        }
+
+        result_msg = bi_delete(&c);
+        if(result_msg != BI_FREE_SUCCESS){
+            log_msg(result_msg);
+            return result_msg;
+        }
+    }
 
     free(str);
 
-    return Test_BI_ADD_SUCCESS;
+    return Test_BI_SUB_SUCCESS;
+
 }

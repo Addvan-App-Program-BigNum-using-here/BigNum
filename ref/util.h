@@ -83,4 +83,20 @@ msg String_Divide(OUT char* int_str, IN bigint **dst, IN int word_idx, const IN 
  */
 msg bi_print(IN bigint** dst, const IN int base);
 
+/**
+ * @brief Compare bigint struct
+ *
+ * @param a pointer to bigint struct
+ * @param b pointer to bigint struct
+ */
+int bi_compare(IN bigint** a, IN bigint** b);
+
+/**
+ * @brief Compare absolute bigint struct
+ *
+ * @param a pointer to bigint struct
+ * @param b pointer to bigint struct
+ */
+int bi_compare_abs(IN bigint** a, IN bigint** b);
+
 #endif // UTIL_H

@@ -20,7 +20,7 @@ def test_addition(f, p):
             p.write(str(hex(tmp)))
             p.write('\n')
 
-def substraction(sub_str):
+def subtraction(sub_str):
     sub_str = sub_str.split(' ')
     result = int(sub_str[4], 16)
     tmp = int(sub_str[0], 16) - int(sub_str[2], 16)
@@ -32,7 +32,8 @@ def test_subtraction(f, p):
     p.write('[Subtraction]\n')
     while True:
         subif = f.readline()
-        if subif == ' ':
+        print(subif)
+        if subif == '\n':
             break
         result, tmp = subtraction(subif)
         if result == false:

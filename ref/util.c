@@ -351,6 +351,65 @@ msg bi_expand(OUT bigint** dst, const IN int word_len, const IN word data){
 }
 
 /*************************************************
+* Name:        bi_compare
+*
+* Description: compare bigint struct
+*
+* Arguments:   - bigint** a: pointer to bigint struct
+*              - bigint** b: pointer to bigint struct
+* Return:      - int: 1 if a > b, -1 if a < b, 0 if a == b
+**************************************************/
+int bi_compare(IN bigint** a, IN bigint** b){
+    if(*a == NULL || *b == NULL)    return BI_NOT_USING;
+
+    if((*a)->sign > (*b)->sign) return 1; // a 양수, b 음수
+    if((*a)->sign < (*b)->sign) return -1; // a 음수, b 양수
+    if((*a)->sign == 1 && (*b)->sign == 1){ // 둘다 음수인 경우
+        if((*a)->word_len > (*b)->word_len) return -1; // a < b
+        if((*a)->word_len < (*b)->word_len) return 1; // a > b
+        //길이가 같은 경우
+        for(int i = (*a)->word_len - 1 ; i >= 0 ; i--){
+            if((*a)->a[i] > (*b)->a[i]) return -1; // a < b
+            if((*a)->a[i] < (*b)->a[i]) return 1; // a > b
+        }
+    }
+    if((*a)->sign == 0 && (*b)->sign == 0){ // 둘다 양수인 경우
+        if((*a)->word_len > (*b)->word_len) return 1; // a > b
+        if((*a)->word_len < (*b)->word_len) return -1; // a < b
+        //길이가 같은 경우
+        for(int i = (*a)->word_len - 1 ; i >= 0 ; i--){
+            if((*a)->a[i] > (*b)->a[i]) return 1; // a > b
+            if((*a)->a[i] < (*b)->a[i]) return -1; // a < b
+        }
+    }
+
+    return 0;
+}
+
+/*************************************************
+* Name:        bi_compare_abs
+*
+* Description: compare absolute bigint struct
+*
+* Arguments:   - bigint** a: pointer to bigint struct
+*              - bigint** b: pointer to bigint struct
+* Return:      - int: 1 if a > b, -1 if a < b, 0 if a == b
+**************************************************/
+int bi_compare_abs(IN bigint** a, IN bigint** b){
+    if(*a == NULL || *b == NULL)    return BI_NOT_USING;
+    int a_sign = (*a)->sign;
+    int b_sign = (*b)->sign;
+
+    (*a)->sign = 0;
+    (*b)->sign = 0;
+    int result = bi_compare(a, b);
+    (*a)->sign = a_sign;
+    (*b)->sign = b_sign;
+
+    return result;
+}
+
+/*************************************************
 * Name:        bi_refine
 *
 * Description: unnessesary zero value delete

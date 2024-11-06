@@ -50,5 +50,11 @@ msg test_bi_random(const IN int test_size, const IN int test_word_size);
  */
 msg test_bi_add(const IN int test_size, const IN int test_word_size);
 
+/**
+ * @brief Test bigint structure Sub operation
+ *
+ * @return msg
+ */
+msg test_bi_sub(const IN int test_size, const IN int test_word_size);
 
 #endif // UTIL_TEST_H
