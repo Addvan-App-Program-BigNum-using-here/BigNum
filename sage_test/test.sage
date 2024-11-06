@@ -41,11 +41,11 @@ def test_subtraction(f, p):
             p.write('\n')
 
 def string_to_hex(p, string, result, base):
-    hex_string = hex(int(string, base))
-    result = hex(int(result, 16))
+    hex_string = int(string, base)
+    result = int(result, 16)
     if hex_string != result:
-        return false, hex_string
-    return true, hex_string
+        return false, hex(hex_string)
+    return true, hex(hex_string)
 
 def test_bi_set_from(f, p):
     p.write('[BI SET FROM]\n')
@@ -56,10 +56,11 @@ def test_bi_set_from(f, p):
             base = re.findall(r'\d+', biset)[0]
             string = f.readline()
             result = f.readline()
-            result, tmp = string_to_hex(p, string, result, int(base))
-            if result == false:
+            result_bol, tmp = string_to_hex(p, string, result, int(base))
+            if result_bol == false:
                 p.write(string)
-                p.write(str(tmp))
+                p.write(f"올바른 값 : {tmp}\n")
+                p.write(f"제시 값   : {result}")
                 p.write('\n')
         elif biset == '\n':
             break

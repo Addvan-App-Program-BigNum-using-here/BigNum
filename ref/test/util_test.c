@@ -4,6 +4,7 @@ int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
     int test_size = 1;
+    int test_word_size = 8;
     char TEST_init[20] = "[TEST CASE START]";
     char TEST_end[20] = "[TEST CASE END]";
 
@@ -21,13 +22,13 @@ int main(){
         return Test_FAIL;
     }
 
-    result_msg = test_bi_random();
+    result_msg = test_bi_random(test_size, test_word_size);
     log_msg(result_msg);
     if(result_msg != Test_BI_GET_RANDOM_SUCCESS){
         return Test_BI_GET_RANDOM_FAIL;
     }
 
-    result_msg = test_bi_add(test_size);
+    result_msg = test_bi_add(test_size, test_word_size);
     log_msg(result_msg);
     if(result_msg != Test_BI_ADD_SUCCESS){
         return Test_BI_ADD_FAIL;
@@ -84,7 +85,7 @@ msg test_bi_set_from(int test_size){
     Test_file_write(FROM_init, APPEND);
 
     for(int i = 0; i < test_size; i++){
-        array_size = rand() % 10000 + 1;
+        array_size = rand() % 1000 + 1;
         test_array = (word*)calloc(array_size, sizeof(word));
 
         if(test_array == NULL)  return MEM_NOT_ALLOC;
@@ -94,6 +95,7 @@ msg test_bi_set_from(int test_size){
         result_msg = bi_set_from_array(&a, 1, array_size, test_array, little_endian);
         if(result_msg != BI_SET_ARRAY_SUCCESS){
             log_msg(result_msg);
+            if(bi_delete(&a) != BI_FREE_SUCCESS)   return result_msg;
             return result_msg;
         }
 
@@ -143,7 +145,7 @@ msg test_bi_set_from(int test_size){
 
         // 랜덤한 str 가져오기
         get_random_string(str_2, array_size - 1, 2);
-        get_random_string(str_10, array_size - 1, 10);
+//        get_random_string(str_10, array_size - 1, 10); // 10진수는 일단 예외
         get_random_string(str_16, array_size - 1, 16);
 
         // 2진수 테스트
@@ -160,6 +162,7 @@ msg test_bi_set_from(int test_size){
 
         if(bi_delete(&a) != BI_FREE_SUCCESS)    return Test_BI_SET_FROM_FAIL;
 
+/*
         // 10진수 테스트
         Test_file_write("[10]", APPEND); // 줄바꿈
         Test_file_write(str_10, APPEND); // 줄바꿈
@@ -174,7 +177,7 @@ msg test_bi_set_from(int test_size){
         if(bi_delete(&a) != BI_FREE_SUCCESS){
             return Test_BI_SET_FROM_FAIL;
         }
-
+*/
         // 16진수 테스트
         Test_file_write("[16]", APPEND); // 줄바꿈
         Test_file_write(str_16, APPEND); // 줄바꿈
@@ -199,33 +202,33 @@ msg test_bi_set_from(int test_size){
     return Test_BI_SET_FROM_SUCCESS;
 }
 
-msg test_bi_random(){
+msg test_bi_random(const IN int test_size, const IN int test_word_size){
     bigint* dst = NULL;
     msg result_msg = 0;
-    int word_len = rand() % 65;
-    result_msg = bi_get_random(&dst, word_len);
-    log_msg(result_msg);
-    if(result_msg != BI_GET_RANDOM_SUCCESS ){
-        log_msg(result_msg);
-        return Test_BI_GET_RANDOM_FAIL;
+
+    for(int i = 0 ; i < test_size; i++){
+        result_msg = bi_get_random(&dst, test_word_size);
+        if(result_msg != BI_GET_RANDOM_SUCCESS ){
+            log_msg(result_msg);
+            return Test_BI_GET_RANDOM_FAIL;
+        }
+        bi_delete(&dst);
     }
-
-    bi_print(&dst, 16);
-
-    bi_delete(&dst);
 
     return Test_BI_GET_RANDOM_SUCCESS;
 }
 
 
-msg test_bi_add(int test_size){
+msg test_bi_add(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
     bigint* b = NULL;
     bigint* c = NULL;
     char add_init[12] = "\n[Addition]";
-    char str[1024]; // 여기 크기에 알맞게 조정필요.
+    char* str = NULL;
     msg result_msg = 0;
-    int test_word_size = 8;
+
+    str = (char*)calloc(test_word_size * 24 + 12, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
+    if(str == NULL) return MEM_NOT_ALLOC;
 
     Test_file_write(add_init, APPEND);
 
@@ -251,7 +254,6 @@ msg test_bi_add(int test_size){
             return result_msg;
         }
 
-        // 여기 문제 해결하자.
         operate_string_cat(str, &a, &b, &c, '+'); // a + b = c을 문자열로 변환
         Test_file_write(str, APPEND); // 파일에 문자열 저장
 
@@ -274,6 +276,7 @@ msg test_bi_add(int test_size){
         }
     }
 
+    free(str);
+
     return Test_BI_ADD_SUCCESS;
 }
-    

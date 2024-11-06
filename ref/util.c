@@ -102,7 +102,6 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
     return BI_SET_ARRAY_SUCCESS;
 }
 
-
 /*************************************************
 * Name:        bi_set_from_string
 *
@@ -114,9 +113,9 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
 **************************************************/
 msg bi_set_from_string(OUT bigint** dst, IN char* int_str, const IN int base){
     msg result_msg = 0;
-    int sign = 0, word_idx = 0;
-    word word_len = 0;
-    dword q = 0;
+    int sign = 0, a_idx = 0, digit = 0, word_len = 0, block_size = 0, word_idx = 0;
+    int str_len = strlen(int_str);
+    word temp = 0;
 
     // sign bit check
     if(int_str[0] == '-'){
@@ -127,19 +126,22 @@ msg bi_set_from_string(OUT bigint** dst, IN char* int_str, const IN int base){
     // extract word length
     switch (base) {
         case 2:
-            word_len = (strlen(int_str) + 31) / 32;
+            word_len = (str_len + 31) / 32;
+            block_size = WORD_BITS;
             break;
         case 10:
-            word_len = (strlen(int_str) + 9) / 10;
+//            word_len = (str_len + 9) / 10;
             break;
         case 16:
-            word_len = (strlen(int_str) + 7) / 8;
+            word_len = (str_len + 7) / 8;
+            block_size = WORD_BITS / 4;
             break;
         default:
             printf("%d base is not supported\n", base);
             return BI_SET_STRING_FAIL;
     }
 
+    a_idx = (str_len % block_size) + block_size * (word_len - 2); // a_idx 값 뒤의 4byte부터 가져오기
     // memory allocate
     result_msg = bi_new(dst, word_len);
     if(result_msg != BI_ALLOC_SUCCESS){
@@ -148,83 +150,166 @@ msg bi_set_from_string(OUT bigint** dst, IN char* int_str, const IN int base){
     }
     // sign bit set
     (*dst)->sign = sign;
-    do{
-        result_msg = String_Divide(int_str, ((*dst)->a) + (word_idx++), base);
-        if(result_msg != DIVIDE_STRING_SUCCESS){
-            log_msg(result_msg);
-            return result_msg;
+
+    // 하위 WORD_BITS만큼씩 끊어서 저장
+    while(word_len > 1){
+        temp = 0;
+        for(int i = 0; i < block_size; i++){
+            digit = char_to_int(int_str[a_idx++]);
+            temp = temp * base + digit;
         }
-        q = string_to_int(int_str, base);
-    }while(q > 0xFFFFFFFF);
-    if(q != 0)
-        (*dst)->a[word_idx++] = q;
-
-    result_msg = bi_refine(*dst);
-    if(result_msg != BI_SET_REFINE_SUCCESS){
-        log_msg(result_msg);
-        return result_msg;
+        (*dst)->a[word_idx++] = temp;
+        word_len--;
+        a_idx = a_idx - 2 * block_size;
     }
 
-        return BI_SET_STRING_SUCCESS;
-}
-
-/*************************************************
-* Name:        String_Divide
-*
-* Description: Divide string to word custom to base 10
-*
-* Arguments:   - char* int_str: string of bigint and return quotient
-*              - word* r: return remainder
-*              - int base: base of string (2, 10, 16)
-**************************************************/
-// 이 함수는 동작되기는 하지만 다시 살펴볼 필요가 있음
-msg String_Divide(OUT char* int_str, IN word* a, const IN int base){
-    int q_idx = 0, digit = 0, a_idx = 0;
-    dword temp = 0;
-    char* q = NULL;
-
-    q = (char*)calloc(strlen(int_str) + 1, sizeof(char));
-    if(q == NULL){
-        return BI_ALLOC_FAIL;
-    }
-
-    for (int i = 0; int_str[i] != '\0'; i++) {
+    // 상위 나머지 부분 저장
+    temp = 0;
+    a_idx += block_size;
+    for(int i = 0; i < a_idx ; i++){
         digit = char_to_int(int_str[i]);
-        if(digit == -1){
-            printf("Invalid character\n");
-            return DIVIDE_STRING_FAIL;
-        }
-
         temp = temp * base + digit;
-        if(temp > 0xFFFFFFFF){
-            switch (base) {
-                case 2:
-                    *(a+(a_idx++)) = (word)(temp >> 1);
-                    temp = temp & 0x1;
-                    break;
-                case 10:
-                    int_to_char((word)(temp >> WORD_BITS), q, q_idx++);
-                    temp = temp % 0x100000000; // 나머지 가져오기
-                    break;
-                case 16:
-                    *(a+(a_idx++)) = (word)(temp >> 4);
-                    temp = temp & 0xF;
-                    break;
-                default:
-                    printf("%d base is not supported\n", base);
-                    return DIVIDE_STRING_FAIL;
-            }
-        }
     }
-    memset(int_str, '0', strlen(int_str));
-    strncpy(int_str, q, strlen(q));
-    int_str[strlen(q)] = '\0';
-    *(a+(a_idx)) = (word)temp;
+    (*dst)->a[word_idx++] = temp;
 
-    free(q);
-
-    return DIVIDE_STRING_SUCCESS;
+    return BI_SET_STRING_SUCCESS;
 }
+
+
+
+///*************************************************
+//* Name:        bi_set_from_string
+//*
+//* Description: Set bigint struct from string
+//*
+//* Arguments:   - bigint** dst: pointer to bigint struct
+//*              - char* int_str: string of bigint
+//*              - int base: base of string (2, 10, 16)
+//**************************************************/
+//msg bi_set_from_string(OUT bigint** dst, IN char* int_str, const IN int base){
+//    msg result_msg = 0;
+//    int sign = 0, word_idx = 0;
+//    word word_len = 0;
+//    dword q = 0;
+//
+//    // sign bit check
+//    if(int_str[0] == '-'){
+//        sign = 1;
+//        int_str++;
+//    }
+//
+//    // extract word length
+//    switch (base) {
+//        case 2:
+//            word_len = (strlen(int_str) + 31) / 32;
+//            break;
+//        case 10:
+//            word_len = (strlen(int_str) + 9) / 10;
+//            break;
+//        case 16:
+//            word_len = (strlen(int_str) + 7) / 8;
+//            break;
+//        default:
+//            printf("%d base is not supported\n", base);
+//            return BI_SET_STRING_FAIL;
+//    }
+//
+//    // memory allocate
+//    result_msg = bi_new(dst, word_len);
+//    if(result_msg != BI_ALLOC_SUCCESS){
+//        log_msg(result_msg);
+//        return result_msg;
+//    }
+//    // sign bit set
+//    (*dst)->sign = sign;
+//    do{
+//        result_msg = String_Divide(int_str, dst, word_idx++, base);
+//        if(result_msg != DIVIDE_STRING_SUCCESS){
+//            log_msg(result_msg);
+//            return result_msg;
+//        }
+//        q = string_to_int(int_str, base);
+//    }while(q > 0xFFFFFFFF);
+//    if(q != 0)
+//        (*dst)->a[word_idx++] = q;
+//
+//    result_msg = bi_refine(*dst);
+//    if(result_msg != BI_SET_REFINE_SUCCESS){
+//        log_msg(result_msg);
+//        return result_msg;
+//    }
+//
+//        return BI_SET_STRING_SUCCESS;
+//}
+//
+///*************************************************
+//* Name:        String_Divide
+//*
+//* Description: Divide string to word custom to base 10
+//*
+//* Arguments:   - char* int_str: string of bigint and return quotient
+//*              - word* r: return remainder
+//*              - int base: base of string (2, 10, 16)
+//**************************************************/
+//// 이 함수는 동작되기는 하지만 다시 살펴볼 필요가 있음
+//msg String_Divide(OUT char* int_str, IN bigint** dst, IN int word_idx, const IN int base){
+//    int q_idx = 0, digit = 0, block_idx = ();
+//    int word_len = (*dst)->word_len - 1;
+//    dword temp = 0;
+//    char* q = NULL;
+//
+//    q = (char*)calloc(strlen(int_str) + 1, sizeof(char));
+//    if(q == NULL){
+//        return BI_ALLOC_FAIL;
+//    }
+//
+//    if(base == 2)
+//        printf("0x%llx, %d\n", temp, a_idx);
+//
+//    for (int i = 0; int_str[i] != '\0'; i++) {
+//        digit = char_to_int(int_str[i]);
+//        if(digit == -1){
+//            printf("Invalid character\n");
+//            return DIVIDE_STRING_FAIL;
+//        }
+//
+//        temp = temp * base + digit;
+//        if(base == 2)
+//                    printf("%x, %x\n", digit, temp);
+//        if(temp > 0xFFFFFFFF){
+//            switch (base) {
+//                case 2:
+//                    int a_idx = (word_len % WORD_BITS) + WORD_BITS * (word_len / WORD_BITS) - 1;
+//                    printf("0x%llx, %d\n", temp, a_idx);
+//                    *(((*dst)->a)+a_idx--) = (word)(temp >> 1);
+//                    temp = temp & 0x1;
+//                    break;
+//                case 10:
+//                    int_to_char((word)(temp >> WORD_BITS), q, q_idx++);
+//                    temp = temp % 0x100000000; // 나머지 가져오기
+//                    break;
+//                case 16:
+//                    *(((*dst)->a)+a_idx--) = (word)(temp >> 4);
+//                    temp = temp & 0xF;
+//                    break;
+//                default:
+//                    printf("%d base is not supported\n", base);
+//                    free(q);
+//                    return DIVIDE_STRING_FAIL;
+//            }
+//        }
+//    }
+//    memset(int_str, '0', strlen(int_str));
+//    strncpy(int_str, q, strlen(q));
+//    int_str[strlen(q)] = '\0';
+//    (*dst)->a[a_idx] = (word)temp;
+//    (*dst)->a[word_idx] = (word)temp;
+////    *(a+(a_idx)) = (word)temp;
+//
+//    free(q);
+//
+//    return DIVIDE_STRING_SUCCESS;
+//}
 
 /*************************************************
 * Name:        bi_expand

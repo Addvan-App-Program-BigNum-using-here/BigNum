@@ -41,14 +41,14 @@ msg test_bi_set_from(int test_size);
  *
  * @return msg
  */
-msg test_bi_random();
+msg test_bi_random(const IN int test_size, const IN int test_word_size);
 
 /**
- * @brief Test bigint structure operation
+ * @brief Test bigint structure Add operation
  *
  * @return msg
  */
-msg test_bi_add(int test_size);
+msg test_bi_add(const IN int test_size, const IN int test_word_size);
 
 
 #endif // UTIL_TEST_H

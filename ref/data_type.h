@@ -69,4 +69,7 @@ int bigint_to_hex(IN bigint** src, OUT char* str);
 // 여기 주석 추가하기
 void operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigint** c, IN char operate);
 
+// 여기 주석 추가하기
+//char* String_refine(const IN char* str);
+
 #endif // DATA_TYPE_H

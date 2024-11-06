@@ -73,7 +73,7 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base);
  * @param r return remainder
  * @param base base of string (2, 10, 16)
  */
-msg String_Divide(OUT char* int_str, IN word* a, const IN int base);
+msg String_Divide(OUT char* int_str, IN bigint **dst, IN int word_idx, const IN int base);
 
 /**
  * @brief Print bigint struct

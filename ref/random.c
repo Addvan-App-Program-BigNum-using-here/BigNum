@@ -65,6 +65,8 @@ msg array_random(OUT word* dst, const IN int word_len){
 *              - int base : base of return String
 **************************************************/
 msg get_random_string(OUT char* str, IN int str_len, IN int base){
+    int str_idx = str_len;
+// 여기도 str 메모리 측면에서 문제가 있을 수 있음
     // 초기화 -> DRBG를 적용해야 가능
 //    srand(time(NULL));
 
@@ -93,9 +95,11 @@ msg get_random_string(OUT char* str, IN int str_len, IN int base){
             return RAND_STRING_INVALID;
     }
 
-    for(int i = 0; i < str_len; i++) {
+    while(str_idx > 0) {
         int random_index = rand() % chars_len;
-        str[i] = chars[random_index];
+        if(strncmp(&chars[random_index], "0", 1) == 0 && str_idx == str_len)    continue;
+        str[str_idx - 1] = chars[random_index];
+        str_idx--;
     }
 
     str[str_len] = '\0';

@@ -75,6 +75,46 @@ int bigint_to_hex(IN bigint** src, OUT char* str) {
     return idx;
 }
 
+
+///*************************************************
+//* Name:        String_refine
+//*
+//* Description: Remove leading zeros from string
+//*
+//* Arguments:   - const char* str: string
+//**************************************************/
+//char* String_refine(const IN char* str) {
+//    if (str == NULL || str[0] == '\0')  return NULL;
+//    int allZero = 1;
+//    for (int i = 0; str[i] != '\0'; i++) {
+//        if (str[i] != '0') {
+//            allZero = 0;
+//            break;
+//        }
+//    }
+//    if (allZero) {
+//        char* result = (char*)malloc(2);  // "0" + null terminator
+//        if (result) {
+//            result[0] = '0';
+//            result[1] = '\0';
+//        }
+//        return result;
+//    }
+//
+//    int startIndex = 0;
+//    while (binary[startIndex] == '0') {
+//        startIndex++;
+//    }
+//
+//    int newLength = strlen(binary) - startIndex;
+//    char* result = (char*)malloc(newLength + 1);
+//    if (result == NULL) return NULL;
+//
+//    strncpy(result, str + startIndex, newLength + 1);
+//    return result;
+//}
+
+
 /*************************************************
 * Name:        operate_string_cat
 *
