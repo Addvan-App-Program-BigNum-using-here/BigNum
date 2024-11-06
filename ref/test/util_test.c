@@ -33,6 +33,8 @@ int main(){
         return Test_BI_ADD_FAIL;
     }
 
+    Test_file_write(TEST_end, APPEND);
+
     // Sage test
     fp = popen("sage ../../sage_test/test.sage >/dev/null 2>&1", "r");
     if (fp == NULL) {
@@ -48,8 +50,6 @@ int main(){
     } else {
         printf("python script exited with status %d\n", status);
     }
-
-    Test_file_write(TEST_end, APPEND);
 
     return 0;
 }
@@ -223,7 +223,7 @@ msg test_bi_add(int test_size){
     bigint* b = NULL;
     bigint* c = NULL;
     char add_init[12] = "\n[Addition]";
-    char str[1024];
+    char str[1024]; // 여기 크기에 알맞게 조정필요.
     msg result_msg = 0;
     int test_word_size = 8;
 
@@ -251,6 +251,7 @@ msg test_bi_add(int test_size){
             return result_msg;
         }
 
+        // 여기 문제 해결하자.
         operate_string_cat(str, &a, &b, &c, '+'); // a + b = c을 문자열로 변환
         Test_file_write(str, APPEND); // 파일에 문자열 저장
 
