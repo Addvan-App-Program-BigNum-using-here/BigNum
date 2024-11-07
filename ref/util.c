@@ -362,8 +362,11 @@ msg bi_expand(OUT bigint** dst, const IN int word_len, const IN word data){
 int bi_compare(IN bigint** a, IN bigint** b){
     if(*a == NULL || *b == NULL)    return BI_NOT_USING;
 
-    if((*a)->sign > (*b)->sign) return 1; // a 양수, b 음수
-    if((*a)->sign < (*b)->sign) return -1; // a 음수, b 양수
+    if(bi_refine(*a) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
+    if(bi_refine(*b) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
+
+    if((*a)->sign == 0 && (*b)->sign == 1) return 1; // a 양수, b 음수
+    if((*a)->sign == 1 && (*b)->sign == 0) return -1; // a 음수, b 양수
     if((*a)->sign == 1 && (*b)->sign == 1){ // 둘다 음수인 경우
         if((*a)->word_len > (*b)->word_len) return -1; // a < b
         if((*a)->word_len < (*b)->word_len) return 1; // a > b
@@ -412,7 +415,7 @@ int bi_compare_abs(IN bigint** a, IN bigint** b){
 /*************************************************
 * Name:        bi_refine
 *
-* Description: unnessesary zero value delete
+* Description: unnessesary zero value delete, if bi is zero then sign is 0, word_len is 1
 *
 * Arguments:   - bigint* src: pointer to bigint struct
 **************************************************/

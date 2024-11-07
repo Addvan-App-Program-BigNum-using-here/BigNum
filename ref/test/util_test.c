@@ -248,11 +248,6 @@ msg test_bi_add(const IN int test_size, const IN int test_word_size){
             return result_msg;
         }
 
-        result_msg = bi_get_random(&c, test_word_size);
-        if(result_msg == BI_ALLOC_FAIL || c->word_len != test_word_size){
-            return result_msg;
-        }
-
         result_msg = bi_add(&c, &a, &b);
         if(result_msg != BI_ADD_SUCCESS){
             log_msg(result_msg);
@@ -305,11 +300,6 @@ msg test_bi_sub(const IN int test_size, const IN int test_word_size){
 
         result_msg = bi_get_random(&b, test_word_size);
         if(result_msg == BI_ALLOC_FAIL || b->word_len != test_word_size){
-            return result_msg;
-        }
-
-        result_msg = bi_get_random(&c, test_word_size);
-        if(result_msg == BI_ALLOC_FAIL || c->word_len != test_word_size){
             return result_msg;
         }
 
