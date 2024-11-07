@@ -48,22 +48,55 @@ def string_to_hex(p, string, result, base):
         return false, hex(hex_string)
     return true, hex(hex_string)
 
+def test_bi_set_from(f, p, base):
+    count = 0
+    falie_count = 0
+    p.write(f'[{base}진수]')
+    while True:
+        string = f.readline()
+        result = f.readline()
+        if string == '\n':
+            break
+        result_bol, tmp = string_to_hex(p, string, result, base)
+        count += 1
+        if result_bol == false:
+            falie_count += 1
+            p.write(string)
+            p.write(f"올바른 값 : {tmp}\n")
+            p.write(f"제시 값   : {result}")
+            p.write('\n')
+    p.write(f"테스트 케이스 : {count}\n성공 케이스 : {count - falie_count}\n실패 케이스 : {falie_count}\n")
+
 def test_bi_set_from(f, p):
-    p.write('[BI SET FROM]\n')
+    p.write('\n[BI SET FROM]\n')
     while True:
         biset = f.readline()
+        count = 0
+        falie_count = 0
+        if '[2]' in biset:
+            base = 2
+            test_bi_set_from(f, p, base)
+        elif '[10]' in biset:
+            base = 10
+            test_bi_set_from(f, p, base)
+        elif '[16]' in biset:
+            base = 16
+            test_bi_set_from(f, p, base)
         if '[2]' in biset or '[10]' in biset or '[16]' in biset:
             p.write(biset)
             base = re.findall(r'\d+', biset)[0]
             string = f.readline()
             result = f.readline()
             result_bol, tmp = string_to_hex(p, string, result, int(base))
+            count += 1
             if result_bol == false:
+                falie_count += 1
                 p.write(string)
                 p.write(f"올바른 값 : {tmp}\n")
                 p.write(f"제시 값   : {result}")
                 p.write('\n')
         elif biset == '\n':
+            p.write(f"테스트 케이스 : {count}\n성공 케이스 : {count - falie_count}\n실패 케이스 : {falie_count}\n")
             break
 
 def bi_test(f):

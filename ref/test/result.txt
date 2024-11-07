@@ -1,7 +1,11 @@
 [Test result]
+
 [BI SET FROM]
 [2]
 [16]
+테스트 케이스 : 0
+성공 케이스 : 0
+실패 케이스 : 0
 [Addition]
 [Subtraction]
 [End Test]
