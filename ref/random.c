@@ -17,11 +17,18 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
         return result_msg;
     }
 
-//    (*dst)->sign = rand() & 1;
-    (*dst)->sign = 0;
-    result_msg = array_random((*dst)->a, word_len);
+    // if(RAND_status() == 0){
+    //     RAND_poll();
+    //     RAND_status();
+    // }
+    if(RAND_bytes((byte*)&(*dst)->sign, sizeof((*dst)->sign)) != 1){
+        return BI_GET_RANDOM_FAIL;
+    }
+    (*dst)->sign = (*dst)->sign & 1;
+
+    result_msg = array_rand((*dst)->a, word_len);
     if(result_msg != GEN_RANDOM_SUCCESS)
-        return GEN_RANDOM_FAIL;
+        return result_msg;
 
     result_msg = bi_refine(*dst);
     if(result_msg != BI_SET_REFINE_SUCCESS){
@@ -41,14 +48,11 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 * Arguments:   - word* dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
 **************************************************/
-msg array_random(OUT word* dst, const IN int word_len){
-    byte* p = (byte*) dst;
-    int cnt = word_len * (sizeof(word) / sizeof(byte));
-    while (cnt > 0)
-    {
-        *p = rand() & 0xff;
-        p++;
-        cnt--;
+msg array_rand(word* dst, int word_len){
+    int byte_len = 0;
+    byte_len = word_len * (sizeof(word) / sizeof(byte)); 
+    if (RAND_bytes((byte*)dst, byte_len) != 1) {
+        return GEN_RANDOM_FAIL;
     }
 
     return GEN_RANDOM_SUCCESS;

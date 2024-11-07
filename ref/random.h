@@ -4,6 +4,7 @@
 #include "msg_control.h"
 #include "util.h"
 #include <stdio.h>
+#include <openssl/rand.h>
 
 /**
  * @brief New allocate bigint struct and fill it with random values
