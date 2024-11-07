@@ -16,30 +16,35 @@ int main(){
         return Test_FAIL;
     }
 
+    Test_file_write(seperator, APPEND); // 구분자
     result_msg = test_bi_set_from(test_size);
     log_msg(result_msg);
     if(result_msg != Test_BI_SET_FROM_SUCCESS){
         return Test_FAIL;
     }
 
+    Test_file_write(seperator, APPEND); // 구분자
     result_msg = test_bi_random(test_size, test_word_size);
     log_msg(result_msg);
     if(result_msg != Test_BI_GET_RANDOM_SUCCESS){
         return Test_BI_GET_RANDOM_FAIL;
     }
 
+    Test_file_write(seperator, APPEND); // 구분자
     result_msg = test_bi_add(test_size, test_word_size);
     log_msg(result_msg);
     if(result_msg != Test_BI_ADD_SUCCESS){
         return Test_BI_ADD_FAIL;
     }
 
+    Test_file_write(seperator, APPEND); // 구분자
     result_msg = test_bi_sub(test_size, test_word_size);
     log_msg(result_msg);
     if(result_msg != Test_BI_SUB_SUCCESS){
         return Test_BI_SUB_FAIL;
     }
 
+    Test_file_write(seperator, APPEND); // 구분자
     Test_file_write(TEST_end, APPEND);
 
     // Sage test
@@ -168,9 +173,11 @@ msg test_bi_set_from(int test_size){
 
         if(bi_delete(&a) != BI_FREE_SUCCESS)    return Test_BI_SET_FROM_FAIL;
 
-/*
+        Test_file_write(seperator, APPEND); // 구분자
+
         // 10진수 테스트
         Test_file_write("[10]", APPEND); // 줄바꿈
+/*
         Test_file_write(str_10, APPEND); // 줄바꿈
         result_msg = bi_set_from_string(&a, str_10, 10); // 10진수 테스트
         if(result_msg != BI_SET_STRING_SUCCESS){
@@ -184,6 +191,8 @@ msg test_bi_set_from(int test_size){
             return Test_BI_SET_FROM_FAIL;
         }
 */
+        Test_file_write(seperator, APPEND); // 구분자
+
         // 16진수 테스트
         Test_file_write("[16]", APPEND); // 줄바꿈
         Test_file_write(str_16, APPEND); // 줄바꿈
@@ -229,7 +238,7 @@ msg test_bi_add(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
     bigint* b = NULL;
     bigint* c = NULL;
-    char add_init[12] = "\n[Addition]";
+    char add_init[12] = "[Addition]";
     char* str = NULL;
     msg result_msg = 0;
 
@@ -283,7 +292,7 @@ msg test_bi_sub(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
     bigint* b = NULL;
     bigint* c = NULL;
-    char sub_init[20] = "\n[Subtraction]";
+    char sub_init[20] = "[Subtraction]";
     char* str = NULL;
     msg result_msg = 0;
 

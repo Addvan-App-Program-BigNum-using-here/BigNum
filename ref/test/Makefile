@@ -26,7 +26,7 @@ endif
 # test 함수 실행
 test : $(TEST_TARGET)
 	leaks --atExit -- ./$(TEST_TARGET)
-	cat ./result.txt
+	cat ./main_result.txt
 
 rerun: rebuild run
 retest: rebuild test
@@ -35,7 +35,7 @@ rebuild: clean all
 clean:
 	rm -f $(TEST_TARGET)
 	rm -f ../../sage_test/test.sage.py
-	rm -f ./result.txt
-	touch ./result.txt
+	rm -f ./main_result.txt
+	touch ./main_result.txt
 
 .PHONY: all clean run rebuild

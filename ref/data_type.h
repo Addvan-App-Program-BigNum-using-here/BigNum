@@ -12,6 +12,7 @@
 
 #define OUT
 #define IN
+#define seperator "-----------------------------------------"
 
 typedef uint8_t byte;             ///< byte type
 typedef uint32_t msg;             ///< Error message control variation
