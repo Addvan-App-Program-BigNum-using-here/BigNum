@@ -133,7 +133,6 @@ void operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigin
     idx += bigint_to_hex(b, &result[idx]);
     idx += sprintf(&result[idx], " = ");
     idx += bigint_to_hex(c, &result[idx]);
-    sprintf(&result[idx], "\n\n");
 }
 
 

@@ -21,16 +21,16 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
         if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     }
 
-    if(a->sign == 0 && b->sign == 1){ // a - b
+    if((*a)->sign == 0 && (*b)->sign == 1){ // a - b
         (*b)->sign = 0;
         return bi_sub(dst, a, b); //  a - b
     }
-    if(a->sign == 1 && b->sign == 0){ // -a + b = b - a
+    if((*a)->sign == 1 && (*b)->sign == 0){ // -a + b = b - a
         (*a)->sign = 0;
         if(bi_sub(dst, b, a) != BI_SUB_SUCCESS)    return BI_SUB_FAIL; // b - a
         return BI_SUB_SUCCESS;
     }
-    if(a->sign == 1 && b->sign == 1){ // -a + -b = -(a + b)
+    if((*a)->sign == 1 && (*b)->sign == 1){ // -a + -b = -(a + b)
         (*a)->sign = 0;
         (*b)->sign = 0;
         if(bi_add(dst, a, b) != BI_ADD_SUCCESS)    return BI_ADD_FAIL; // a + b
