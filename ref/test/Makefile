@@ -11,23 +11,33 @@ ifeq ($(OS),Windows_NT)
     TEST_TARGET = util_test.exe
 else
     UNAME_S := $(shell uname -s)
+    UNAME_M := $(shell uname -m)
     ifeq ($(UNAME_S),Darwin)
         # Mac settings
-        CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
-        LDFLAGS = -g -fsanitize=address -arch arm64
-        INCLUDES = -I..
-        TEST_TARGET = util_test
+        ifeq ($(UNAME_M),x86_64)
+            CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
+            LDFLAGS = -g -fsanitize=address -arch x86_64
+        else ifeq ($(UNAME_M),arm64)
+            CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
+            LDFLAGS = -g -fsanitize=address -arch arm64
+        endif
+    else
+        # Linux settings (assuming arm64 architecture)
+        CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
+        LDFLAGS = -g -fsanitize=address
     endif
+    INCLUDES = -I..
+    TEST_TARGET = util_test
 endif
 
-all: $(TARGET)
+all: $(TEST_TARGET)
 
 $(TEST_TARGET): $(TEST_SRC)
 	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_SRC) -o $(TEST_TARGET)
 
 ifeq ($(OS),Windows_NT)
-run: $(TARGET)
-	./$(TARGET)
+run: $(TEST_TARGET)
+	./$(TEST_TARGET)
 else
 run: $(TEST_TARGET)
 	leaks --atExit --  ./$(TEST_TARGET)
@@ -44,9 +54,9 @@ rebuild: clean all
 clean:
 	@echo "Cleaning up..."
 ifeq ($(OS),Windows_NT)
-	del /F $(TARGET) $(OBJS)
+	del /F $(TEST_TARGET)
 else
-	rm -f $(TARGET) $(OBJS)
+	rm -f $(TEST_TARGET)
 	rm -f ../../sage_test/test.sage.py
 	rm -f ./test.txt
 	touch ./test.txt
