@@ -1,77 +1,160 @@
 #include "random.h"
 
-msg bi_get_random(bigint** dst, int word_len){
-    msg result_msg = 0;
-    printf("%d\n", word_len);
-	result_msg = bi_new(dst, word_len);
-    if (result_msg != BI_ALLOC_SUCCESS){
-        print_log(result_msg);
+/*************************************************
+* Name:        bi_get_random
+*
+* Description: New allocate bigint struct and fill it with random values
+*
+* Arguments:   - bigint** dst: pointer to bigint struct
+*              - int word_len: length of bigint struct
+**************************************************/
+msg bi_get_random(OUT bigint** dst, const IN int word_len) {
+    int result_msg;
+
+    result_msg = bi_new(dst, word_len);
+    if (result_msg != BI_ALLOC_SUCCESS) {
+        log_msg(result_msg);
         return result_msg;
     }
 
-    if (check_seed() != 1){
-        return BI_GET_RANDOM_FAIL; // GET_SEED_FAIL error_msg에 추가?
-    }
-    
-    if(RAND_bytes((byte*)&(*dst)->sign, sizeof((*dst)->sign)) != 1){
-        return BI_GET_RANDOM_FAIL;
-    }
+    result_msg = randombytes(&(*dst)->sign, 1);
+    if(result_msg != GEN_RANDOM_BYTES_SUCCESS)  return result_msg;
+
     (*dst)->sign = (*dst)->sign & 1;
 
-    result_msg = array_rand((*dst)->a, word_len);
-    if(result_msg != GEN_RANDOM_SUCCESS)
-        return result_msg;
+    result_msg = array_random((*dst)->a, word_len);
+    if(result_msg != GEN_RANDOM_SUCCESS)    return result_msg;
 
     result_msg = bi_refine(*dst);
     if(result_msg != BI_SET_REFINE_SUCCESS){
-        print_log(result_msg);
+        log_msg(result_msg);
         return result_msg;
     }
 
     return BI_GET_RANDOM_SUCCESS;
 }
 
+/*************************************************
+* Name:        array_random
+*
+* Description: Fill array with random values
+*
+* Arguments:   - word* dst: pointer to bigint struct
+*              - int word_len: length of bigint struct
+**************************************************/
+msg array_random(word* dst, int word_len) {
+    msg result_msg = 0;
+    int byte_len = word_len * (sizeof(word) / sizeof(byte));
 
-msg array_rand(word* dst, int word_len){
-    int byte_len = 0;
-    byte_len = word_len * (sizeof(word) / sizeof(byte)); 
-    if (RAND_bytes((byte*)dst, byte_len) != 1) {
-        return GEN_RANDOM_FAIL;
+    if (dst == NULL || word_len <= 0) {
+        return BI_INVALID_LENGTH;
     }
+
+    result_msg = randombytes((byte*)dst, byte_len);
+    if(result_msg != GEN_RANDOM_BYTES_SUCCESS)
+        return result_msg;
 
     return GEN_RANDOM_SUCCESS;
 }
 
-int check_seed(void){
-    if (RAND_status() == 0){
-        unsigned char buf[64];
-        unsigned char hash[SHA256_DIGEST_LENGTH];
-        time_t current_time = time(NULL);  
-        
-        // 프로세스 ID: Windows와 Unix에서 다르게 가져오기
-        #ifdef _WIN32
-        DWORD pid = GetCurrentProcessId();  // Windows API
-        #else
-        pid_t pid = getpid();               // Unix API
-        #endif
 
-        // buf에 현재 시간, 프로세스 ID, 메모리 주소 등을 문자열 형태로 기록
-        snprintf((char *)buf, sizeof(buf), "%ld%ld%p", (long)current_time, (long)pid, &buf);
-        
-        // buf에 기록된 데이터를 SHA-256 해시로 변환하여 고유한 무작위 데이터 생성
-        SHA256(buf, sizeof(buf), hash); // 32byte 출력
-
-        double entropy = sizeof(hash) / 2.0; // 엔트로피 추정량을 보수적으로 절반으로 계산
-        RAND_add(hash, sizeof(hash), entropy);
-
-        if (RAND_status() == 0) {
-            return 0;
-        }
-        else{
-            return 1;
-        }
+/*************************************************
+* Name:        randombytes
+*
+* Description: Fill random value to bytes array
+*
+* Arguments:   - byte* dst: pointer to bigint struct
+*              - int byte_len: length of bigint struct
+**************************************************/
+msg randombytes(IN byte* dst, IN int byte_len) {
+#ifdef _WIN32
+    // Windows 버전
+    HCRYPTPROV hProvider = 0;
+    if (!CryptAcquireContext(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
+        return GEN_RANDOM_BYTES_FAIL;
     }
-    else{
-        return 1;
+
+    if (!CryptGenRandom(hProvider, byte_len, dst)) {
+        CryptReleaseContext(hProvider, 0);
+        return GEN_RANDOM_BYTES_FAIL;
     }
+
+    CryptReleaseContext(hProvider, 0);
+    return GEN_RANDOM_BYTES_SUCCESS;
+#else
+    // Unix 버전 (기존 코드)
+    static int fd = -1;
+    ssize_t ret;
+
+    while(fd == -1) {
+        fd = open("/dev/urandom", O_RDONLY);
+        if(fd == -1 && errno == EINTR)
+            continue;
+        else if(fd == -1)
+            return GEN_RANDOM_BYTES_FAIL;
+    }
+
+    while(byte_len > 0) {
+        ret = read(fd, dst, byte_len);
+        if(ret == -1 && errno == EINTR)
+            continue;
+        else if(ret == -1)
+            return GEN_RANDOM_BYTES_FAIL;
+        dst += ret;
+        byte_len -= ret;
+    }
+
+    return GEN_RANDOM_BYTES_SUCCESS;
+#endif
+}
+/*************************************************
+* Name:        get_random_string
+*
+* Description: Create Random String with given length
+*
+* Arguments:   - char* str: return String
+*              - int str_len : length of return String
+*              - int base : base of return String
+**************************************************/
+msg get_random_string(OUT char* str, IN int str_len, IN int base){
+    int str_idx = str_len;
+    byte temp;
+
+    // 각 진수별 사용할 문자 배열
+    const char binary_chars[] = "01";
+    const char decimal_chars[] = "0123456789";
+    const char hex_chars[] = "0123456789abcdef";
+    const char* chars;
+    int chars_len;
+
+    switch(base) {
+        case 2:
+            chars = binary_chars;
+            chars_len = sizeof(binary_chars) - 1;
+            break;
+        case 10:
+            chars = decimal_chars;
+            chars_len = sizeof(decimal_chars) - 1;
+            break;
+        case 16:
+            chars = hex_chars;
+            chars_len = sizeof(hex_chars) - 1;
+            break;
+        default:
+            str[0] = '\0';
+            return RAND_STRING_INVALID;
+    }
+
+    while(str_idx > 0) {
+        if(randombytes(&temp, 1) != GEN_RANDOM_BYTES_SUCCESS)  return GEN_RANDOM_BYTES_FAIL;
+
+        int random_index = (int)temp % chars_len;
+        if(strncmp(&chars[random_index], "0", 1) == 0 && str_idx == str_len)    continue;
+        str[str_idx - 1] = chars[random_index];
+        str_idx--;
+    }
+
+    str[str_len] = '\0';
+
+    return RAND_STRING_SUCCESS;
 }
