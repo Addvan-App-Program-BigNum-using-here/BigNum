@@ -73,12 +73,16 @@ enum TestMSGCodes {
     Test_BI_GET_RANDOM_FAIL     = MSG_TYPE_TEST | 0x0009,      // Test Bigint 랜덤 할당 실패
     Test_BI_ADD_SUCCESS     = MSG_TYPE_TEST | 0x000A,      // Test Bigint 연산 성공
     Test_BI_ADD_FAIL        = MSG_TYPE_TEST | 0x000B,      // Test Bigint 연산 실패
+    Test_BI_SUB_SUCCESS     = MSG_TYPE_TEST | 0x000C,      // Test Bigint 연산 성공
+    Test_BI_SUB_FAIL        = MSG_TYPE_TEST | 0x000D,      // Test Bigint 연산 실패
     // 추가 테스트 관련 에러 코드...
 };
 
 enum OperateMSGCodes {
     BI_ADD_SUCCESS              = MSG_TYPE_OPERATE | 0x0001,    // Bigint 덧셈 성공
     BI_ADD_FAIL                 = MSG_TYPE_OPERATE | 0x0002,    // Bigint 덧셈 실패
+    BI_SUB_SUCCESS              = MSG_TYPE_OPERATE | 0x0003,    // Bigint 뺄셈 성공
+    BI_SUB_FAIL                 = MSG_TYPE_OPERATE | 0x0004,    // Bigint 뺄셈 실패
     // 추가 연산 관련 에러 코드...
 };
 

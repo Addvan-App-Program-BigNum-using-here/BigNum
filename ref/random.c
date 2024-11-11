@@ -19,11 +19,19 @@ msg bi_get_random(OUT bigint **dst, const IN int word_len)
         return result_msg;
     }
 
-    //    (*dst)->sign = rand() & 1;
-    (*dst)->sign = 0;
-    result_msg = array_random((*dst)->a, word_len);
+    // if(RAND_status() == 0){
+    //     RAND_poll();
+    //     RAND_status();
+    // }
+    if (RAND_bytes((byte *)&(*dst)->sign, sizeof((*dst)->sign)) != 1)
+    {
+        return BI_GET_RANDOM_FAIL;
+    }
+    (*dst)->sign = (*dst)->sign & 1;
+
+    result_msg = array_rand((*dst)->a, word_len);
     if (result_msg != GEN_RANDOM_SUCCESS)
-        return GEN_RANDOM_FAIL;
+        return result_msg;
 
     result_msg = bi_refine(*dst);
     if (result_msg != BI_SET_REFINE_SUCCESS)
@@ -43,15 +51,13 @@ msg bi_get_random(OUT bigint **dst, const IN int word_len)
  * Arguments:   - word* dst: pointer to bigint struct
  *              - int word_len: length of bigint struct
  **************************************************/
-msg array_random(OUT word *dst, const IN int word_len)
+msg array_rand(word *dst, int word_len)
 {
-    byte *p = (byte *)dst;
-    int cnt = word_len * (sizeof(word) / sizeof(byte));
-    while (cnt > 0)
+    int byte_len = 0;
+    byte_len = word_len * (sizeof(word) / sizeof(byte));
+    if (RAND_bytes((byte *)dst, byte_len) != 1)
     {
-        *p = rand() & 0xff;
-        p++;
-        cnt--;
+        return GEN_RANDOM_FAIL;
     }
 
     return GEN_RANDOM_SUCCESS;
@@ -68,6 +74,8 @@ msg array_random(OUT word *dst, const IN int word_len)
  **************************************************/
 msg get_random_string(OUT char *str, IN int str_len, IN int base)
 {
+    int str_idx = str_len;
+    // 여기도 str 메모리 측면에서 문제가 있을 수 있음
     // 초기화 -> DRBG를 적용해야 가능
     //    srand(time(NULL));
 
@@ -97,10 +105,13 @@ msg get_random_string(OUT char *str, IN int str_len, IN int base)
         return RAND_STRING_INVALID;
     }
 
-    for (int i = 0; i < str_len; i++)
+    while (str_idx > 0)
     {
         int random_index = rand() % chars_len;
-        str[i] = chars[random_index];
+        if (strncmp(&chars[random_index], "0", 1) == 0 && str_idx == str_len)
+            continue;
+        str[str_idx - 1] = chars[random_index];
+        str_idx--;
     }
 
     str[str_len] = '\0';

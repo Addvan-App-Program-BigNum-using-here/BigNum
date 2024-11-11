@@ -9,18 +9,28 @@ def addition(add_str):
     return true, tmp
 
 def test_addition(f, p):
+    k = open('./result/result_addition.txt', 'w')
     p.write('[Addition]\n')
+    count = 0
+    false_count = 0
     while True:
         addif = f.readline()
-        if addif == '\n':
+        if "----------" in addif:
             break
+        count += 1
         result, tmp = addition(addif)
         if result == false:
-            p.write(addif)
-            p.write(str(hex(tmp)))
-            p.write('\n')
+            false_count += 1
+            k.write(addif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    if false_count == 0:
+        p.write("************** 테스트 성공 **************\n")
+    else:
+        p.write("!!!!!!!!!!!!!! 테스트 실패 !!!!!!!!!!!!!!\n")
+        p.write(f"실패 개수 : {false_count}\n")
 
-def substraction(sub_str):
+def subtraction(sub_str):
     sub_str = sub_str.split(' ')
     result = int(sub_str[4], 16)
     tmp = int(sub_str[0], 16) - int(sub_str[2], 16)
@@ -29,43 +39,75 @@ def substraction(sub_str):
     return true, tmp
 
 def test_subtraction(f, p):
+    k = open('./result/result_subtraction.txt', 'w')
     p.write('[Subtraction]\n')
+    count = 0
+    false_count = 0
     while True:
         subif = f.readline()
-        if subif == ' ':
+        if "----------" in subif:
             break
+        count += 1
         result, tmp = subtraction(subif)
         if result == false:
-            p.write(subif)
-            p.write(str(hex(tmp)))
-            p.write('\n')
+            false_count += 1
+            k.write(subif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    if false_count == 0:
+        p.write("************** 테스트 성공 **************\n")
+    else:
+        p.write("!!!!!!!!!!!!!! 테스트 실패 !!!!!!!!!!!!!!\n")
+        p.write(f"실패 개수 : {false_count}\n")
+
 
 def string_to_hex(p, string, result, base):
-    hex_string = hex(int(string, base))
-    result = hex(int(result, 16))
+    hex_string = int(string, base)
+    result = int(result, 16)
     if hex_string != result:
-        return false, hex_string
-    return true, hex_string
+        return false, hex(hex_string)
+    return true, hex(hex_string)
+
+def test_bi_set_from_loop(f, p, k, base):
+    count = 0
+    false_count = 0
+    p.write(f'[{base}진수]\n')
+    k.write(f'[{base}진수]\n')
+    while True:
+        string = f.readline()
+        if "----------" in string:
+            break
+        result = f.readline()
+        result_bol, tmp = string_to_hex(p, string, result, base)
+        count += 1
+        if result_bol == false:
+            false_count += 1
+            k.write(string)
+            k.write(f"올바른 값 : {tmp}\n")
+            k.write(f"제시 값   : {result}")
+            k.write('\n')
+    if false_count == 0:
+        p.write("************** 테스트 성공 **************\n")
+    else:
+        p.write("!!!!!!!!!!!!!! 테스트 실패 !!!!!!!!!!!!!!\n")
+        p.write(f"실패 개수 : {false_count}\n")
 
 def test_bi_set_from(f, p):
-    p.write('[BI SET FROM]\n')
+    k = open('./result/result_set_from.txt', 'w')
+    p.write('\n[BI SET FROM]\n')
     while True:
         biset = f.readline()
-        if '[2]' in biset or '[10]' in biset or '[16]' in biset:
-            p.write(biset)
-            base = re.findall(r'\d+', biset)[0]
-            string = f.readline()
-            result = f.readline()
-            result, tmp = string_to_hex(p, string, result, int(base))
-            if result == false:
-                p.write(string)
-                p.write(str(tmp))
-                p.write('\n')
-        elif biset == '\n':
+        if '[2]' in biset:
+            test_bi_set_from_loop(f, p, k, 2)
+        elif '[10]' in biset:
+            test_bi_set_from_loop(f, p, k, 10)
+        elif '[16]' in biset:
+            test_bi_set_from_loop(f, p, k, 16)
+        elif "----------" in biset:
             break
 
 def bi_test(f):
-    with open('./result.txt', 'w') as p:
+    with open('./main_result.txt', 'w') as p:
         p.write('[Test result]\n')
         while True:
             line = f.readline()
