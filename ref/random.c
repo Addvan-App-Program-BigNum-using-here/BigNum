@@ -19,17 +19,13 @@ msg bi_get_random(OUT bigint **dst, const IN int word_len)
         return result_msg;
     }
 
-    // if(RAND_status() == 0){
-    //     RAND_poll();
-    //     RAND_status();
-    // }
     if (RAND_bytes((byte *)&(*dst)->sign, sizeof((*dst)->sign)) != 1)
     {
         return BI_GET_RANDOM_FAIL;
     }
     (*dst)->sign = (*dst)->sign & 1;
 
-    result_msg = array_rand((*dst)->a, word_len);
+    result_msg = array_random((*dst)->a, word_len); // Changed from array_rand to array_random
     if (result_msg != GEN_RANDOM_SUCCESS)
         return result_msg;
 
@@ -51,7 +47,7 @@ msg bi_get_random(OUT bigint **dst, const IN int word_len)
  * Arguments:   - word* dst: pointer to bigint struct
  *              - int word_len: length of bigint struct
  **************************************************/
-msg array_rand(word *dst, int word_len)
+msg array_random(word *dst, int word_len) // Changed from array_rand to array_random
 {
     int byte_len = 0;
     byte_len = word_len * (sizeof(word) / sizeof(byte));
@@ -75,11 +71,6 @@ msg array_rand(word *dst, int word_len)
 msg get_random_string(OUT char *str, IN int str_len, IN int base)
 {
     int str_idx = str_len;
-    // 여기도 str 메모리 측면에서 문제가 있을 수 있음
-    // 초기화 -> DRBG를 적용해야 가능
-    //    srand(time(NULL));
-
-    // 각 진수별 사용할 문자 배열
     const char binary_chars[] = "01";
     const char decimal_chars[] = "0123456789";
     const char hex_chars[] = "0123456789abcdef";

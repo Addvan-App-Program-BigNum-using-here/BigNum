@@ -12,24 +12,23 @@
  * @param dst pointer to bigint struct
  * @param word_len length of bigint struct
  */
-msg bi_get_random(OUT bigint** dst, IN int word_len);
+msg bi_get_random(OUT bigint **dst, IN int word_len);
 
 /**
- * @brief Fill word array with random values using for array_random()
+ * @brief Fill word array with random values
  *
  * @param dst pointer to word array
  * @param word_len length of bigint struct
  */
-msg array_random(OUT word* dst, IN int word_len);
-
+msg array_random(OUT word *dst, IN int word_len); // Changed from array_random to array_random
 
 /**
- * @brief Maek bigint String using for get_random_string()
+ * @brief Make bigint String
  *
  * @param str pointer to char array
  * @param str_len length of char array
  * @param base base of random string
  */
-msg get_random_string(OUT char* str, IN int str_len, IN int base);
+msg get_random_string(OUT char *str, IN int str_len, IN int base);
 
 #endif // RANDOM_H
