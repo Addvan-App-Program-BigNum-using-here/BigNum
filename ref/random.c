@@ -9,11 +9,11 @@
 *              - int word_len: length of bigint struct
 **************************************************/
 msg bi_get_random(OUT bigint** dst, const IN int word_len) {
-	int result_msg;
+    int result_msg;
 
-	result_msg = bi_new(dst, word_len);
-	if (result_msg != BI_ALLOC_SUCCESS) {
-	    log_msg(result_msg);
+    result_msg = bi_new(dst, word_len);
+    if (result_msg != BI_ALLOC_SUCCESS) {
+        log_msg(result_msg);
         return result_msg;
     }
 

@@ -3,14 +3,13 @@ TEST_SRC = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ..
 ifeq ($(OS),Windows_NT)
     # Windows settings
     CC = gcc
-    CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
-    LDFLAGS = -fsanitize=address
+    CFLAGS = -Wall -Wextra -std=c99 -I..
+    LDFLAGS =
     INCLUDES = -I..
     TEST_TARGET = util_test.exe
 else
 	CC = clang
     UNAME_S := $(shell uname -s)
-    UNAME_M := $(shell uname -m)
     ifeq ($(UNAME_S),Darwin)
         # Mac settings
         ifeq ($(UNAME_M),x86_64)
