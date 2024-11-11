@@ -9,11 +9,11 @@
 *              - int word_len: length of bigint struct
 **************************************************/
 msg bi_get_random(OUT bigint** dst, const IN int word_len) {
-	int result_msg;
+    int result_msg;
 
-	result_msg = bi_new(dst, word_len);
-	if (result_msg != BI_ALLOC_SUCCESS) {
-	    log_msg(result_msg);
+    result_msg = bi_new(dst, word_len);
+    if (result_msg != BI_ALLOC_SUCCESS) {
+        log_msg(result_msg);
         return result_msg;
     }
 
@@ -66,9 +66,26 @@ msg array_random(word* dst, int word_len) {
 * Arguments:   - byte* dst: pointer to bigint struct
 *              - int byte_len: length of bigint struct
 **************************************************/
-msg randombytes(IN byte* dst, IN int byte_len){
+msg randombytes(IN byte* dst, IN int byte_len) {
+#ifdef _WIN32
+    // Windows 버전
+    HCRYPTPROV hProvider = 0;
+    if (!CryptAcquireContext(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
+        return GEN_RANDOM_BYTES_FAIL;
+    }
+
+    if (!CryptGenRandom(hProvider, byte_len, dst)) {
+        CryptReleaseContext(hProvider, 0);
+        return GEN_RANDOM_BYTES_FAIL;
+    }
+
+    CryptReleaseContext(hProvider, 0);
+    return GEN_RANDOM_BYTES_SUCCESS;
+#else
+    // Unix 버전 (기존 코드)
     static int fd = -1;
     ssize_t ret;
+
     while(fd == -1) {
         fd = open("/dev/urandom", O_RDONLY);
         if(fd == -1 && errno == EINTR)
@@ -76,6 +93,7 @@ msg randombytes(IN byte* dst, IN int byte_len){
         else if(fd == -1)
             return GEN_RANDOM_BYTES_FAIL;
     }
+
     while(byte_len > 0) {
         ret = read(fd, dst, byte_len);
         if(ret == -1 && errno == EINTR)
@@ -85,9 +103,10 @@ msg randombytes(IN byte* dst, IN int byte_len){
         dst += ret;
         byte_len -= ret;
     }
-    return GEN_RANDOM_BYTES_SUCCESS;
-}
 
+    return GEN_RANDOM_BYTES_SUCCESS;
+#endif
+}
 /*************************************************
 * Name:        get_random_string
 *
