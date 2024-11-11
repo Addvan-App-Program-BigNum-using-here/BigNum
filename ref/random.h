@@ -1,7 +1,15 @@
 #include "error_msg.h"
 #include "util.h"
 #include <stdio.h>
+#include <time.h>
 #include <openssl/rand.h>
+#include <openssl/sha.h>
+#ifdef _WIN32
+#include <windows.h>  // Windows API
+#else
+#include <unistd.h>   // Unix 환경
+#endif
+
 
 /**
  * @brief New allocate bigint struct and fill it with random values
@@ -18,3 +26,8 @@ msg bi_get_random(bigint** dst, int word_len);
  * @param word_len length of bigint struct
  */
 msg array_rand(word* dst, int word_len);
+
+/**
+ * @brief Check seed for using RAND_bytes(). return 1 -> SEED CHECK SUCCESS, return 0 -> SEED CHECK FAIL
+ */
+int check_seed();
