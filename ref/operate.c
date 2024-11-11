@@ -14,7 +14,7 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
     bigint* tmp = NULL;
     byte carry = 0;
     msg result_msg;
-    int max_word_len = 0, sign = 0;
+    int max_word_len = 0;
 
     if(a == NULL || b == NULL)    return MEM_NOT_ALLOC;
     if(dst != NULL){ // NULL이 아닌 경우 삭제
@@ -90,7 +90,6 @@ msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b){
 
     bigint* tmp = NULL;
     byte barrow = bi_compare_abs(a, b) >= 0 ? 0 : 1; // 여기 첫 barrow 수행할 때 a >= b일 때 0, a < b 일 때 1
-    int sign = 0;
 
     if(a == NULL || b == NULL)    return MEM_NOT_ALLOC;
     if(dst != NULL){

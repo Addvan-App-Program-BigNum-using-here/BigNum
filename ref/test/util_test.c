@@ -117,7 +117,7 @@ msg test_bi_set_from(int test_size, int test_word_size){
     char* str_10 = NULL; // 10진수 문자열
     char* str_16 = NULL; // 16진수 문자열
     char FROM_init[20] = "\n[BI SET FROM]";
-    int array_size = 0, word_size = 0;
+    int array_size = 0;
     int result_msg = Test_BI_SET_FROM_SUCCESS;
 
     result_msg = Test_file_write(FROM_init, APPEND);

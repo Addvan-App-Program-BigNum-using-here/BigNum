@@ -5,9 +5,18 @@
 #include "util.h"
 #include <stdio.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <errno.h>
 #include <stdint.h>
+
+#ifdef _WIN32
+    // Windows 시스템용 헤더
+    #include <windows.h>
+    #include <io.h>
+    #include <wincrypt.h>
+#else
+    // Unix 계열(Linux, macOS) 시스템용 헤더
+    #include <unistd.h>
+#endif
 
 /**
  * @brief New allocate bigint struct and fill it with random values
