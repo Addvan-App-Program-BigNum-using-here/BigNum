@@ -1,61 +1,45 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c99
-LDFLAGS = -lcrypto -lssl
+CC = clang
 
-# Source files
-SRCS = util_test.c \
-       ../util.c \
-       ../msg_control.c \
-       ../random.c \
-       ../data_type.c \
-       ../operate.c \
-       ../file_io.c
+TEST_SRC = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ../file_io.c ./util_test.c
 
 # Detect operating system
 ifeq ($(OS),Windows_NT)
     # Windows settings
-    INCLUDES = -I.. -I"C:/msys64/mingw64/include"
-    LIBDIRS = -L"C:/msys64/mingw64/lib"
-    TARGET = util_test.exe
+    CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
+    LDFLAGS = -fsanitize=address
+    INCLUDES = -I..
+    TEST_TARGET = util_test.exe
 else
     UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Darwin)
         # Mac settings
-        INCLUDES = -I.. -I/usr/local/opt/openssl/include
-        LIBDIRS = -L/usr/local/opt/openssl/lib
-        TARGET = util_test
-    else
-        # Linux settings
+        CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
+        LDFLAGS = -g -fsanitize=address -arch arm64
         INCLUDES = -I..
-        LIBDIRS = 
-        TARGET = util_test
+        TEST_TARGET = util_test
     endif
 endif
 
-# Objects are all source files with .c replaced by .o
-OBJS = $(SRCS:.c=.o)
-
 all: $(TARGET)
 
-# Linking
-$(TARGET): $(OBJS)
-	$(CC) $(OBJS) $(LIBDIRS) $(LDFLAGS) -o $@
-
-# Compilation
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(TEST_TARGET): $(TEST_SRC)
+	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_SRC) -o $(TEST_TARGET)
 
 ifeq ($(OS),Windows_NT)
 run: $(TARGET)
 	./$(TARGET)
 else
-run: $(TARGET)
-	leaks --atExit -- ./$(TARGET)
+run: $(TEST_TARGET)
+	leaks --atExit --  ./$(TEST_TARGET)
 endif
 
-test: $(TARGET)
-	leaks --atExit -- ./$(TARGET)
-	cat ./test.txt
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
+	cat ./main_result.txt
+
+rerun: rebuild run
+retest: rebuild test
+rebuild: clean all
 
 clean:
 	@echo "Cleaning up..."
@@ -68,4 +52,4 @@ else
 	touch ./test.txt
 endif
 
-.PHONY: all clean run test
+.PHONY: all clean run rebuild test rerun retest

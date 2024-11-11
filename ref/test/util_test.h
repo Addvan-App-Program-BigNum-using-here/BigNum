@@ -34,7 +34,7 @@ msg test_bi_new_delete();
  *
  * @return int
  */
-msg test_bi_set_from(int test_size);
+msg test_bi_set_from(int test_size, int test_word_size);
 
 /**
  * @brief Test bigint structure set random

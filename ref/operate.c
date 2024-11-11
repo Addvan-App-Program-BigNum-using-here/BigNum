@@ -20,7 +20,7 @@ msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b)
     if (a == NULL || b == NULL)
         return MEM_NOT_ALLOC;
     if (dst != NULL)
-    {
+    { // NULL이 아닌 경우 삭제
         if (bi_delete(dst) != BI_FREE_SUCCESS)
             return BI_FREE_FAIL;
     }
@@ -28,14 +28,16 @@ msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b)
     if ((*a)->sign == 0 && (*b)->sign == 1)
     { // a - b
         (*b)->sign = 0;
-        return bi_sub(dst, a, b); //  a - b
+        if (bi_sub(dst, a, b) != BI_SUB_SUCCESS)
+            return BI_ADD_FAIL; // a - b
+        return BI_ADD_SUCCESS;
     }
     if ((*a)->sign == 1 && (*b)->sign == 0)
     { // -a + b = b - a
         (*a)->sign = 0;
         if (bi_sub(dst, b, a) != BI_SUB_SUCCESS)
             return BI_SUB_FAIL; // b - a
-        return BI_SUB_SUCCESS;
+        return BI_ADD_SUCCESS;
     }
     if ((*a)->sign == 1 && (*b)->sign == 1)
     { // -a + -b = -(a + b)
@@ -60,12 +62,20 @@ msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b)
     }
 
     if (result_msg != BI_SET_ASSIGN_SUCCESS)
-        return BI_SET_ASSIGN_FAIL;
+        return BI_SET_ASSIGN_FAIL; // assign 성공 여부 확인
     if (bi_expand(&tmp, max_word_len, 0) != BI_EXPAND_SUCCESS)
+    {
+        if (bi_delete(&tmp) != BI_FREE_SUCCESS)
+            return BI_FREE_FAIL;
         return BI_EXPAND_FAIL;
+    }
 
     if (bi_new(dst, max_word_len + 1) != BI_ALLOC_SUCCESS)
+    {
+        if (bi_delete(&tmp) != BI_FREE_SUCCESS)
+            return BI_FREE_FAIL;
         return BI_ALLOC_FAIL;
+    }
 
     // 덧셈 연산 수행
     for (int i = 0; i < max_word_len; i++)
@@ -75,9 +85,18 @@ msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b)
     }
     (*dst)->a[max_word_len] = carry;
 
-    bi_delete(&tmp);
-    bi_refine(*dst);
-
+    if (bi_delete(&tmp) != BI_FREE_SUCCESS)
+    {
+        if (bi_delete(dst) != BI_FREE_SUCCESS)
+            return BI_FREE_FAIL;
+        return BI_FREE_FAIL;
+    }
+    if (bi_refine(*dst) != BI_SET_REFINE_SUCCESS)
+    {
+        if (bi_delete(dst) != BI_FREE_SUCCESS)
+            return BI_FREE_FAIL;
+        return BI_SET_REFINE_FAIL;
+    }
     return BI_ADD_SUCCESS;
 }
 
@@ -94,7 +113,7 @@ msg bi_sub(OUT bigint **dst, IN bigint **a, IN bigint **b)
 {
 
     bigint *tmp = NULL;
-    byte barrow = 0; // 여기 첫 barrow 수행할 때 a >= b일 때 0, a < b 일 때 1
+    byte barrow = bi_compare_abs(a, b) >= 0 ? 0 : 1; // 여기 첫 barrow 수행할 때 a >= b일 때 0, a < b 일 때 1
     int sign = 0;
 
     if (a == NULL || b == NULL)
@@ -143,20 +162,37 @@ msg bi_sub(OUT bigint **dst, IN bigint **a, IN bigint **b)
     if (bi_assign(&tmp, b) != BI_SET_ASSIGN_SUCCESS)
         return BI_SET_ASSIGN_FAIL; // b를 tmp에 복사
     if (bi_expand(&tmp, (*a)->word_len, 0) != BI_EXPAND_SUCCESS)
-        return BI_EXPAND_FAIL; // tmp의 길이를 a와 같게 만듦
+    { // tmp의 길이를 a와 같게 만듦
+        if (bi_delete(&tmp) != BI_FREE_SUCCESS)
+            return BI_FREE_FAIL;
+        return BI_EXPAND_FAIL;
+    }
     if (bi_new(dst, (*a)->word_len) != BI_ALLOC_SUCCESS)
-        return BI_ALLOC_FAIL; // 결과값 할당
+    {
+        if (bi_delete(&tmp) != BI_FREE_SUCCESS)
+            return BI_FREE_FAIL;
+        return BI_ALLOC_FAIL;
+    }
 
     // 뺄셈 연산 수행
     for (int i = 0; i < (*a)->word_len; i++)
     {
         (*dst)->a[i] = (word)(barrow * 0xFFFFFFFF - (*b)->a[i] + (*a)->a[i] + 1);
-        // barrow 할 때 a = 0이고 barrow가 1인경우 확인 필요
-        barrow = ((*a)->a[i] < (*b)->a[i] + barrow) ? 1 : 0; // barrow bit 계산
+        barrow = (((*a)->a[i] < (*b)->a[i] + barrow) || ((*b)->a[i] == 0xffffffff && barrow)) ? 1 : 0; // barrow bit 계산
     }
 
-    bi_delete(&tmp);
-    bi_refine(*dst);
+    if (bi_delete(&tmp) != BI_FREE_SUCCESS)
+    {
+        if (bi_delete(dst) != BI_FREE_SUCCESS)
+            return BI_FREE_FAIL;
+        return BI_FREE_FAIL;
+    }
+    if (bi_refine(*dst) != BI_SET_REFINE_SUCCESS)
+    {
+        if (bi_delete(dst) != BI_FREE_SUCCESS)
+            return BI_FREE_FAIL;
+        return BI_SET_REFINE_FAIL;
+    }
     return BI_SUB_SUCCESS;
 }
 

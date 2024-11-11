@@ -19,13 +19,13 @@ msg bi_get_random(OUT bigint **dst, const IN int word_len)
         return result_msg;
     }
 
-    if (RAND_bytes((byte *)&(*dst)->sign, sizeof((*dst)->sign)) != 1)
-    {
-        return BI_GET_RANDOM_FAIL;
-    }
+    result_msg = randombytes(&(*dst)->sign, 1);
+    if (result_msg != GEN_RANDOM_BYTES_SUCCESS)
+        return result_msg;
+
     (*dst)->sign = (*dst)->sign & 1;
 
-    result_msg = array_random((*dst)->a, word_len); // Changed from array_rand to array_random
+    result_msg = array_random((*dst)->a, word_len);
     if (result_msg != GEN_RANDOM_SUCCESS)
         return result_msg;
 
@@ -47,16 +47,54 @@ msg bi_get_random(OUT bigint **dst, const IN int word_len)
  * Arguments:   - word* dst: pointer to bigint struct
  *              - int word_len: length of bigint struct
  **************************************************/
-msg array_random(word *dst, int word_len) // Changed from array_rand to array_random
+msg array_random(word *dst, int word_len)
 {
-    int byte_len = 0;
-    byte_len = word_len * (sizeof(word) / sizeof(byte));
-    if (RAND_bytes((byte *)dst, byte_len) != 1)
+    msg result_msg = 0;
+    int byte_len = word_len * (sizeof(word) / sizeof(byte));
+
+    if (dst == NULL || word_len <= 0)
     {
-        return GEN_RANDOM_FAIL;
+        return BI_INVALID_LENGTH;
     }
 
+    result_msg = randombytes((byte *)dst, byte_len);
+    if (result_msg != GEN_RANDOM_BYTES_SUCCESS)
+        return result_msg;
+
     return GEN_RANDOM_SUCCESS;
+}
+
+/*************************************************
+ * Name:        randombytes
+ *
+ * Description: Fill random value to bytes array
+ *
+ * Arguments:   - byte* dst: pointer to bigint struct
+ *              - int byte_len: length of bigint struct
+ **************************************************/
+msg randombytes(IN byte *dst, IN int byte_len)
+{
+    static int fd = -1;
+    ssize_t ret;
+    while (fd == -1)
+    {
+        fd = open("/dev/urandom", O_RDONLY);
+        if (fd == -1 && errno == EINTR)
+            continue;
+        else if (fd == -1)
+            return GEN_RANDOM_BYTES_FAIL;
+    }
+    while (byte_len > 0)
+    {
+        ret = read(fd, dst, byte_len);
+        if (ret == -1 && errno == EINTR)
+            continue;
+        else if (ret == -1)
+            return GEN_RANDOM_BYTES_FAIL;
+        dst += ret;
+        byte_len -= ret;
+    }
+    return GEN_RANDOM_BYTES_SUCCESS;
 }
 
 /*************************************************
@@ -71,6 +109,9 @@ msg array_random(word *dst, int word_len) // Changed from array_rand to array_ra
 msg get_random_string(OUT char *str, IN int str_len, IN int base)
 {
     int str_idx = str_len;
+    byte temp;
+
+    // 각 진수별 사용할 문자 배열
     const char binary_chars[] = "01";
     const char decimal_chars[] = "0123456789";
     const char hex_chars[] = "0123456789abcdef";
@@ -98,7 +139,10 @@ msg get_random_string(OUT char *str, IN int str_len, IN int base)
 
     while (str_idx > 0)
     {
-        int random_index = rand() % chars_len;
+        if (randombytes(&temp, 1) != GEN_RANDOM_BYTES_SUCCESS)
+            return GEN_RANDOM_BYTES_FAIL;
+
+        int random_index = (int)temp % chars_len;
         if (strncmp(&chars[random_index], "0", 1) == 0 && str_idx == str_len)
             continue;
         str[str_idx - 1] = chars[random_index];

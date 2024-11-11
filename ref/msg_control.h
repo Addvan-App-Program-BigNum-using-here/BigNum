@@ -16,38 +16,47 @@
 // 표준 메시지
 enum StandardMSGCodes
 {
-    SUCCESS = MSG_TYPE_STANDARD | 0x0001, // 성공
-    FAIL = MSG_TYPE_STANDARD | 0x0002,    // 실패
+    SUCCESS = MSG_TYPE_STANDARD | 0x0001,           // 성공
+    FAIL = MSG_TYPE_STANDARD | 0x0002,              // 실패
+    BI_INVALID_LENGTH = MSG_TYPE_STANDARD | 0x0003, // Bigint 길이가 0 이하인 경우
 };
 
 // 메모리 관련 에러
 enum MemoryMSGCodes
 {
-    BI_ALLOC_SUCCESS = MSG_TYPE_MEMORY | 0x0001,      // Bigint 메모리 할당 성공
-    BI_ALLOC_FAIL = MSG_TYPE_MEMORY | 0x0002,         // Bigint 메모리 할당 실패
-    BI_FREE_SUCCESS = MSG_TYPE_MEMORY | 0x0003,       // Bigint 메모리 해제 성공
-    BI_FREE_FAIL = MSG_TYPE_MEMORY | 0x0004,          // Bigint 메모리 해제 실패
-    BI_NOT_USING = MSG_TYPE_MEMORY | 0x0005,          // 해제 시 NULL 체크를 하는데 이전에 사용 이력이 없는 경우
-    MEM_NOT_ALLOC = MSG_TYPE_MEMORY | 0x0006,         // Bigint 구조체가 아닌 다른 동적 할당에서 할당이 안될 경우
-    BI_SET_ARRAY_SUCCESS = MSG_TYPE_MEMORY | 0x0007,  // Bigint 배열 할당 성공
-    BI_SET_ARRAY_FAIL = MSG_TYPE_MEMORY | 0x0008,     // Bigint 배열 할당 실패
-    BI_SET_ASSIGN_SUCCESS = MSG_TYPE_MEMORY | 0x0009, // Bigint Assign 성공
-    BI_SET_ASSIGN_FAIL = MSG_TYPE_MEMORY | 0x000A,    // Bigint Assign 실패
-    BI_SET_REFINE_SUCCESS = MSG_TYPE_MEMORY | 0x000B, // Bigint Refine 성공
-    BI_SET_REFINE_FAIL = MSG_TYPE_MEMORY | 0x000C,    // Bigint Refine 실패
-    BI_EXPAND_SUCCESS = MSG_TYPE_MEMORY | 0x000D,     // Bigint expand 성공
-    BI_EXPAND_FAIL = MSG_TYPE_MEMORY | 0x000E,        // Bigint expand 실패
+    BI_ALLOC_SUCCESS = MSG_TYPE_MEMORY | 0x0001,       // Bigint 메모리 할당 성공
+    BI_ALLOC_FAIL = MSG_TYPE_MEMORY | 0x0002,          // Bigint 메모리 할당 실패
+    BI_FREE_SUCCESS = MSG_TYPE_MEMORY | 0x0003,        // Bigint 메모리 해제 성공
+    BI_FREE_FAIL = MSG_TYPE_MEMORY | 0x0004,           // Bigint 메모리 해제 실패
+    BI_NOT_USING = MSG_TYPE_MEMORY | 0x0005,           // 해제 시 NULL 체크를 하는데 이전에 사용 이력이 없는 경우
+    MEM_NOT_ALLOC = MSG_TYPE_MEMORY | 0x0006,          // Bigint 구조체가 아닌 다른 동적 할당에서 할당이 안될 경우
+    BI_SET_ARRAY_SUCCESS = MSG_TYPE_MEMORY | 0x0007,   // Bigint 배열 할당 성공
+    BI_SET_ARRAY_FAIL = MSG_TYPE_MEMORY | 0x0008,      // Bigint 배열 할당 실패
+    BI_SET_ASSIGN_SUCCESS = MSG_TYPE_MEMORY | 0x0009,  // Bigint Assign 성공
+    BI_SET_ASSIGN_FAIL = MSG_TYPE_MEMORY | 0x000A,     // Bigint Assign 실패
+    BI_SET_REFINE_SUCCESS = MSG_TYPE_MEMORY | 0x000B,  // Bigint Refine 성공
+    BI_SET_REFINE_FAIL = MSG_TYPE_MEMORY | 0x000C,     // Bigint Refine 실패
+    BI_EXPAND_SUCCESS = MSG_TYPE_MEMORY | 0x000D,      // Bigint expand 성공
+    BI_EXPAND_FAIL = MSG_TYPE_MEMORY | 0x000E,         // Bigint expand 실패
+    BI_SET_ARRAY_NOT_MATCH = MSG_TYPE_MEMORY | 0x000F, // Bigint 배열 할당 시 길이가 맞지 않는 경우
     // 추가 메모리 관련 에러 코드...
 };
 
 enum StringMSGCodes
 {
-    DIVIDE_STRING_SUCCESS = MSG_TYPE_STRING | 0x0001, // 10진수 string Bigint 변환 시 문자열 나누기 성공
-    DIVIDE_STRING_FAIL = MSG_TYPE_STRING | 0x0002,    // 10진수 string Bigint 변환 시 문자열 나누기 실패
-    BI_SET_STRING_SUCCESS = MSG_TYPE_STRING | 0x0003, // String to Bigint 성공
-    BI_SET_STRING_FAIL = MSG_TYPE_STRING | 0x0004,    // String to Binint 실패
-    RAND_STRING_SUCCESS = MSG_TYPE_STRING | 0x0005,   // 랜덤 문자열 생성 성공
-    RAND_STRING_INVALID = MSG_TYPE_STRING | 0x0006,   // 랜덤 문자열 생성 시 base가 2, 10이 아닌 경우
+    DIVIDE_STRING_SUCCESS = MSG_TYPE_STRING | 0x0001,    // 10진수 string Bigint 변환 시 문자열 나누기 성공
+    DIVIDE_STRING_FAIL = MSG_TYPE_STRING | 0x0002,       // 10진수 string Bigint 변환 시 문자열 나누기 실패
+    BI_SET_STRING_SUCCESS = MSG_TYPE_STRING | 0x0003,    // String to Bigint 성공
+    BI_SET_STRING_FAIL = MSG_TYPE_STRING | 0x0004,       // String to Binint 실패
+    RAND_STRING_SUCCESS = MSG_TYPE_STRING | 0x0005,      // 랜덤 문자열 생성 성공
+    RAND_STRING_INVALID = MSG_TYPE_STRING | 0x0006,      // 랜덤 문자열 생성 시 base가 2, 10이 아닌 경우
+    BI_TO_HEX_FAIL = MSG_TYPE_STRING | 0x0008,           // Bigint to Hex 실패
+    RAND_BYTE_SUCCESS = MSG_TYPE_STRING | 0x0009,        // 랜덤 바이트 생성 성공
+    RAND_BYTE_FAIL = MSG_TYPE_STRING | 0x000A,           // 랜덤 바이트 생성 실패
+    RAND_INIT_SUCCESS = MSG_TYPE_STRING | 0x000B,        // 랜덤 초기화 성공
+    RAND_INIT_FAIL = MSG_TYPE_STRING | 0x000C,           // 랜덤 초기화 실패
+    GEN_RANDOM_BYTES_SUCCESS = MSG_TYPE_STRING | 0x000D, // 랜덤 바이트 생성 성공
+    GEN_RANDOM_BYTES_FAIL = MSG_TYPE_STRING | 0x000E,    // 랜덤 바이트 생성 실패
     // 추가 문자열 관련 에러 코드...
 };
 
