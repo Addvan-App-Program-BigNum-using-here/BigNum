@@ -10,9 +10,7 @@
 **************************************************/
 msg bi_new(OUT bigint** dst, const IN int word_len){
     if(*dst != NULL){
-        if(bi_delete(dst) != BI_FREE_SUCCESS){
-            return BI_ALLOC_FAIL;
-        }
+        if(bi_delete(dst) != BI_FREE_SUCCESS)   return BI_ALLOC_FAIL;
     }
 
     *dst = (bigint*)calloc(1, sizeof(bigint));
@@ -20,7 +18,11 @@ msg bi_new(OUT bigint** dst, const IN int word_len){
 
     (*dst)->sign = 0;
     (*dst)->a = (word*)calloc(word_len, sizeof(word));
-    if((*dst)->a == NULL)   return BI_ALLOC_FAIL;
+    if((*dst)->a == NULL){
+        free(*dst);
+        *dst = NULL;
+        return BI_ALLOC_FAIL;
+    }
 
     (*dst)->word_len = word_len;
 
@@ -69,24 +71,19 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
     int idx = endian ? 1 : -1;
 
     result_msg = bi_new(dst, word_len);
-    if(result_msg == BI_ALLOC_FAIL){
+    if(result_msg != BI_ALLOC_SUCCESS){
         log_msg(result_msg);
         return result_msg;
     }
 
-    if(dst == NULL){
-        return MEM_NOT_ALLOC;
-    }
+    if(dst == NULL) return MEM_NOT_ALLOC;
 
     (*dst)->sign = sign;
     for(int i = 0; i < word_len; i++){
         if(data[endian_idx] > 0xFFFFFFFF){
             printf("DATA_OVERFLOW\n");
             result_msg = bi_delete(dst);
-            if(result_msg != BI_FREE_SUCCESS){
-                log_msg(result_msg);
-                return result_msg;
-            }
+            if(result_msg != BI_FREE_SUCCESS)   return result_msg;
             return BI_SET_ARRAY_FAIL;
         }
         (*dst)->a[i] = data[endian_idx];
@@ -94,10 +91,7 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
     }
 
     result_msg = bi_refine(*dst);
-    if(result_msg != BI_SET_REFINE_SUCCESS){
-        log_msg(result_msg);
-        return result_msg;
-    }
+    if(result_msg != BI_SET_REFINE_SUCCESS) return result_msg;
 
     return BI_SET_ARRAY_SUCCESS;
 }
@@ -326,25 +320,24 @@ msg bi_expand(OUT bigint** dst, const IN int word_len, const IN word data){
     // dst가 NULL인 경우 새로 할당해서 data로 채워주기
     if(*dst == NULL){
         result_msg = bi_new(dst, word_len);
-        if(result_msg != BI_ALLOC_SUCCESS){
-            log_msg(result_msg);
-            return result_msg;
-        }
+        if(result_msg != BI_ALLOC_SUCCESS)  return result_msg;
     }
 
     // word_len이 작을 경우 word_len을 늘려주기
     if((*dst)->word_len >= word_len){
+        if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
         return BI_EXPAND_SUCCESS;
     }
 
     // 동적할당으로 메모리 늘리기
     (*dst)->a = (word*)realloc((*dst)->a, word_len * sizeof(word));
     if((*dst)->a == NULL){
+        if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
         return BI_ALLOC_FAIL;
     }
 
     // 늘린 메모리에 data로 채워주기
-    memset((*dst)->a + (*dst)->word_len, data, (word_len - (*dst)->word_len) * sizeof(word));
+    memset((*dst)->a + (*dst)->word_len, data, (word_len - (*dst)->word_len) * sizeof(word)); // memset 수행 확인 필요한가??
     (*dst)->word_len = word_len;
 
     return BI_ALLOC_SUCCESS;

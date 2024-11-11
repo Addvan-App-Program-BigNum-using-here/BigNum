@@ -17,6 +17,7 @@
 enum StandardMSGCodes {
     SUCCESS = MSG_TYPE_STANDARD | 0x0001, // 성공
     FAIL    = MSG_TYPE_STANDARD | 0x0002, // 실패
+    BI_INVALID_LENGTH = MSG_TYPE_STANDARD | 0x0003, // Bigint 길이가 0 이하인 경우
 };
 
 // 메모리 관련 에러
@@ -35,6 +36,7 @@ enum MemoryMSGCodes {
     BI_SET_REFINE_FAIL   = MSG_TYPE_MEMORY | 0x000C,  // Bigint Refine 실패
     BI_EXPAND_SUCCESS    = MSG_TYPE_MEMORY | 0x000D,  // Bigint expand 성공
     BI_EXPAND_FAIL       = MSG_TYPE_MEMORY | 0x000E,  // Bigint expand 실패
+    BI_SET_ARRAY_NOT_MATCH = MSG_TYPE_MEMORY | 0x000F, // Bigint 배열 할당 시 길이가 맞지 않는 경우
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -45,6 +47,13 @@ enum StringMSGCodes {
     BI_SET_STRING_FAIL    = MSG_TYPE_STRING | 0x0004, // String to Binint 실패
     RAND_STRING_SUCCESS    = MSG_TYPE_STRING | 0x0005, // 랜덤 문자열 생성 성공
     RAND_STRING_INVALID   = MSG_TYPE_STRING | 0x0006, // 랜덤 문자열 생성 시 base가 2, 10이 아닌 경우
+    BI_TO_HEX_FAIL        = MSG_TYPE_STRING | 0x0008, // Bigint to Hex 실패
+    RAND_BYTE_SUCCESS     = MSG_TYPE_STRING | 0x0009, // 랜덤 바이트 생성 성공
+    RAND_BYTE_FAIL        = MSG_TYPE_STRING | 0x000A, // 랜덤 바이트 생성 실패
+    RAND_INIT_SUCCESS     = MSG_TYPE_STRING | 0x000B, // 랜덤 초기화 성공
+    RAND_INIT_FAIL        = MSG_TYPE_STRING | 0x000C, // 랜덤 초기화 실패
+    GEN_RANDOM_BYTES_SUCCESS = MSG_TYPE_STRING | 0x000D, // 랜덤 바이트 생성 성공
+    GEN_RANDOM_BYTES_FAIL    = MSG_TYPE_STRING | 0x000E, // 랜덤 바이트 생성 실패
     // 추가 문자열 관련 에러 코드...
 };
 

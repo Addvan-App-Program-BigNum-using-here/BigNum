@@ -75,6 +75,7 @@ def test_bi_set_from_loop(f, p, k, base):
     k.write(f'[{base}진수]\n')
     while True:
         string = f.readline()
+        print(f"loop : {string}")
         if "----------" in string:
             break
         result = f.readline()
@@ -97,6 +98,7 @@ def test_bi_set_from(f, p):
     p.write('\n[BI SET FROM]\n')
     while True:
         biset = f.readline()
+        print(f"set from {biset}")
         if '[2]' in biset:
             test_bi_set_from_loop(f, p, k, 2)
         elif '[10]' in biset:
@@ -111,6 +113,7 @@ def bi_test(f):
         p.write('[Test result]\n')
         while True:
             line = f.readline()
+            print(f"main  :{line}")
             if 'BI SET FROM' in line:
                 test_bi_set_from(f, p)
             elif '[Addition]' in line:

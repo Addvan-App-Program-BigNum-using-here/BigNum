@@ -76,6 +76,15 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case BI_SUB_FAIL: return "Bigint subtraction failed";
         case Test_BI_SUB_SUCCESS: return "Test Bigint subtraction successful";
         case Test_BI_SUB_FAIL: return "Test Bigint subtraction failed";
+        case BI_SET_ARRAY_NOT_MATCH: return "Bigint array allocation length mismatch";
+        case BI_TO_HEX_FAIL: return "Bigint to Hex conversion failed";
+        case BI_INVALID_LENGTH: return "Invalid length";
+        case RAND_BYTE_SUCCESS: return "Random byte generation successful";
+        case RAND_BYTE_FAIL: return "Random byte generation failed";
+        case RAND_INIT_SUCCESS: return "Random initialization successful";
+        case RAND_INIT_FAIL: return "Random initialization failed";
+        case GEN_RANDOM_BYTES_SUCCESS: return "Random byte generation successful";
+        case GEN_RANDOM_BYTES_FAIL: return "Random byte generation failed";
         default: return "Unknown error code";
     }
 }

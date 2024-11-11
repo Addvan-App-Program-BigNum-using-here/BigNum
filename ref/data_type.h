@@ -33,7 +33,7 @@ typedef uint64_t dword;           ///< Double word type
  * array of word
  */
 typedef struct {
-    int sign;       ///< positive or negative (positive == 0, negative == 1)
+    byte sign;       ///< positive or negative (positive == 0, negative == 1)
     int word_len;   ///< length of bigint struct
     word* a;        ///< array of word
 } bigint;
@@ -68,7 +68,7 @@ uint64_t string_to_int(IN char* str, const IN int base);
 int bigint_to_hex(IN bigint** src, OUT char* str);
 
 // 여기 주석 추가하기
-void operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigint** c, IN char operate);
+msg operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigint** c, IN char operate);
 
 // 여기 주석 추가하기
 //char* String_refine(const IN char* str);

@@ -1,54 +1,46 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -I.. -I"C:/msys64/mingw64/include"
-LDFLAGS = -L"C:/msys64/mingw64/lib" -lssl -lcrypto
+CC = clang
 
 TEST_SRC = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ../file_io.c ./util_test.c
-TEST_TARGET = util_test
 
 # Detect operating system
 ifeq ($(OS),Windows_NT)
     # Windows settings
-    INCLUDES = -I.. -I"C:/msys64/mingw64/include"
-    LIBDIRS = -L"C:/msys64/mingw64/lib"
-    TARGET = util_test.exe
+    CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
+    LDFLAGS = -fsanitize=address
+    INCLUDES = -I..
+    TEST_TARGET = util_test.exe
 else
     UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Darwin)
         # Mac settings
-        INCLUDES = -I.. -I/usr/local/opt/openssl/include
-        LIBDIRS = -L/usr/local/opt/openssl/lib
-        TARGET = util_test
+        CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
+        LDFLAGS = -g -fsanitize=address -arch arm64
+        INCLUDES = -I..
+        TEST_TARGET = util_test
     endif
 endif
-# Libraries
-LIBS = -lcrypto -lssl
 
 all: $(TEST_TARGET)
 
-#$(MAIN_TARGET):
-#	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(MAIN_SRC)
-
-$(TEST_TARGET): $(SRCS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(LIBDIRS) $(SRCS) $(LIBS) -o $(TARGET)
+$(TEST_TARGET): $(TEST_SRC)
+	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_SRC) -o $(TEST_TARGET)
 
 ifeq ($(OS),Windows_NT)
 run: $(TEST_TARGET)
 	$(TEST_TARGET)
 else
-# main 함수 실행
 run: $(TEST_TARGET)
-	leaks --atExit -- ./$(TEST_TARGET)
+	leaks --atExit --  ./$(TEST_TARGET)
 endif
 
-# test 함수 실행
-test : $(TEST_TARGET)
-	leaks --atExit -- ./$(TEST_TARGET)
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
 	cat ./main_result.txt
 
 rerun: rebuild run
 retest: rebuild test
 rebuild: clean all
-  
+
 clean:
 	@echo "Cleaning up..."
 ifeq ($(OS),Windows_NT)
@@ -60,5 +52,4 @@ else
 	touch ./main_result.txt
 endif
 
-.PHONY: all clean run rebuild
-
+.PHONY: all clean run rebuild test rerun retest

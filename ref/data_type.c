@@ -66,11 +66,11 @@ int bigint_to_hex(IN bigint** src, OUT char* str) {
     // Assuming the bigint is stored in little-endian format
     int idx = 0;
 
-    if(*src == NULL)    return 0;
-    idx += ((*src)->sign == 1) ? sprintf(&str[idx], "-") : 0; // 부호 값 저장
-    idx += sprintf(&str[idx], "0x");
+    if(*src == NULL)    return -1;
+    idx += ((*src)->sign == 1) ? snprintf(&str[idx], 2, "-") : 0; // 부호 값 저장
+    idx += snprintf(&str[idx], 3, "0x");
     for (int i = (*src)->word_len - 1; i >= 0; i--) {
-        idx += sprintf(&str[idx], "%08X", (*src)->a[i]);
+        idx += snprintf(&str[idx], 9, "%08X", (*src)->a[i]);
     }
     return idx;
 }
@@ -126,13 +126,31 @@ int bigint_to_hex(IN bigint** src, OUT char* str) {
 *              - bigint** c: bigint result
 *              - char operate: operator
 **************************************************/
-void operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigint** c, IN char operate){
+msg operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigint** c, IN char operate){
     int idx = 0;
-    idx += bigint_to_hex(a, &result[idx]);
-    idx += sprintf(&result[idx], " %c ", operate);
-    idx += bigint_to_hex(b, &result[idx]);
-    idx += sprintf(&result[idx], " = ");
-    idx += bigint_to_hex(c, &result[idx]);
+    int result_idx = 0;
+
+    result_idx = bigint_to_hex(a, &result[idx]);
+    if(idx == -1)    return -1;
+    idx += result_idx;
+
+    result_idx = snprintf(&result[idx], 4, " %c ", operate);
+    if(idx == -1)    return -1;
+    idx += result_idx;
+
+    result_idx = bigint_to_hex(b, &result[idx]);
+    if(idx == -1)    return -1;
+    idx += result_idx;
+
+    result_idx = snprintf(&result[idx], 4, " = ");
+    if(idx == -1)    return -1;
+    idx += result_idx;
+
+    result_idx = bigint_to_hex(c, &result[idx]);
+    if(idx == -1)    return -1;
+    idx += result_idx;
+
+    return 1;
 }
 
 
