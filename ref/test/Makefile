@@ -1,9 +1,15 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -I.. -I"C:/msys64/mingw64/include"
-LDFLAGS = -L"C:/msys64/mingw64/lib" -lssl -lcrypto
+CFLAGS = -Wall -Wextra -std=c99
+LDFLAGS = -lcrypto -lssl
 
-TEST_SRC = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ../file_io.c ./util_test.c
-TEST_TARGET = util_test
+# Source files
+SRCS = util_test.c \
+       ../util.c \
+       ../msg_control.c \
+       ../random.c \
+       ../data_type.c \
+       ../operate.c \
+       ../file_io.c
 
 # Detect operating system
 ifeq ($(OS),Windows_NT)
@@ -18,47 +24,48 @@ else
         INCLUDES = -I.. -I/usr/local/opt/openssl/include
         LIBDIRS = -L/usr/local/opt/openssl/lib
         TARGET = util_test
+    else
+        # Linux settings
+        INCLUDES = -I..
+        LIBDIRS = 
+        TARGET = util_test
     endif
 endif
-# Libraries
-LIBS = -lcrypto -lssl
 
-all: $(TEST_TARGET)
+# Objects are all source files with .c replaced by .o
+OBJS = $(SRCS:.c=.o)
 
-#$(MAIN_TARGET):
-#	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(MAIN_SRC)
+all: $(TARGET)
 
-$(TEST_TARGET): $(SRCS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(LIBDIRS) $(SRCS) $(LIBS) -o $(TARGET)
+# Linking
+$(TARGET): $(OBJS)
+	$(CC) $(OBJS) $(LIBDIRS) $(LDFLAGS) -o $@
+
+# Compilation
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 ifeq ($(OS),Windows_NT)
-run: $(TEST_TARGET)
-	$(TEST_TARGET)
+run: $(TARGET)
+	./$(TARGET)
 else
-# main 함수 실행
-run: $(TEST_TARGET)
-	leaks --atExit -- ./$(TEST_TARGET)
+run: $(TARGET)
+	leaks --atExit -- ./$(TARGET)
 endif
 
-# test 함수 실행
-test : $(TEST_TARGET)
-	leaks --atExit -- ./$(TEST_TARGET)
-	cat ./main_result.txt
+test: $(TARGET)
+	leaks --atExit -- ./$(TARGET)
+	cat ./test.txt
 
-rerun: rebuild run
-retest: rebuild test
-rebuild: clean all
-  
 clean:
 	@echo "Cleaning up..."
 ifeq ($(OS),Windows_NT)
-	rm -f $(TARGET)
+	del /F $(TARGET) $(OBJS)
 else
-	rm -f $(TEST_TARGET)
+	rm -f $(TARGET) $(OBJS)
 	rm -f ../../sage_test/test.sage.py
-	rm -f ./main_result.txt
-	touch ./main_result.txt
+	rm -f ./test.txt
+	touch ./test.txt
 endif
 
-.PHONY: all clean run rebuild
-
+.PHONY: all clean run test
