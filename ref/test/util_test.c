@@ -3,7 +3,7 @@
 int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
-    int test_size = 10000;
+    int test_size = 10;
     int test_word_size = 2;
     char TEST_init[20] = "[TEST CASE START]";
     char TEST_end[20] = "[TEST CASE END]";
@@ -178,8 +178,8 @@ msg test_bi_set_from(int test_size, int test_word_size){
     result_msg = Test_file_write(seperator, APPEND); // 구분자
     if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;
 
-//    // 10진수 테스트
-//    result_msg = Test_file_write("[10]", APPEND);
+    // 10진수 테스트
+    result_msg = Test_file_write("[10]", APPEND);
 //    if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;
 //    result_msg = test_bi_set_from_base(test_size, 10);
 //    if(result_msg != Test_BI_SET_FROM_BASE_SUCCESS)    goto FROM_EXIT;

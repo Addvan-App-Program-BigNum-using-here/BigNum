@@ -10,7 +10,8 @@ def addition(add_str):
 
 def test_addition(f, p):
     k = open('./result/result_addition.txt', 'w')
-    p.write('[Addition]\n')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 덧셈 연산]\n')
     count = 0
     false_count = 0
     while True:
@@ -36,7 +37,8 @@ def subtraction(sub_str):
 
 def test_subtraction(f, p):
     k = open('./result/result_subtraction.txt', 'w')
-    p.write('[Subtraction]\n')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 뺄셈 연산]\n')
     count = 0
     false_count = 0
     while True:
@@ -62,7 +64,8 @@ def multiplicaiton(sub_str):
 
 def test_multiplication(f, p):
     k = open('./result/result_multiplication.txt', 'w')
-    p.write('[Multiplication]\n')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 곱셈 연산]\n')
     count = 0
     false_count = 0
     while True:
@@ -107,7 +110,8 @@ def test_bi_set_from_loop(f, p, k, base):
 
 def test_bi_set_from(f, p):
     k = open('./result/result_set_from.txt', 'w')
-    p.write('\n[BI SET FROM]\n')
+    p.write('------------------------------------------------------------\n')
+    p.write('[문자열을 빅넘으로 변환하기]\n')
     while True:
         biset = f.readline()
         if '[2]' in biset:
