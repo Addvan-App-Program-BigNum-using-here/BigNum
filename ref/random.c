@@ -7,6 +7,7 @@
 *
 * Arguments:   - bigint** dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
+* Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
 msg bi_get_random(OUT bigint** dst, const IN int word_len) {
     int result_msg;
@@ -41,6 +42,7 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 *
 * Arguments:   - word* dst: pointer to bigint struct
 *              - int word_len: length of bigint struct
+* Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
 msg array_random(word* dst, int word_len) {
     msg result_msg = 0;
@@ -65,6 +67,7 @@ msg array_random(word* dst, int word_len) {
 *
 * Arguments:   - byte* dst: pointer to bigint struct
 *              - int byte_len: length of bigint struct
+* Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
 msg randombytes(IN byte* dst, IN int byte_len){
 #ifdef _WIN32
@@ -115,6 +118,7 @@ msg randombytes(IN byte* dst, IN int byte_len){
 * Arguments:   - char* str: return String
 *              - int str_len : length of return String
 *              - int base : base of return String
+* Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
 msg get_random_string(OUT char* str, IN int str_len, IN int base){
     int str_idx = str_len;

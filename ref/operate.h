@@ -10,7 +10,8 @@
  * @param dst pointer to result of bigint add
  * @param a bigint structure a
  * @param b bigint structure b
- * @param option option for clear
+ * @param option option for clear or append
+  * @return msg
  */
 msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b, IN byte option);
 
@@ -19,10 +20,18 @@ msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b, IN byte option);
  * @param dst pointer to result of bigint sub
  * @param a bigint structure a
  * @param b bigint structure b
+  * @param option option for clear or append
+  * @return msg
  */
 msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b, IN byte option);
 
-// 주석 나중에
+/**
+ * @brief bigint structure mul operation
+ * @param dst pointer to result of bigint mul
+ * @param a bigint structure a
+ * @param b bigint structure b
+ * @return msg
+ */
 msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b);
 
 #endif // OPERATE_H

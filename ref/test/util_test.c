@@ -15,7 +15,7 @@ int main(){
     }
 
     // bigint 할당 및 해제 테스트
-    result_msg = test_bi_new_delete();
+    result_msg = test_bi_new_delete(test_size, test_word_size);
     log_msg(result_msg);
     if(result_msg != Test_BI_NEW_DELETE_SUCCESS)    return Test_FAIL;
 
@@ -107,20 +107,16 @@ int main(){
     return 0;
 }
 
-msg test_bi_new_delete(){
+msg test_bi_new_delete(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
-    msg result_msg = 0;
-
-    result_msg = bi_new(&a, 4);
-    if(result_msg == BI_ALLOC_FAIL || a->word_len != 4){
-        return result_msg;
+    for(int i = 0; i < test_size; i++){
+        if(bi_new(&a, test_word_size) == BI_ALLOC_FAIL || a->word_len != test_word_size) return BI_ALLOC_FAIL;
+        if(bi_delete(&a) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     }
-
-    if(bi_delete(&a) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     return Test_BI_NEW_DELETE_SUCCESS;
 }
 
-msg test_bi_set_from(int test_size, int test_word_size){
+msg test_bi_set_from(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
     word* test_array = NULL;
     char FROM_init[20] = "\n[BI SET FROM]";
@@ -215,7 +211,7 @@ msg test_bi_set_from_base(const IN int test_size, const IN int base){
 
     // 랜덤한 array_size 할당
     if(randombytes(byte_array_size, 4) != GEN_RANDOM_BYTES_SUCCESS)  return GEN_RANDOM_BYTES_FAIL;
-    array_size = byte_to_int(byte_array_size, 4);
+    array_size = byte_to_uint(byte_array_size, 4);
     if(!array_size)    return SET_ARRAY_SIZE_FAIL;
     array_size %= 1000;
 
