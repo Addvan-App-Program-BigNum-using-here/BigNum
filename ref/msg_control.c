@@ -85,6 +85,12 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case RAND_INIT_FAIL: return "Random initialization failed";
         case GEN_RANDOM_BYTES_SUCCESS: return "Random byte generation successful";
         case GEN_RANDOM_BYTES_FAIL: return "Random byte generation failed";
+        case BI_SHIFT_SUCCESS: return "Bigint shift successful";
+        case BI_SHIFT_FAIL: return "Bigint shift failed";
+        case Test_BI_MUL_SUCCESS: return "Test Bigint multiplication successful";
+        case Test_BI_MUL_FAIL: return "Test Bigint multiplication failed";
+        case BI_MUL_SUCCESS: return "Bigint multiplication successful";
+        case BI_MUL_FAIL: return "Bigint multiplication failed";
         default: return "Unknown error code";
     }
 }

@@ -37,6 +37,10 @@ enum MemoryMSGCodes {
     BI_EXPAND_SUCCESS    = MSG_TYPE_MEMORY | 0x000D,  // Bigint expand 성공
     BI_EXPAND_FAIL       = MSG_TYPE_MEMORY | 0x000E,  // Bigint expand 실패
     BI_SET_ARRAY_NOT_MATCH = MSG_TYPE_MEMORY | 0x000F, // Bigint 배열 할당 시 길이가 맞지 않는 경우
+    BI_SHIFT_SUCCESS     = MSG_TYPE_MEMORY | 0x0010,  // Bigint shift 성공
+    BI_SHIFT_FAIL        = MSG_TYPE_MEMORY | 0x0011,  // Bigint shift 실패
+    BI_MUL_SUCCESS      = MSG_TYPE_MEMORY | 0x0012,  // Bigint 곱셈 성공
+    BI_MUL_FAIL         = MSG_TYPE_MEMORY | 0x0013,  // Bigint 곱셈 실패
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -84,6 +88,8 @@ enum TestMSGCodes {
     Test_BI_ADD_FAIL        = MSG_TYPE_TEST | 0x000B,      // Test Bigint 연산 실패
     Test_BI_SUB_SUCCESS     = MSG_TYPE_TEST | 0x000C,      // Test Bigint 연산 성공
     Test_BI_SUB_FAIL        = MSG_TYPE_TEST | 0x000D,      // Test Bigint 연산 실패
+    Test_BI_MUL_SUCCESS     = MSG_TYPE_TEST | 0x000E,      // Test Bigint 연산 성공
+    Test_BI_MUL_FAIL        = MSG_TYPE_TEST | 0x000F,      // Test Bigint 연산 실패
     // 추가 테스트 관련 에러 코드...
 };
 

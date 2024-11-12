@@ -152,23 +152,3 @@ msg operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigint
 
     return 1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

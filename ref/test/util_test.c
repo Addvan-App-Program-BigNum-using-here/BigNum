@@ -3,8 +3,8 @@
 int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
-    int test_size = 1;
-    int test_word_size = 13;
+    int test_size = 1000;
+    int test_word_size = 20;
     char TEST_init[20] = "[TEST CASE START]";
     char TEST_end[20] = "[TEST CASE END]";
 
@@ -71,6 +71,17 @@ int main(){
         return Test_FAIL;
     }
 
+    // bigint 곱셈 테스트
+    result_msg = test_bi_mul(test_size, test_word_size);
+    log_msg(result_msg);
+    if(result_msg != Test_BI_MUL_SUCCESS)   return Test_BI_MUL_FAIL;
+
+    result_msg = Test_file_write(seperator, APPEND); // 구분자
+    if(result_msg != FILE_WRITE_SUCCESS){
+        log_msg(result_msg);
+        return Test_FAIL;
+    }
+
     result_msg = Test_file_write(TEST_end, APPEND);
     if(result_msg != FILE_WRITE_SUCCESS){
         log_msg(result_msg);
@@ -123,13 +134,11 @@ msg test_bi_set_from(int test_size, int test_word_size){
     result_msg = Test_file_write(FROM_init, APPEND);
     if(result_msg != FILE_WRITE_SUCCESS)    return result_msg;
 
-    array_size = 255;
+    array_size = 100;
+//    randombytes(IN byte* dst, IN int byte_len)
 
     test_array = (word*)calloc(test_word_size, sizeof(word));
     if(test_array == NULL)  return MEM_NOT_ALLOC;
-
-    // 랜덤으로 변경
-    array_size = 1000;
 
     // 테스트 str 초기화
     str = (char*)calloc(array_size + 20, sizeof(byte)); // '0x' * 3 + '-' * 3 + " + " + " = " => 6 + 3 + 3 + 3 = 14
@@ -307,13 +316,25 @@ msg test_bi_add(const IN int test_size, const IN int test_word_size){
         result_msg = bi_get_random(&b, test_word_size);
         if(result_msg != BI_GET_RANDOM_SUCCESS || b->word_len != test_word_size)    break;
 
-        result_msg = bi_add(&c, &a, &b);
+        if(bigint_to_hex(&a, str) == -1)    break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = Test_file_write_non_enter(" + ", APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        if(bigint_to_hex(&b, str) == -1)    break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = Test_file_write_non_enter(" = ", APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = bi_add(&c, &a, &b, CLEAR);
         if(result_msg != BI_ADD_SUCCESS)    break;
 
-        result_msg = operate_string_cat(str, &a, &b, &c, '+'); // a + b = c을 문자열로 변환
-        if(result_msg != 1)    break;
-
-        result_msg = Test_file_write(str, APPEND); // 파일에 문자열 저장
+        if(bigint_to_hex(&c, str) == -1)    break;
+        result_msg = Test_file_write(str, APPEND);
         if(result_msg != FILE_WRITE_SUCCESS)    break;
 
         result_msg = bi_delete(&a);
@@ -359,13 +380,25 @@ msg test_bi_sub(const IN int test_size, const IN int test_word_size){
         result_msg = bi_get_random(&b, test_word_size);
         if(result_msg != BI_GET_RANDOM_SUCCESS || b->word_len != test_word_size)    break;
 
-        result_msg = bi_sub(&c, &a, &b);
+        if(bigint_to_hex(&a, str) == -1)    break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = Test_file_write_non_enter(" - ", APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        if(bigint_to_hex(&b, str) == -1)    break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = Test_file_write_non_enter(" = ", APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = bi_sub(&c, &a, &b, CLEAR);
         if(result_msg != BI_SUB_SUCCESS)    break;
 
-        result_msg = operate_string_cat(str, &a, &b, &c, '-'); // a + b = c을 문자열로 변환
-        if(result_msg != 1)    break;
-
-        result_msg = Test_file_write(str, APPEND); // 파일에 문자열 저장
+        if(bigint_to_hex(&c, str) == -1)    break;
+        result_msg = Test_file_write(str, APPEND);
         if(result_msg != FILE_WRITE_SUCCESS)    break;
 
         result_msg = bi_delete(&a);
@@ -378,6 +411,70 @@ msg test_bi_sub(const IN int test_size, const IN int test_word_size){
         if(result_msg != BI_FREE_SUCCESS)   break;
 
         result_msg = Test_BI_SUB_SUCCESS;
+    }
+
+    free(str);
+    if(bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if(bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if(bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    return result_msg;
+}
+
+msg test_bi_mul(const IN int test_size, const IN int test_word_size){
+    bigint* a = NULL;
+    bigint* b = NULL;
+    bigint* c = NULL;
+    char sub_init[25] = "[Multiplication]";
+    char* str = NULL;
+    msg result_msg = Test_BI_MUL_SUCCESS;
+
+    str = (char*)calloc((test_word_size * 8) * 3 + 100, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
+    if(str == NULL) return MEM_NOT_ALLOC;
+
+    result_msg = Test_file_write(sub_init, APPEND);
+    if(result_msg != FILE_WRITE_SUCCESS){
+        free(str);
+        return result_msg;
+    }
+
+    for(int i = 0; i < test_size; i++){
+        result_msg = bi_get_random(&a, test_word_size);
+        if(result_msg != BI_GET_RANDOM_SUCCESS || a->word_len != test_word_size)    break;
+
+        result_msg = bi_get_random(&b, test_word_size);
+        if(result_msg != BI_GET_RANDOM_SUCCESS || b->word_len != test_word_size)    break;
+
+        if(bigint_to_hex(&a, str) == -1)    break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = Test_file_write_non_enter(" * ", APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        if(bigint_to_hex(&b, str) == -1)    break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = Test_file_write_non_enter(" = ", APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = bi_mul(&c, &a, &b);
+        if(result_msg != BI_MUL_SUCCESS)    break;
+
+        if(bigint_to_hex(&c, str) == -1)    break;
+        result_msg = Test_file_write(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = bi_delete(&a);
+        if(result_msg != BI_FREE_SUCCESS)   break;
+
+        result_msg = bi_delete(&b);
+        if(result_msg != BI_FREE_SUCCESS)   break;
+
+        result_msg = bi_delete(&c);
+        if(result_msg != BI_FREE_SUCCESS)   break;
+
+        result_msg = Test_BI_MUL_SUCCESS;
     }
 
     free(str);

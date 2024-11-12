@@ -15,6 +15,7 @@
 #define seperator "-----------------------------------------"
 
 typedef uint8_t byte;             ///< byte type
+typedef uint16_t hword;           ///< Half word type
 typedef uint32_t msg;             ///< Error message control variation
 typedef uint32_t word;            ///< Word type
 typedef uint64_t dword;           ///< Double word type

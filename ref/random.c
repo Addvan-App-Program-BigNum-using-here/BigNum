@@ -66,7 +66,7 @@ msg array_random(word* dst, int word_len) {
 * Arguments:   - byte* dst: pointer to bigint struct
 *              - int byte_len: length of bigint struct
 **************************************************/
-msg randombytes(IN byte* dst, IN int byte_len) {
+msg randombytes(IN byte* dst, IN int byte_len){
 #ifdef _WIN32
     // Windows 버전
     HCRYPTPROV hProvider = 0;

@@ -1,3 +1,4 @@
+
 #ifndef UTIL_H
 #define UTIL_H
 
@@ -98,5 +99,8 @@ int bi_compare(IN bigint** a, IN bigint** b);
  * @param b pointer to bigint struct
  */
 int bi_compare_abs(IN bigint** a, IN bigint** b);
+
+// 주석 나중에
+msg bi_shift_left(IN bigint** dst, const IN int shift_len);
 
 #endif // UTIL_H

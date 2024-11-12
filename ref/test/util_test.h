@@ -57,4 +57,6 @@ msg test_bi_add(const IN int test_size, const IN int test_word_size);
  */
 msg test_bi_sub(const IN int test_size, const IN int test_word_size);
 
+// 주석 나중에
+msg test_bi_mul(const IN int test_size, const IN int test_word_size);
 #endif // UTIL_TEST_H
