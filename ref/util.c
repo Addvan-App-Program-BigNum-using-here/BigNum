@@ -107,7 +107,7 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
 **************************************************/
 msg bi_set_from_string(OUT bigint** dst, IN char* int_str, const IN int base){
     msg result_msg = 0;
-    int sign = 0, a_idx = 0, digit = 0, word_len = 0, block_size = 0, word_idx = 0;
+    int sign = 0, a_idx = 0, digit = 0, block_size = 0, word_idx = 0, word_len = 0;
     int str_len = strlen(int_str);
     word temp = 0;
 
@@ -135,7 +135,8 @@ msg bi_set_from_string(OUT bigint** dst, IN char* int_str, const IN int base){
             return BI_SET_STRING_FAIL;
     }
 
-    a_idx = (str_len % block_size) + block_size * (word_len - 2); // a_idx 값 뒤의 4byte부터 가져오기
+    a_idx = (str_len % block_size == 0) ? block_size : str_len % block_size;
+    a_idx += block_size * (word_len - 2); // a_idx 값 뒤의 4byte부터 가져오기
     // memory allocate
     result_msg = bi_new(dst, word_len);
     if(result_msg != BI_ALLOC_SUCCESS){
@@ -448,8 +449,7 @@ msg bi_refine(OUT bigint *src)
 * Arguments:   - bigint** dst: pointer to bigint struct
 *              - bigint* src: source bigint struct
 **************************************************/
-msg bi_assign(OUT bigint** dst, IN bigint** src)
-{
+msg bi_assign(OUT bigint** dst, IN bigint** src){
     msg result_msg = 0;
     if (*src == NULL)   return BI_SET_ASSIGN_FAIL;
 
