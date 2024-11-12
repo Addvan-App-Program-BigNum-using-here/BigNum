@@ -39,14 +39,18 @@ $(TEST_TARGET): $(TEST_SRC)
 ifeq ($(OS),Windows_NT)
 run: $(TEST_TARGET)
 	./$(TEST_TARGET)
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
+	cls
+	cat ./main_result.txt
 else
 run: $(TEST_TARGET)
 	leaks --atExit --  ./$(TEST_TARGET)
-endif
-
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
+	clear
 	cat ./main_result.txt
+endif
 
 rerun: rebuild run
 retest: rebuild test

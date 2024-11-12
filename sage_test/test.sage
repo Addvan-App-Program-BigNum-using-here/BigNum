@@ -24,11 +24,7 @@ def test_addition(f, p):
             k.write(addif)
             k.write(str(hex(tmp)))
             k.write('\n')
-    if false_count == 0:
-        p.write("************** 테스트 성공 **************\n")
-    else:
-        p.write("!!!!!!!!!!!!!! 테스트 실패 !!!!!!!!!!!!!!\n")
-        p.write(f"실패 개수 : {false_count}\n")
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
 
 def subtraction(sub_str):
     sub_str = sub_str.split(' ')
@@ -54,11 +50,7 @@ def test_subtraction(f, p):
             k.write(subif)
             k.write(str(hex(tmp)))
             k.write('\n')
-    if false_count == 0:
-        p.write("************** 테스트 성공 **************\n")
-    else:
-        p.write("!!!!!!!!!!!!!! 테스트 실패 !!!!!!!!!!!!!!\n")
-        p.write(f"실패 개수 : {false_count}\n")
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
 
 def multiplicaiton(sub_str):
     sub_str = sub_str.split(' ')
@@ -84,11 +76,7 @@ def test_multiplication(f, p):
             k.write(subif)
             k.write(str(hex(tmp)))
             k.write('\n')
-    if false_count == 0:
-        p.write("************** 테스트 성공 **************\n")
-    else:
-        p.write("!!!!!!!!!!!!!! 테스트 실패 !!!!!!!!!!!!!!\n")
-        p.write(f"실패 개수 : {false_count}\n")
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
 
 def string_to_hex(p, string, result, base):
     hex_string = int(string, base)
@@ -115,11 +103,7 @@ def test_bi_set_from_loop(f, p, k, base):
             k.write(f"올바른 값 : {tmp}\n")
             k.write(f"제시 값   : {result}")
             k.write('\n')
-    if false_count == 0:
-        p.write("************** 테스트 성공 **************\n")
-    else:
-        p.write("!!!!!!!!!!!!!! 테스트 실패 !!!!!!!!!!!!!!\n")
-        p.write(f"실패 개수 : {false_count}\n")
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
 
 def test_bi_set_from(f, p):
     k = open('./result/result_set_from.txt', 'w')

@@ -12,6 +12,7 @@ dword string_to_int(IN char* str, const IN int base){
     int i = 0;
     dword num = 0;
     while (str[i] != '\0'){
+        // 여기 입력 값에 대한 예외처리 해줘야 한다.
         if (str[i] >= '0' && str[i] <= '9'){
             num = num * base + (str[i] - '0');
             i++;
@@ -73,6 +74,22 @@ int bigint_to_hex(IN bigint** src, OUT char* str) {
         idx += snprintf(&str[idx], 9, "%08X", (*src)->a[i]);
     }
     return idx;
+}
+
+/*************************************************
+* Name:        bigint_to_int
+*
+* Description: Transfer byte to integer
+*
+* Arguments:   - byte* input: bytes array
+**************************************************/
+word byte_to_int(IN byte* input, const IN int byte_len){
+    word result = 0;
+    // 입력된 byte 크기가 4보다 클 경우
+    if(byte_len > 4)    return 0;
+
+    for(int i = 0; i < byte_len; i++)   result = result * 256 + input[i];
+    return result;
 }
 
 

@@ -18,6 +18,7 @@ enum StandardMSGCodes {
     SUCCESS = MSG_TYPE_STANDARD | 0x0001, // 성공
     FAIL    = MSG_TYPE_STANDARD | 0x0002, // 실패
     BI_INVALID_LENGTH = MSG_TYPE_STANDARD | 0x0003, // Bigint 길이가 0 이하인 경우
+    SET_ARRAY_SIZE_FAIL = MSG_TYPE_STANDARD | 0x0004, // 배열 할당 시 길이가 0 이하인 경우
 };
 
 // 메모리 관련 에러
@@ -90,6 +91,8 @@ enum TestMSGCodes {
     Test_BI_SUB_FAIL        = MSG_TYPE_TEST | 0x000D,      // Test Bigint 연산 실패
     Test_BI_MUL_SUCCESS     = MSG_TYPE_TEST | 0x000E,      // Test Bigint 연산 성공
     Test_BI_MUL_FAIL        = MSG_TYPE_TEST | 0x000F,      // Test Bigint 연산 실패
+    Test_BI_SET_FROM_BASE_SUCCESS = MSG_TYPE_TEST | 0x0010, // Test Bigint 배열 및 문자열 할당 성공
+    Test_BI_SET_FROM_BASE_FAIL    = MSG_TYPE_TEST | 0x0011, // Test Bigint 배열 및 문자열 할당 실패
     // 추가 테스트 관련 에러 코드...
 };
 

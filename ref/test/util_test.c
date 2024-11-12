@@ -3,8 +3,8 @@
 int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
-    int test_size = 1000;
-    int test_word_size = 20;
+    int test_size = 10000;
+    int test_word_size = 2;
     char TEST_init[20] = "[TEST CASE START]";
     char TEST_end[20] = "[TEST CASE END]";
 
@@ -123,154 +123,140 @@ msg test_bi_new_delete(){
 msg test_bi_set_from(int test_size, int test_word_size){
     bigint* a = NULL;
     word* test_array = NULL;
-    char* str = NULL; // bigint를 16진수로 변환한 문자열
-    char* str_2 = NULL; // 2진수 문자열
-    char* str_10 = NULL; // 10진수 문자열
-    char* str_16 = NULL; // 16진수 문자열
     char FROM_init[20] = "\n[BI SET FROM]";
-    int array_size = 0;
     int result_msg = Test_BI_SET_FROM_SUCCESS;
 
     result_msg = Test_file_write(FROM_init, APPEND);
     if(result_msg != FILE_WRITE_SUCCESS)    return result_msg;
 
-    array_size = 100;
-//    randombytes(IN byte* dst, IN int byte_len)
-
+    // 테스트 할 배열 생성
     test_array = (word*)calloc(test_word_size, sizeof(word));
     if(test_array == NULL)  return MEM_NOT_ALLOC;
 
-    // 테스트 str 초기화
-    str = (char*)calloc(array_size + 20, sizeof(byte)); // '0x' * 3 + '-' * 3 + " + " + " = " => 6 + 3 + 3 + 3 = 14
-    str_2 = (char*)calloc(array_size + 1, sizeof(byte));
-    str_10 = (char*)calloc(array_size + 1, sizeof(byte));
-    str_16 = (char*)calloc(array_size + 1, sizeof(byte));
-    if(str == NULL || str_2 == NULL || str_10 == NULL || str_16 == NULL) return MEM_NOT_ALLOC;
-
+    // 문자열로 들어온 hex를 endian에 맞추어 잘 저장하는지 테스트
     for(int i = 0; i < test_size; i++){
         // 랜덤한 배열 생성
         result_msg = array_random(test_array, test_word_size);
-        log_msg(result_msg);
-        if(result_msg != GEN_RANDOM_SUCCESS)    break;
+        if(result_msg != GEN_RANDOM_SUCCESS)    goto FROM_EXIT;
 
         // little endian set test
         result_msg = bi_set_from_array(&a, 1, test_word_size, test_array, little_endian);
-        if(result_msg != BI_SET_ARRAY_SUCCESS)  break;
+        if(result_msg != BI_SET_ARRAY_SUCCESS)  goto FROM_EXIT;
 
         // 할당이 잘 되었는지 확인
         for(int i = 0; i < test_word_size; i++){
             if(a->a[i] != test_array[i]){
                 result_msg = BI_SET_ARRAY_NOT_MATCH;
-                log_msg(result_msg);
-                free(test_array);
-                if(bi_delete(&a) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-                return Test_BI_SET_FROM_FAIL;
+                goto FROM_EXIT;
             }
         }
+
         result_msg = bi_delete(&a);
-        if(result_msg != BI_FREE_SUCCESS)   break;
+        if(result_msg != BI_FREE_SUCCESS)   goto FROM_EXIT;
 
         // big_endian set test
         result_msg = bi_set_from_array(&a, 1, test_word_size, test_array, big_endian);
-        if(result_msg != BI_SET_ARRAY_SUCCESS)  break;
+        if(result_msg != BI_SET_ARRAY_SUCCESS)  goto FROM_EXIT;
 
         for(int i = 0; i < test_word_size; i++){
             if(a->a[(test_word_size - 1) - i] != test_array[i]){
                 result_msg = BI_SET_ARRAY_NOT_MATCH;
-                log_msg(result_msg);
-                free(test_array);
-                if(bi_delete(&a) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-                return Test_BI_SET_FROM_FAIL;
+                goto FROM_EXIT;
             }
         }
 
         result_msg = bi_delete(&a);
-        if(result_msg != BI_FREE_SUCCESS)   break;
-
-        //************************************ string set test *************************************
-
-        // 랜덤한 str 가져오기
-        result_msg = get_random_string(str_2, array_size - 1, 2);
-        if(result_msg != RAND_STRING_SUCCESS) break;
-
-//        get_random_string(str_10, array_size - 1, 10); // 10진수는 일단 예외
-
-        result_msg = get_random_string(str_16, array_size - 1, 16);
-        if(result_msg != RAND_STRING_SUCCESS) break;
-
-        // 2진수 테스트
-        result_msg = Test_file_write("[2]", APPEND); // 줄바꿈
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-        result_msg = Test_file_write(str_2, APPEND); // 줄바꿈
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-
-        result_msg = bi_set_from_string(&a, str_2, 2); // 2진수 테스트
-        if(result_msg != BI_SET_STRING_SUCCESS)     break;
-
-        result_msg = bigint_to_hex(&a, str); // bigint를 16진수로 변환
-        if(result_msg == -1)    break;
-
-        result_msg = Test_file_write(str, APPEND); // 변환한 16진수 문자열을 txt에 넣는다.
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-
-        result_msg = bi_delete(&a);
-        if(result_msg!= BI_FREE_SUCCESS)    break;
-
-/*
-        result_msg = Test_file_write(seperator, APPEND); // 구분자
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-
-        // 10진수 테스트
-        result_msg = Test_file_write("[10]", APPEND); // 줄바꿈
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-        result_msg = Test_file_write(str_10, APPEND); // 줄바꿈
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-
-        result_msg = bi_set_from_string(&a, str_2, 10); // 2진수 테스트
-        if(result_msg != BI_SET_STRING_SUCCESS)     break;
-
-        result_msg = bigint_to_hex(&a, str); // bigint를 16진수로 변환
-        if(result_msg == -1)    break;
-
-        result_msg = Test_file_write(str, APPEND); // 변환한 16진수 문자열을 txt에 넣는다.
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-
-        result_msg = bi_delete(&a);
-        if(result_msg!= BI_FREE_SUCCESS)    break;
-*/
-
-        result_msg = Test_file_write(seperator, APPEND); // 구분자
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-
-        // 16진수 테스트
-        result_msg = Test_file_write("[16]", APPEND); // 줄바꿈
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-        result_msg = Test_file_write(str_16, APPEND); // 줄바꿈
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-
-        result_msg = bi_set_from_string(&a, str_16, 16); // 16진수 테스트
-        if(result_msg != BI_SET_STRING_SUCCESS) break;
-
-        result_msg = bigint_to_hex(&a, str); // bigint를 16진수로 변환
-        if(result_msg == -1)    break;
-
-        result_msg = Test_file_write(str, APPEND); // 변환한 16진수 문자열을 txt에 넣는다.
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-
-        result_msg = bi_delete(&a);
-        if(result_msg != BI_FREE_SUCCESS)   break;
-
-        result_msg = Test_file_write(seperator, APPEND); // 구분자
-        if(result_msg != FILE_WRITE_SUCCESS)    break;
-
-        result_msg = Test_BI_SET_FROM_SUCCESS;
+        if(result_msg != BI_FREE_SUCCESS)   goto FROM_EXIT;
     }
 
+    // 2진수 테스트
+    result_msg = Test_file_write("[2]", APPEND);
+    if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;
+    result_msg = test_bi_set_from_base(test_size, 2);
+    if(result_msg != Test_BI_SET_FROM_BASE_SUCCESS)    goto FROM_EXIT;
+
+    result_msg = Test_file_write(seperator, APPEND); // 구분자
+    if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;
+
+//    // 10진수 테스트
+//    result_msg = Test_file_write("[10]", APPEND);
+//    if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;
+//    result_msg = test_bi_set_from_base(test_size, 10);
+//    if(result_msg != Test_BI_SET_FROM_BASE_SUCCESS)    goto FROM_EXIT;
+
+    result_msg = Test_file_write(seperator, APPEND); // 구분자
+    if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;;
+
+    // 16진수 테스트
+    result_msg = Test_file_write("[16]", APPEND);
+    if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;;
+    result_msg = test_bi_set_from_base(test_size, 16);
+    if(result_msg != Test_BI_SET_FROM_BASE_SUCCESS)    goto FROM_EXIT;;
+
+    result_msg = Test_file_write(seperator, APPEND); // 구분자
+    if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;;
+
+    result_msg = Test_BI_SET_FROM_SUCCESS;
+    goto FROM_EXIT;
+
+FROM_EXIT:
     free(test_array);
+    if(bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    return result_msg;
+}
+
+msg test_bi_set_from_base(const IN int test_size, const IN int base){
+    byte byte_array_size[4]; // 4바이트 크기의 배열
+    word array_size = 0; // 최대 4바이트 크기의 정수
+    bigint* a = NULL;
+    char* str = NULL;
+    char* str_base = NULL;
+    msg result_msg = 0;
+
+    // 랜덤한 array_size 할당
+    if(randombytes(byte_array_size, 4) != GEN_RANDOM_BYTES_SUCCESS)  return GEN_RANDOM_BYTES_FAIL;
+    array_size = byte_to_int(byte_array_size, 4);
+    if(!array_size)    return SET_ARRAY_SIZE_FAIL;
+    array_size %= 1000;
+
+    str = (char*)calloc(array_size + 20, sizeof(byte)); // '0x' * 3 + '-' * 3 + " + " + " = " => 6 + 3 + 3 + 3 = 14
+    if(str == NULL) return MEM_NOT_ALLOC;
+
+    str_base = (char*)calloc(array_size + 1, sizeof(byte));
+    if(str_base == NULL){
+        free(str);
+        return MEM_NOT_ALLOC;
+    }
+
+    for(int i = 0; i < test_size; i++){
+        // base 기준 랜덤한 str 가져오기
+        result_msg = get_random_string(str_base, array_size - 1, base);
+        if(result_msg != RAND_STRING_SUCCESS) goto FROM_BASE_EXIT;
+
+        // 랜덤한 문자열 저장
+        result_msg = Test_file_write(str_base, APPEND); // 랜덤한 문자열 저장
+        if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_BASE_EXIT;
+
+        // base 테스트
+        result_msg = bi_set_from_string(&a, str_base, base); // base 테스트
+        if(result_msg != BI_SET_STRING_SUCCESS)     goto FROM_BASE_EXIT;
+
+        // bigint to hex string
+        if(bigint_to_hex(&a, str) == -1)    goto FROM_BASE_EXIT;
+
+        // 변환한 16진수 문자열을 txt에 넣는다.
+        result_msg = Test_file_write(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_BASE_EXIT;
+
+        result_msg = bi_delete(&a);
+        if(result_msg!= BI_FREE_SUCCESS)    goto FROM_BASE_EXIT;
+    }
+    result_msg = Test_BI_SET_FROM_BASE_SUCCESS;
+    goto FROM_BASE_EXIT;
+
+FROM_BASE_EXIT:
     free(str);
-    free(str_2);
-    free(str_10);
-    free(str_16);
+    free(str_base);
     if(bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     return result_msg;
 }

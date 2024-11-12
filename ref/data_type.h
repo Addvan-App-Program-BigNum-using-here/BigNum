@@ -69,6 +69,9 @@ uint64_t string_to_int(IN char* str, const IN int base);
 int bigint_to_hex(IN bigint** src, OUT char* str);
 
 // 여기 주석 추가하기
+word byte_to_int(IN byte* input, const IN int byte_len);
+
+// 여기 주석 추가하기
 msg operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigint** c, IN char operate);
 
 // 여기 주석 추가하기

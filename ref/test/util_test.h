@@ -36,6 +36,9 @@ msg test_bi_new_delete();
  */
 msg test_bi_set_from(int test_size, int test_word_size);
 
+// 주석 나중에
+msg test_bi_set_from_base(const IN int test_size, const IN int base);
+
 /**
  * @brief Test bigint structure set random
  *
