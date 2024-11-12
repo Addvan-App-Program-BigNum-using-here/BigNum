@@ -42,6 +42,8 @@ enum MemoryMSGCodes {
     BI_SHIFT_FAIL        = MSG_TYPE_MEMORY | 0x0011,  // Bigint shift 실패
     BI_MUL_SUCCESS      = MSG_TYPE_MEMORY | 0x0012,  // Bigint 곱셈 성공
     BI_MUL_FAIL         = MSG_TYPE_MEMORY | 0x0013,  // Bigint 곱셈 실패
+    BI_MOD_SUCCESS      = MSG_TYPE_MEMORY | 0x0014,  // Bigint 나머지 연산 성공
+    BI_MOD_FAIL         = MSG_TYPE_MEMORY | 0x0015,  // Bigint 나머지 연산 실패
     // 추가 메모리 관련 에러 코드...
 };
 

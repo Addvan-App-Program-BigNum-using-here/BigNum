@@ -370,40 +370,167 @@ msg bi_print(IN bigint** dst, const IN int base){
 *
 * Description: Shift bigint left
 *
-* Arguments:   - bigint* dst: pointer to bigint struct
+* Arguments:   - bigint* dst: pointer to bigint struct result
+*              - bigint* src: pointer to bigint struct
 *              - int shift_len : shift length
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
-msg bi_shift_left(IN bigint** dst, const IN int shift_len){
-    if(*dst == NULL)    return BI_SHIFT_FAIL;
+msg bi_shift_left(OUT bigint** dst, IN bigint** src, const IN int shift_len){
+    // shift_len이 word_len보다 클 경우도 생각해야함
+    if(*src == NULL)    return BI_SHIFT_FAIL;
 
-    if(shift_len == 0)  return BI_SHIFT_SUCCESS;
+    // shift_len이 0일 경우 복사
+    if(shift_len == 0){
+        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+        return BI_SHIFT_SUCCESS;
+    }
 
-    int word_len = (*dst)->word_len;
+    // dst가 비어있지 않을 경우
+    if(*dst != NULL){
+        // 만약 src와 dst가 동일한 경우 수행한 값을 src에 저장하여 반환
+        if(*dst == *src){
+            bigint* temp = NULL;
+            if(bi_shift_left(&temp, src, shift_len) != BI_SHIFT_SUCCESS)    return BI_SHIFT_FAIL;
+            if(bi_assign(dst, &temp) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+            if(bi_delete(&temp) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+            return BI_SHIFT_SUCCESS;
+        }else{
+            if(bi_delete(dst) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+        }
+    }
+
+    int word_len = (*src)->word_len;
     int shift_word = shift_len / WORD_BITS; // word 단위로 시프트
     int shift_bit = shift_len % WORD_BITS; // bit 단위로 시프트
 
     // shift_len이 0보다 크니까 무조건 1은 증가
     int new_word_len = word_len + shift_word + (shift_bit > 0); // 새로 할당할 bigint 길이
-    word* new_a = (word*)calloc(new_word_len, sizeof(word)); // 새로 word list 할당
-    if(new_a == NULL)   return BI_SHIFT_FAIL;
+    if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL; // 새로운 길이 맞게 할당
+    (*dst)->sign = (*src)->sign;
 
     // word 이동
     for(int i = 0; i < word_len; i++){
-        new_a[i + shift_word] = (*dst)->a[i];
+        (*dst)->a[i + shift_word] = (*src)->a[i];
     }
 
     // bit 이동
     if(shift_bit != 0){
         for(int i = new_word_len - 1 ; i > 0; i--){
-            new_a[i] = (new_a[i] << shift_bit) | (new_a[i - 1] >> (WORD_BITS - shift_bit));
+            (*dst)->a[i] = ((*dst)->a[i] << shift_bit) | ((*dst)->a[i - 1] >> (WORD_BITS - shift_bit));
         }
     }
-    new_a[0] = new_a[0] << shift_bit;
-
-    free((*dst)->a);
-    (*dst)->a = new_a;
-    (*dst)->word_len = new_word_len;
+    (*dst)->a[0] = (*dst)->a[0] << shift_bit;
 
     return BI_SHIFT_SUCCESS;
+}
+
+/*************************************************
+* Name:        bi_shift_right
+*
+* Description: Shift bigint right
+*
+* Arguments:   - bigint* dst: pointer to bigint struct
+*              - int shift_len : shift length
+* Return:      - msg : message. SUCCESS or FAIL
+**************************************************/
+msg bi_shift_right(OUT bigint** dst, IN bigint** src, const IN int shift_len){
+    // shift_len이 word_len보다 클 경우도 생각해야함
+    if(*src == NULL)    return BI_SHIFT_FAIL;
+
+    // shift_len이 0일 경우 복사
+    if(shift_len == 0){
+        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+        return BI_SHIFT_SUCCESS;
+    }
+
+    // dst가 비어있지 않을 경우
+    if(*dst != NULL){
+        // 만약 src와 dst가 동일한 경우 수행한 값을 src에 저장하여 반환
+        if(*dst == *src){
+            bigint* temp = NULL;
+            if(bi_shift_right(&temp, src, shift_len) != BI_SHIFT_SUCCESS)    return BI_SHIFT_FAIL;
+            if(bi_assign(dst, &temp) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+            if(bi_delete(&temp) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+            return BI_SHIFT_SUCCESS;
+        }else{
+            if(bi_delete(dst) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+        }
+    }
+
+    int word_len = (*src)->word_len;
+    int shift_word = shift_len / WORD_BITS; // word 단위로 시프트
+    int shift_bit = shift_len % WORD_BITS; // bit 단위로 시프트
+
+    // shift_len이 0보다 크니까 무조건 1은 감소
+    int new_word_len = word_len - shift_word; // 새로 할당할 bigint 길이
+    if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL; // 새로운 길이 맞게 할당
+    (*dst)->sign = (*src)->sign;
+
+    // word 이동
+    for(int i = shift_word; i < word_len; i++){
+        (*dst)->a[i - shift_word] = (*src)->a[i];
+    }
+
+    // bit 이동
+    if(shift_bit != 0){
+        for(int i = 0; i < new_word_len - 1; i++){
+            (*dst)->a[i] = ((*dst)->a[i] >> shift_bit) | ((*dst)->a[i + 1] << (WORD_BITS - shift_bit));
+        }
+    }
+    (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] >> shift_bit;
+
+    return BI_SHIFT_SUCCESS;
+}
+
+/*************************************************
+* Name:        bi_mod
+*
+* Description: bigint modulation
+*
+* Arguments:   - bigint* dst: pointer to bigint struct result
+*              - bigint* src: pointer to bigint struct source
+*              - int mod_len : length of mod (2^mod_len)
+* Return:      - msg : message. SUCCESS or FAIL
+**************************************************/
+msg bi_mod(OUT bigint** dst, IN bigint** src, IN int mod_len){
+    if(*src == NULL)    return BI_MOD_FAIL;
+
+    // mod_len이 0일 경우 1에 대한 mod이기 때문에 나머지는 0
+    if(mod_len == 0){
+        if(bi_new(dst, 1) != BI_ALLOC_SUCCESS)    return BI_MOD_FAIL;
+        return BI_MOD_SUCCESS;
+    }
+
+    // dst가 비어있지 않을 경우
+    if(*dst != NULL){
+        // 만약 src와 dst가 동일한 경우 수행한 값을 src에 저장하여 반환
+        if(*dst == *src){
+            bigint* temp = NULL;
+            if(bi_mod(&temp, src, mod_len) != BI_SHIFT_SUCCESS)    return BI_MOD_FAIL;
+            if(bi_assign(dst, &temp) != BI_SET_ASSIGN_SUCCESS)    return BI_MOD_FAIL;
+            if(bi_delete(&temp) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+            return BI_SHIFT_SUCCESS;
+        }else{ // dst가 src와 다른 경우 삭제
+            if(bi_delete(dst) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+        }
+    }
+
+    int mod_word = mod_len / WORD_BITS; // mod_len에 대한 word_len
+    int mod_bit = mod_len % WORD_BITS; // bit 단위로 시프트
+
+    int new_word_len = mod_word + (mod_bit > 0); // 새로 할당할 bigint 길이
+    if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_MOD_FAIL; // 새로운 길이 맞게 할당
+    (*dst)->sign = (*src)->sign;
+
+    // word 이동
+    for(int i = 0; i < new_word_len; i++){
+        (*dst)->a[i] = (*src)->a[i];
+    }
+
+    // bit 이동
+    if(mod_bit != 0){
+        (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] & ((1 << mod_bit) - 1);
+    }
+
+    return BI_MOD_SUCCESS;
 }

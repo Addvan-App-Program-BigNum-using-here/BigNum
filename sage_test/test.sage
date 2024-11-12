@@ -123,6 +123,25 @@ def test_bi_set_from(f, p):
         elif "----------" in biset:
             break
 
+def test_karachuba_multiplication(f, p):
+    k = open('./result/result_multiplication_karachuba.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[카라츄바 빅넘 곱셈 연산]\n')
+    count = 0
+    false_count = 0
+    while True:
+        subif = f.readline()
+        if "----------" in subif:
+            break
+        count += 1
+        result, tmp = multiplicaiton(subif)
+        if result == false:
+            false_count += 1
+            k.write(subif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
+
 def bi_test(f):
     with open('./main_result.txt', 'w') as p:
         p.write('[Test result]\n')
@@ -136,6 +155,8 @@ def bi_test(f):
                 test_subtraction(f, p)
             elif '[Multiplication]' in line:
                 test_multiplication(f, p)
+            elif '[Karachuba Multiplication]' in line:
+                test_karachuba_multiplication(f, p)
             elif '[TEST CASE END]' in line:
                 break
 

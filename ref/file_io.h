@@ -1,3 +1,6 @@
+#ifndef FILE_IO_H
+#define FILE_IO_H
+
 #include <stdio.h>
 #include "data_type.h"
 #include "msg_control.h"
@@ -21,3 +24,5 @@ msg Test_file_write(IN char* str, const IN int option);
  * @return result of integer
  */
 msg Test_file_write_non_enter(IN char *str, const IN int option);
+
+#endif // FILE_IO_H

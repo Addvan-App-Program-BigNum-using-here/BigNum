@@ -13,7 +13,7 @@
  * @param option option for clear or append
   * @return msg
  */
-msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b, IN byte option);
+msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b);
 
 /**
  * @brief bigint structure sub operation
@@ -23,7 +23,7 @@ msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b, IN byte option);
   * @param option option for clear or append
   * @return msg
  */
-msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b, IN byte option);
+msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b);
 
 /**
  * @brief bigint structure mul operation
@@ -33,5 +33,14 @@ msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b, IN byte option);
  * @return msg
  */
 msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b);
+
+/**
+ * @brief bigint structure mul operation using Karachuba algorithm
+ * @param dst pointer to result of bigint mul
+ * @param a bigint structure a
+ * @param b bigint structure b
+ * @return msg
+ */
+msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b);
 
 #endif // OPERATE_H

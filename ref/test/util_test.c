@@ -3,9 +3,9 @@
 int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
-    int test_size = 10;
-    int test_word_size = 2;
-    char TEST_init[20] = "[TEST CASE START]";
+    int test_size = 1000;
+    int test_word_size = 17;
+    char TEST_init[20] = "[TEST CASE START]"; // 이런거 #define으로 빼놓으면 좋을 것 같아요
     char TEST_end[20] = "[TEST CASE END]";
 
     result_msg = Test_file_write(TEST_init, CLEAR); // 시작 log
@@ -77,6 +77,14 @@ int main(){
     if(result_msg != Test_BI_MUL_SUCCESS)   return Test_BI_MUL_FAIL;
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
+    if(result_msg != FILE_WRITE_SUCCESS){
+        log_msg(result_msg);
+        return Test_FAIL;
+    }
+
+    // bigint 곱셈 카라츄바 테스트
+    result_msg = test_bi_mul_karachuba(test_size, test_word_size);
+    result_msg = Test_file_write(seperator, APPEND);
     if(result_msg != FILE_WRITE_SUCCESS){
         log_msg(result_msg);
         return Test_FAIL;
@@ -312,7 +320,7 @@ msg test_bi_add(const IN int test_size, const IN int test_word_size){
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if(result_msg != FILE_WRITE_SUCCESS)    break;
 
-        result_msg = bi_add(&c, &a, &b, CLEAR);
+        result_msg = bi_add(&c, &a, &b);
         if(result_msg != BI_ADD_SUCCESS)    break;
 
         if(bigint_to_hex(&c, str) == -1)    break;
@@ -376,7 +384,7 @@ msg test_bi_sub(const IN int test_size, const IN int test_word_size){
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if(result_msg != FILE_WRITE_SUCCESS)    break;
 
-        result_msg = bi_sub(&c, &a, &b, CLEAR);
+        result_msg = bi_sub(&c, &a, &b);
         if(result_msg != BI_SUB_SUCCESS)    break;
 
         if(bigint_to_hex(&c, str) == -1)    break;
@@ -441,6 +449,70 @@ msg test_bi_mul(const IN int test_size, const IN int test_word_size){
         if(result_msg != FILE_WRITE_SUCCESS)    break;
 
         result_msg = bi_mul(&c, &a, &b);
+        if(result_msg != BI_MUL_SUCCESS)    break;
+
+        if(bigint_to_hex(&c, str) == -1)    break;
+        result_msg = Test_file_write(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = bi_delete(&a);
+        if(result_msg != BI_FREE_SUCCESS)   break;
+
+        result_msg = bi_delete(&b);
+        if(result_msg != BI_FREE_SUCCESS)   break;
+
+        result_msg = bi_delete(&c);
+        if(result_msg != BI_FREE_SUCCESS)   break;
+
+        result_msg = Test_BI_MUL_SUCCESS;
+    }
+
+    free(str);
+    if(bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if(bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if(bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    return result_msg;
+}
+
+msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size){
+    bigint* a = NULL;
+    bigint* b = NULL;
+    bigint* c = NULL;
+    char sub_init[40] = "[Karachuba Multiplication]";
+    char* str = NULL;
+    msg result_msg = Test_BI_MUL_SUCCESS;
+
+    str = (char*)calloc((test_word_size * 8) * 3 + 100, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
+    if(str == NULL) return MEM_NOT_ALLOC;
+
+    result_msg = Test_file_write(sub_init, APPEND);
+    if(result_msg != FILE_WRITE_SUCCESS){
+        free(str);
+        return result_msg;
+    }
+
+    for(int i = 0; i < test_size; i++){
+        result_msg = bi_get_random(&a, test_word_size);
+        if(result_msg != BI_GET_RANDOM_SUCCESS || a->word_len != test_word_size)    break;
+
+        result_msg = bi_get_random(&b, test_word_size);
+        if(result_msg != BI_GET_RANDOM_SUCCESS || b->word_len != test_word_size)    break;
+
+        if(bigint_to_hex(&a, str) == -1)    break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = Test_file_write_non_enter(" * ", APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        if(bigint_to_hex(&b, str) == -1)    break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = Test_file_write_non_enter(" = ", APPEND);
+        if(result_msg != FILE_WRITE_SUCCESS)    break;
+
+        result_msg = bi_mul_karachuba(&c, &a, &b);
         if(result_msg != BI_MUL_SUCCESS)    break;
 
         if(bigint_to_hex(&c, str) == -1)    break;

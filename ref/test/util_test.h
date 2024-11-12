@@ -84,4 +84,13 @@ msg test_bi_sub(const IN int test_size, const IN int test_word_size);
  * @return message SUCCESS or FAIL
  */
 msg test_bi_mul(const IN int test_size, const IN int test_word_size);
+
+/**
+ * @brief Test bigint structure Mul operation using Karachuba algorithm
+ *
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
+ */
+msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size);
 #endif // UTIL_TEST_H

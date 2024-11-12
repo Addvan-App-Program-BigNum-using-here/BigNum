@@ -102,12 +102,33 @@ int bi_compare(IN bigint** a, IN bigint** b);
 int bi_compare_abs(IN bigint** a, IN bigint** b);
 
 /**
- * @brief bigint structure shift operator
+ * @brief bigint structure shift left operator
  *
- * @param dst pointer to bigint struct
+ * @param dst pointer to bigint struct result
+ * @param src pointer to bigint struct source
  * @param shift_len length of shift
  * @return message SUCCESS or FAIL
  */
-msg bi_shift_left(IN bigint** dst, const IN int shift_len);
+msg bi_shift_left(OUT bigint** dst, IN bigint** src, const IN int shift_len);
+
+/**
+ * @brief bigint structure shift right operator
+ *
+ * @param dst pointer to bigint struct result
+ * @param src pointer to bigint struct source
+ * @param shift_len length of shift
+ * @return message SUCCESS or FAIL
+ */
+msg bi_shift_right(OUT bigint** dst, IN bigint** src, const IN int shift_len);
+
+/**
+ * @brief bigint structure modulation operator
+ *
+ * @param dst pointer to bigint struct result
+ * @param src pointer to bigint struct source
+ * @param mod_len length of shift
+ * @return message SUCCESS or FAIL
+ */
+msg bi_mod(OUT bigint** dst, IN bigint** src, IN int mod_len);
 
 #endif // UTIL_H
