@@ -270,7 +270,7 @@ MUL_EXIT:
 *              - bigint** b: bigint struct
 **************************************************/
 msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
-    int max_word_len = 0, half_word_len = 0;
+    int max_word_len = 0, half_word_len = 0, min_word_len = 0;
 //    char str[1024];
     bigint* a_0 = NULL;
     bigint* b_0 = NULL;
@@ -298,8 +298,16 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
         }
     }
 
+    // base case에서 카라츄바가 아닌 일반 곱셈 수행을 위한 연산
+    min_word_len = min((*a)->word_len, (*b)->word_len);
+    if(flag > min_word_len){
+        result_msg = bi_mul(dst, a, b);
+        if(result_msg != BI_MUL_SUCCESS)    return BI_MUL_FAIL;
+        return BI_MUL_SUCCESS;
+    }
+
     // 길이의 절반 가져오기
-    max_word_len = (*a)->word_len >= (*b)->word_len ? (*a)->word_len : (*b)->word_len;
+    max_word_len = max((*a)->word_len, (*b)->word_len);
     half_word_len = (max_word_len + 1) >> 1;
 
     a_sign = (*a)->sign;
@@ -307,6 +315,7 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
     (*a)->sign = 0;
     (*b)->sign = 0;
 
+    // 결과 값을 저장할 메모리 할당
     result_msg = bi_new(dst, half_word_len * 2);
     if(result_msg != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
 
@@ -323,18 +332,27 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
     if(result_msg != BI_MOD_SUCCESS)    goto karachuba_exit;
 
     // A_0 * B_0
-    result_msg = bi_mul(&a_0b_0, &a_0, &b_0);
+    result_msg = bi_mul_karachuba(&a_0b_0, &a_0, &b_0);
     if(result_msg != BI_MUL_SUCCESS)    goto karachuba_exit;
+
+//    // A_0 * B_0 / 원본 코드
+//    result_msg = bi_mul(&a_0b_0, &a_0, &b_0);
+//    if(result_msg != BI_MUL_SUCCESS)    goto karachuba_exit;
 
     // dst = A_0 * B_0
     result_msg = bi_assign(dst, &a_0b_0);
     if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto karachuba_exit;
 
-    // (A_1 * B_1)
-    result_msg = bi_mul(&a_1b_1, &a_1, &b_1);
+    // A_1 * B_1
+    result_msg = bi_mul_karachuba(&a_1b_1, &a_1, &b_1);
     if(result_msg != BI_MUL_SUCCESS)    goto karachuba_exit;
 
-    // A_1 * B_1 + A_0 * B_0 - (A_1 - A_0) * (B_1 - B_0)
+
+//    // A_1 * B_1 / 원본 코드
+//    result_msg = bi_mul(&a_1b_1, &a_1, &b_1);
+//    if(result_msg != BI_MUL_SUCCESS)    goto karachuba_exit;
+
+    // (A_1 * B_1) + (A_0 * B_0) - (A_1 - A_0) * (B_1 - B_0)
     result_msg = bi_sub(&a_1_a_0, &a_1, &a_0); // A_1 - A_0
     if(result_msg != BI_SUB_SUCCESS)    goto karachuba_exit;
     result_msg = bi_sub(&b_1_b_0, &b_1, &b_0); // B_1 - B_0
@@ -343,8 +361,13 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
     result_msg = bi_add(&a_0b_0, &a_1b_1, &a_0b_0); // (A_1 * B_1) + (A_0 * B_0)
     if(result_msg != BI_ADD_SUCCESS)    goto karachuba_exit;
 
-    result_msg = bi_mul(&a_1_a_0, &a_1_a_0, &b_1_b_0); // (A_1 - A_0) * (B_1 - B_0)
+    // (A_1 - A_0) * (B_1 - B_0)
+    result_msg = bi_mul_karachuba(&a_1_a_0, &a_1_a_0, &b_1_b_0);
     if(result_msg != BI_MUL_SUCCESS)    goto karachuba_exit;
+
+//    // 원본 코드
+//    result_msg = bi_mul(&a_1_a_0, &a_1_a_0, &b_1_b_0); // (A_1 - A_0) * (B_1 - B_0)
+//    if(result_msg != BI_MUL_SUCCESS)    goto karachuba_exit;
 
     result_msg = bi_sub(&a_0b_0, &a_0b_0, &a_1_a_0); // (A_1 * B_1) + (A_0 * B_0) - (A_1 - A_0) * (B_1 - B_0)
     if(result_msg != BI_SUB_SUCCESS)    goto karachuba_exit;

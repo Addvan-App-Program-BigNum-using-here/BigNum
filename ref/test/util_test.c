@@ -4,9 +4,9 @@ int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
     int test_size = 1000;
-    int test_word_size = 17;
-    char TEST_init[20] = "[TEST CASE START]"; // 이런거 #define으로 빼놓으면 좋을 것 같아요
-    char TEST_end[20] = "[TEST CASE END]";
+    int test_word_size = 100;
+    struct timeval start, end;
+    double time_used;
 
     result_msg = Test_file_write(TEST_init, CLEAR); // 시작 log
     if(result_msg != FILE_WRITE_SUCCESS){
@@ -15,9 +15,14 @@ int main(){
     }
 
     // bigint 할당 및 해제 테스트
+    printf("\n============ Testing bi_new_delete ============\n");
+    gettimeofday(&start, NULL);
     result_msg = test_bi_new_delete(test_size, test_word_size);
+    gettimeofday(&end, NULL);
+    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     log_msg(result_msg);
     if(result_msg != Test_BI_NEW_DELETE_SUCCESS)    return Test_FAIL;
+    printf("Time taken: %f seconds\n", time_used);
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
     if(result_msg != FILE_WRITE_SUCCESS){
@@ -26,11 +31,14 @@ int main(){
     }
 
     // 랜덤 bigint 생성 테스트
+    printf("\n============ Testing bi_random ============\n");
+    gettimeofday(&start, NULL);
     result_msg = test_bi_random(test_size, test_word_size);
+    gettimeofday(&end, NULL);
+    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     log_msg(result_msg);
-    if(result_msg != Test_BI_GET_RANDOM_SUCCESS){
-        return Test_BI_GET_RANDOM_FAIL;
-    }
+    if(result_msg != Test_BI_GET_RANDOM_SUCCESS)    return Test_FAIL;
+    printf("Time taken: %f seconds\n", time_used);
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
     if(result_msg != FILE_WRITE_SUCCESS){
@@ -39,9 +47,14 @@ int main(){
     }
 
     // string으로부터 bigint 생성 테스트
+    printf("\n============ Testing bi_set_from ============\n");
+    gettimeofday(&start, NULL);
     result_msg = test_bi_set_from(test_size, test_word_size);
+    gettimeofday(&end, NULL);
+    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     log_msg(result_msg);
-    if(result_msg != Test_BI_SET_FROM_SUCCESS)  return Test_BI_SET_FROM_FAIL;
+    if(result_msg != Test_BI_SET_FROM_SUCCESS)  return Test_FAIL;
+    printf("Time taken: %f seconds\n", time_used);
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
     if(result_msg != FILE_WRITE_SUCCESS){
@@ -50,9 +63,14 @@ int main(){
     }
 
     // bigint 덧셈 테스트
+    printf("\n============ Testing bi_add ============\n");
+    gettimeofday(&start, NULL);
     result_msg = test_bi_add(test_size, test_word_size);
+    gettimeofday(&end, NULL);
+    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     log_msg(result_msg);
-    if(result_msg != Test_BI_ADD_SUCCESS)   return Test_BI_ADD_FAIL;
+    if(result_msg != Test_BI_ADD_SUCCESS)   return Test_FAIL;
+    printf("Time taken: %f seconds\n", time_used);
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
     if(result_msg != FILE_WRITE_SUCCESS){
@@ -61,9 +79,14 @@ int main(){
     }
 
     // bigint 뺄셈 테스트
+    printf("\n============ Testing bi_sub ============\n");
+    gettimeofday(&start, NULL);
     result_msg = test_bi_sub(test_size, test_word_size);
+    gettimeofday(&end, NULL);
+    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     log_msg(result_msg);
-    if(result_msg != Test_BI_SUB_SUCCESS)   return Test_BI_SUB_FAIL;
+    if(result_msg != Test_BI_SUB_SUCCESS)   return Test_FAIL;
+    printf("Time taken: %f seconds\n", time_used);
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
     if(result_msg != FILE_WRITE_SUCCESS){
@@ -72,9 +95,14 @@ int main(){
     }
 
     // bigint 곱셈 테스트
+    printf("\n============ Testing bi_mul ============\n");
+    gettimeofday(&start, NULL);
     result_msg = test_bi_mul(test_size, test_word_size);
+    gettimeofday(&end, NULL);
+    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     log_msg(result_msg);
-    if(result_msg != Test_BI_MUL_SUCCESS)   return Test_BI_MUL_FAIL;
+    if(result_msg != Test_BI_MUL_SUCCESS)   return Test_FAIL;
+    printf("Time taken: %f seconds\n", time_used);
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
     if(result_msg != FILE_WRITE_SUCCESS){
@@ -83,7 +111,15 @@ int main(){
     }
 
     // bigint 곱셈 카라츄바 테스트
+    printf("\n============ Testing bi_mul_karachuba ============\n");
+    gettimeofday(&start, NULL);
     result_msg = test_bi_mul_karachuba(test_size, test_word_size);
+    gettimeofday(&end, NULL);
+    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
+    log_msg(result_msg);
+    if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS)   return Test_FAIL;
+    printf("Time taken: %f seconds\n", time_used);
+
     result_msg = Test_file_write(seperator, APPEND);
     if(result_msg != FILE_WRITE_SUCCESS){
         log_msg(result_msg);
@@ -95,6 +131,8 @@ int main(){
         log_msg(result_msg);
         return Test_FAIL;
     }
+
+    log_msg(Test_SUCCESS);
 
     // Sage test
     fp = popen("sage ../../sage_test/test.sage >/dev/null 2>&1", "r");
@@ -127,7 +165,6 @@ msg test_bi_new_delete(const IN int test_size, const IN int test_word_size){
 msg test_bi_set_from(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
     word* test_array = NULL;
-    char FROM_init[20] = "\n[BI SET FROM]";
     int result_msg = Test_BI_SET_FROM_SUCCESS;
 
     result_msg = Test_file_write(FROM_init, APPEND);
@@ -286,7 +323,6 @@ msg test_bi_add(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
     bigint* b = NULL;
     bigint* c = NULL;
-    char add_init[12] = "[Addition]";
     char* str = NULL;
     msg result_msg = Test_BI_ADD_SUCCESS;
 
@@ -350,7 +386,6 @@ msg test_bi_sub(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
     bigint* b = NULL;
     bigint* c = NULL;
-    char sub_init[20] = "[Subtraction]";
     char* str = NULL;
     msg result_msg = Test_BI_SUB_SUCCESS;
 
@@ -414,14 +449,13 @@ msg test_bi_mul(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
     bigint* b = NULL;
     bigint* c = NULL;
-    char sub_init[25] = "[Multiplication]";
     char* str = NULL;
     msg result_msg = Test_BI_MUL_SUCCESS;
 
     str = (char*)calloc((test_word_size * 8) * 3 + 100, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
     if(str == NULL) return MEM_NOT_ALLOC;
 
-    result_msg = Test_file_write(sub_init, APPEND);
+    result_msg = Test_file_write(mul_init, APPEND);
     if(result_msg != FILE_WRITE_SUCCESS){
         free(str);
         return result_msg;
@@ -478,14 +512,13 @@ msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size){
     bigint* a = NULL;
     bigint* b = NULL;
     bigint* c = NULL;
-    char sub_init[40] = "[Karachuba Multiplication]";
     char* str = NULL;
-    msg result_msg = Test_BI_MUL_SUCCESS;
+    msg result_msg = Test_BI_MUL_KARACHUBA_SUCCESS;
 
     str = (char*)calloc((test_word_size * 8) * 3 + 100, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
     if(str == NULL) return MEM_NOT_ALLOC;
 
-    result_msg = Test_file_write(sub_init, APPEND);
+    result_msg = Test_file_write(mul_karachuba_init, APPEND);
     if(result_msg != FILE_WRITE_SUCCESS){
         free(str);
         return result_msg;
@@ -528,7 +561,7 @@ msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size){
         result_msg = bi_delete(&c);
         if(result_msg != BI_FREE_SUCCESS)   break;
 
-        result_msg = Test_BI_MUL_SUCCESS;
+        result_msg = Test_BI_MUL_KARACHUBA_SUCCESS;
     }
 
     free(str);

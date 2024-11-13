@@ -13,12 +13,22 @@
 #define OUT
 #define IN
 #define seperator "-----------------------------------------"
+#define TEST_init "[TEST CASE START]"
+#define TEST_end "[TEST CASE END]"
+#define FROM_init "\n[BI SET FROM]"
+#define add_init "[Addition]"
+#define sub_init "[Subtraction]"
+#define mul_init "[Multiplication]"
+#define mul_karachuba_init "[Karachuba Multiplication]"
 
 typedef uint8_t byte;             ///< byte type
 typedef uint16_t hword;           ///< Half word type
 typedef uint32_t msg;             ///< Error message control variation
 typedef uint32_t word;            ///< Word type
 typedef uint64_t dword;           ///< Double word type
+
+#define min(a, b) ((a) < (b) ? (a) : (b)) ///< min value
+#define max(a, b) ((a) > (b) ? (a) : (b)) ///< max value
 
 /**
  * @struct bigint

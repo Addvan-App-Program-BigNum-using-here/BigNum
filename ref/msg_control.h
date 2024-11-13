@@ -95,6 +95,8 @@ enum TestMSGCodes {
     Test_BI_MUL_FAIL        = MSG_TYPE_TEST | 0x000F,      // Test Bigint 연산 실패
     Test_BI_SET_FROM_BASE_SUCCESS = MSG_TYPE_TEST | 0x0010, // Test Bigint 배열 및 문자열 할당 성공
     Test_BI_SET_FROM_BASE_FAIL    = MSG_TYPE_TEST | 0x0011, // Test Bigint 배열 및 문자열 할당 실패
+    Test_BI_MUL_KARACHUBA_SUCCESS = MSG_TYPE_TEST | 0x0012, // Test Bigint 카라츄바 곱셈 성공
+    Test_BI_MUL_KARACHUBA_FAIL    = MSG_TYPE_TEST | 0x0013, // Test Bigint 카라츄바 곱셈 실패
     // 추가 테스트 관련 에러 코드...
 };
 

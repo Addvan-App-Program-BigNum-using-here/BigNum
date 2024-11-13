@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 #include "../util.h"
 #include "../msg_control.h"
 #include "../random.h"

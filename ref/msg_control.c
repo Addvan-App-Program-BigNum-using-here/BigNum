@@ -96,6 +96,8 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case Test_BI_SET_FROM_BASE_FAIL: return "Test Bigint array and string allocation with base failed";
         case BI_MOD_SUCCESS: return "Bigint modulo operation successful";
         case BI_MOD_FAIL: return "Bigint modulo operation failed";
+        case Test_BI_MUL_KARACHUBA_SUCCESS: return "Test Bigint Karachuba multiplication successful";
+        case Test_BI_MUL_KARACHUBA_FAIL: return "Bigint refinement successful";
         default: return "Unknown error code";
     }
 }
