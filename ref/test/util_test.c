@@ -3,8 +3,8 @@
 int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
-    int test_size = 1000;
-    int test_word_size = 100;
+    int test_size = 1;
+    int test_word_size = 64;
     struct timeval start, end;
     double time_used;
 
@@ -125,6 +125,12 @@ int main(){
         log_msg(result_msg);
         return Test_FAIL;
     }
+
+    // bigint 곱셈 성능 비교 테스트
+    result_msg = compare_multiplicaiton(10, 64, 10, 200);
+    if(result_msg != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;
+
+    printf("\n\n");
 
     result_msg = Test_file_write(TEST_end, APPEND);
     if(result_msg != FILE_WRITE_SUCCESS){
@@ -568,5 +574,82 @@ msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size){
     if(bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if(bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if(bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    return result_msg;
+}
+
+msg compare_multiplicaiton(int start_size, int end_size, int step_size, int iterations){
+    printf("\n=== Comparing Multiplication Methods ===\n");
+    printf("Size\tClassic(s)\tKaratsuba(s)\tRatio\tCrossover\n");
+    printf("------------------------------------------------\n");
+
+    bigint* a = NULL;
+    bigint* b = NULL;
+    bigint* c = NULL;
+    msg result_msg = COMPARE_MULTIPLICATION_SUCCESS;
+    int crossover_found = 0;
+    int crossover_point = 0;
+
+    for(int test_word_size = start_size; test_word_size <= end_size; test_word_size += step_size) {
+        double total_time_classic = 0;
+        double total_time_karatsuba = 0;
+
+        for(int i = 0; i < iterations; i++) {
+            clock_t start, end;
+
+            result_msg = bi_get_random(&a, test_word_size);
+            if(result_msg != BI_GET_RANDOM_SUCCESS || a->word_len != test_word_size)    goto COMAPARE_MUL_EXIT;
+
+            result_msg = bi_get_random(&b, test_word_size);
+            if(result_msg != BI_GET_RANDOM_SUCCESS || b->word_len != test_word_size)    goto COMAPARE_MUL_EXIT;
+
+            start = clock();
+            result_msg = bi_mul(&c, &a, &b);
+            if(result_msg != BI_MUL_SUCCESS)    goto COMAPARE_MUL_EXIT;
+            end = clock();
+            total_time_classic += ((double) (end - start)) / CLOCKS_PER_SEC;
+
+            start = clock();
+            result_msg = bi_mul_karachuba(&c, &a, &b);
+            if(result_msg != BI_MUL_SUCCESS)    goto COMAPARE_MUL_EXIT;
+            end = clock();
+            total_time_karatsuba += ((double) (end - start)) / CLOCKS_PER_SEC;
+
+            result_msg = bi_delete(&a);
+            if(result_msg != BI_FREE_SUCCESS)   break;
+
+            result_msg = bi_delete(&b);
+            if(result_msg != BI_FREE_SUCCESS)   break;
+
+            result_msg = bi_delete(&c);
+            if(result_msg != BI_FREE_SUCCESS)   break;
+        }
+        double avg_time_classic = total_time_classic / iterations;
+        double avg_time_karatsuba = total_time_karatsuba / iterations;
+        double ratio = avg_time_classic / avg_time_karatsuba;
+
+        // Crossover point 찾기 (Karatsuba가 더 빨라지는 지점)
+        if (!crossover_found && ratio > 1.0) {
+            crossover_found = 1;
+            crossover_point = test_word_size;
+        }
+
+        printf("%d\t%.6f\t%.6f\t%.2f\t%s\n",
+               test_word_size,
+               avg_time_classic,
+               avg_time_karatsuba,
+               ratio,
+               (test_word_size == crossover_point) ? "<=== Crossover" : "");
+    }
+
+    if (crossover_found) {
+        printf("\nKaratsuba becomes faster at word size: %d\n", crossover_point);
+    }
+    result_msg = COMPARE_MULTIPLICATION_SUCCESS;
+
+COMAPARE_MUL_EXIT:
+    if(bi_delete(&a) != BI_FREE_SUCCESS)   log_msg(BI_FREE_FAIL);
+    if(bi_delete(&b) != BI_FREE_SUCCESS)   log_msg(BI_FREE_FAIL);
+    if(bi_delete(&c) != BI_FREE_SUCCESS)   log_msg(BI_FREE_FAIL);
+    log_msg(result_msg);
     return result_msg;
 }

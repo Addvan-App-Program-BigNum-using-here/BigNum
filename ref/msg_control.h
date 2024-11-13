@@ -19,6 +19,7 @@ enum StandardMSGCodes {
     FAIL    = MSG_TYPE_STANDARD | 0x0002, // 실패
     BI_INVALID_LENGTH = MSG_TYPE_STANDARD | 0x0003, // Bigint 길이가 0 이하인 경우
     SET_ARRAY_SIZE_FAIL = MSG_TYPE_STANDARD | 0x0004, // 배열 할당 시 길이가 0 이하인 경우
+    BI_SIGN_NOT_MATCH = MSG_TYPE_STANDARD | 0x0005, // 부호가 일치하지 않는 경우
 };
 
 // 메모리 관련 에러
@@ -44,6 +45,8 @@ enum MemoryMSGCodes {
     BI_MUL_FAIL         = MSG_TYPE_MEMORY | 0x0013,  // Bigint 곱셈 실패
     BI_MOD_SUCCESS      = MSG_TYPE_MEMORY | 0x0014,  // Bigint 나머지 연산 성공
     BI_MOD_FAIL         = MSG_TYPE_MEMORY | 0x0015,  // Bigint 나머지 연산 실패
+    BI_CAT_SUCCESS      = MSG_TYPE_MEMORY | 0x0016,  // Bigint 이어붙이기 성공
+    BI_CAT_FAIL         = MSG_TYPE_MEMORY | 0x0017,  // Bigint 이어붙이기 실패
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -97,6 +100,8 @@ enum TestMSGCodes {
     Test_BI_SET_FROM_BASE_FAIL    = MSG_TYPE_TEST | 0x0011, // Test Bigint 배열 및 문자열 할당 실패
     Test_BI_MUL_KARACHUBA_SUCCESS = MSG_TYPE_TEST | 0x0012, // Test Bigint 카라츄바 곱셈 성공
     Test_BI_MUL_KARACHUBA_FAIL    = MSG_TYPE_TEST | 0x0013, // Test Bigint 카라츄바 곱셈 실패
+    COMPARE_MULTIPLICATION_SUCCESS = MSG_TYPE_TEST | 0x0014, // Test Bigint 곱셈 비교 성공
+    COMPARE_MULTIPLICATION_FAIL    = MSG_TYPE_TEST | 0x0015, // Test Bigint 곱셈 비교 실패
     // 추가 테스트 관련 에러 코드...
 };
 

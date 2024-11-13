@@ -5,7 +5,7 @@
 #include "msg_control.h"
 #include "util.h"
 
-#define flag 2  // karachuba에서 base case 수행 시 일반 곱셈의 기준
+#define flag 10  // karachuba에서 base case 수행 시 일반 곱셈의 기준
 
 /**
  * @brief bigint structure add operation

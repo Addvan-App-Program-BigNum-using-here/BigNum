@@ -94,4 +94,14 @@ msg test_bi_mul(const IN int test_size, const IN int test_word_size);
  * @return message SUCCESS or FAIL
  */
 msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size);
+
+/**
+ * @brief Test multiplication classic and Karachuba algorithm same value
+ *
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
+ */
+msg compare_multiplicaiton(int start_size, int end_size, int step_size, int iterations);
+
 #endif // UTIL_TEST_H

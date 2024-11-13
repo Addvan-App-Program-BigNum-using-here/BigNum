@@ -131,4 +131,14 @@ msg bi_shift_right(OUT bigint** dst, IN bigint** src, const IN int shift_len);
  */
 msg bi_mod(OUT bigint** dst, IN bigint** src, IN int mod_len);
 
+/**
+ * @brief bigint structure concatenate operator => a||b
+ *
+ * @param dst pointer to bigint struct result
+ * @param a pointer to bigint struct concate
+ * @param b pointer to bigint struct concated
+ * @return message SUCCESS or FAIL
+ */
+msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b);
+
 #endif // UTIL_H

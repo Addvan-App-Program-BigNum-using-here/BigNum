@@ -285,7 +285,7 @@ int bi_compare_abs(IN bigint** a, IN bigint** b){
 * Arguments:   - bigint* src: pointer to bigint struct
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
-msg bi_refine(OUT bigint *src)
+msg bi_refine(OUT bigint* src)
 {
     if (src == NULL)
     {
@@ -316,8 +316,8 @@ msg bi_refine(OUT bigint *src)
 *
 * Description: copy bigint struct
 *
-* Arguments:   - bigint** dst: pointer to bigint struct
-*              - bigint* src: source bigint struct
+* Arguments:   - bigint** dst: pointer to bigint struct result
+*              - bigint** src: source bigint struct
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
 msg bi_assign(OUT bigint** dst, IN bigint** src){
@@ -343,7 +343,7 @@ msg bi_assign(OUT bigint** dst, IN bigint** src){
 *
 * Description: Print bigint struct
 *
-* Arguments:   - bigint* dst: pointer to bigint struct
+* Arguments:   - bigint** dst: pointer to bigint struct result
 *              - int base: base of bigint struct (2, 10, 16)
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
@@ -370,8 +370,8 @@ msg bi_print(IN bigint** dst, const IN int base){
 *
 * Description: Shift bigint left
 *
-* Arguments:   - bigint* dst: pointer to bigint struct result
-*              - bigint* src: pointer to bigint struct
+* Arguments:   - bigint** dst: pointer to bigint struct result
+*              - bigint** src: pointer to bigint struct source
 *              - int shift_len : shift length
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
@@ -429,7 +429,8 @@ msg bi_shift_left(OUT bigint** dst, IN bigint** src, const IN int shift_len){
 *
 * Description: Shift bigint right
 *
-* Arguments:   - bigint* dst: pointer to bigint struct
+* Arguments:   - bigint** dst: pointer to bigint struct result
+*              - bigint** src: pointer to bigint struct source
 *              - int shift_len : shift length
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
@@ -487,8 +488,8 @@ msg bi_shift_right(OUT bigint** dst, IN bigint** src, const IN int shift_len){
 *
 * Description: bigint modulation
 *
-* Arguments:   - bigint* dst: pointer to bigint struct result
-*              - bigint* src: pointer to bigint struct source
+* Arguments:   - bigint** dst: pointer to bigint struct result
+*              - bigint** src: pointer to bigint struct source
 *              - int mod_len : length of mod (2^mod_len)
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
@@ -533,4 +534,49 @@ msg bi_mod(OUT bigint** dst, IN bigint** src, IN int mod_len){
     }
 
     return BI_MOD_SUCCESS;
+}
+
+/*************************************************
+* Name:        bi_cat
+*
+* Description: bigint concatenation
+*
+* Arguments:   - bigint** dst: pointer to bigint struct result
+*              - bigint** a: pointer to bigint struct of concate
+*              - bigint** b : pointer to bigint struct of concated
+* Return:      - msg : message. SUCCESS or FAIL
+**************************************************/
+msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
+    int new_word_len = 0;
+
+    // 두 값 중 하나가 NULL인 경우
+    if(*a == NULL || *b == NULL)    return BI_CAT_FAIL;
+    // 연접하려는 두 값의 부호가 다를 경우
+    if((*a)->sign != (*b)->sign)    return BI_SIGN_NOT_MATCH;
+
+    // dst가 비어있지 않을 경우
+    if(*dst != NULL){
+        // 만약 src와 dst가 동일한 경우 수행한 값을 src에 저장하여 반환
+        if(*dst == *a || *dst == *b){
+            bigint* temp = NULL;
+            if(bi_cat(&temp, a, b) != BI_SHIFT_SUCCESS)    return BI_CAT_FAIL;
+            if(bi_assign(dst, &temp) != BI_SET_ASSIGN_SUCCESS)    return BI_CAT_FAIL;
+            if(bi_delete(&temp) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+            return BI_CAT_SUCCESS;
+        }else{ // dst가 src와 다른 경우 삭제
+            if(bi_delete(dst) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+        }
+    }
+
+    new_word_len = (*a)->word_len + (*b)->word_len;
+    if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_CAT_FAIL; // 새로운 길이 맞게 할당
+    (*dst)->sign = (*a)->sign;
+    // b 값 먼저 넣기
+    for(int i = 0; i < (*b)->word_len; i++)
+        (*dst)->a[i] = (*b)->a[i];
+    // 이후 a 값 넣기
+    for(int i = 0; i < (*a)->word_len; i++)
+        (*dst)->a[i + (*b)->word_len] = (*a)->a[i];
+
+    return BI_CAT_SUCCESS;
 }
