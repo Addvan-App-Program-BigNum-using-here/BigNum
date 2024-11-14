@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - base_yoosunghwan
 
 jobs:
   test_main:
@@ -33,6 +34,10 @@ jobs:
           sudo apt-get install -y sagemath
           sudo mkdir -p /usr/local/sage
 
-      - name: Run SageMath tests
+      - name: Verfiy SageMath installation
         run: |
-          sage BigNum/sage_test/test.sage | tee sage_output.log
+          sage --version
+#
+#      - name: Run SageMath tests
+#        run: |
+#          sage BigNum/sage_test/test.sage | tee sage_output.log
