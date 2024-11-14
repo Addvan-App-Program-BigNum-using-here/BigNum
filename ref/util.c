@@ -288,13 +288,18 @@ int bi_compare(IN bigint **a, IN bigint **b)
             return 1; // a > b
         if ((*a)->word_len < (*b)->word_len)
             return -1; // a < b
-        // 길이가 같은 경우
         for (int i = (*a)->word_len - 1; i >= 0; i--)
         {
             if ((*a)->a[i] > (*b)->a[i])
+            {
                 return 1; // a > b
+            }
+
+            // return 받겠지 1이거나 -1 이거나 둘중 하나.
             if ((*a)->a[i] < (*b)->a[i])
+            {
                 return -1; // a < b
+            }
         }
     }
 
@@ -445,7 +450,10 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len)
     if (shift_len == 0)
     {
         if (bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)
+        {
             return BI_SHIFT_FAIL;
+        }
+
         return BI_SHIFT_SUCCESS;
     }
 
@@ -470,7 +478,6 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len)
                 return BI_FREE_FAIL;
         }
     }
-
     int word_len = (*src)->word_len;
     int shift_word = shift_len / WORD_BITS; // word 단위로 시프트
     int shift_bit = shift_len % WORD_BITS;  // bit 단위로 시프트

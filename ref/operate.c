@@ -543,12 +543,14 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
     {
         if (bi_delete(q) != BI_FREE_SUCCESS)
             return BI_FREE_FAIL;
+        *q = NULL;
     }
 
     if (*r != NULL)
     {
         if (bi_delete(r) != BI_FREE_SUCCESS)
             return BI_FREE_FAIL;
+        *r = NULL;
     }
 
     // 4. |a| < |b| 케이스 처리
@@ -559,13 +561,14 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
             return BI_ALLOC_FAIL;
         (*q)->a[0] = 0;
 
-        // r을 a로 초기화
+        // r에 a 복사를 위한 메모리 할당
         if (bi_new(r, (*a)->word_len) != BI_ALLOC_SUCCESS)
         {
             bi_delete(q);
             return BI_ALLOC_FAIL;
         }
 
+        // a의 내용을 r에 복사
         result_msg = bi_assign(r, a);
         if (result_msg != BI_SET_ASSIGN_SUCCESS)
         {
@@ -577,20 +580,29 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
         (*q)->sign = (*a)->sign ^ (*b)->sign;
         return BI_DIV_SUCCESS;
     }
-    printf("@@@@@@@\n");
+
     // 5. 나눗셈을 위한 메모리 할당
     int q_wordlen = (*a)->word_len - (*b)->word_len + 1;
+    if (q_wordlen <= 0)
+    {
+        printf("Invalid q_wordlen: %d\n", q_wordlen);
+        return BI_DIV_FAIL;
+    }
 
+    // q에 대한 메모리 할당
     if (bi_new(q, q_wordlen) != BI_ALLOC_SUCCESS)
-        return BI_ALLOC_FAIL;
+        return BI_DIV_FAIL;
 
+    // r에 대한 메모리 할당
     if (bi_new(r, (*a)->word_len) != BI_ALLOC_SUCCESS)
     {
         bi_delete(q);
         return BI_ALLOC_FAIL;
     }
 
+    // r에 a의 값 복사
     result_msg = bi_assign(r, a);
+
     if (result_msg != BI_SET_ASSIGN_SUCCESS)
     {
         bi_delete(q);
@@ -601,14 +613,29 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
     // 6. 임시 변수 선언
     bigint *temp_sub = NULL;
     bigint *temp_b = NULL;
-    byte b_sign = (*b)->sign;
+    word b_sign = (*b)->sign;
     (*b)->sign = 0;
 
     // 7. 나눗셈 수행
+    printf("r word_len: %d\n", (*r)->word_len);
+    printf("b word_len: %d\n", (*b)->word_len);
+    printf(" pointer r : %p\n", *r);
+    printf(" pointer b : %p\n", *b);
+
     for (int i = (*r)->word_len - (*b)->word_len; i >= 0; i--)
     {
-        printf("@@@@@@@\n");
+        if (temp_b != NULL)
+        {
+            bi_delete(&temp_b);
+        }
+        // temp_b 메모리 할당
+        if (bi_new(&temp_b, (*b)->word_len + i) != BI_ALLOC_SUCCESS)
+            goto DIV_EXIT;
+        printf(" 여기가능 ?@@@@@@@");
+        printf("%d 번째 시프트\n", i);
+        printf("temp_b : %p\n", temp_b);
         result_msg = bi_shift_left(&temp_b, b, i * WORD_BITS);
+        printf(" shift_left 문제냐 설마 !!!!!!!!!!\n");
         if (result_msg != BI_SHIFT_SUCCESS)
             goto DIV_EXIT;
 
@@ -618,6 +645,7 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
             if (result_msg != BI_SUB_SUCCESS)
                 goto DIV_EXIT;
 
+            // r에 temp_sub 복사
             result_msg = bi_assign(r, &temp_sub);
             if (result_msg != BI_SET_ASSIGN_SUCCESS)
                 goto DIV_EXIT;
@@ -627,8 +655,7 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
             if (bi_delete(&temp_sub) != BI_FREE_SUCCESS)
                 goto DIV_EXIT;
         }
-        if (bi_delete(&temp_b) != BI_FREE_SUCCESS)
-            goto DIV_EXIT;
+        temp_b = NULL;
     }
 
     // 8. 부호 처리
@@ -636,7 +663,6 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
     (*q)->sign = (*a)->sign ^ (*b)->sign;
     (*r)->sign = (*a)->sign;
 
-    // 9. refine 수행
     if (bi_refine(*q) != BI_SET_REFINE_SUCCESS)
         goto DIV_EXIT;
     if (bi_refine(*r) != BI_SET_REFINE_SUCCESS)
