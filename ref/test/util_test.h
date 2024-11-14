@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+// 윈도우일 때는 time.h 인 것으로 판단
+#include <time.h>
 #include "../util.h"
 #include "../msg_control.h"
 #include "../random.h"
@@ -15,6 +17,7 @@
 // popen에서 나오는 출력 값 예외처리
 // Windows 시스템
 #ifdef _WIN32
+
 #define PYTHON_REDIRECT " >nul 2>nul"
 #define PYTHON_CMD "python "
 // Unix/Linux/MacOS 시스템

@@ -377,7 +377,6 @@ msg bi_assign(OUT bigint **dst, IN bigint **src)
     msg result_msg = 0;
     if (*src == NULL)
         return BI_SET_ASSIGN_FAIL;
-
     if (*dst != NULL)
     {
         if (*dst == *src)
