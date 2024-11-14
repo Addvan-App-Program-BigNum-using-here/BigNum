@@ -631,25 +631,27 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
         // temp_b 메모리 할당
         if (bi_new(&temp_b, (*b)->word_len + i) != BI_ALLOC_SUCCESS)
             goto DIV_EXIT;
-        printf(" 여기가능 ?@@@@@@@");
-        printf("%d 번째 시프트\n", i);
-        printf("temp_b : %p\n", temp_b);
         result_msg = bi_shift_left(&temp_b, b, i * WORD_BITS);
-        printf(" shift_left 문제냐 설마 !!!!!!!!!!\n");
+        // shift 나오면 temp_b <- b << i * WORD_BITS
+        // ex) A = 12345 , B = 123 , i = 2
+        // temp_b = 12300 뺄셈 수행 가능해짐.
         if (result_msg != BI_SHIFT_SUCCESS)
             goto DIV_EXIT;
 
         while (bi_compare_abs(r, &temp_b) >= 0)
         {
+            // a가 더 클 때처리임. 절대값 했을 때
             result_msg = bi_sub(&temp_sub, r, &temp_b);
+            // while 문 돌면서 temp_sub <- r - temp_b 수행
             if (result_msg != BI_SUB_SUCCESS)
                 goto DIV_EXIT;
 
-            // r에 temp_sub 복사
+            // r에 temp_sub값 복사
             result_msg = bi_assign(r, &temp_sub);
             if (result_msg != BI_SET_ASSIGN_SUCCESS)
                 goto DIV_EXIT;
 
+            // 몫값 증가
             (*q)->a[i]++;
 
             if (bi_delete(&temp_sub) != BI_FREE_SUCCESS)
