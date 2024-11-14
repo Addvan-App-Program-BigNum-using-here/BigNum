@@ -183,6 +183,14 @@ const char *get_msg_message(const IN uint32_t msg_code)
         return "Test Bigint Karachuba multiplication successful";
     case Test_BI_MUL_KARACHUBA_FAIL:
         return "Bigint refinement successful";
+    case BI_DIV_SUCCESS:
+        return "Bigint division successful";
+    case BI_DIV_FAIL:
+        return "Bigint division failed";
+    case Test_BI_DIV_SUCCESS:
+        return "Test Bigint division successful";
+    case Test_BI_DIV_FAIL:
+        return "Test Bigint division failed";
     case COMPARE_MULTIPLICATION_SUCCESS:
         return "Compare multiplication successful";
     case COMPARE_MULTIPLICATION_FAIL:

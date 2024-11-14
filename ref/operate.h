@@ -5,7 +5,7 @@
 #include "msg_control.h"
 #include "util.h"
 
-#define flag 10  // karachuba에서 base case 수행 시 일반 곱셈의 기준
+#define flag 10 // karachuba에서 base case 수행 시 일반 곱셈의 기준
 
 /**
  * @brief bigint structure add operation
@@ -13,7 +13,7 @@
  * @param a bigint structure a
  * @param b bigint structure b
  * @param option option for clear or append
-  * @return msg
+ * @return msg
  */
 msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b);
 
@@ -22,8 +22,8 @@ msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b);
  * @param dst pointer to result of bigint sub
  * @param a bigint structure a
  * @param b bigint structure b
-  * @param option option for clear or append
-  * @return msg
+ * @param option option for clear or append
+ * @return msg
  */
 msg bi_sub(OUT bigint **dst, IN bigint **a, IN bigint **b);
 
@@ -53,5 +53,16 @@ msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b);
  * @return msg
  */
 msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b);
+
+/**
+ * @brief bigint structure division operation
+ * @param q pointer to quotient of bigint division
+ * @param r pointer to remainder of bigint division
+ * @param a dividend bigint operand
+ * @param b divisor bigint operand
+ * @return msg
+ */
+
+msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b);
 
 #endif // OPERATE_H

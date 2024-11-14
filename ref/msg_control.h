@@ -107,6 +107,8 @@ enum TestMSGCodes
     Test_BI_MUL_KARACHUBA_FAIL = MSG_TYPE_TEST | 0x0013,     // Test Bigint 카라츄바 곱셈 실패
     COMPARE_MULTIPLICATION_SUCCESS = MSG_TYPE_TEST | 0x0014, // Test Bigint 곱셈 비교 성공
     COMPARE_MULTIPLICATION_FAIL = MSG_TYPE_TEST | 0x0015,    // Test Bigint 곱셈 비교 실패
+    Test_BI_DIV_SUCCESS = MSG_TYPE_TEST | 0x0016,            // Test Bigint 나눗셈 성공
+    Test_BI_DIV_FAIL = MSG_TYPE_TEST | 0x0017,               // Test Bigint 나눗셈 실패
     // 추가 테스트 관련 에러 코드...
 };
 
@@ -116,10 +118,11 @@ enum OperateMSGCodes
     BI_ADD_FAIL = MSG_TYPE_OPERATE | 0x0002,    // Bigint 덧셈 실패
     BI_SUB_SUCCESS = MSG_TYPE_OPERATE | 0x0003, // Bigint 뺄셈 성공
     BI_SUB_FAIL = MSG_TYPE_OPERATE | 0x0004,    // Bigint 뺄셈 실패
-    // ================ 2024-11-11 수정 ========================
-    BI_MUL_SUCCESS = MSG_TYPE_OPERATE | 0x0005, // Bigint 곱셈 성공
-    BI_MUL_FAIL = MSG_TYPE_OPERATE | 0x0006,    // Bigint 곱셈 실패
+
     // 추가 연산 관련 에러 코드...
+    // ================= 2024-11-14 수정 ========================
+    BI_DIV_SUCCESS = MSG_TYPE_OPERATE | 0x0007, // Bigint 나눗셈 성공
+    BI_DIV_FAIL = MSG_TYPE_OPERATE | 0x0008,    // Bigint 나눗셈 실패
 };
 
 // 에러 처리 함수 프로토타입

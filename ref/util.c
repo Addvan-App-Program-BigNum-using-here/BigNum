@@ -700,3 +700,19 @@ msg bi_cat(OUT bigint **dst, IN bigint **a, IN bigint **b)
 
     return BI_CAT_SUCCESS;
 }
+
+bool bi_is_zero(const bigint *num)
+{
+    if (num == NULL || num->word_len == 0)
+    {
+        return true; // NULL이거나 길이가 0인 경우 0으로 간주
+    }
+    for (int i = 0; i < num->word_len; i++)
+    {
+        if (num->a[i] != 0)
+        {
+            return false; // 하나라도 0이 아니면 false 반환
+        }
+    }
+    return true; // 모든 요소가 0이면 true 반환
+}
