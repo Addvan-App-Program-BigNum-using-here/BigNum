@@ -123,6 +123,15 @@ int main()
         log_msg(result_msg);
         return Test_FAIL;
     }
+    printf("\n============ Testing bi_div ============\n");
+    gettimeofday(&start, NULL);
+    result_msg = test_bi_div(test_size, test_word_size);
+    gettimeofday(&end, NULL);
+    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
+    log_msg(result_msg);
+    if (result_msg != Test_BI_DIV_SUCCESS)
+        return Test_FAIL;
+    printf("Time taken: %f seconds\n", time_used);
 
     // bigint 곱셈 카라츄바 테스트
     printf("\n============ Testing bi_mul_karachuba ============\n");
@@ -464,7 +473,7 @@ msg test_bi_add(const IN int test_size, const IN int test_word_size)
         if (result_msg != BI_FREE_SUCCESS)
             break;
 
-        result_msg = Test_BI_MUL_SUCCESS;
+        result_msg = Test_BI_ADD_SUCCESS;
     }
 
     free(str);
@@ -548,7 +557,7 @@ msg test_bi_sub(const IN int test_size, const IN int test_word_size)
         if (result_msg != BI_FREE_SUCCESS)
             break;
 
-        result_msg = Test_BI_MUL_KARACHUBA_SUCCESS;
+        result_msg = Test_BI_SUB_SUCCESS;
     }
 
     free(str);
@@ -818,5 +827,109 @@ COMAPARE_MUL_EXIT:
     if (bi_delete(&c) != BI_FREE_SUCCESS)
         log_msg(BI_FREE_FAIL);
     log_msg(result_msg);
+    return result_msg;
+}
+
+msg test_bi_div(const IN int test_size, const IN int test_word_size)
+{
+    bigint *q = NULL;
+    bigint *r = NULL;
+    bigint *a = NULL;
+    bigint *b = NULL;
+
+    char *str = NULL;
+    // Test_BI_DIV_SUCCESS
+    msg result_msg = Test_BI_DIV_SUCCESS;
+
+    str = (char *)calloc((test_word_size * 8) * 3 + 100, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
+    if (str == NULL)
+        return MEM_NOT_ALLOC;
+
+    result_msg = Test_file_write(div_init, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)
+    {
+        free(str);
+        return result_msg;
+    }
+
+    for (int i = 0; i < test_size; i++)
+    {
+        result_msg = bi_get_random(&a, test_word_size);
+        if (result_msg != BI_GET_RANDOM_SUCCESS || a->word_len != test_word_size)
+            break;
+
+        result_msg = bi_get_random(&b, test_word_size);
+        if (result_msg != BI_GET_RANDOM_SUCCESS || b->word_len != test_word_size || bi_is_zero(b))
+            continue; // b가 0인 경우는 건너뜁니다.
+
+        if (bigint_to_hex(&a, str) == -1)
+            break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+
+        result_msg = Test_file_write_non_enter(" / ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+
+        if (bigint_to_hex(&b, str) == -1)
+            break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+
+        result_msg = Test_file_write_non_enter(" = ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+
+        result_msg = bi_div(&q, &r, &a, &b); // a / b를 수행하여 몫과 나머지를 구합니다.
+        if (result_msg != BI_DIV_SUCCESS)
+            break;
+
+        if (bigint_to_hex(&q, str) == -1)
+            break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+
+        result_msg = Test_file_write_non_enter(" remainder ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+
+        if (bigint_to_hex(&r, str) == -1)
+            break;
+        result_msg = Test_file_write(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+
+        // 할당된 메모리 해제
+        result_msg = bi_delete(&a);
+        if (result_msg != BI_FREE_SUCCESS)
+            break;
+
+        result_msg = bi_delete(&b);
+        if (result_msg != BI_FREE_SUCCESS)
+            break;
+
+        result_msg = bi_delete(&q);
+        if (result_msg != BI_FREE_SUCCESS)
+            break;
+
+        result_msg = bi_delete(&r);
+        if (result_msg != BI_FREE_SUCCESS)
+            break;
+
+        result_msg = Test_BI_DIV_SUCCESS;
+    }
+
+    free(str);
+    if (bi_delete(&a) != BI_FREE_SUCCESS)
+        return BI_FREE_FAIL;
+    if (bi_delete(&b) != BI_FREE_SUCCESS)
+        return BI_FREE_FAIL;
+    if (bi_delete(&q) != BI_FREE_SUCCESS)
+        return BI_FREE_FAIL;
+    if (bi_delete(&r) != BI_FREE_SUCCESS)
+        return BI_FREE_FAIL;
     return result_msg;
 }

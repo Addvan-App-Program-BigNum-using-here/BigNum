@@ -104,4 +104,5 @@ msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size);
  */
 msg compare_multiplicaiton(int start_size, int end_size, int step_size, int iterations);
 
+msg test_bi_div(const IN int test_size, const IN int test_word_size);
 #endif // UTIL_TEST_H
