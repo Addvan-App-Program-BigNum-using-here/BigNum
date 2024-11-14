@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 #include "../util.h"
 #include "../msg_control.h"
 #include "../random.h"
@@ -25,43 +26,82 @@
 /**
  * @brief Test bigint structure allocation and deallocation
  *
- * @return int
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
  */
-msg test_bi_new_delete();
+msg test_bi_new_delete(const IN int test_size, const IN int test_word_size);
 
 /**
  * @brief Test bigint structure set content from array and string
  *
- * @return int
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
  */
-msg test_bi_set_from(int test_size, int test_word_size);
+msg test_bi_set_from(const IN int test_size, const IN int test_word_size);
+
+/**
+ * @brief Test bigint structure set content from array and string in each base
+ *
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
+ */
+msg test_bi_set_from_base(const IN int test_size, const IN int base);
 
 /**
  * @brief Test bigint structure set random
  *
- * @return msg
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
  */
 msg test_bi_random(const IN int test_size, const IN int test_word_size);
 
 /**
  * @brief Test bigint structure Add operation
  *
- * @return msg
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
  */
 msg test_bi_add(const IN int test_size, const IN int test_word_size);
 
 /**
  * @brief Test bigint structure Sub operation
  *
- * @return msg
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
  */
 msg test_bi_sub(const IN int test_size, const IN int test_word_size);
 
 /**
  * @brief Test bigint structure Mul operation
  *
- * @return msg
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
  */
-msg test_bi_mul();
+msg test_bi_mul(const IN int test_size, const IN int test_word_size);
+
+/**
+ * @brief Test bigint structure Mul operation using Karachuba algorithm
+ *
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
+ */
+msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size);
+
+/**
+ * @brief Test multiplication classic and Karachuba algorithm same value
+ *
+ * @param test_size size of test
+ * @param test_word_size size of bigint struct
+ * @return message SUCCESS or FAIL
+ */
+msg compare_multiplicaiton(int start_size, int end_size, int step_size, int iterations);
 
 #endif // UTIL_TEST_H

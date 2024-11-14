@@ -13,11 +13,22 @@
 #define OUT
 #define IN
 #define seperator "-----------------------------------------"
+#define TEST_init "[TEST CASE START]"
+#define TEST_end "[TEST CASE END]"
+#define FROM_init "\n[BI SET FROM]"
+#define add_init "[Addition]"
+#define sub_init "[Subtraction]"
+#define mul_init "[Multiplication]"
+#define mul_karachuba_init "[Karachuba Multiplication]"
 
 typedef uint8_t byte;             ///< byte type
+typedef uint16_t hword;           ///< Half word type
 typedef uint32_t msg;             ///< Error message control variation
 typedef uint32_t word;            ///< Word type
 typedef uint64_t dword;           ///< Double word type
+
+#define min(a, b) ((a) < (b) ? (a) : (b)) ///< min value
+#define max(a, b) ((a) > (b) ? (a) : (b)) ///< max value
 
 /**
  * @struct bigint
@@ -39,15 +50,6 @@ typedef struct {
 } bigint;
 
 /**
- * @brief Transfer integer to string
- *
- * @param num integer
- * @param str string
- * @param idx index of string
- */
-void int_to_char(IN word num, OUT char *str, IN int idx);
-
-/**
  * @brief Transfer char to integer
  *
  * @param str string
@@ -56,21 +58,21 @@ void int_to_char(IN word num, OUT char *str, IN int idx);
 int char_to_int(IN char str);
 
 /**
- * @brief Convert string to integer
+ * @brief Convert bigint to hex string
  *
- * @param str string of bigint
- * @param base integer base
- * @return result of integer
+ * @param src bigint structure
+ * @param str return string value
+ * @return result of integer, FAIL == -1
  */
-uint64_t string_to_int(IN char* str, const IN int base);
-
-// 여기 주석 추가하기
 int bigint_to_hex(IN bigint** src, OUT char* str);
 
-// 여기 주석 추가하기
-msg operate_string_cat(OUT char* result, IN bigint** a, IN bigint** b, IN bigint** c, IN char operate);
-
-// 여기 주석 추가하기
-//char* String_refine(const IN char* str);
+/**
+ * @brief Convert byte(array) to integer
+ *
+ * @param input byte array
+ * @param byte_len length of byte array
+ * @return word of integer
+ */
+word byte_to_uint(IN byte* input, const IN int byte_len);
 
 #endif // DATA_TYPE_H

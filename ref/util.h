@@ -1,3 +1,4 @@
+
 #ifndef UTIL_H
 #define UTIL_H
 
@@ -13,6 +14,7 @@
  *
  * @param dst pointer to bigint struct
  * @param word_len length of bigint struct
+ * @return message SUCCESS or FAIL
  */
 msg bi_new(OUT bigint **dst, const IN int word_len);
 
@@ -20,6 +22,7 @@ msg bi_new(OUT bigint **dst, const IN int word_len);
  * @brief Delete allocated memory for bigint struct
  *
  * @param dst pointer to bigint struct
+ * @return message SUCCESS or FAIL
  */
 msg bi_delete(OUT bigint **dst);
 
@@ -27,6 +30,7 @@ msg bi_delete(OUT bigint **dst);
  * @brief Refine bigint struct
  *
  * @param src pointer to bigint struct
+ * @return message SUCCESS or FAIL
  */
 msg bi_refine(OUT bigint *src);
 
@@ -35,6 +39,7 @@ msg bi_refine(OUT bigint *src);
  *
  * @param dst pointer to bigint struct
  * @param src source bigint struct
+ * @return message SUCCESS or FAIL
  */
 msg bi_assign(OUT bigint **dst, IN bigint** src);
 
@@ -43,6 +48,7 @@ msg bi_assign(OUT bigint **dst, IN bigint** src);
  * @param dst pointer to bigint struct
  * @param word_len length of bigint struct
  * @param data array of word
+ * @return message SUCCESS or FAIL
  */
 msg bi_expand(OUT bigint** dst, const IN int word_len, const IN word data);
 
@@ -54,6 +60,7 @@ msg bi_expand(OUT bigint** dst, const IN int word_len, const IN word data);
  * @param word_len length of bigint struct
  * @param a array of word
  * @param endian little endian == 0, big endian == 1
+ * @return message SUCCESS or FAIL
  */
 msg bi_set_from_array(OUT bigint **dst, const IN int sign, const IN int word_len, const IN word *data, const IN int endian);
 
@@ -63,23 +70,16 @@ msg bi_set_from_array(OUT bigint **dst, const IN int sign, const IN int word_len
  * @param dst pointer to bigint struct
  * @param int_str string of bigint
  * @param base base of string (2, 10, 16)
+ * @return message SUCCESS or FAIL
  */
 msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base);
-
-/**
- * @brief Divide string to word custom to base 10
- *
- * @param int_str string of bigint and return quotient
- * @param r return remainder
- * @param base base of string (2, 10, 16)
- */
-msg String_Divide(OUT char* int_str, IN bigint **dst, IN int word_idx, const IN int base);
 
 /**
  * @brief Print bigint struct
  *
  * @param dst pointer to bigint struct
  * @param base base of bigint struct (2, 10, 16)
+ * @return message SUCCESS or FAIL
  */
 msg bi_print(IN bigint** dst, const IN int base);
 
@@ -88,6 +88,7 @@ msg bi_print(IN bigint** dst, const IN int base);
  *
  * @param a pointer to bigint struct
  * @param b pointer to bigint struct
+ * @return result of compare (a > b => 1, a < b => -1, a == b => 0)
  */
 int bi_compare(IN bigint** a, IN bigint** b);
 
@@ -96,7 +97,48 @@ int bi_compare(IN bigint** a, IN bigint** b);
  *
  * @param a pointer to bigint struct
  * @param b pointer to bigint struct
+ * @return result of compare (a > b => 1, a < b => -1, a == b => 0)
  */
 int bi_compare_abs(IN bigint** a, IN bigint** b);
+
+/**
+ * @brief bigint structure shift left operator
+ *
+ * @param dst pointer to bigint struct result
+ * @param src pointer to bigint struct source
+ * @param shift_len length of shift
+ * @return message SUCCESS or FAIL
+ */
+msg bi_shift_left(OUT bigint** dst, IN bigint** src, const IN int shift_len);
+
+/**
+ * @brief bigint structure shift right operator
+ *
+ * @param dst pointer to bigint struct result
+ * @param src pointer to bigint struct source
+ * @param shift_len length of shift
+ * @return message SUCCESS or FAIL
+ */
+msg bi_shift_right(OUT bigint** dst, IN bigint** src, const IN int shift_len);
+
+/**
+ * @brief bigint structure modulation operator
+ *
+ * @param dst pointer to bigint struct result
+ * @param src pointer to bigint struct source
+ * @param mod_len length of shift
+ * @return message SUCCESS or FAIL
+ */
+msg bi_mod(OUT bigint** dst, IN bigint** src, IN int mod_len);
+
+/**
+ * @brief bigint structure concatenate operator => a||b
+ *
+ * @param dst pointer to bigint struct result
+ * @param a pointer to bigint struct concate
+ * @param b pointer to bigint struct concated
+ * @return message SUCCESS or FAIL
+ */
+msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b);
 
 #endif // UTIL_H

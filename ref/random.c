@@ -7,6 +7,7 @@
  *
  * Arguments:   - bigint** dst: pointer to bigint struct
  *              - int word_len: length of bigint struct
+ * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
 msg bi_get_random(OUT bigint **dst, const IN int word_len)
 {
@@ -46,6 +47,7 @@ msg bi_get_random(OUT bigint **dst, const IN int word_len)
  *
  * Arguments:   - word* dst: pointer to bigint struct
  *              - int word_len: length of bigint struct
+ * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
 msg array_random(word *dst, int word_len)
 {
@@ -71,11 +73,31 @@ msg array_random(word *dst, int word_len)
  *
  * Arguments:   - byte* dst: pointer to bigint struct
  *              - int byte_len: length of bigint struct
+ * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
 msg randombytes(IN byte *dst, IN int byte_len)
 {
+#ifdef _WIN32
+    // Windows 버전
+    HCRYPTPROV hProvider = 0;
+    if (!CryptAcquireContext(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+    {
+        return GEN_RANDOM_BYTES_FAIL;
+    }
+
+    if (!CryptGenRandom(hProvider, byte_len, dst))
+    {
+        CryptReleaseContext(hProvider, 0);
+        return GEN_RANDOM_BYTES_FAIL;
+    }
+
+    CryptReleaseContext(hProvider, 0);
+    return GEN_RANDOM_BYTES_SUCCESS;
+#else
+    // Unix 버전 (기존 코드)
     static int fd = -1;
     ssize_t ret;
+
     while (fd == -1)
     {
         fd = open("/dev/urandom", O_RDONLY);
@@ -84,6 +106,7 @@ msg randombytes(IN byte *dst, IN int byte_len)
         else if (fd == -1)
             return GEN_RANDOM_BYTES_FAIL;
     }
+
     while (byte_len > 0)
     {
         ret = read(fd, dst, byte_len);
@@ -94,9 +117,10 @@ msg randombytes(IN byte *dst, IN int byte_len)
         dst += ret;
         byte_len -= ret;
     }
-    return GEN_RANDOM_BYTES_SUCCESS;
-}
 
+    return GEN_RANDOM_BYTES_SUCCESS;
+#endif
+}
 /*************************************************
  * Name:        get_random_string
  *
@@ -105,6 +129,7 @@ msg randombytes(IN byte *dst, IN int byte_len)
  * Arguments:   - char* str: return String
  *              - int str_len : length of return String
  *              - int base : base of return String
+ * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
 msg get_random_string(OUT char *str, IN int str_len, IN int base)
 {
