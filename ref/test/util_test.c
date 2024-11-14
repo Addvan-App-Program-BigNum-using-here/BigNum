@@ -836,12 +836,10 @@ msg test_bi_div(const IN int test_size, const IN int test_word_size)
     bigint *r = NULL;
     bigint *a = NULL;
     bigint *b = NULL;
-
     char *str = NULL;
-    // Test_BI_DIV_SUCCESS
     msg result_msg = Test_BI_DIV_SUCCESS;
 
-    str = (char *)calloc((test_word_size * 8) * 3 + 100, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
+    str = (char *)calloc((test_word_size * 8) * 3 + 100, sizeof(char));
     if (str == NULL)
         return MEM_NOT_ALLOC;
 
@@ -854,82 +852,149 @@ msg test_bi_div(const IN int test_size, const IN int test_word_size)
 
     for (int i = 0; i < test_size; i++)
     {
+        // 메모리가 남아있을 수 있으므로 반복문 시작시 NULL로 초기화
+        q = NULL;
+        r = NULL;
+        a = NULL;
+        b = NULL;
+
         result_msg = bi_get_random(&a, test_word_size);
-        if (result_msg != BI_GET_RANDOM_SUCCESS || a->word_len != test_word_size)
+        if (result_msg != BI_GET_RANDOM_SUCCESS || a == NULL)
             break;
 
         result_msg = bi_get_random(&b, test_word_size);
-        if (result_msg != BI_GET_RANDOM_SUCCESS || b->word_len != test_word_size || bi_is_zero(b))
-            continue; // b가 0인 경우는 건너뜁니다.
+        if (result_msg != BI_GET_RANDOM_SUCCESS || b == NULL || bi_is_zero(b))
+        {
+            bi_delete(&a);
+            continue;
+        }
 
+        // a 출력
         if (bigint_to_hex(&a, str) == -1)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
             break;
+        }
         result_msg = Test_file_write_non_enter(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
             break;
+        }
 
+        // 나누기 표시
         result_msg = Test_file_write_non_enter(" / ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
             break;
+        }
 
+        // b 출력
         if (bigint_to_hex(&b, str) == -1)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
             break;
+        }
         result_msg = Test_file_write_non_enter(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
             break;
+        }
 
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
             break;
+        }
 
-        result_msg = bi_div(&q, &r, &a, &b); // a / b를 수행하여 몫과 나머지를 구합니다.
+        // 나눗셈 수행
+        result_msg = bi_div(&q, &r, &a, &b);
         if (result_msg != BI_DIV_SUCCESS)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
             break;
+        }
 
+        // 몫 출력
         if (bigint_to_hex(&q, str) == -1)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
+            bi_delete(&q);
+            bi_delete(&r);
             break;
+        }
         result_msg = Test_file_write_non_enter(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
+            bi_delete(&q);
+            bi_delete(&r);
             break;
+        }
 
+        // remainder 출력
         result_msg = Test_file_write_non_enter(" remainder ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
+            bi_delete(&q);
+            bi_delete(&r);
             break;
+        }
 
+        // 나머지 출력
         if (bigint_to_hex(&r, str) == -1)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
+            bi_delete(&q);
+            bi_delete(&r);
             break;
+        }
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)
+        {
+            bi_delete(&a);
+            bi_delete(&b);
+            bi_delete(&q);
+            bi_delete(&r);
             break;
+        }
 
         // 할당된 메모리 해제
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)
-            break;
-
-        result_msg = bi_delete(&b);
-        if (result_msg != BI_FREE_SUCCESS)
-            break;
-
-        result_msg = bi_delete(&q);
-        if (result_msg != BI_FREE_SUCCESS)
-            break;
-
-        result_msg = bi_delete(&r);
-        if (result_msg != BI_FREE_SUCCESS)
-            break;
+        bi_delete(&a);
+        bi_delete(&b);
+        bi_delete(&q);
+        bi_delete(&r);
 
         result_msg = Test_BI_DIV_SUCCESS;
     }
 
+    // 문자열 버퍼 해제
     free(str);
-    if (bi_delete(&a) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
-    if (bi_delete(&b) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
-    if (bi_delete(&q) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
-    if (bi_delete(&r) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
+
+    // 혹시 남아있을 수 있는 메모리 정리
+    if (a != NULL)
+        bi_delete(&a);
+    if (b != NULL)
+        bi_delete(&b);
+    if (q != NULL)
+        bi_delete(&q);
+    if (r != NULL)
+        bi_delete(&r);
+
     return result_msg;
 }
