@@ -47,6 +47,13 @@ enum MemoryMSGCodes {
     BI_MOD_FAIL         = MSG_TYPE_MEMORY | 0x0015,  // Bigint 나머지 연산 실패
     BI_CAT_SUCCESS      = MSG_TYPE_MEMORY | 0x0016,  // Bigint 이어붙이기 성공
     BI_CAT_FAIL         = MSG_TYPE_MEMORY | 0x0017,  // Bigint 이어붙이기 실패
+    INIT_KARACHUBA_POOL_SUCCESS = MSG_TYPE_MEMORY | 0x0018, // 카라츄바 풀 초기화 성공
+    INIT_KARACHUBA_POOL_FAIL    = MSG_TYPE_MEMORY | 0x0019, // 카라츄바 풀 초기화 실패
+    CLEAR_KARACHUBA_POOL_SUCCESS = MSG_TYPE_MEMORY | 0x001A, // 카라츄바 풀 해제 성공
+    CLEAR_KARACHUBA_POOL_FAIL    = MSG_TYPE_MEMORY | 0x001B, // 카라츄바 풀 해제 실패
+    RAND_LENGTH_INVALID = MSG_TYPE_MEMORY | 0x001C, // 랜덤 길이가 유효하지 않을 경우
+    BI_RESIZE_SUCCESS   = MSG_TYPE_MEMORY | 0x001D, // Bigint resize 성공
+    BI_RESIZE_FAIL      = MSG_TYPE_MEMORY | 0x001E, // Bigint resize 실패
     // 추가 메모리 관련 에러 코드...
 };
 

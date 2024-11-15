@@ -53,10 +53,9 @@ int bigint_to_hex(IN bigint** src, OUT char* str) {
 * Return:      - word : integer. FAIL == 0
 **************************************************/
 word byte_to_uint(IN byte* input, const IN int byte_len){
-    word result = 0;
     // 입력된 byte 크기가 4보다 클 경우
     if(byte_len > 4)    return 0;
-
+    word result = 0;
     for(int i = 0; i < byte_len; i++){
         if(result > UINT32_MAX) return 0;
         result = result * 256 + input[i];
