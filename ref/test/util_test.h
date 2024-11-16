@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
+#include <time.h>
+#include <windows.h> // window 환경에서 gettimeofday() 함수 사용 위한것
 #include "../util.h"
 #include "../msg_control.h"
 #include "../random.h"
@@ -103,5 +104,8 @@ msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size);
  * @return message SUCCESS or FAIL
  */
 msg compare_multiplicaiton(int start_size, int end_size, int step_size, int iterations);
+
+
+int gettimeofday(struct timeval* tv, struct timezone* tz);
 
 #endif // UTIL_TEST_H

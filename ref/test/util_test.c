@@ -1,10 +1,11 @@
 #include "util_test.h"
 
+
 int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
     int test_size = 1;
-    int test_word_size = 64;
+    int test_word_size = 100;
     struct timeval start, end;
     double time_used;
 
@@ -46,6 +47,8 @@ int main(){
         return Test_FAIL;
     }
 
+    
+
     // string으로부터 bigint 생성 테스트
     printf("\n============ Testing bi_set_from ============\n");
     gettimeofday(&start, NULL);
@@ -62,6 +65,7 @@ int main(){
         return Test_FAIL;
     }
 
+    
     // bigint 덧셈 테스트
     printf("\n============ Testing bi_add ============\n");
     gettimeofday(&start, NULL);
@@ -154,6 +158,30 @@ int main(){
         return 1;
     } else {
         printf("python script exited with status %d\n", status);
+    }
+
+    return 0;
+}
+
+// Window 환경에서 사용하기 위해 gettimeofday() 함수 정의
+int gettimeofday(struct timeval* tv, struct timezone* tz) {
+    FILETIME ft;
+    unsigned __int64 tmpres = 0;
+    static const unsigned __int64 EPOCH = ((unsigned __int64) 116444736000000000ULL);
+
+    if (tv) {
+        GetSystemTimeAsFileTime(&ft);
+
+        tmpres |= ft.dwHighDateTime;
+        tmpres <<= 32;
+        tmpres |= ft.dwLowDateTime;
+
+        // Convert to microseconds
+        tmpres -= EPOCH;
+        tmpres /= 10;  // Convert into microseconds
+
+        tv->tv_sec = (long)(tmpres / 1000000UL);
+        tv->tv_usec = (long)(tmpres % 1000000UL);
     }
 
     return 0;
