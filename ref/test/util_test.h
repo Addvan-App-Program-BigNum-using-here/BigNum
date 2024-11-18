@@ -49,7 +49,7 @@ msg test_bi_set_from(const IN int test_size, const IN int test_word_size);
  * @param test_word_size size of bigint struct
  * @return message SUCCESS or FAIL
  */
-msg test_bi_set_from_base(const IN int test_size, const IN int base);
+msg test_bi_set_from_base(const IN int test_size, const IN int base, const IN int test_word_size);
 
 /**
  * @brief Test bigint structure set random
