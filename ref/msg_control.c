@@ -85,6 +85,31 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case RAND_INIT_FAIL: return "Random initialization failed";
         case GEN_RANDOM_BYTES_SUCCESS: return "Random byte generation successful";
         case GEN_RANDOM_BYTES_FAIL: return "Random byte generation failed";
+        case BI_SHIFT_SUCCESS: return "Bigint shift successful";
+        case BI_SHIFT_FAIL: return "Bigint shift failed";
+        case Test_BI_MUL_SUCCESS: return "Test Bigint multiplication successful";
+        case Test_BI_MUL_FAIL: return "Test Bigint multiplication failed";
+        case BI_MUL_SUCCESS: return "Bigint multiplication successful";
+        case BI_MUL_FAIL: return "Bigint multiplication failed";
+        case SET_ARRAY_SIZE_FAIL : return "Bigint array size set failed";
+        case Test_BI_SET_FROM_BASE_SUCCESS: return "Test Bigint array and string allocation with base successful";
+        case Test_BI_SET_FROM_BASE_FAIL: return "Test Bigint array and string allocation with base failed";
+        case BI_MOD_SUCCESS: return "Bigint modulo operation successful";
+        case BI_MOD_FAIL: return "Bigint modulo operation failed";
+        case Test_BI_MUL_KARACHUBA_SUCCESS: return "Test Bigint Karachuba multiplication successful";
+        case Test_BI_MUL_KARACHUBA_FAIL: return "Bigint refinement successful";
+        case COMPARE_MULTIPLICATION_SUCCESS: return "Compare multiplication successful";
+        case COMPARE_MULTIPLICATION_FAIL: return "Compare multiplication failed";
+        case BI_CAT_SUCCESS: return "Bigint concatenation successful";
+        case BI_CAT_FAIL: return "Bigint concatenation failed";
+        case BI_SIGN_NOT_MATCH: return "Bigint sign mismatch";
+        case INIT_KARACHUBA_POOL_SUCCESS: return "Karachuba pool initialization successful";
+        case INIT_KARACHUBA_POOL_FAIL: return "Karachuba pool initialization failed";
+        case CLEAR_KARACHUBA_POOL_SUCCESS: return "Karachuba pool deallocation successful";
+        case CLEAR_KARACHUBA_POOL_FAIL: return "Karachuba pool deallocation failed";
+        case RAND_LENGTH_INVALID: return "Invalid random length";
+        case BI_RESIZE_SUCCESS: return "Bigint resize successful";
+        case BI_RESIZE_FAIL: return "Bigint resize failed";
         default: return "Unknown error code";
     }
 }

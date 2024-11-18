@@ -18,6 +18,8 @@ enum StandardMSGCodes {
     SUCCESS = MSG_TYPE_STANDARD | 0x0001, // 성공
     FAIL    = MSG_TYPE_STANDARD | 0x0002, // 실패
     BI_INVALID_LENGTH = MSG_TYPE_STANDARD | 0x0003, // Bigint 길이가 0 이하인 경우
+    SET_ARRAY_SIZE_FAIL = MSG_TYPE_STANDARD | 0x0004, // 배열 할당 시 길이가 0 이하인 경우
+    BI_SIGN_NOT_MATCH = MSG_TYPE_STANDARD | 0x0005, // 부호가 일치하지 않는 경우
 };
 
 // 메모리 관련 에러
@@ -37,6 +39,21 @@ enum MemoryMSGCodes {
     BI_EXPAND_SUCCESS    = MSG_TYPE_MEMORY | 0x000D,  // Bigint expand 성공
     BI_EXPAND_FAIL       = MSG_TYPE_MEMORY | 0x000E,  // Bigint expand 실패
     BI_SET_ARRAY_NOT_MATCH = MSG_TYPE_MEMORY | 0x000F, // Bigint 배열 할당 시 길이가 맞지 않는 경우
+    BI_SHIFT_SUCCESS     = MSG_TYPE_MEMORY | 0x0010,  // Bigint shift 성공
+    BI_SHIFT_FAIL        = MSG_TYPE_MEMORY | 0x0011,  // Bigint shift 실패
+    BI_MUL_SUCCESS      = MSG_TYPE_MEMORY | 0x0012,  // Bigint 곱셈 성공
+    BI_MUL_FAIL         = MSG_TYPE_MEMORY | 0x0013,  // Bigint 곱셈 실패
+    BI_MOD_SUCCESS      = MSG_TYPE_MEMORY | 0x0014,  // Bigint 나머지 연산 성공
+    BI_MOD_FAIL         = MSG_TYPE_MEMORY | 0x0015,  // Bigint 나머지 연산 실패
+    BI_CAT_SUCCESS      = MSG_TYPE_MEMORY | 0x0016,  // Bigint 이어붙이기 성공
+    BI_CAT_FAIL         = MSG_TYPE_MEMORY | 0x0017,  // Bigint 이어붙이기 실패
+    INIT_KARACHUBA_POOL_SUCCESS = MSG_TYPE_MEMORY | 0x0018, // 카라츄바 풀 초기화 성공
+    INIT_KARACHUBA_POOL_FAIL    = MSG_TYPE_MEMORY | 0x0019, // 카라츄바 풀 초기화 실패
+    CLEAR_KARACHUBA_POOL_SUCCESS = MSG_TYPE_MEMORY | 0x001A, // 카라츄바 풀 해제 성공
+    CLEAR_KARACHUBA_POOL_FAIL    = MSG_TYPE_MEMORY | 0x001B, // 카라츄바 풀 해제 실패
+    RAND_LENGTH_INVALID = MSG_TYPE_MEMORY | 0x001C, // 랜덤 길이가 유효하지 않을 경우
+    BI_RESIZE_SUCCESS   = MSG_TYPE_MEMORY | 0x001D, // Bigint resize 성공
+    BI_RESIZE_FAIL      = MSG_TYPE_MEMORY | 0x001E, // Bigint resize 실패
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -84,6 +101,14 @@ enum TestMSGCodes {
     Test_BI_ADD_FAIL        = MSG_TYPE_TEST | 0x000B,      // Test Bigint 연산 실패
     Test_BI_SUB_SUCCESS     = MSG_TYPE_TEST | 0x000C,      // Test Bigint 연산 성공
     Test_BI_SUB_FAIL        = MSG_TYPE_TEST | 0x000D,      // Test Bigint 연산 실패
+    Test_BI_MUL_SUCCESS     = MSG_TYPE_TEST | 0x000E,      // Test Bigint 연산 성공
+    Test_BI_MUL_FAIL        = MSG_TYPE_TEST | 0x000F,      // Test Bigint 연산 실패
+    Test_BI_SET_FROM_BASE_SUCCESS = MSG_TYPE_TEST | 0x0010, // Test Bigint 배열 및 문자열 할당 성공
+    Test_BI_SET_FROM_BASE_FAIL    = MSG_TYPE_TEST | 0x0011, // Test Bigint 배열 및 문자열 할당 실패
+    Test_BI_MUL_KARACHUBA_SUCCESS = MSG_TYPE_TEST | 0x0012, // Test Bigint 카라츄바 곱셈 성공
+    Test_BI_MUL_KARACHUBA_FAIL    = MSG_TYPE_TEST | 0x0013, // Test Bigint 카라츄바 곱셈 실패
+    COMPARE_MULTIPLICATION_SUCCESS = MSG_TYPE_TEST | 0x0014, // Test Bigint 곱셈 비교 성공
+    COMPARE_MULTIPLICATION_FAIL    = MSG_TYPE_TEST | 0x0015, // Test Bigint 곱셈 비교 실패
     // 추가 테스트 관련 에러 코드...
 };
 
