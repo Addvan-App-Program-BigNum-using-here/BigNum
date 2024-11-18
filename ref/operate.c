@@ -66,7 +66,6 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
         if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
         return BI_RESIZE_FAIL;
     }
-
 //    if(bi_refine(dst) != BI_SET_REFINE_SUCCESS){
 //        if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
 //        return BI_SET_REFINE_FAIL;
@@ -115,7 +114,7 @@ msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b){
     }
 
     int max_word_len = (*a)->word_len;
-    byte barrow = bi_compare_abs(a, b) >= 0 ? 0 : 1; // 여기 첫 barrow 수행할 때 a >= b일 때 0, a < b 일 때 1
+    byte borrow = bi_compare_abs(a, b) >= 0 ? 0 : 1; // 여기 첫 borrow 수행할 때 a >= b일 때 0, a < b 일 때 1
     word temp_a = 0, temp_b = 0; // dst가 a와 b 중 같은 값일 경우 사용
 
     if(*dst == NULL){
@@ -131,8 +130,8 @@ msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b){
     for(int i = 0; i < (*a)->word_len; i++){
         temp_a = (*a)->a[i];
         temp_b = (*b)->a[i];
-        (*dst)->a[i] = (word)(barrow * 0xFFFFFFFF - temp_b + temp_a);
-        barrow = ((temp_a < temp_b + barrow) || (temp_b == 0xffffffff && barrow)) ? 1 : 0; // barrow bit 계산
+        (*dst)->a[i] = (word)(borrow * 0xFFFFFFFF - temp_b + temp_a);
+        borrow = ((temp_a < temp_b + borrow) || (temp_b == 0xffffffff && borrow)) ? 1 : 0; // borrow bit 계산
     }
     // 부호 설정
     (*dst)->sign = 0;

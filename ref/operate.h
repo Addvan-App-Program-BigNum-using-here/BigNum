@@ -5,7 +5,7 @@
 #include "msg_control.h"
 #include "util.h"
 
-#define flag 9  // karachuba에서 base case 수행 시 일반 곱셈의 기준
+#define flag 6  // karachuba에서 base case 수행 시 일반 곱셈의 기준 6이 가장 높은 듯??
 #define MAX_RECURSION_DEPTH 32 // 재귀 깊이
 #define POOL_SIZE 8            // 카라츄바에 필요한 임시 변수 개수 (a_0, b_0, a_1, b_1, a_0b_0, a_1b_1, a_1_a_0, b_1_b_0)
 
