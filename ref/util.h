@@ -32,7 +32,7 @@ msg bi_delete(OUT bigint **dst);
  * @param src pointer to bigint struct
  * @return message SUCCESS or FAIL
  */
-msg bi_refine(OUT bigint *src);
+msg bi_refine(OUT bigint** src);
 
 /**
  * @brief Processing_assign bigint struct
@@ -42,6 +42,15 @@ msg bi_refine(OUT bigint *src);
  * @return message SUCCESS or FAIL
  */
 msg bi_assign(OUT bigint **dst, IN bigint **src);
+
+/**
+ * @brief resize bigint struct
+ *
+ * @param dst pointer to bigint struct
+ * @param word_len length of bigint struct
+ * @return message SUCCESS or FAIL
+ */
+msg bi_resize(OUT bigint** dst, const IN int word_len);
 
 /**
  * @brief Expand bigint struct and fill data

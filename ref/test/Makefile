@@ -2,32 +2,32 @@ TEST_SRC = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ..
 CC = gcc
 # Detect operating system
 ifeq ($(OS),Windows_NT)
-	# Windows settings
-	CFLAGS = -Wall -Wextra -std=c99 -I..
-	LDFLAGS =
-	INCLUDES = -I..
-	TEST_TARGET = util_test.exe
+    # Windows settings
+    CFLAGS = -Wall -Wextra -std=c99 -I..
+    LDFLAGS =
+    INCLUDES = -I..
+    TEST_TARGET = util_test.exe
 else ifeq ($(OS),Linux)
-	# Linux settings
-	CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
-	LDFLAGS = -g -fsanitize=address
-	INCLUDES = -I..
-	TEST_TARGET = util_test
+    # Linux settings
+    CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
+    LDFLAGS = -g -fsanitize=address
+    INCLUDES = -I..
+    TEST_TARGET = util_test
 else
-	UNAME_S := $(shell uname -s)
-	UNAME_M := $(shell uname -m)
-	ifeq ($(UNAME_S),Darwin)
-		# Mac settings
-		ifeq ($(UNAME_M),x86_64)
-			CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
-			LDFLAGS = -g -fsanitize=address -arch x86_64
-		else ifeq ($(UNAME_M),arm64)
-			CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
-			LDFLAGS = -g -fsanitize=address -arch arm64
-		endif
-	endif
-	INCLUDES = -I..
-	TEST_TARGET = util_test
+    UNAME_S := $(shell uname -s)
+    UNAME_M := $(shell uname -m)
+    ifeq ($(UNAME_S),Darwin)
+        # Mac settings
+        ifeq ($(UNAME_M),x86_64)
+            CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
+            LDFLAGS = -g -fsanitize=address -arch x86_64
+        else ifeq ($(UNAME_M),arm64)
+            CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
+            LDFLAGS = -g -fsanitize=address -arch arm64
+        endif
+    endif
+    INCLUDES = -I..
+    TEST_TARGET = util_test
 endif
 
 all: $(TEST_TARGET)
