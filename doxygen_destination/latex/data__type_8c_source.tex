@@ -1,0 +1,37 @@
+\doxysection{data\+\_\+type.\+c}
+\hypertarget{data__type_8c_source}{}\label{data__type_8c_source}\index{BigNum/doxygen\_test/data\_type.c@{BigNum/doxygen\_test/data\_type.c}}
+\mbox{\hyperlink{data__type_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{data__type_8h}{data\_type.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00003}\mbox{\hyperlink{data__type_8c_a432d4743a0c1aa43e7fd86f3718d6ef1}{00003}}\ \mbox{\hyperlink{data__type_8h_adcff24a4bf9ee8d5311d29bc8019ecd6}{dword}}\ \mbox{\hyperlink{data__type_8c_a432d4743a0c1aa43e7fd86f3718d6ef1}{string\_to\_int}}(\textcolor{keywordtype}{char}*\ str,\ \textcolor{keywordtype}{int}\ base)\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00004}00004\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00005}00005\ \ \ \ \ \mbox{\hyperlink{data__type_8h_adcff24a4bf9ee8d5311d29bc8019ecd6}{dword}}\ num\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00006}00006\ \ \ \ \ \textcolor{keywordflow}{while}\ (str[i]\ !=\ \textcolor{charliteral}{'\(\backslash\)0'})\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00007}00007\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (str[i]\ >=\ \textcolor{charliteral}{'0'}\ \&\&\ str[i]\ <=\ \textcolor{charliteral}{'9'})\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00008}00008\ \ \ \ \ \ \ \ \ \ \ \ \ num\ =\ num\ *\ base\ +\ (str[i]\ -\/\ \textcolor{charliteral}{'0'});}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00009}00009\ \ \ \ \ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00010}00010\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00011}00011\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00012}00012\ \ \ \ \ \textcolor{keywordflow}{return}\ num;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00013}00013\ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00015}\mbox{\hyperlink{data__type_8c_ac6965f3f9a614b77ad608274d25b1543}{00015}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{data__type_8c_ac6965f3f9a614b77ad608274d25b1543}{char\_to\_int}}(\textcolor{keywordtype}{char}\ str)\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00016}00016\ \ \ \ \ \textcolor{keywordflow}{if}\ (str\ >=\ \textcolor{charliteral}{'0'}\ \&\&\ str\ <=\ \textcolor{charliteral}{'9'})}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00017}00017\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ -\/\ \textcolor{charliteral}{'0'};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00018}00018\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (str\ >=\ \textcolor{charliteral}{'A'}\ \&\&\ str\ <=\ \textcolor{charliteral}{'F'})}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00019}00019\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ -\/\ \textcolor{charliteral}{'A'}\ +\ 10;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00020}00020\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (str\ >=\ \textcolor{charliteral}{'a'}\ \&\&\ str\ <=\ \textcolor{charliteral}{'f'})}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00021}00021\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ -\/\ \textcolor{charliteral}{'a'}\ +\ 10;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00022}00022\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00023}00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00024}00024\ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00026}\mbox{\hyperlink{data__type_8c_aa28a72ed006d6e9072310c1b73dc7410}{00026}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{data__type_8c_aa28a72ed006d6e9072310c1b73dc7410}{int\_to\_char}}(\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}\ num,\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{int}\ idx)\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00027}00027\ \ \ \ \ \textcolor{keywordflow}{while}\ (num\ !=\ 0)\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00028}00028\ \ \ \ \ \ \ \ \ str[idx]\ =\ num\ \%\ 10\ +\ \textcolor{charliteral}{'0'};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00029}00029\ \ \ \ \ \ \ \ \ num\ /=\ 10;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00030}00030\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00031}00031\ \}}
+
+\end{DoxyCode}
