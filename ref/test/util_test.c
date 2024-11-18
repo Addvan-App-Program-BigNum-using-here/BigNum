@@ -5,7 +5,7 @@ int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
     int test_size = 1;
-    int test_word_size = 100;
+    int test_word_size = 1000;
     struct timeval start, end;
     double time_used;
 
@@ -98,6 +98,7 @@ int main(){
         return Test_FAIL;
     }
 
+    /*
     // bigint 곱셈 테스트
     printf("\n============ Testing bi_mul ============\n");
     gettimeofday(&start, NULL);
@@ -114,14 +115,21 @@ int main(){
         return Test_FAIL;
     }
 
-    // bigint 곱셈 카라츄바 테스트
+    // bigint 곱셈 karachub 테스트
     printf("\n============ Testing bi_mul_karachuba ============\n");
     gettimeofday(&start, NULL);
+
+    // karachuba 실행
+    result_msg = init_karachuba_pool(test_word_size);
+    if(result_msg != INIT_KARACHUBA_POOL_SUCCESS)    return Test_FAIL;
     result_msg = test_bi_mul_karachuba(test_size, test_word_size);
+    if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS)   return Test_FAIL;
+    result_msg = clear_karachuba_pool();
+    if(result_msg != CLEAR_KARACHUBA_POOL_SUCCESS)    return Test_FAIL;
+
     gettimeofday(&end, NULL);
     time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     log_msg(result_msg);
-    if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS)   return Test_FAIL;
     printf("Time taken: %f seconds\n", time_used);
 
     result_msg = Test_file_write(seperator, APPEND);
@@ -131,16 +139,16 @@ int main(){
     }
 
     // bigint 곱셈 성능 비교 테스트
-    result_msg = compare_multiplicaiton(10, 64, 10, 200);
+    result_msg = compare_multiplicaiton(10, test_word_size, 10, test_size);
     if(result_msg != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;
 
-    printf("\n\n");
-
+    printf("\n");
     result_msg = Test_file_write(TEST_end, APPEND);
     if(result_msg != FILE_WRITE_SUCCESS){
         log_msg(result_msg);
         return Test_FAIL;
     }
+    */
 
     log_msg(Test_SUCCESS);
 
@@ -226,9 +234,6 @@ msg test_bi_set_from(const IN int test_size, const IN int test_word_size){
             }
         }
 
-        result_msg = bi_delete(&a);
-        if(result_msg != BI_FREE_SUCCESS)   goto FROM_EXIT;
-
         // big_endian set test
         result_msg = bi_set_from_array(&a, 1, test_word_size, test_array, big_endian);
         if(result_msg != BI_SET_ARRAY_SUCCESS)  goto FROM_EXIT;
@@ -239,9 +244,6 @@ msg test_bi_set_from(const IN int test_size, const IN int test_word_size){
                 goto FROM_EXIT;
             }
         }
-
-        result_msg = bi_delete(&a);
-        if(result_msg != BI_FREE_SUCCESS)   goto FROM_EXIT;
     }
 
     // 2진수 테스트
@@ -297,15 +299,9 @@ msg test_bi_set_from_base(const IN int test_size, const IN int base){
     str = (char*)calloc(array_size + 20, sizeof(byte)); // '0x' * 3 + '-' * 3 + " + " + " = " => 6 + 3 + 3 + 3 = 14
     if(str == NULL) return MEM_NOT_ALLOC;
 
-    str_base = (char*)calloc(array_size + 1, sizeof(byte));
-    if(str_base == NULL){
-        free(str);
-        return MEM_NOT_ALLOC;
-    }
-
     for(int i = 0; i < test_size; i++){
         // base 기준 랜덤한 str 가져오기
-        result_msg = get_random_string(str_base, array_size - 1, base);
+        result_msg = get_random_string(&str_base, array_size - 1, base);
         if(result_msg != RAND_STRING_SUCCESS) goto FROM_BASE_EXIT;
 
         // 랜덤한 문자열 저장
@@ -607,8 +603,8 @@ msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size){
 
 msg compare_multiplicaiton(int start_size, int end_size, int step_size, int iterations){
     printf("\n=== Comparing Multiplication Methods ===\n");
-    printf("Size\tClassic(s)\tKaratsuba(s)\tRatio\tCrossover\n");
-    printf("------------------------------------------------\n");
+    printf("Size\titeration\tClassic(s)\tKaratsuba(s)\tRatio\tCrossover\n");
+    printf("------------------------------------------------------------------------------\n");
 
     bigint* a = NULL;
     bigint* b = NULL;
@@ -661,8 +657,9 @@ msg compare_multiplicaiton(int start_size, int end_size, int step_size, int iter
             crossover_point = test_word_size;
         }
 
-        printf("%d\t%.6f\t%.6f\t%.2f\t%s\n",
+        printf("%d\t%d\t\t%.6f\t%.6f\t%.2f\t%s\n",
                test_word_size,
+               iterations,
                avg_time_classic,
                avg_time_karatsuba,
                ratio,

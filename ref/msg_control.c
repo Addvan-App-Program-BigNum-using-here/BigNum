@@ -103,6 +103,13 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case BI_CAT_SUCCESS: return "Bigint concatenation successful";
         case BI_CAT_FAIL: return "Bigint concatenation failed";
         case BI_SIGN_NOT_MATCH: return "Bigint sign mismatch";
+        case INIT_KARACHUBA_POOL_SUCCESS: return "Karachuba pool initialization successful";
+        case INIT_KARACHUBA_POOL_FAIL: return "Karachuba pool initialization failed";
+        case CLEAR_KARACHUBA_POOL_SUCCESS: return "Karachuba pool deallocation successful";
+        case CLEAR_KARACHUBA_POOL_FAIL: return "Karachuba pool deallocation failed";
+        case RAND_LENGTH_INVALID: return "Invalid random length";
+        case BI_RESIZE_SUCCESS: return "Bigint resize successful";
+        case BI_RESIZE_FAIL: return "Bigint resize failed";
         default: return "Unknown error code";
     }
 }

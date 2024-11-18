@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #define big_endian 0              ///< big endian
 #define little_endian 1           ///< little endian

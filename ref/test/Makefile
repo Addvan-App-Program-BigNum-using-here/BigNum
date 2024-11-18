@@ -1,19 +1,23 @@
 TEST_SRC = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ../file_io.c ./util_test.c
-
+CC = gcc
 # Detect operating system
 ifeq ($(OS),Windows_NT)
     # Windows settings
-    CC = gcc
     CFLAGS = -Wall -Wextra -std=c99 -I..
     LDFLAGS =
     INCLUDES = -I..
     TEST_TARGET = util_test.exe
+else ifeq ($(OS),Linux)
+    # Linux settings
+    CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
+    LDFLAGS = -g -fsanitize=address
+    INCLUDES = -I..
+    TEST_TARGET = util_test
 else
     UNAME_S := $(shell uname -s)
     UNAME_M := $(shell uname -m)
     ifeq ($(UNAME_S),Darwin)
         # Mac settings
-        CC = clang
         ifeq ($(UNAME_M),x86_64)
             CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
             LDFLAGS = -g -fsanitize=address -arch x86_64
@@ -21,11 +25,6 @@ else
             CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
             LDFLAGS = -g -fsanitize=address -arch arm64
         endif
-    else
-        # Linux settings (assuming arm64 architecture)
-        CC = clang
-        CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
-        LDFLAGS = -g -fsanitize=address
     endif
     INCLUDES = -I..
     TEST_TARGET = util_test
@@ -39,18 +38,14 @@ $(TEST_TARGET): $(TEST_SRC)
 ifeq ($(OS),Windows_NT)
 run: $(TEST_TARGET)
 	./$(TEST_TARGET)
-test: $(TEST_TARGET)
-	./$(TEST_TARGET)
-	cls
-	cat ./main_result.txt
 else
 run: $(TEST_TARGET)
-	leaks --atExit --  ./$(TEST_TARGET)
+	leaks --atExit -- ./$(TEST_TARGET)
+endif
+
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
-	clear
 	cat ./main_result.txt
-endif
 
 rerun: rebuild run
 retest: rebuild test

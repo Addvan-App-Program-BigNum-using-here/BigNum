@@ -44,7 +44,7 @@ msg array_random(OUT word* dst, IN int word_len);
  * @param base base of random string
  * @return message SUCCESS or FAIL
  */
-msg get_random_string(OUT char* str, IN int str_len, IN int base);
+msg get_random_string(OUT char** str, IN int str_len, IN int base);
 
 /**
  * @brief get random byte array
