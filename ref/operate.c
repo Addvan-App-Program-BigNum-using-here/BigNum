@@ -525,6 +525,158 @@ karachuba_exit:
  *              - bigint** a: bigint struct
  *              - bigint** b: bigint struct
  **************************************************/
+// msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
+// {
+//     msg result_msg;
+
+//     // 1. NULL 체크 강화
+//     if (q == NULL || r == NULL || a == NULL || b == NULL ||
+//         *a == NULL || *b == NULL)
+//         return MEM_NOT_ALLOC;
+
+//     // 2. 0으로 나누기 체크
+//     if ((*b)->word_len == 1 && (*b)->a[0] == 0)
+//         return BI_DIV_FAIL;
+
+//     // 3. 기존 메모리 해제
+//     if (*q != NULL)
+//     {
+//         if (bi_delete(q) != BI_FREE_SUCCESS)
+//             return BI_FREE_FAIL;
+//         *q = NULL;
+//     }
+
+//     if (*r != NULL)
+//     {
+//         if (bi_delete(r) != BI_FREE_SUCCESS)
+//             return BI_FREE_FAIL;
+//         *r = NULL;
+//     }
+
+//     // 4. |a| < |b| 케이스 처리
+//     if (bi_compare_abs(a, b) < 0)
+//     {
+//         // q를 0으로 초기화
+//         if (bi_new(q, 1) != BI_ALLOC_SUCCESS)
+//             return BI_ALLOC_FAIL;
+//         (*q)->a[0] = 0;
+
+//         // r에 a 복사를 위한 메모리 할당
+//         if (bi_new(r, (*a)->word_len) != BI_ALLOC_SUCCESS)
+//         {
+//             bi_delete(q);
+//             return BI_ALLOC_FAIL;
+//         }
+
+//         // a의 내용을 r에 복사
+//         result_msg = bi_assign(r, a);
+//         if (result_msg != BI_SET_ASSIGN_SUCCESS)
+//         {
+//             bi_delete(q);
+//             bi_delete(r);
+//             return result_msg;
+//         }
+
+//         (*q)->sign = (*a)->sign ^ (*b)->sign;
+//         return BI_DIV_SUCCESS;
+//     }
+
+//     // 5. 나눗셈을 위한 메모리 할당
+//     int q_wordlen = (*a)->word_len - (*b)->word_len + 1;
+//     if (q_wordlen <= 0)
+//     {
+//         printf("Invalid q_wordlen: %d\n", q_wordlen);
+//         return BI_DIV_FAIL;
+//     }
+
+//     // q에 대한 메모리 할당
+//     if (bi_new(q, q_wordlen) != BI_ALLOC_SUCCESS)
+//         return BI_DIV_FAIL;
+
+//     // r에 대한 메모리 할당
+//     if (bi_new(r, (*a)->word_len) != BI_ALLOC_SUCCESS)
+//     {
+//         bi_delete(q);
+//         return BI_ALLOC_FAIL;
+//     }
+
+//     // r에 a의 값 복사
+//     result_msg = bi_assign(r, a);
+
+//     if (result_msg != BI_SET_ASSIGN_SUCCESS)
+//     {
+//         bi_delete(q);
+//         bi_delete(r);
+//         return result_msg;
+//     }
+
+//     // 6. 임시 변수 선언
+//     bigint *temp_sub = NULL;
+//     bigint *temp_b = NULL;
+//     word b_sign = (*b)->sign;
+//     (*b)->sign = 0;
+
+//     // 7. 나눗셈 수행
+//     for (int i = (*r)->word_len - (*b)->word_len; i >= 0; i--)
+//     {
+//         if (temp_b != NULL)
+//         {
+//             bi_delete(&temp_b);
+//         }
+//         // temp_b 메모리 할당
+//         if (bi_new(&temp_b, (*b)->word_len + i) != BI_ALLOC_SUCCESS)
+//             goto DIV_EXIT;
+//         result_msg = bi_shift_left(&temp_b, b, i * WORD_BITS);
+//         // shift 나오면 temp_b <- b << i * WORD_BITS
+//         // ex) A = 12345 , B = 123 , i = 2
+//         // temp_b = 12300 뺄셈 수행 가능해짐.
+//         if (result_msg != BI_SHIFT_SUCCESS)
+//             goto DIV_EXIT;
+
+//         while (bi_compare_abs(r, &temp_b) >= 0)
+//         {
+//             // a가 더 클 때처리임. 절대값 했을 때
+//             result_msg = bi_sub(&temp_sub, r, &temp_b);
+//             // while 문 돌면서 temp_sub <- r - temp_b 수행
+//             if (result_msg != BI_SUB_SUCCESS)
+//                 goto DIV_EXIT;
+
+//             // r에 temp_sub값 복사
+//             result_msg = bi_assign(r, &temp_sub);
+//             if (result_msg != BI_SET_ASSIGN_SUCCESS)
+//                 goto DIV_EXIT;
+//             printf(" . ");
+//             // 몫값 증가
+//             (*q)->a[i]++;
+
+//             if (bi_delete(&temp_sub) != BI_FREE_SUCCESS)
+//                 goto DIV_EXIT;
+//         }
+//         temp_b = NULL;
+//     }
+
+//     // 8. 부호 처리
+//     (*b)->sign = b_sign;
+//     (*q)->sign = (*a)->sign ^ (*b)->sign;
+//     (*r)->sign = (*a)->sign;
+
+//     if (bi_refine(*q) != BI_SET_REFINE_SUCCESS)
+//         goto DIV_EXIT;
+//     if (bi_refine(*r) != BI_SET_REFINE_SUCCESS)
+//         goto DIV_EXIT;
+
+//     return BI_DIV_SUCCESS;
+
+// DIV_EXIT:
+//     (*b)->sign = b_sign;
+//     if (temp_sub != NULL)
+//         bi_delete(&temp_sub);
+//     if (temp_b != NULL)
+//         bi_delete(&temp_b);
+//     bi_delete(q);
+//     bi_delete(r);
+//     return BI_DIV_FAIL;
+// }
 msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
 {
     msg result_msg;
@@ -556,19 +708,16 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
     // 4. |a| < |b| 케이스 처리
     if (bi_compare_abs(a, b) < 0)
     {
-        // q를 0으로 초기화
         if (bi_new(q, 1) != BI_ALLOC_SUCCESS)
             return BI_ALLOC_FAIL;
         (*q)->a[0] = 0;
 
-        // r에 a 복사를 위한 메모리 할당
         if (bi_new(r, (*a)->word_len) != BI_ALLOC_SUCCESS)
         {
             bi_delete(q);
             return BI_ALLOC_FAIL;
         }
 
-        // a의 내용을 r에 복사
         result_msg = bi_assign(r, a);
         if (result_msg != BI_SET_ASSIGN_SUCCESS)
         {
@@ -584,25 +733,18 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
     // 5. 나눗셈을 위한 메모리 할당
     int q_wordlen = (*a)->word_len - (*b)->word_len + 1;
     if (q_wordlen <= 0)
-    {
-        printf("Invalid q_wordlen: %d\n", q_wordlen);
         return BI_DIV_FAIL;
-    }
 
-    // q에 대한 메모리 할당
     if (bi_new(q, q_wordlen) != BI_ALLOC_SUCCESS)
         return BI_DIV_FAIL;
 
-    // r에 대한 메모리 할당
     if (bi_new(r, (*a)->word_len) != BI_ALLOC_SUCCESS)
     {
         bi_delete(q);
         return BI_ALLOC_FAIL;
     }
 
-    // r에 a의 값 복사
     result_msg = bi_assign(r, a);
-
     if (result_msg != BI_SET_ASSIGN_SUCCESS)
     {
         bi_delete(q);
@@ -613,51 +755,79 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)
     // 6. 임시 변수 선언
     bigint *temp_sub = NULL;
     bigint *temp_b = NULL;
+    bigint *temp_q = NULL;
     word b_sign = (*b)->sign;
     (*b)->sign = 0;
 
-    // 7. 나눗셈 수행
-    printf("r word_len: %d\n", (*r)->word_len);
-    printf("b word_len: %d\n", (*b)->word_len);
-    printf(" pointer r : %p\n", *r);
-    printf(" pointer b : %p\n", *b);
-
+    // 7. 개선된 나눗셈 수행
     for (int i = (*r)->word_len - (*b)->word_len; i >= 0; i--)
     {
         if (temp_b != NULL)
         {
             bi_delete(&temp_b);
         }
-        // temp_b 메모리 할당
+
+        // 현재 위치에서의 temporary divisor 계산
         if (bi_new(&temp_b, (*b)->word_len + i) != BI_ALLOC_SUCCESS)
             goto DIV_EXIT;
+
         result_msg = bi_shift_left(&temp_b, b, i * WORD_BITS);
-        // shift 나오면 temp_b <- b << i * WORD_BITS
-        // ex) A = 12345 , B = 123 , i = 2
-        // temp_b = 12300 뺄셈 수행 가능해짐.
         if (result_msg != BI_SHIFT_SUCCESS)
             goto DIV_EXIT;
 
-        while (bi_compare_abs(r, &temp_b) >= 0)
+        // Binary search for quotient digit
+        word left = 0, right = UINT32_MAX;
+        word mid = 0;
+
+        while (left <= right)
         {
-            // a가 더 클 때처리임. 절대값 했을 때
-            result_msg = bi_sub(&temp_sub, r, &temp_b);
-            // while 문 돌면서 temp_sub <- r - temp_b 수행
-            if (result_msg != BI_SUB_SUCCESS)
+            mid = (left + right) >> 1;
+
+            // Calculate temp_q = mid * temp_b
+            if (bi_new(&temp_q, temp_b->word_len + 1) != BI_ALLOC_SUCCESS)
                 goto DIV_EXIT;
 
-            // r에 temp_sub값 복사
-            result_msg = bi_assign(r, &temp_sub);
-            if (result_msg != BI_SET_ASSIGN_SUCCESS)
-                goto DIV_EXIT;
+            for (int j = 0; j < temp_b->word_len; j++)
+            {
+                temp_q->a[j] = temp_b->a[j] * mid;
+            }
 
-            // 몫값 증가
-            (*q)->a[i]++;
+            int cmp = bi_compare_abs(r, &temp_q);
 
-            if (bi_delete(&temp_sub) != BI_FREE_SUCCESS)
-                goto DIV_EXIT;
+            if (cmp == 0)
+            {
+                (*q)->a[i] = mid;
+                bi_assign(r, &temp_q);
+                break;
+            }
+            else if (cmp > 0)
+            {
+                left = mid + 1;
+                (*q)->a[i] = mid;
+
+                result_msg = bi_sub(&temp_sub, r, &temp_q);
+                if (result_msg != BI_SUB_SUCCESS)
+                    goto DIV_EXIT;
+
+                result_msg = bi_assign(r, &temp_sub);
+                if (result_msg != BI_SET_ASSIGN_SUCCESS)
+                    goto DIV_EXIT;
+            }
+            else
+            {
+                right = mid - 1;
+            }
+
+            bi_delete(&temp_q);
+            if (temp_sub != NULL)
+            {
+                bi_delete(&temp_sub);
+                temp_sub = NULL;
+            }
+
+            if (left > right)
+                break;
         }
-        temp_b = NULL;
     }
 
     // 8. 부호 처리
@@ -678,6 +848,8 @@ DIV_EXIT:
         bi_delete(&temp_sub);
     if (temp_b != NULL)
         bi_delete(&temp_b);
+    if (temp_q != NULL)
+        bi_delete(&temp_q);
     bi_delete(q);
     bi_delete(r);
     return BI_DIV_FAIL;
