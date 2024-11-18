@@ -1,31 +1,43 @@
 #include "msg_control.h"
 #include <stdio.h>
 
-void log_msg(const IN uint32_t msg_code) {
-    const char* msg_type = "UNKNOWN";
-    if ((msg_code & MSG_TYPE_STANDARD) == MSG_TYPE_STANDARD) {
+void log_msg(const IN uint32_t msg_code)
+{
+    const char *msg_type = "UNKNOWN";
+    if ((msg_code & MSG_TYPE_STANDARD) == MSG_TYPE_STANDARD)
+    {
         msg_type = "STANDARD";
-    } else if ((msg_code & MSG_TYPE_MEMORY) == MSG_TYPE_MEMORY) {
+    }
+    else if ((msg_code & MSG_TYPE_MEMORY) == MSG_TYPE_MEMORY)
+    {
         msg_type = "MEMORY";
-    } else if ((msg_code & MSG_TYPE_STRING) == MSG_TYPE_STRING) {
+    }
+    else if ((msg_code & MSG_TYPE_STRING) == MSG_TYPE_STRING)
+    {
         msg_type = "STRING";
-    } else if ((msg_code & MSG_TYPE_IO) == MSG_TYPE_IO) {
+    }
+    else if ((msg_code & MSG_TYPE_IO) == MSG_TYPE_IO)
+    {
         msg_type = "IO";
-    } else if ((msg_code & MSG_TYPE_TEST) == MSG_TYPE_TEST) {
+    }
+    else if ((msg_code & MSG_TYPE_TEST) == MSG_TYPE_TEST)
+    {
         msg_type = "TEST";
-    } else if ((msg_code & MSG_TYPE_OPERATE) == MSG_TYPE_OPERATE) {
+    }
+    else if ((msg_code & MSG_TYPE_OPERATE) == MSG_TYPE_OPERATE)
+    {
         msg_type = "OPERATE";
-    } else if ((msg_code & MSG_TYPE_OTHER) == MSG_TYPE_OTHER) {
+    }
+    else if ((msg_code & MSG_TYPE_OTHER) == MSG_TYPE_OTHER)
+    {
         msg_type = "OTHER";
     }
     // 추가 에러 타입에 대한 처리...
 
     fprintf(stderr, "[LOG] : [%s] 0x%08X : [%s]\n", msg_type, msg_code, get_msg_message(msg_code));
-
 }
 
 #include "msg_control.h"
-
 const char* get_msg_message(const IN uint32_t msg_code) {
     switch (msg_code) {
         case SUCCESS: return "Operation successful";

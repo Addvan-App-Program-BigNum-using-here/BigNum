@@ -41,7 +41,7 @@ msg bi_refine(OUT bigint** src);
  * @param src source bigint struct
  * @return message SUCCESS or FAIL
  */
-msg bi_assign(OUT bigint **dst, IN bigint** src);
+msg bi_assign(OUT bigint **dst, IN bigint **src);
 
 /**
  * @brief resize bigint struct
@@ -59,7 +59,7 @@ msg bi_resize(OUT bigint** dst, const IN int word_len);
  * @param data array of word
  * @return message SUCCESS or FAIL
  */
-msg bi_expand(OUT bigint** dst, const IN int word_len, const IN word data);
+msg bi_expand(OUT bigint **dst, const IN int word_len, const IN word data);
 
 /**
  * @brief Set bigint struct from array
@@ -90,7 +90,7 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base);
  * @param base base of bigint struct (2, 10, 16)
  * @return message SUCCESS or FAIL
  */
-msg bi_print(IN bigint** dst, const IN int base);
+msg bi_print(IN bigint **dst, const IN int base);
 
 /**
  * @brief Compare bigint struct
@@ -99,7 +99,7 @@ msg bi_print(IN bigint** dst, const IN int base);
  * @param b pointer to bigint struct
  * @return result of compare (a > b => 1, a < b => -1, a == b => 0)
  */
-int bi_compare(IN bigint** a, IN bigint** b);
+int bi_compare(IN bigint **a, IN bigint **b);
 
 /**
  * @brief Compare absolute bigint struct
@@ -108,7 +108,7 @@ int bi_compare(IN bigint** a, IN bigint** b);
  * @param b pointer to bigint struct
  * @return result of compare (a > b => 1, a < b => -1, a == b => 0)
  */
-int bi_compare_abs(IN bigint** a, IN bigint** b);
+int bi_compare_abs(IN bigint **a, IN bigint **b);
 
 /**
  * @brief bigint structure shift left operator
@@ -118,7 +118,7 @@ int bi_compare_abs(IN bigint** a, IN bigint** b);
  * @param shift_len length of shift
  * @return message SUCCESS or FAIL
  */
-msg bi_shift_left(OUT bigint** dst, IN bigint** src, const IN int shift_len);
+msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len);
 
 /**
  * @brief bigint structure shift right operator
@@ -128,7 +128,7 @@ msg bi_shift_left(OUT bigint** dst, IN bigint** src, const IN int shift_len);
  * @param shift_len length of shift
  * @return message SUCCESS or FAIL
  */
-msg bi_shift_right(OUT bigint** dst, IN bigint** src, const IN int shift_len);
+msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len);
 
 /**
  * @brief bigint structure modulation operator
@@ -138,7 +138,7 @@ msg bi_shift_right(OUT bigint** dst, IN bigint** src, const IN int shift_len);
  * @param mod_len length of shift
  * @return message SUCCESS or FAIL
  */
-msg bi_mod(OUT bigint** dst, IN bigint** src, IN int mod_len);
+msg bi_mod(OUT bigint **dst, IN bigint **src, IN int mod_len);
 
 /**
  * @brief bigint structure concatenate operator => a||b
@@ -148,6 +148,7 @@ msg bi_mod(OUT bigint** dst, IN bigint** src, IN int mod_len);
  * @param b pointer to bigint struct concated
  * @return message SUCCESS or FAIL
  */
-msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b);
+msg bi_cat(OUT bigint **dst, IN bigint **a, IN bigint **b);
 
+bool bi_is_zero(const bigint *num);
 #endif // UTIL_H

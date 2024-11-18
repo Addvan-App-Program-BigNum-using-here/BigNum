@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+// 윈도우일 때는 time.h 인 것으로 판단
+#include <time.h>
 #include "../util.h"
 #include "../msg_control.h"
 #include "../random.h"
@@ -15,6 +17,7 @@
 // popen에서 나오는 출력 값 예외처리
 // Windows 시스템
 #ifdef _WIN32
+
 #define PYTHON_REDIRECT " >nul 2>nul"
 #define PYTHON_CMD "python "
 // Unix/Linux/MacOS 시스템
@@ -104,4 +107,5 @@ msg test_bi_mul_karachuba(const IN int test_size, const IN int test_word_size);
  */
 msg compare_multiplicaiton(int start_size, int end_size, int step_size, int iterations);
 
+msg test_bi_div(const IN int test_size, const IN int test_word_size);
 #endif // UTIL_TEST_H
