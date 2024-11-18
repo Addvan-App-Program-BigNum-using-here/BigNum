@@ -114,17 +114,6 @@ msg randombytes(IN byte* dst, IN int byte_len){
 **************************************************/
 msg get_random_string(OUT char** str, IN int str_len, IN int base){
     if(str_len <= 0)    return RAND_LENGTH_INVALID;
-    if(*str == NULL){
-        *str = (char*)calloc(str_len + 1, sizeof(char));
-        if(*str == NULL) return MEM_NOT_ALLOC;
-    }else{
-         if((int)strlen(*str) < str_len + 1){ // 여기 뭔가 에러 날 수 있음.. 확인 다시 필요
-             *str = (char*)realloc(*str, (str_len + 1) * sizeof(char));
-             if(*str == NULL) return MEM_NOT_ALLOC;
-         }
-     }
-
-    int str_idx = str_len;
     byte temp;
 
     // 각 진수별 사용할 문자 배열
@@ -138,20 +127,37 @@ msg get_random_string(OUT char** str, IN int str_len, IN int base){
         case 2:
             chars = binary_chars;
             chars_len = sizeof(binary_chars) - 1;
+            str_len *= 32;
             break;
         case 10:
             chars = decimal_chars;
             chars_len = sizeof(decimal_chars) - 1;
+            str_len *= 9; // 10자리로 하면 overflow 날 수도 있어서 (최대 : 4294967296)
             break;
         case 16:
             chars = hex_chars;
             chars_len = sizeof(hex_chars) - 1;
+            str_len *= 8;
             break;
         default:
-            (*str)[0] = '\0';
+            if(str != NULL)    (*str)[0] = '\0';
             return RAND_STRING_INVALID;
     }
 
+    if(*str == NULL){
+        *str = (char*)calloc(str_len + 1, sizeof(char));
+        if(*str == NULL) return MEM_NOT_ALLOC;
+    }else{
+         if((int)strlen(*str) < str_len + 1){ // 여기 뭔가 에러 날 수 있음.. 확인 다시 필요
+             *str = (char*)realloc(*str, (str_len + 1) * sizeof(char));
+             if(*str == NULL) return MEM_NOT_ALLOC;
+         }
+     }
+
+
+    int str_idx = str_len;
+
+    printf("str len: %d\n", str_len);
     while(str_idx > 0) {
         if(randombytes(&temp, 1) != GEN_RANDOM_BYTES_SUCCESS)  return GEN_RANDOM_BYTES_FAIL;
         int random_index = (int)temp % chars_len;

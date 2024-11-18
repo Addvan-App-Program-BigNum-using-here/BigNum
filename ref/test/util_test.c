@@ -3,7 +3,7 @@
 int main(){
     msg result_msg = 0;
     FILE *fp = NULL;
-    int test_size = 200;
+    int test_size = 1;
     int test_word_size = 70;
     struct timeval start, end;
     double time_used;
@@ -219,7 +219,7 @@ msg test_bi_set_from(const IN int test_size, const IN int test_word_size){
     // 2진수 테스트
     result_msg = Test_file_write("[2]", APPEND);
     if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;
-    result_msg = test_bi_set_from_base(test_size, 2);
+    result_msg = test_bi_set_from_base(test_size, 2, test_word_size);
     if(result_msg != Test_BI_SET_FROM_BASE_SUCCESS)    goto FROM_EXIT;
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
@@ -228,7 +228,7 @@ msg test_bi_set_from(const IN int test_size, const IN int test_word_size){
     // 10진수 테스트
     result_msg = Test_file_write("[10]", APPEND);
 //    if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;
-//    result_msg = test_bi_set_from_base(test_size, 10);
+//    result_msg = test_bi_set_from_base(test_size, 10, test_word_size);
 //    if(result_msg != Test_BI_SET_FROM_BASE_SUCCESS)    goto FROM_EXIT;
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
@@ -237,7 +237,7 @@ msg test_bi_set_from(const IN int test_size, const IN int test_word_size){
     // 16진수 테스트
     result_msg = Test_file_write("[16]", APPEND);
     if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;;
-    result_msg = test_bi_set_from_base(test_size, 16);
+    result_msg = test_bi_set_from_base(test_size, 16, test_word_size);
     if(result_msg != Test_BI_SET_FROM_BASE_SUCCESS)    goto FROM_EXIT;;
 
     result_msg = Test_file_write(seperator, APPEND); // 구분자
@@ -252,7 +252,7 @@ FROM_EXIT:
     return result_msg;
 }
 
-msg test_bi_set_from_base(const IN int test_size, const IN int base){
+msg test_bi_set_from_base(const IN int test_size, const IN int base, const IN int test_word_size){
     byte byte_array_size[4]; // 4바이트 크기의 배열
     word array_size = 0; // 최대 4바이트 크기의 정수
     bigint* a = NULL;
@@ -261,17 +261,19 @@ msg test_bi_set_from_base(const IN int test_size, const IN int base){
     msg result_msg = 0;
 
     // 랜덤한 array_size 할당
-    if(randombytes(byte_array_size, 4) != GEN_RANDOM_BYTES_SUCCESS)  return GEN_RANDOM_BYTES_FAIL;
-    array_size = byte_to_uint(byte_array_size, 4);
-    if(!array_size)    return SET_ARRAY_SIZE_FAIL;
-    array_size %= 1000;
+//    if(randombytes(byte_array_size, 4) != GEN_RANDOM_BYTES_SUCCESS)  return GEN_RANDOM_BYTES_FAIL;
+//    array_size = byte_to_uint(byte_array_size, 4); // 길이가 랜덤으로 잡힌다.
+//    if(!array_size)    return SET_ARRAY_SIZE_FAIL;
+//    array_size %= 1000;
 
-    str = (char*)calloc(array_size + 20, sizeof(byte)); // '0x' * 3 + '-' * 3 + " + " + " = " => 6 + 3 + 3 + 3 = 14
+    array_size = test_word_size;
+
+    str = (char*)calloc(array_size * 32 + 20, sizeof(byte)); // '0x' * 3 + '-' * 3 + " + " + " = " => 6 + 3 + 3 + 3 = 14
     if(str == NULL) return MEM_NOT_ALLOC;
 
     for(int i = 0; i < test_size; i++){
         // base 기준 랜덤한 str 가져오기
-        result_msg = get_random_string(&str_base, array_size - 1, base);
+        result_msg = get_random_string(&str_base, array_size, base); // 오버플로우 나면 여기 먼저 수정
         if(result_msg != RAND_STRING_SUCCESS) goto FROM_BASE_EXIT;
 
         // 랜덤한 문자열 저장
