@@ -1,37 +1,22 @@
 #include "msg_control.h"
 #include <stdio.h>
 
-void log_msg(const IN uint32_t msg_code)
-{
+void log_msg(const IN uint32_t msg_code){
     const char *msg_type = "UNKNOWN";
     if ((msg_code & MSG_TYPE_STANDARD) == MSG_TYPE_STANDARD)
-    {
         msg_type = "STANDARD";
-    }
     else if ((msg_code & MSG_TYPE_MEMORY) == MSG_TYPE_MEMORY)
-    {
         msg_type = "MEMORY";
-    }
     else if ((msg_code & MSG_TYPE_STRING) == MSG_TYPE_STRING)
-    {
         msg_type = "STRING";
-    }
     else if ((msg_code & MSG_TYPE_IO) == MSG_TYPE_IO)
-    {
         msg_type = "IO";
-    }
     else if ((msg_code & MSG_TYPE_TEST) == MSG_TYPE_TEST)
-    {
         msg_type = "TEST";
-    }
     else if ((msg_code & MSG_TYPE_OPERATE) == MSG_TYPE_OPERATE)
-    {
         msg_type = "OPERATE";
-    }
     else if ((msg_code & MSG_TYPE_OTHER) == MSG_TYPE_OTHER)
-    {
         msg_type = "OTHER";
-    }
     // 추가 에러 타입에 대한 처리...
 
     fprintf(stderr, "[LOG] : [%s] 0x%08X : [%s]\n", msg_type, msg_code, get_msg_message(msg_code));
@@ -106,8 +91,8 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case SET_ARRAY_SIZE_FAIL : return "Bigint array size set failed";
         case Test_BI_SET_FROM_BASE_SUCCESS: return "Test Bigint array and string allocation with base successful";
         case Test_BI_SET_FROM_BASE_FAIL: return "Test Bigint array and string allocation with base failed";
-        case BI_MOD_SUCCESS: return "Bigint modulo operation successful";
-        case BI_MOD_FAIL: return "Bigint modulo operation failed";
+        case BI_GET_LOWER_SUCCESS: return "Bigint get lower successful";
+        case BI_GET_LOWER_FAIL: return "Bigint modulo operation failed";
         case Test_BI_MUL_KARACHUBA_SUCCESS: return "Test Bigint Karachuba multiplication successful";
         case Test_BI_MUL_KARACHUBA_FAIL: return "Bigint refinement successful";
         case COMPARE_MULTIPLICATION_SUCCESS: return "Compare multiplication successful";
@@ -122,6 +107,21 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case RAND_LENGTH_INVALID: return "Invalid random length";
         case BI_RESIZE_SUCCESS: return "Bigint resize successful";
         case BI_RESIZE_FAIL: return "Bigint resize failed";
+        case DIV_FAIL: return "Division failed";
+        case BI_DIV_SUCCESS: return "Bigint division successful";
+        case BI_IS_ZERO: return "Bigint is zero";
+        case BI_NOT_ZERO : return "Bigint is not zero";
+        case DIVC_SUCCESS: return "Division calculation successful";
+        case DIVC_FAIL: return "Division calculation failed";
+        case Test_BI_DIV_SUCCESS: return "Test Bigint division successful";
+        case BI_GET_RANDOM_LENGTH_NOT_MATCH: return "Bigint random allocation length mismatch";
+        case Test_BI_SHIFT_SUCCESS: return "Test Bigint shift successful";
+        case Test_BI_SHIFT_FAIL: return "Test Bigint shift failed";
+        case Test_BI_GET_LOWER_SUCCESS: return "Test Bigint get lower operation successful";
+        case Test_BI_GET_LOWER_FAIL: return "Test Bigint get lower operation failed";
+        case Test_BI_CAT_SUCCESS: return "Test Bigint concatenation successful";
+        case Test_BI_CAT_FAIL: return "Test Bigint concatenation failed";
+        case BI_DIV_BY_ZERO: return "Division by zero";
         default: return "Unknown error code";
     }
 }

@@ -4,6 +4,7 @@
 
 #include "data_type.h"
 #include "msg_control.h"
+#include "operate.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -131,14 +132,14 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len);
 msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len);
 
 /**
- * @brief bigint structure modulation operator
+ * @brief bigint structure get lower bigint operator
  *
  * @param dst pointer to bigint struct result
  * @param src pointer to bigint struct source
  * @param mod_len length of shift
  * @return message SUCCESS or FAIL
  */
-msg bi_mod(OUT bigint **dst, IN bigint **src, IN int mod_len);
+msg bi_get_lower(OUT bigint **dst, IN bigint **src, IN int mod_len);
 
 /**
  * @brief bigint structure concatenate operator => a||b
@@ -150,5 +151,12 @@ msg bi_mod(OUT bigint **dst, IN bigint **src, IN int mod_len);
  */
 msg bi_cat(OUT bigint **dst, IN bigint **a, IN bigint **b);
 
-bool bi_is_zero(const bigint *num);
+/**
+ * @brief check bigint is zero
+ *
+ * @param num bigint structure to check zero
+ * @return message TRUE or FALSE
+ */
+msg bi_is_zero(bigint **num);
+
 #endif // UTIL_H

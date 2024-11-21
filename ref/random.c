@@ -161,8 +161,6 @@ msg get_random_string(OUT char** str, IN int str_len, IN int base){
 
 
     int str_idx = str_len;
-
-    printf("str len: %d\n", str_len);
     while(str_idx > 0) {
         if(randombytes(&temp, 1) != GEN_RANDOM_BYTES_SUCCESS)  return GEN_RANDOM_BYTES_FAIL;
         int random_index = (int)temp % chars_len;
