@@ -276,18 +276,6 @@ msg test_bi_shift(){
     char* shift_right_size_str = NULL;
     char* str = NULL;
 
-    if(test_word_size > 0){
-        // left shift size
-        if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
-        shift_size_left = temp[0] % (rand_test_word_size * WORD_BITS);
-        shift_left_size_str = int_to_string(shift_size_left);
-
-        // right shift size
-        if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
-        shift_size_right = temp[0] % (rand_test_word_size * WORD_BITS);
-        shift_right_size_str = int_to_string(shift_size_right);
-    }
-
     result_msg = Test_file_write(SHIFT_init, APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)
         return result_msg;
@@ -298,18 +286,17 @@ msg test_bi_shift(){
             do{
                 if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
                 rand_test_word_size = temp[0] % test_word_size_limit;
-
-                // left shift size
-                if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
-                shift_size_left = temp[0] % (rand_test_word_size * WORD_BITS);
-                shift_left_size_str = int_to_string(shift_size_left);
-
-                // right shift size
-                if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
-                shift_size_right = temp[0] % (rand_test_word_size * WORD_BITS);
-                shift_right_size_str = int_to_string(shift_size_right);
             }while(rand_test_word_size <= 0);
         }
+       // left shift size
+        if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
+        shift_size_left = temp[0] % (rand_test_word_size * WORD_BITS);
+        shift_left_size_str = int_to_string(shift_size_left);
+
+        // right shift size
+        if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
+        shift_size_right = temp[0] % (rand_test_word_size * WORD_BITS);
+        shift_right_size_str = int_to_string(shift_size_right);
 
         str = (char*)calloc(2 * rand_test_word_size * WORD_BITS + 1, sizeof(char));
         if (str == NULL)    return MEM_NOT_ALLOC;
@@ -380,18 +367,6 @@ msg test_bi_shift(){
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)  goto SHIFT_EXIT_FREE;
-
-        result_msg = bi_delete(&b);
-        if (result_msg != BI_FREE_SUCCESS)  goto SHIFT_EXIT_FREE;
-
-        result_msg = bi_delete(&c);
-        if (result_msg != BI_FREE_SUCCESS)  goto SHIFT_EXIT_FREE;
-
-        result_msg = bi_delete(&d);
-        if (result_msg != BI_FREE_SUCCESS)  goto SHIFT_EXIT_FREE;
-
         free(str);
         if(test_word_size <= 0){
             free(shift_right_size_str);
@@ -407,6 +382,9 @@ SHIFT_EXIT_FREE:
     free(shift_right_size_str);
 SHIFT_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&d) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     return result_msg;
 }
 
@@ -455,7 +433,6 @@ msg test_bi_get_lower(){
             result_msg = BI_GET_RANDOM_LENGTH_NOT_MATCH;
             goto GET_LOWER_EXIT_FREE;
         }
-
         a->sign = 0;
 
         if (bigint_to_hex(str, &a) == -1)   goto GET_LOWER_EXIT_FREE;
@@ -482,12 +459,6 @@ msg test_bi_get_lower(){
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto GET_LOWER_EXIT_FREE;
 
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)  goto GET_LOWER_EXIT_FREE;
-
-        result_msg = bi_delete(&b);
-        if (result_msg != BI_FREE_SUCCESS)  goto GET_LOWER_EXIT_FREE;
-
         free(str);
         if(test_word_size <= 0) free(lower_bit_str);
     }
@@ -499,6 +470,7 @@ GET_LOWER_EXIT_FREE:
     free(lower_bit_str);
 GET_LOWER_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     return result_msg;
 }
 
@@ -586,15 +558,6 @@ msg test_bi_cat(){
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto CAT_EXIT_FREE;
 
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)  goto CAT_EXIT_FREE;
-
-        result_msg = bi_delete(&b);
-        if (result_msg != BI_FREE_SUCCESS)  goto CAT_EXIT_FREE;
-
-        result_msg = bi_delete(&c);
-        if (result_msg != BI_FREE_SUCCESS)  goto CAT_EXIT_FREE;
-
         free(str);
     }
     result_msg = Test_BI_CAT_SUCCESS;
@@ -604,6 +567,8 @@ CAT_EXIT_FREE:
     free(str);
 CAT_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     return result_msg;
 }
 
@@ -740,9 +705,6 @@ msg test_bi_set_from_base(const IN int base){
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto FROM_BASE_EXIT_FREE;
 
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)  goto FROM_BASE_EXIT_FREE;
-
         free(str);
     }
     result_msg = Test_BI_SET_FROM_BASE_SUCCESS;
@@ -774,14 +736,13 @@ msg test_bi_random(){
 
         result_msg = bi_get_random(&dst, rand_test_word_size);
         if (result_msg != BI_GET_RANDOM_SUCCESS){
-            if (bi_delete(&dst) != BI_FREE_SUCCESS)
-                return BI_FREE_FAIL;
+            if (bi_delete(&dst) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
             log_msg(result_msg);
             return Test_BI_GET_RANDOM_FAIL;
         }
-        if (bi_delete(&dst) != BI_FREE_SUCCESS)
-            return BI_FREE_FAIL;
     }
+    if (bi_delete(&dst) != BI_FREE_SUCCESS)
+        return BI_FREE_FAIL;
     return Test_BI_GET_RANDOM_SUCCESS;
 }
 
@@ -855,15 +816,6 @@ msg test_bi_add(){
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto ADD_EXIT_FREE;
 
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)  goto ADD_EXIT_FREE;
-
-        result_msg = bi_delete(&b);
-        if (result_msg != BI_FREE_SUCCESS)  goto ADD_EXIT_FREE;
-
-        result_msg = bi_delete(&c);
-        if (result_msg != BI_FREE_SUCCESS)  goto ADD_EXIT_FREE;
-
         free(str);
     }
     result_msg = Test_BI_ADD_SUCCESS;
@@ -872,12 +824,9 @@ msg test_bi_add(){
 ADD_EXIT_FREE:
     free(str);
 ADD_EXIT:
-    if (bi_delete(&a) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
-    if (bi_delete(&b) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
-    if (bi_delete(&c) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
+    if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     return result_msg;
 }
 
@@ -950,15 +899,6 @@ msg test_bi_sub(){
         if (bigint_to_hex(str, &c) == -1)   goto SUB_EXIT_FREE;
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto SUB_EXIT_FREE;
-
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)  goto SUB_EXIT_FREE;
-
-        result_msg = bi_delete(&b);
-        if (result_msg != BI_FREE_SUCCESS)  goto SUB_EXIT_FREE;
-
-        result_msg = bi_delete(&c);
-        if (result_msg != BI_FREE_SUCCESS)  goto SUB_EXIT_FREE;
 
         free(str);
     }
@@ -1044,15 +984,6 @@ msg test_bi_mul(){
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto MUL_EXIT_FREE;
 
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)  goto MUL_EXIT_FREE;
-
-        result_msg = bi_delete(&b);
-        if (result_msg != BI_FREE_SUCCESS)  goto MUL_EXIT_FREE;
-
-        result_msg = bi_delete(&c);
-        if (result_msg != BI_FREE_SUCCESS)  goto MUL_EXIT_FREE;
-
         free(str);
     }
     result_msg = Test_BI_MUL_SUCCESS;
@@ -1136,15 +1067,6 @@ msg test_bi_mul_karachuba(){
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto MUL_KARACHUBA_EXIT_FREE;
 
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)  goto MUL_KARACHUBA_EXIT_FREE;
-
-        result_msg = bi_delete(&b);
-        if (result_msg != BI_FREE_SUCCESS)  goto MUL_KARACHUBA_EXIT_FREE;
-
-        result_msg = bi_delete(&c);
-        if (result_msg != BI_FREE_SUCCESS)  goto MUL_KARACHUBA_EXIT_FREE;
-
         free(str);
     }
     result_msg = Test_BI_MUL_KARACHUBA_SUCCESS;
@@ -1159,8 +1081,7 @@ MUL_KARACHUBA_EXIT:
     return result_msg;
 }
 
-msg compare_multiplicaiton(int start_size, int end_size, int step_size)
-{
+msg compare_multiplicaiton(int start_size, int end_size, int step_size){
     printf("\n=== Comparing Multiplication Methods ===\n");
     printf("Size\titeration\tClassic(s)\tKaratsuba(s)\tRatio\tCrossover\n");
     printf("------------------------------------------------------------------------------\n");
@@ -1172,13 +1093,11 @@ msg compare_multiplicaiton(int start_size, int end_size, int step_size)
     int crossover_found = 0;
     int crossover_point = 0;
 
-    for (int word_size = start_size; word_size <= end_size; word_size += step_size)
-    {
+    for (int word_size = start_size; word_size <= end_size; word_size += step_size){
         double total_time_classic = 0;
         double total_time_karatsuba = 0;
 
-        for (int i = 0; i < test_size; i++)
-        {
+        for (int i = 0; i < test_size; i++){
             clock_t start, end;
 
             result_msg = bi_get_random(&a, word_size);
@@ -1210,18 +1129,6 @@ msg compare_multiplicaiton(int start_size, int end_size, int step_size)
                 goto COMAPARE_MUL_EXIT;
             end = clock();
             total_time_karatsuba += ((double)(end - start)) / CLOCKS_PER_SEC;
-
-            result_msg = bi_delete(&a);
-            if (result_msg != BI_FREE_SUCCESS)
-                break;
-
-            result_msg = bi_delete(&b);
-            if (result_msg != BI_FREE_SUCCESS)
-                break;
-
-            result_msg = bi_delete(&c);
-            if (result_msg != BI_FREE_SUCCESS)
-                break;
         }
         double avg_time_classic = total_time_classic / test_size;
         double avg_time_karatsuba = total_time_karatsuba / test_size;
@@ -1248,13 +1155,9 @@ msg compare_multiplicaiton(int start_size, int end_size, int step_size)
     result_msg = COMPARE_MULTIPLICATION_SUCCESS;
 
 COMAPARE_MUL_EXIT:
-    if (bi_delete(&a) != BI_FREE_SUCCESS)
-        log_msg(BI_FREE_FAIL);
-    if (bi_delete(&b) != BI_FREE_SUCCESS)
-        log_msg(BI_FREE_FAIL);
-    if (bi_delete(&c) != BI_FREE_SUCCESS)
-        log_msg(BI_FREE_FAIL);
-    log_msg(result_msg);
+    if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     return result_msg;
 }
 
@@ -1340,18 +1243,6 @@ msg test_bi_div(){
         if (bigint_to_hex(str, &r) == -1)   goto DIV_EXIT_FREE;
         result_msg = Test_file_write(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto DIV_EXIT_FREE;
-
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)  goto DIV_EXIT_FREE;
-
-        result_msg = bi_delete(&b);
-        if (result_msg != BI_FREE_SUCCESS)  goto DIV_EXIT_FREE;
-
-        result_msg = bi_delete(&q);
-        if (result_msg != BI_FREE_SUCCESS)  goto DIV_EXIT_FREE;
-
-        result_msg = bi_delete(&r);
-        if (result_msg != BI_FREE_SUCCESS)  goto DIV_EXIT_FREE;
 
         free(str);
     }

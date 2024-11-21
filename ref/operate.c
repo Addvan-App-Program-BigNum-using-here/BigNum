@@ -38,8 +38,6 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
     int max_word_len = max((*a)->word_len, (*b)->word_len);
     int dst_word_len = max_word_len + 1;
     word temp_a = 0, temp_b = 0; // dst가 a와 b 중 같은 값일 경우 사용
-//    int a_len = (*a)->word_len;
-//    int b_len = (*b)->word_len;
 
     if(*dst == NULL){
         if(bi_new(dst, dst_word_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
@@ -49,10 +47,6 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
     // dst가 a와 b가 아닌 경우 길이는 동일하게 위에서 체크 했으니까 재사용
 
     // 두 빅넘 크기 맞추기
-//    if((*b)->word_len < max_word_len)
-//        if(bi_expand(b, max_word_len, 0) != BI_EXPAND_SUCCESS) return BI_EXPAND_FAIL;
-//    if((*a)->word_len < max_word_len)
-//        if(bi_expand(a, max_word_len, 0) != BI_EXPAND_SUCCESS) return BI_EXPAND_FAIL;
     if(bi_expand(b, max_word_len, 0) != BI_EXPAND_SUCCESS) return BI_EXPAND_FAIL;
     if(bi_expand(a, max_word_len, 0) != BI_EXPAND_SUCCESS) return BI_EXPAND_FAIL;
 
@@ -63,25 +57,13 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
         (*dst)->a[i] = (word)(temp_a + temp_b + carry);
         carry = (temp_a > 0xffffffff - (temp_b + carry) || temp_b > 0xffffffff - (temp_a + carry) || (temp_a == 0xffffffff && temp_b == 0xffffffff)) ? 1 : 0; // carry bit 계산
     }
-    if (carry)
-        (*dst)->a[max_word_len] = carry;
+    if (carry)  (*dst)->a[max_word_len] = carry;
+    (*dst)->sign = 0;
 
-    if(bi_resize(dst, dst_word_len) != BI_RESIZE_SUCCESS){
+    if(bi_resize(dst, dst_word_len - (carry ^ 1)) != BI_RESIZE_SUCCESS){ // carry ^ 1을 한 이유는 마지막 carry가 발생하지 않으면 사이즈를 1 word 줄여도 되서
         if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
         return BI_RESIZE_FAIL;
     }
-//    if(bi_refine(dst) != BI_SET_REFINE_SUCCESS){
-//        if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-//        return BI_SET_REFINE_FAIL;
-//    }
-
-//    // 상수 연산을 위해 expand 한 것을 다시 원상 복귀 dst가 걸려있는 경우 수행하면 안됨
-//    if(*dst != *a){
-//        if(bi_resize(a, a_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-//    }
-//    if(*dst != *b){
-//        if(bi_resize(b, b_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-//    }
 
     return BI_ADD_SUCCESS;
 }
@@ -133,7 +115,6 @@ msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b){
 
     // 여기서 첫 barrow 계산할 때 a랑 b를 전체를 넣으면 안되고 a[0] b[0]끼리 비교를 해줘야 한다.
     byte borrow = (*a)->a[0] >= (*b)->a[0] ? 0 : 1; // 여기 첫 borrow 수행할 때 a >= b일 때 0, a < b 일 때 1
-//    printf("a[0] : 0x%08x, b : 0x%08x, borrow\n", a[0], b[0], borrow);
     byte borrow_temp = 0; // 이전 word에서 사용한 borrow 값을 뺄 때 사용
 
     if(*dst == NULL){
@@ -159,12 +140,7 @@ msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b){
         if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
         return BI_RESIZE_FAIL;
     }
-//    if(bi_refine(dst) != BI_SET_REFINE_SUCCESS){
-//        if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-//        return BI_SET_REFINE_FAIL;
-//    }
-    // 상수 연산을 위해 expand 한 것을 다시 원상 복귀
-//    if(bi_refine(b) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
+
     return BI_SUB_SUCCESS;
 }
 
@@ -209,9 +185,6 @@ msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b){
     b_sign = (*b)->sign;
     (*a)->sign = 0;
     (*b)->sign = 0;
-
-//    if(bi_resize(&temp1, temp_len_a) != BI_RESIZE_SUCCESS)    goto MUL_EXIT;
-//    if(bi_resize(&temp2, temp_len_a) != BI_RESIZE_SUCCESS)    goto MUL_EXIT;
 
     // 반복문 밖에가 작은 값, 안쪽이 큰 값
     for (int i = (temp_len_b * 2) - 1; i >= 0; i--){ // word_len == 2
@@ -461,7 +434,6 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b){
 
     msg result_msg = BI_DIV_SUCCESS;
     bigint* temp_r = NULL;
-    char str[1024];
 
     // b가 0이거나 할당이 안되었을 경우
     result_msg = bi_is_zero(b);
@@ -489,7 +461,6 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b){
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;
         (*a)->sign = 0;
         (*b)->sign = 1;
-//        (*r)->sign = 1; // r에 대한 부호만 바뀜
         result_msg = BI_DIV_SUCCESS;
         goto EXIT_DIV_REFINE;
     }else if((*a)->sign){ // a가 음수, b가 양수인 경우
@@ -501,71 +472,52 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b){
         (*a)->sign = 0;
         result_msg = bi_div(q, r, a, b);
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;
-//        bigint_to_hex(str, r);
-//        printf("result r : %s\n", str);
-//        bigint_to_hex(str, q);
-//        printf("result q : %s\n", str);
         (*a)->sign = 1;
-//        bigint_to_hex(str, b);
-//        printf("b : %s\n", str);
 
-//        printf("adsfasd\n");
         // q와 r 처리
         if(bi_sub(r, b, r) != BI_SUB_SUCCESS)    return BI_SUB_FAIL; // r = b - r 수행. 여기서 나눗셈 연산 과정에서 b가 변하면 안된다!
-//        bigint_to_hex(str, r);
-//        printf("after r : %s\n", str);
 
         (*q)->sign = 0; // -q
         if(bi_add(q, q, &one) != BI_ADD_SUCCESS)    return BI_ADD_FAIL; // q = -q - 1 수행 // 일단 여기서 문제 발생
-//        bigint_to_hex(str, q);
-//        printf("after q : %s\n", str);
         (*q)->sign = 1; // q = -q - 1
         result_msg = BI_DIV_SUCCESS;
         goto EXIT_DIV_REFINE;
     }
 
     // 해당 코드로 짤 경우 time attack 가능성이 있음
-    if(!bi_compare_abs(a, b)){ // |a| == |b|인 경우 a와 b가 부호가 다르면 q = -1, r = 0 반환, 같으면 q = 1, r = 0 반환
+    int bi_compare = bi_compare_abs(a, b);
+    if(bi_compare <= 0){
         if(*q == NULL){
             if(bi_new(q, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
         }else{
             if(bi_resize(q, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
         }
         (*q)->word_len = 1;
-        (*q)->a[0] = 1;
-        (*q)->sign = ((*a)->sign ^ (*b)->sign) ? 1 : 0; // 부호가 다르면 음수, 같으면 양수
-        if(*r == NULL){
-            if(bi_new(r, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
+        if(!bi_compare){
+            (*q)->a[0] = 1;
+            (*q)->sign = ((*a)->sign ^ (*b)->sign) ? 1 : 0; // 부호가 다르면 음수, 같으면 양수
+            if(*r == NULL){
+                if(bi_new(r, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
+            }else{
+                if(bi_resize(r, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+            }
+            (*r)->word_len = 1;
+            (*r)->a[0] = 0;
         }else{
-            if(bi_resize(r, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-        }
-        (*r)->word_len = 1;
-        (*r)->a[0] = 0;
-        result_msg = BI_DIV_SUCCESS;
-        goto EXIT_DIV_REFINE;
-    }else if(bi_compare_abs(a, b) == -1){ // |a| < |b| 인 경우 q = 0, r = a 반환
-        // q 메모리 할당
-        if(*q == NULL){
-            if(bi_new(q, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-        }else{
-            if(bi_resize(q, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-        }
-        // a가 음수인 경우 q는 -1, a가 양수이면 0
-        (*q)->word_len = 1;
-        (*q)->a[0] = (word)(*a)->sign;
-        (*q)->sign = (*a)->sign;
+            (*q)->a[0] = (word)(*a)->sign;
+            (*q)->sign = (*a)->sign;
+            // r 메모리 할당
+            if(*r == NULL){
+                if(bi_new(r, (*a)->word_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
+            }else if(*r != NULL && (*r) != (*a)){
+                if(bi_resize(r, (*a)->word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+            }
+            // a가 음수인 경우 r = b + a, a가 양수인 경우 r = a
+            if(bi_assign(r, a) != BI_SET_ASSIGN_SUCCESS)    return BI_ALLOC_FAIL; // 어차피 *r == *a 인경우 assign에서 바로 return
 
-        // r 메모리 할당
-        if(*r == NULL){
-            if(bi_new(r, (*a)->word_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-        }else if(*r != NULL && (*r) != (*a)){
-            if(bi_resize(r, (*a)->word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-        }
-        // a가 음수인 경우 r = b + a, a가 양수인 경우 r = a
-        if(bi_assign(r, a) != BI_SET_ASSIGN_SUCCESS)    return BI_ALLOC_FAIL; // 어차피 *r == *a 인경우 assign에서 바로 return
-
-        if((*a)->sign){ // a가 음수인 경우
-            if(bi_add(r, r, b) != BI_ADD_SUCCESS)    return BI_ADD_FAIL;
+            if((*a)->sign){ // a가 음수인 경우
+                if(bi_add(r, r, b) != BI_ADD_SUCCESS)    return BI_ADD_FAIL;
+            }
         }
         result_msg = BI_DIV_SUCCESS;
         goto EXIT_DIV_REFINE;
@@ -613,48 +565,18 @@ EXIT_DIV_REFINE:
 msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
     if(*a == NULL || *b == NULL)    return MEM_NOT_ALLOC;
 
-    char str[1024];
-
-//    bigint* temp_q = NULL;
-//    bigint* temp_r = NULL;
-
-//    // (Q, R) <- (0, 0)
-//    (*q)->a[index] = 0; // q는 재사용 할 경우 초기화 필요
-//    (*r)->a[index] = 0;
-
     for(int i = (*a)->word_len - 1; i >= 0; i--){
         for(int j = WORD_BITS - 1; j >= 0; j--){ // bit 단위의 곱셈을 수행하기에
             // R <- R << 1 | (a[i] >> j & 1) -> 이 버전은 bit division 버전이다.
-            // 이 아래 두 줄 최적화 가능할 듯
             bi_shift_left(r, r, 1); // r <- r << 1
             (*r)->a[0] |= (((*a)->a[i] >> j) & 1); // r <- r | (a[i] >> j & 1)
-//            bigint_to_hex(str, r);
-//            printf("r : %s\n", str);
-//
-//            bigint_to_hex(str, b);
-//            printf("b : %s\n", str);
             // if R >= b then R <- R - b, Q[i] <- 1
             if(bi_compare_abs(r, b) >= 0){ // 여기서 r이 재활용 되지 않은 경우는 상관 없는데 재활용 하는 경우 쓰레기 값이 있는지 확인해볼 필요가 있다. 내부에서 refine 해주기는 한다.
-//                printf("sub\n");
                 if(bi_sub(r, r, b) != BI_SUB_SUCCESS)    return DIVC_FAIL;
-//                bigint_to_hex(str, r);
-//                printf("after sub r : %s\n", str);
                 (*r)->a[(*r)->word_len - 1] = 0;
                 (*q)->a[i] |= 1 << j;
             }
         }
     }
-
-//    bigint_to_hex(str, q);
-//    printf("q : %s\n", str);
-//    bigint_to_hex(str, r);
-//    printf("r : %s\n", str);
-
-//    if(bi_assign(q, &temp_q) != BI_SET_ASSIGN_SUCCESS)    return DIVC_FAIL;
-//    if(bi_assign(r, &temp_r) != BI_SET_ASSIGN_SUCCESS)    return DIVC_FAIL;
-//
-//    if(bi_delete(&temp_q) != BI_FREE_SUCCESS)    return DIVC_FAIL;
-//    if(bi_delete(&temp_r) != BI_FREE_SUCCESS)    return DIVC_FAIL;
-
     return DIVC_SUCCESS;
 }
