@@ -122,6 +122,10 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case Test_BI_CAT_SUCCESS: return "Test Bigint concatenation successful";
         case Test_BI_CAT_FAIL: return "Test Bigint concatenation failed";
         case BI_DIV_BY_ZERO: return "Division by zero";
+        case Test_BI_SQU_SUCCESS: return "Test Bigint square operation successful";
+        case Test_BI_SQU_FAIL: return "Test Bigint square operation failed";
+        case BI_SQU_SUCCESS: return "Bigint square operation successful";
+        case BI_SQU_FAIL: return "Bigint square operation failed";
         default: return "Unknown error code";
     }
 }

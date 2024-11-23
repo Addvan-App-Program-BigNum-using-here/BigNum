@@ -259,6 +259,27 @@ def test_cat(f, p):
             k.write('\n')
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
 
+def test_seq(f, p):
+    k = open('./result/result_seq.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 seq 연산]\n')
+    count = 0
+    false_count = 0
+    while True:
+        shiftif = f.readline()
+        if "----------" in shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[4], 16)
+        tmp = int(shiftif_tmp[0], 0) * int(shiftif_tmp[2], 0)
+        if(result != tmp):
+            false_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
+
 def bi_test(f):
     with open('./main_result.txt', 'w') as p:
         p.write('[Test result]\n')
@@ -282,6 +303,8 @@ def bi_test(f):
                 test_get_lower(f, p)
             elif '[Cat]' in line:
                 test_cat(f, p)
+            elif '[Sequence]' in line:
+                test_seq(f, p)
             elif '[TEST CASE END]' in line:
                 break
 

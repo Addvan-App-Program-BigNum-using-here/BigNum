@@ -11,7 +11,7 @@ int main(){
         log_msg(result_msg);
         return Test_FAIL;
     }
-
+/*
     // bigint 할당 및 해제 테스트
     printf("\n============ Testing bi_new_delete ============\n");
     gettimeofday(&start, NULL);
@@ -200,6 +200,22 @@ int main(){
     time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     log_msg(result_msg);
     if (result_msg != Test_BI_DIV_SUCCESS)
+        return Test_FAIL;
+    printf("Time taken: %f seconds\n", time_used);
+
+    result_msg = Test_file_write(seperator, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS){
+        log_msg(result_msg);
+        return Test_FAIL;
+    }
+*/
+    printf("\n============ Testing bi_squ ============\n");
+    gettimeofday(&start, NULL);
+    result_msg = test_bi_squ();
+    gettimeofday(&end, NULL);
+    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
+    log_msg(result_msg);
+    if (result_msg != Test_BI_SQU_SUCCESS)
         return Test_FAIL;
     printf("Time taken: %f seconds\n", time_used);
 
@@ -1256,5 +1272,72 @@ DIV_EXIT:
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&q) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&r) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    return result_msg;
+}
+
+msg test_bi_squ(){
+    bigint *a = NULL;
+    bigint *c = NULL;
+    char *str = NULL;
+    msg result_msg = Test_BI_SQU_SUCCESS;
+    int test_max_word_size = test_word_size;
+
+    result_msg = Test_file_write(SEQ_init, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS){
+        free(str);
+        return result_msg;
+    }
+
+    for (int i = 0; i < test_size; i++){
+       if(test_word_size <= 0){
+            byte temp[1] = {0}; // 랜덤 값을 받아오기 위한
+            do{
+                if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
+                test_max_word_size = temp[0] % test_word_size_limit;
+            }while(test_max_word_size <= 0);
+        }
+
+       str = (char *)calloc((test_max_word_size * 8) * 3 + 100, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
+       if (str == NULL) return MEM_NOT_ALLOC;
+
+        result_msg = bi_get_random(&a, test_max_word_size);
+        if (result_msg != BI_GET_RANDOM_SUCCESS || a->word_len != test_max_word_size)
+            break;
+        if (bigint_to_hex(str, &a) == -1)
+            break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+        result_msg = Test_file_write_non_enter(" * ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+        result_msg = Test_file_write_non_enter(" = ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+        result_msg = bi_squ(&c, &a);
+        if (result_msg != BI_SQU_SUCCESS)
+            break;
+        if (bigint_to_hex(str, &c) == -1)
+            break;
+        result_msg = Test_file_write(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)
+            break;
+        result_msg = bi_delete(&a);
+        if (result_msg != BI_FREE_SUCCESS)
+            break;
+        result_msg = bi_delete(&c);
+        if (result_msg != BI_FREE_SUCCESS)
+            break;
+        result_msg = Test_BI_SQU_SUCCESS;
+
+    }
+    free(str);
+    if (bi_delete(&a) != BI_FREE_SUCCESS)
+        return BI_FREE_FAIL;
+    if (bi_delete(&c) != BI_FREE_SUCCESS)
+        return BI_FREE_FAIL;
     return result_msg;
 }

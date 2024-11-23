@@ -28,6 +28,7 @@
 #define SHIFT_init "[Shift]"
 #define GET_LOWER_init "[Get Lower]"
 #define CAT_init "[Cat]"
+#define SEQ_init "[Sequence]"
 
 typedef uint8_t byte;   ///< byte type
 typedef uint16_t hword; ///< Half word type

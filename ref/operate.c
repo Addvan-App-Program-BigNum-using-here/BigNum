@@ -144,6 +144,20 @@ msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b){
     return BI_SUB_SUCCESS;
 }
 
+msg bi_mul_word(OUT bigint **dst, IN word a, IN word b){
+    if(*dst == NULL){
+        if(bi_new(dst, 2) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
+    }else if((*dst)->word_len != 2){
+        if(bi_resize(dst, 2) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+    }
+
+    (*dst)->a[0] = a * b;
+    (*dst)->a[1] = 0;
+    (*dst)->sign = 0;
+
+    return BI_MUL_SUCCESS;
+}
+
 /*************************************************
 * Name:        bi_mul
 *
@@ -562,9 +576,18 @@ EXIT_DIV_REFINE:
     return result_msg;
 }
 
+/*************************************************
+ * Name:        divc
+ *
+ * Description: Bigint division using binary division
+ *
+ * Arguments:   - bigint** q: pointer to bigint struct
+ *              - bigint** r: pointer to bigint struct
+ *              - bigint** a: bigint struct
+ *              - bigint** b: bigint struct
+ **************************************************/
 msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
     if(*a == NULL || *b == NULL)    return MEM_NOT_ALLOC;
-
     for(int i = (*a)->word_len - 1; i >= 0; i--){
         for(int j = WORD_BITS - 1; j >= 0; j--){ // bit 단위의 곱셈을 수행하기에
             // R <- R << 1 | (a[i] >> j & 1) -> 이 버전은 bit division 버전이다.
@@ -579,4 +602,95 @@ msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
         }
     }
     return DIVC_SUCCESS;
+}
+
+///*************************************************
+// * Name:        divc_gener
+// *
+// * Description: Bigint division using word division
+// *
+// * Arguments:   - bigint** q: pointer to bigint struct
+// *              - bigint** r: pointer to bigint struct
+// *              - bigint** a: bigint struct
+// *              - bigint** b: bigint struct
+// **************************************************/
+//msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
+//    if(*a == NULL || *b == NULL)    return MEM_NOT_ALLOC;
+//
+//    word Q_hat = 0;
+//
+//    Q_hat =
+//}
+
+/*************************************************
+ * Name:        bi_squ
+ *
+ * Description: Bigint squaring
+ *
+ * Arguments:   - bigint** dst: pointer to bigint struct
+ *              - bigint** a: bigint struct to be squared
+ **************************************************/
+// 데이터 넣을 때 조금 더 최적화 할 수 있는 방법 생각해보기
+msg bi_squ(OUT bigint** dst, IN bigint** a){
+    if(*a == NULL)    return MEM_NOT_ALLOC;
+    msg result_msg = 0;
+    word T2 = 0; // Ai * Aj 결과 저장
+    word temp = 0; // Aj 저장
+    bigint* C1 = NULL;  // 제곱 결과 저장
+    bigint* C2 = NULL;  // Ai * Aj 홀수 내용 저장
+    bigint* C3 = NULL;  // Ai * Aj 짝수 내용 저장
+    bigint* mid = NULL; // C1과 C2의 중간 결과 값 저장
+    int max_word_len = (*a)->word_len * 2;
+
+    result_msg = bi_new(&C1, max_word_len);
+    if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    result_msg = bi_new(&C2, max_word_len);
+    if(result_msg != BI_ALLOC_SUCCESS) goto EXIT_SQU;
+    result_msg = bi_new(&C3, max_word_len);
+    if(result_msg != BI_ALLOC_SUCCESS) goto EXIT_SQU;
+    result_msg = bi_new(&mid, max_word_len);
+    if(result_msg != BI_ALLOC_SUCCESS) goto EXIT_SQU;
+
+    for(int j = 0; j < max_word_len; j++){
+        C3->a[j] = 0; // C3 초기화 -> 처음에 j 번째만 초기화 하면 나머지는 덮어써짐
+        if(j % 2 == 0)  temp = ((*a)->a[j / 2]) & 0xffff;
+        else if(j % 2 == 1)    temp = ((*a)->a[j / 2]) >> 16;
+        C1 -> a[j] = temp * temp;
+        for(int i = j + 1; i < max_word_len; i++){
+            if(i % 2 == 1)  T2 = (temp * (((*a)->a[i / 2]) >> 16)); // 위에서 연산했던 temp 재사용
+            else if(i % 2 == 0)    T2 = temp * (((*a) -> a[i / 2]) & 0xffff);
+            if((i + j) % 2 == 0)    C3 ->a[(i + j) / 2] = T2; // 짝수
+            else C2 -> a[(i + j) / 2] = T2; // 홀수
+        }
+        result_msg = bi_shift_left(&C2, &C2, 16); // 16비트 단위로 밀기
+        if(result_msg != BI_SHIFT_SUCCESS) goto EXIT_SQU;
+        result_msg = bi_add(&mid, &mid, &C2);
+        if(result_msg != BI_ADD_SUCCESS) goto EXIT_SQU;
+        result_msg = bi_add(&mid, &mid, &C3);
+        if(result_msg != BI_ADD_SUCCESS) goto EXIT_SQU;
+        // C2의 경우 j와 사용 마지막 인덱스 + 1만 초기화 해주면 나머지는 덮어써진다.
+        C2->a[j] = 0;
+        C2->a[(j + max_word_len) / 2] = 0;
+    }
+
+    result_msg = bi_shift_left(dst, &mid, 1); // 2배 만들기
+    if(result_msg != BI_SHIFT_SUCCESS) goto EXIT_SQU;
+
+    result_msg = bi_add(dst, dst, &C1); // 제곱 더하기
+    if(result_msg != BI_ADD_SUCCESS) goto EXIT_SQU;
+
+    result_msg = bi_refine(dst);
+    if(result_msg != BI_SET_REFINE_SUCCESS) goto EXIT_SQU;
+
+    (*dst) -> sign = 0; // 부호 설정
+
+    result_msg = BI_SQU_SUCCESS;
+
+EXIT_SQU:
+    if(bi_delete(&C1) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(bi_delete(&C2) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(bi_delete(&C3) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(bi_delete(&mid) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+
+    return result_msg;
 }
