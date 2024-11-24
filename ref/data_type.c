@@ -28,7 +28,7 @@ int char_to_int(IN char str){
 *              - char* str: store string
 * Return:      - int : result of integer, FAIL == -1
 **************************************************/
-int bigint_to_hex(IN bigint** src, OUT char* str) {
+int bigint_to_hex(OUT char* str, IN bigint** src) {
     // Assuming the bigint is stored in little-endian format
     int idx = 0;
 
@@ -61,4 +61,18 @@ word byte_to_uint(IN byte* input, const IN int byte_len){
         result = result * 256 + input[i];
     }
     return result;
+}
+
+/*************************************************
+* Name:        int_to_string
+*
+* Description: Transfer integer to string
+*
+* Arguments:   - char* str: char array
+*              - int num: integer
+**************************************************/
+char* int_to_string(IN int num){
+    char* str = (char*)calloc(12, sizeof(char));
+    snprintf(str, 12, "%d", num);
+    return str;
 }
