@@ -11,7 +11,7 @@ int main(){
         log_msg(result_msg);
         return Test_FAIL;
     }
-/*
+
     // bigint 할당 및 해제 테스트
     printf("\n============ Testing bi_new_delete ============\n");
     gettimeofday(&start, NULL);
@@ -208,7 +208,7 @@ int main(){
         log_msg(result_msg);
         return Test_FAIL;
     }
-*/
+
     printf("\n============ Testing bi_squ ============\n");
     gettimeofday(&start, NULL);
     result_msg = test_bi_squ();
@@ -292,9 +292,7 @@ msg test_bi_shift(){
     char* shift_right_size_str = NULL;
     char* str = NULL;
 
-    result_msg = Test_file_write(SHIFT_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS)
-        return result_msg;
+    if (Test_file_write(SHIFT_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for(int i = 0; i < test_size; i++){
         if(test_word_size <= 0){
@@ -304,6 +302,7 @@ msg test_bi_shift(){
                 rand_test_word_size = temp[0] % test_word_size_limit;
             }while(rand_test_word_size <= 0);
         }
+
        // left shift size
         if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
         shift_size_left = temp[0] % (rand_test_word_size * WORD_BITS);
@@ -420,9 +419,7 @@ msg test_bi_get_lower(){
         lower_bit_str = int_to_string(lower_bit_size);
     }
 
-    result_msg = Test_file_write(GET_LOWER_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS)
-        return result_msg;
+    if (Test_file_write(GET_LOWER_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for(int i = 0; i < test_size; i++){
         if(test_word_size <= 0){
@@ -513,9 +510,7 @@ msg test_bi_cat(){
         }while(a_len <= 0 || b_len <= 0);
     }
 
-    result_msg = Test_file_write(CAT_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS)
-        return result_msg;
+    if (Test_file_write(CAT_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for(int i = 0; i < test_size; i++){
         if(test_word_size <= 0){
@@ -594,9 +589,7 @@ msg test_bi_set_from(){
     int result_msg = Test_BI_SET_FROM_SUCCESS;
     int rand_test_word_size = test_word_size;
 
-    result_msg = Test_file_write(FROM_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS)
-        return result_msg;
+    if (Test_file_write(FROM_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     // 문자열로 들어온 hex를 endian에 맞추어 잘 저장하는지 테스트
     for (int i = 0; i < test_size; i++){
@@ -773,11 +766,7 @@ msg test_bi_add(){
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
 
-    result_msg = Test_file_write(add_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS){
-        free(str);
-        return result_msg;
-    }
+    if (Test_file_write(add_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for (int i = 0; i < test_size; i++){
         // test_word_size가 0보다 작거나 같으면 랜덤으로 test_word_size를 할당해준다. (0 ~ 99)
@@ -857,11 +846,7 @@ msg test_bi_sub(){
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
 
-    result_msg = Test_file_write(sub_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS){
-        free(str);
-        return result_msg;
-    }
+    if (Test_file_write(sub_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for (int i = 0; i < test_size; i++){
         // test_word_size가 0보다 작거나 같으면 랜덤으로 test_word_size를 할당해준다. (0 ~ 99)
@@ -941,11 +926,7 @@ msg test_bi_mul(){
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
 
-    result_msg = Test_file_write(mul_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS){
-        free(str);
-        return result_msg;
-    }
+    if (Test_file_write(mul_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for (int i = 0; i < test_size; i++){
         // test_word_size가 0보다 작거나 같으면 랜덤으로 test_word_size를 할당해준다. (0 ~ 99)
@@ -1024,11 +1005,8 @@ msg test_bi_mul_karachuba(){
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
 
-    result_msg = Test_file_write(mul_karachuba_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS){
-        free(str);
-        return result_msg;
-    }
+
+    if (Test_file_write(mul_karachuba_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for (int i = 0; i < test_size; i++){
         // test_word_size가 0보다 작거나 같으면 랜덤으로 test_word_size를 할당해준다. (0 ~ 99)
@@ -1189,11 +1167,7 @@ msg test_bi_div(){
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
 
-    result_msg = Test_file_write(div_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS){
-        free(str);
-        return result_msg;
-    }
+    if (Test_file_write(div_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for (int i = 0; i < test_size; i++){
         if(test_word_size <= 0){
@@ -1277,16 +1251,12 @@ DIV_EXIT:
 
 msg test_bi_squ(){
     bigint *a = NULL;
-    bigint *c = NULL;
+    bigint *b = NULL;
     char *str = NULL;
     msg result_msg = Test_BI_SQU_SUCCESS;
     int test_max_word_size = test_word_size;
 
-    result_msg = Test_file_write(SEQ_init, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS){
-        free(str);
-        return result_msg;
-    }
+    if (Test_file_write(SEQ_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for (int i = 0; i < test_size; i++){
        if(test_word_size <= 0){
@@ -1301,43 +1271,43 @@ msg test_bi_squ(){
        if (str == NULL) return MEM_NOT_ALLOC;
 
         result_msg = bi_get_random(&a, test_max_word_size);
-        if (result_msg != BI_GET_RANDOM_SUCCESS || a->word_len != test_max_word_size)
-            break;
-        if (bigint_to_hex(str, &a) == -1)
-            break;
-        result_msg = Test_file_write_non_enter(str, APPEND);
-        if (result_msg != FILE_WRITE_SUCCESS)
-            break;
-        result_msg = Test_file_write_non_enter(" * ", APPEND);
-        if (result_msg != FILE_WRITE_SUCCESS)
-            break;
-        result_msg = Test_file_write_non_enter(str, APPEND);
-        if (result_msg != FILE_WRITE_SUCCESS)
-            break;
-        result_msg = Test_file_write_non_enter(" = ", APPEND);
-        if (result_msg != FILE_WRITE_SUCCESS)
-            break;
-        result_msg = bi_squ(&c, &a);
-        if (result_msg != BI_SQU_SUCCESS)
-            break;
-        if (bigint_to_hex(str, &c) == -1)
-            break;
-        result_msg = Test_file_write(str, APPEND);
-        if (result_msg != FILE_WRITE_SUCCESS)
-            break;
-        result_msg = bi_delete(&a);
-        if (result_msg != BI_FREE_SUCCESS)
-            break;
-        result_msg = bi_delete(&c);
-        if (result_msg != BI_FREE_SUCCESS)
-            break;
-        result_msg = Test_BI_SQU_SUCCESS;
+        if(result_msg != BI_GET_RANDOM_SUCCESS) goto BI_SQU_EXIT_FREE;
+        else if(a->word_len != test_max_word_size){
+            result_msg = BI_GET_RANDOM_LENGTH_NOT_MATCH;
+            goto BI_SQU_EXIT_FREE;
+        }
 
+        if (bigint_to_hex(str, &a) == -1)   goto BI_SQU_EXIT_FREE;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)goto BI_SQU_EXIT_FREE;
+
+        result_msg = Test_file_write_non_enter(" * ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto BI_SQU_EXIT_FREE;
+
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto BI_SQU_EXIT_FREE;
+
+        result_msg = Test_file_write_non_enter(" = ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto BI_SQU_EXIT_FREE;
+
+        result_msg = bi_squ(&b, &a);
+        if (result_msg != BI_SQU_SUCCESS)   goto BI_SQU_EXIT_FREE;
+
+        if (bigint_to_hex(str, &b) == -1)   goto BI_SQU_EXIT_FREE;
+        result_msg = Test_file_write(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto BI_SQU_EXIT_FREE;
+
+        free(str);
     }
+    result_msg = Test_BI_SQU_SUCCESS;
+    goto BI_SQU_EXIT;
+
+BI_SQU_EXIT_FREE:
     free(str);
-    if (bi_delete(&a) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
-    if (bi_delete(&c) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
+
+BI_SQU_EXIT:
+    if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     return result_msg;
+
 }
