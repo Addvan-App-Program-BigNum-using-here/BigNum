@@ -44,7 +44,7 @@ run: $(TEST_TARGET)
 endif
 
 test: $(TEST_TARGET)
-	./$(TEST_TARGET)
+	leaks --atExit -- ./$(TEST_TARGET)
 	cat ./main_result.txt
 
 rerun: rebuild run

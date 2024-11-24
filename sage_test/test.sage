@@ -142,6 +142,144 @@ def test_karachuba_multiplication(f, p):
             k.write('\n')
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
 
+def division(sub_str):
+    sub_str = sub_str.split(' ')
+    if 'DIVISION BY ZERO' in sub_str[4]:
+        return true, 0, 0
+    A = int(sub_str[0], 0)
+    B = int(sub_str[2], 0)
+    if(A > 0 and B < 0):
+        B = -B
+        A = -A
+    q = A // B
+    r = A % B
+    result_q = int(sub_str[4][:-1], 16)
+    result_r = int(sub_str[5], 16)
+    if(result_q != q or result_r != r):
+        return false, q, r
+    return true, q, r
+
+def test_division(f, p):
+    k = open('./result/result_division.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 나눗셈 연산]\n')
+    count = 0
+    false_count = 0
+    while True:
+        subif = f.readline()
+        if "----------" in subif:
+            break
+        count += 1
+        result, q, r = division(subif)
+        if result == false:
+            print(subif)
+            false_count += 1
+            k.write(subif)
+            k.write(str(hex(q)))
+            k.write(', ')
+            k.write(str(hex(r)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
+
+def test_shift(f, p):
+    k = open('./result/result_shift.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 시프트 연산]\n')
+    count = 0
+    false_count = 0
+    while True:
+        shiftif = f.readline()
+        if "----------" in shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[4], 16)
+        if shiftif_tmp[1] == '<<':
+            tmp = int(shiftif_tmp[0], 0) << int(shiftif_tmp[2], 0)
+        else:
+            tmp = int(shiftif_tmp[0], 0) >> int(shiftif_tmp[2], 0)
+        if(result != tmp):
+            false_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
+
+def test_get_lower(f, p):
+    k = open('./result/result_get_lower.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 and 연산]\n')
+    count = 0
+    false_count = 0
+    while True:
+        and_op = 1
+        shiftif = f.readline()
+        if "----------" in shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[4], 16)
+        lower_len = int(shiftif_tmp[2], 0)
+        if lower_len % 32 == 0:
+            if lower_len == 0:
+                and_op = 0
+            else:
+                lower_len -= 1
+        elif lower_len % 32 == 31:
+            lower_len -= 1
+        for i in range(lower_len):
+            and_op = and_op << 1 | 1
+        tmp = int(shiftif_tmp[0], 0) & and_op
+        print(f"{hex(int(shiftif_tmp[0], 0))} / {hex(and_op)}")
+        if(result != tmp):
+            false_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
+
+def test_cat(f, p):
+    k = open('./result/result_cat.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 cat 연산]\n')
+    count = 0
+    false_count = 0
+    while True:
+        shiftif = f.readline()
+        if "----------" in shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[4], 16)
+        tmp = '0x' + shiftif_tmp[0][2:] + shiftif_tmp[2][2:]
+        if(result != int(tmp, 16)):
+            false_count += 1
+            k.write(shiftif)
+            k.write(str(tmp))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
+
+def test_seq(f, p):
+    k = open('./result/result_seq.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 seq 연산]\n')
+    count = 0
+    false_count = 0
+    while True:
+        shiftif = f.readline()
+        if "----------" in shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[4], 16)
+        tmp = int(shiftif_tmp[0], 0) * int(shiftif_tmp[2], 0)
+        if(result != tmp):
+            false_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
+
 def bi_test(f):
     with open('./main_result.txt', 'w') as p:
         p.write('[Test result]\n')
@@ -157,6 +295,16 @@ def bi_test(f):
                 test_multiplication(f, p)
             elif '[Karachuba Multiplication]' in line:
                 test_karachuba_multiplication(f, p)
+            elif '[Division]' in line:
+                test_division(f, p)
+            elif '[Shift]' in line:
+                test_shift(f, p)
+            elif '[Get Lower]' in line:
+                test_get_lower(f, p)
+            elif '[Cat]' in line:
+                test_cat(f, p)
+            elif '[Sequence]' in line:
+                test_seq(f, p)
             elif '[TEST CASE END]' in line:
                 break
 

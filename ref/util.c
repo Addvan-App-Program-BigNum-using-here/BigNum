@@ -27,8 +27,7 @@ msg bi_new(OUT bigint** dst, const IN int word_len){
 
     (*dst)->sign = 0;
     (*dst)->a = (word *)calloc(word_len, sizeof(word));
-    if ((*dst)->a == NULL)
-    {
+    if ((*dst)->a == NULL){
         free(*dst);
         *dst = NULL;
         return BI_ALLOC_FAIL;
@@ -81,8 +80,7 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
 
     // sign bit set
     (*dst)->sign = sign;
-    for (int i = 0; i < word_len; i++)
-    {
+    for (int i = 0; i < word_len; i++){
         if (data[endian_idx] > 0xFFFFFFFF)
         {
             printf("DATA_OVERFLOW\n");
@@ -106,23 +104,20 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
  *              - int base: base of string (2, 10, 16)
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base)
-{
+msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base){
     msg result_msg = 0;
     int sign = 0, a_idx = 0, digit = 0, block_size = 0, word_idx = 0, word_len = 0;
     int str_len = strlen(int_str);
     word temp = 0;
 
     // sign bit check
-    if (int_str[0] == '-')
-    {
+    if (int_str[0] == '-'){
         sign = 1;
         int_str++;
     }
 
     // extract word length
-    switch (base)
-    {
+    switch (base){
     case 2:
         word_len = (str_len + 31) / 32;
         block_size = WORD_BITS;
@@ -143,8 +138,7 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base)
     a_idx += block_size * (word_len - 2); // a_idx 값 뒤의 4byte부터 가져오기
     // memory allocate
     result_msg = bi_new(dst, word_len);
-    if (result_msg != BI_ALLOC_SUCCESS)
-    {
+    if (result_msg != BI_ALLOC_SUCCESS){
         log_msg(result_msg);
         return result_msg;
     }
@@ -152,11 +146,9 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base)
     (*dst)->sign = sign;
 
     // 하위 WORD_BITS만큼씩 끊어서 저장
-    while (word_len > 1)
-    {
+    while (word_len > 1){
         temp = 0;
-        for (int i = 0; i < block_size; i++)
-        {
+        for (int i = 0; i < block_size; i++){
             digit = char_to_int(int_str[a_idx++]);
             temp = temp * base + digit;
         }
@@ -168,8 +160,7 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base)
     // 상위 나머지 부분 저장
     temp = 0;
     a_idx += block_size;
-    for (int i = 0; i < a_idx; i++)
-    {
+    for (int i = 0; i < a_idx; i++){
         digit = char_to_int(int_str[i]);
         temp = temp * base + digit;
     }
@@ -232,15 +223,12 @@ msg bi_expand(OUT bigint** dst, const IN int word_len, const IN word data){
         flag = 1;
     }
 
-//    if((*dst)->word_len == word_len)    return BI_EXPAND_SUCCESS;
-//    else if((*dst)->word_len > word_len)    return BI_EXPAND_FAIL;
     if((*dst)->word_len >= word_len)    return BI_EXPAND_SUCCESS;
     // word_len이 작을 경우 expand가 아니기에 실패 -> 이거는 resize 구현 때 참고하자
 
     // 동적할당으로 메모리 늘리기
     (*dst)->a = (word *)realloc((*dst)->a, word_len * sizeof(word));
-    if ((*dst)->a == NULL)
-    {
+    if ((*dst)->a == NULL){
         if (flag && bi_delete(dst) != BI_FREE_SUCCESS)
             return BI_FREE_FAIL;
         return BI_ALLOC_FAIL;
@@ -274,6 +262,7 @@ int bi_compare(IN bigint** a, IN bigint** b){
     if(bi_refine(&temp_a) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
     if(bi_refine(&temp_b) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
 
+    // 여기 부호 부터 비교 할 때 -0, 0 이럴 때도 잘 봐야 한다. -> 이거 bi_is_zero로 확인해봐야 할 듯
     if(temp_a->sign == 0 && temp_b->sign == 1) return 1; // a 양수, b 음수
     if(temp_a->sign == 1 && temp_b->sign == 0) return -1; // a 음수, b 양수
     if(temp_a->sign == 1 && temp_b->sign == 1){ // 둘다 음수인 경우
@@ -307,8 +296,7 @@ int bi_compare(IN bigint** a, IN bigint** b){
  *              - bigint** b: pointer to bigint struct
  * Return:      - int: 1 if a > b, -1 if a < b, 0 if a == b
  **************************************************/
-int bi_compare_abs(IN bigint **a, IN bigint **b)
-{
+int bi_compare_abs(IN bigint **a, IN bigint **b){
     if (*a == NULL || *b == NULL)
         return BI_NOT_USING;
     int a_sign = (*a)->sign;
@@ -384,8 +372,7 @@ msg bi_assign(OUT bigint** dst, IN bigint** src){
  *              - int base: base of bigint struct (2, 10, 16)
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg bi_print(IN bigint **dst, const IN int base)
-{
+msg bi_print(IN bigint **dst, const IN int base){
     if (*dst == NULL || (*dst)->a == NULL)
         return PRINT_NULL;
 
@@ -395,8 +382,7 @@ msg bi_print(IN bigint **dst, const IN int base)
         printf("0x");
 
     // 간단한 16진수 출력 (10 진수는 이후 추가)
-    for (int i = (*dst)->word_len - 1; i >= 0; i--)
-    {
+    for (int i = (*dst)->word_len - 1; i >= 0; i--){
         printf("%08x", (*dst)->a[i]);
     }
     printf("\n");
@@ -414,12 +400,11 @@ msg bi_print(IN bigint **dst, const IN int base)
  *              - int shift_len : shift length
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len)
-{
+msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     // shift_len이 word_len보다 클 경우도 생각해야함
     if (*src == NULL)
         return BI_SHIFT_FAIL;
-  
+
     // shift_len이 0일 경우
     if(shift_len == 0){
         if(*dst == *src)    return BI_SHIFT_SUCCESS;
@@ -427,38 +412,39 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len)
         return BI_SHIFT_SUCCESS;
     }
 
+    int max_src_len = (*src)->word_len;
+    if(bi_refine(src) != BI_SET_REFINE_SUCCESS)    return BI_SHIFT_FAIL;
     int word_len = (*src)->word_len;
     int shift_word = shift_len / WORD_BITS; // word 단위로 시프트
     int shift_bit = shift_len % WORD_BITS; // bit 단위로 시프트
     int new_word_len = word_len + shift_word + (shift_bit > 0); // 새로 할당할 bigint 길이
+    max_src_len = max(max_src_len, new_word_len);
 
     if(*dst == NULL){
-        if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
-    }else if(*dst != NULL && (*dst)->word_len < new_word_len){ // dst가 이미 할당되어 있을 경우
-        if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_new(dst, max_src_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
+    }else if(*dst != NULL && (*dst)->word_len != max_src_len){ // dst가 이미 할당되어 있을 경우
+        if(bi_resize(dst, max_src_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
     }
     // 부호 복사
     (*dst)->sign = (*src)->sign;
 
     // word 이동
     if(shift_word != 0){
-        for(int i = word_len - 1; i >= 0; i--){
-            (*dst)->a[i + shift_word] = (*src)->a[i];
-        }
-        for(int i = 0; i < shift_word; i++){
-            (*dst)->a[i] = 0;
-        }
+        for(int i = word_len - 1; i >= 0; i--)  (*dst)->a[i + shift_word] = (*src)->a[i];
+        for(int i = 0; i < shift_word; i++) (*dst)->a[i] = 0;
+    }else{
+        for(int i = 0; i < word_len; i++)   (*dst)->a[i] = (*src)->a[i];
     }
 
     // bit 이동
-    if (shift_bit != 0)
-    {
-        for (int i = new_word_len - 1; i > 0; i--)
-        {
+    if (shift_bit != 0){
+        for (int i = max_src_len - 1; i > 0; i--){
             (*dst)->a[i] = ((*dst)->a[i] << shift_bit) | ((*dst)->a[i - 1] >> (WORD_BITS - shift_bit));
         }
     }
     (*dst)->a[0] = (*dst)->a[0] << shift_bit;
+    (*dst)->a[new_word_len - 1] &= 0xffffffff >> (WORD_BITS - shift_bit); // 메모리 재활용 할 때 사용하지 않은 bit는 0 처리
+    for(int i = new_word_len; i < max_src_len; i++) (*dst)->a[i] = 0; // 메모리 재활용 할 때 사용하지 않은 word는 0 처리
 
     return BI_SHIFT_SUCCESS;
 }
@@ -473,12 +459,10 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len)
  *              - int shift_len : shift length
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len)
-{
+msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     // shift_len이 word_len보다 클 경우도 생각해야함
-    if (*src == NULL)
-        return BI_SHIFT_FAIL;
-  
+    if (*src == NULL)   return BI_SHIFT_FAIL;
+
     // shift_len이 0일 경우
     if(shift_len == 0){
         if(*dst == *src)    return BI_SHIFT_SUCCESS;
@@ -491,29 +475,55 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len)
     int shift_bit = shift_len % WORD_BITS; // bit 단위로 시프트
     int new_word_len = word_len - shift_word; // 새로 할당할 bigint 길이
     int flag = 0;
+    bigint* one = NULL;
 
     if(*dst == NULL){
         if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
         flag = 1;
-    }else if(*dst != NULL && (*dst)->word_len < new_word_len){ // dst가 이미 할당되어 있을 경우
+    }else if(*dst != NULL && (*dst)->word_len != new_word_len){ // dst가 이미 할당되어 있을 경우
         if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
     }
     // 부호 복사
     (*dst)->sign = (*src)->sign;
+    if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+
+    // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 부호 뺀 값에 -1을 해준다.
+    if((*dst)->sign){
+        if(bi_new(&one, 1) != BI_ALLOC_SUCCESS){
+            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
+            return BI_SHIFT_FAIL;
+        }
+        one->a[0] = 1;
+        one->sign = 1;
+        if(bi_sub(dst, dst, &one) != BI_SUB_SUCCESS){
+            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
+            if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
+            return BI_SHIFT_FAIL;
+        }
+    }
 
     // word 이동
-    for(int i = shift_word; i < word_len; i++)
-        (*dst)->a[i - shift_word] = (*src)->a[i];
+    for(int i = shift_word; i < word_len; i++)  (*dst)->a[i - shift_word] = (*dst)->a[i];
 
     // bit 이동
-    if (shift_bit != 0)
-    {
-        for (int i = 0; i < new_word_len - 1; i++)
-        {
+    if (shift_bit != 0){
+        for (int i = 0; i < new_word_len - 1; i++){
             (*dst)->a[i] = ((*dst)->a[i] >> shift_bit) | ((*dst)->a[i + 1] << (WORD_BITS - shift_bit));
         }
     }
     (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] >> shift_bit;
+
+    // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 시프트 해준 결과 값에 +1을 한다.
+    if((*dst)->sign){
+        if(bi_add(dst, dst, &one) != BI_ADD_SUCCESS){
+            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
+            if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
+            return BI_SHIFT_FAIL;
+        }
+    }
+
+    // 사용한 1 값 해제
+    if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
 
     // 반환 전에 크기에 맞게 배열 resize
     if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS){
@@ -525,7 +535,7 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len)
 }
 
 /*************************************************
- * Name:        bi_mod
+ * Name:        bi_get_lower
  *
  * Description: bigint modulation
  *
@@ -534,17 +544,13 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len)
  *              - int mod_len : length of mod (2^mod_len)
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg bi_mod(OUT bigint **dst, IN bigint **src, IN int mod_len)
-{
-    if (*src == NULL)
-        return BI_MOD_FAIL;
+msg bi_get_lower(OUT bigint **dst, IN bigint **src, IN int mod_len){
+    if (*src == NULL)   return BI_GET_LOWER_FAIL;
 
     // mod_len이 0일 경우 1에 대한 mod이기 때문에 나머지는 0
-    if (mod_len == 0)
-    {
-        if (bi_new(dst, 1) != BI_ALLOC_SUCCESS)
-            return BI_MOD_FAIL;
-        return BI_MOD_SUCCESS;
+    if (mod_len == 0){
+        if (bi_new(dst, 1) != BI_ALLOC_SUCCESS) return BI_GET_LOWER_FAIL;
+        return BI_GET_LOWER_SUCCESS;
     }
     int mod_word = mod_len / WORD_BITS; // mod_len에 대한 word_len
     int mod_bit = mod_len % WORD_BITS; // bit 단위로 시프트
@@ -567,14 +573,15 @@ msg bi_mod(OUT bigint **dst, IN bigint **src, IN int mod_len)
     }
 
     // bit 이동
-    if(mod_bit != 0)    (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] & ((1 << mod_bit) - 1);
+    if(mod_bit != 0 && mod_bit != 31)    (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] & ((1 << (mod_bit + 1)) - 1);
+    else if(mod_bit == 31)    (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] & ((1 << mod_bit) - 1);
     // 반환 전에 크기에 맞게 배열 resize
     if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS){
         if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
         return BI_SHIFT_FAIL;
     }
 
-    return BI_MOD_SUCCESS;
+    return BI_GET_LOWER_SUCCESS;
 }
 
 /*************************************************
@@ -589,11 +596,9 @@ msg bi_mod(OUT bigint **dst, IN bigint **src, IN int mod_len)
 **************************************************/
 msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
     // 두 값 중 하나가 NULL인 경우
-    if (*a == NULL || *b == NULL)
-        return BI_CAT_FAIL;
+    if (*a == NULL || *b == NULL)   return BI_CAT_FAIL;
     // 연접하려는 두 값의 부호가 다를 경우
-    if ((*a)->sign != (*b)->sign)
-        return BI_SIGN_NOT_MATCH;
+    if ((*a)->sign != (*b)->sign)   return BI_SIGN_NOT_MATCH;
   
     int new_word_len = (*a)->word_len + (*b)->word_len;
     word* temp = NULL; // dst가 a와 같을 경우 연산에서 사용됨.
@@ -602,7 +607,7 @@ msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
     if(*dst == NULL){
         if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
         flag = 1;
-    }else if(*dst != NULL && (*dst)->word_len < new_word_len){ // dst가 이미 할당되어 있을 경우
+    }else if(*dst != NULL && (*dst)->word_len != new_word_len){ // dst가 이미 할당되어 있을 경우
         if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
     }
     // 부호 복사
@@ -629,18 +634,12 @@ msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
     return BI_CAT_SUCCESS;
 }
 
-bool bi_is_zero(const bigint *num)
-{
-    if (num == NULL || num->word_len == 0)
-    {
-        return true; // NULL이거나 길이가 0인 경우 0으로 간주
+msg bi_is_zero(bigint **num){
+    if(*num == NULL)    return BI_NOT_USING;
+    if((*num)->word_len == 0)  return BI_IS_ZERO;
+    for (int i = 0; i < (*num)->word_len; i++){
+        if ((*num)->a[i] != 0)
+            return BI_NOT_ZERO;
     }
-    for (int i = 0; i < num->word_len; i++)
-    {
-        if (num->a[i] != 0)
-        {
-            return false; // 하나라도 0이 아니면 false 반환
-        }
-    }
-    return true; // 모든 요소가 0이면 true 반환
+    return BI_IS_ZERO; // 모든 요소가 0이면 true 반환
 }
