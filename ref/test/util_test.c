@@ -1093,7 +1093,7 @@ msg test_bi_div(){
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
 
-    printf("\n\n============ Testing bi_div ============\n");
+    printf("\n============ Testing bi_div ============\n");
     gettimeofday(&start, NULL);
 
     if (Test_file_write(div_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;

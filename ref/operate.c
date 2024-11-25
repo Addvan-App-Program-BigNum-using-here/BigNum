@@ -696,6 +696,27 @@ EXIT_SQU:
 }
 
 /*************************************************
+ * Name:        bi_squ_karachuba
+ *
+ * Description: Bigint squaring by using karachuba algorithm
+ *
+ * Arguments:   - bigint** dst: pointer to bigint struct
+ *              - bigint** a: bigint struct to be squared
+ **************************************************/
+//msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a){
+//    if(*a == NULL)  return MEM_NOT_ALLOC;
+//    msg result_msg = BI_SQU_FAIL;
+//
+//    // base case에서 카라츄바가 아닌 일반 곱셈 수행을 위한 연산
+//    if(squ_karachuba_flag > (*a)->word_len){
+//        result_msg = bi_squ(dst, a);
+//        if(result_msg != BI_SQU_SUCCESS)    return result_msg;
+//        return BI_SQU_SUCCESS;
+//    }
+//    l = (*a)->word_len;
+//}
+
+/*************************************************
  * Name:        bi_exp_MS
  *
  * Description: Bigint modular exponentiation using Montgomery Square
@@ -710,7 +731,7 @@ msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
 
     // 음수인 경우 -> 이거는 역원 찾는거라서 일단 패스 -> 이거 test에서 전처리 함
     if((*x)->sign)    return BI_EXP_MS_FAIL;
-    // 0인 경우 time attack을 방지하고자 값 할당해서 수행하자.
+    // 0인 경우 time attack을 방지하고자 0값 할당해서 수행하자.
     if(bi_is_zero(x) == BI_IS_ZERO){
         (*x)->word_len = 1;
         (*x)->a[0] = 0;
@@ -728,7 +749,6 @@ msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
     bigint* temp = NULL;
     msg result_msg = BI_EXP_MS_FAIL;
     byte bit = 0;
-//    char str[10240];
 
     // timeattack을 방지하고자 배열로 선언
     t = (bigint**)calloc(sizeof(bigint*), 2);

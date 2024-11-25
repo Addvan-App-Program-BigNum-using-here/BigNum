@@ -6,6 +6,7 @@
 #include "util.h"
 
 #define karachuba_flag 20  // karachuba에서 base case 수행 시 일반 곱셈의 기준 6이 가장 높은 듯??
+#define squ_karachuba_flag 2 // squ_karachuba에서 base case 수행 시 일반 곱셈의 기준
 #define MAX_RECURSION_DEPTH 32 // 재귀 깊이
 #define POOL_SIZE 8            // 카라츄바에 필요한 임시 변수 개수 (a_0, b_0, a_1, b_1, a_0b_0, a_1b_1, a_1_a_0, b_1_b_0)
 
@@ -129,5 +130,7 @@ msg bi_squ(OUT bigint** dst, IN bigint** a);
  * @return msg
  */
 msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
+
+//msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a);
 
 #endif // OPERATE_H
