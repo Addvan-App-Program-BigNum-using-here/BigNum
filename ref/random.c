@@ -24,7 +24,8 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
     (*dst)->sign = (*dst)->sign & 1;
 
     result_msg = array_random((*dst)->a, word_len);
-    if(result_msg != GEN_RANDOM_SUCCESS)    return result_msg;
+    if (result_msg != GEN_RANDOM_SUCCESS)
+        return result_msg;
 
     if(bi_refine(dst) != BI_SET_REFINE_SUCCESS) return BI_SET_REFINE_FAIL;
 
@@ -51,25 +52,27 @@ msg array_random(word* dst, int word_len) {
     return GEN_RANDOM_SUCCESS;
 }
 
-
 /*************************************************
-* Name:        randombytes
-*
-* Description: Fill random value to bytes array
-*
-* Arguments:   - byte* dst: pointer to bigint struct
-*              - int byte_len: length of bigint struct
-* Return:      - msg : message. SUCCESS or FAIL
-**************************************************/
-msg randombytes(IN byte* dst, IN int byte_len){
+ * Name:        randombytes
+ *
+ * Description: Fill random value to bytes array
+ *
+ * Arguments:   - byte* dst: pointer to bigint struct
+ *              - int byte_len: length of bigint struct
+ * Return:      - msg : message. SUCCESS or FAIL
+ **************************************************/
+msg randombytes(IN byte *dst, IN int byte_len)
+{
 #ifdef _WIN32
     // Windows 버전
     HCRYPTPROV hProvider = 0;
-    if (!CryptAcquireContext(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
+    if (!CryptAcquireContext(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+    {
         return GEN_RANDOM_BYTES_FAIL;
     }
 
-    if (!CryptGenRandom(hProvider, byte_len, dst)) {
+    if (!CryptGenRandom(hProvider, byte_len, dst))
+    {
         CryptReleaseContext(hProvider, 0);
         return GEN_RANDOM_BYTES_FAIL;
     }
@@ -81,19 +84,21 @@ msg randombytes(IN byte* dst, IN int byte_len){
     static int fd = -1;
     ssize_t ret;
 
-    while(fd == -1) {
+    while (fd == -1)
+    {
         fd = open("/dev/urandom", O_RDONLY);
-        if(fd == -1 && errno == EINTR)
+        if (fd == -1 && errno == EINTR)
             continue;
-        else if(fd == -1)
+        else if (fd == -1)
             return GEN_RANDOM_BYTES_FAIL;
     }
 
-    while(byte_len > 0) {
+    while (byte_len > 0)
+    {
         ret = read(fd, dst, byte_len);
-        if(ret == -1 && errno == EINTR)
+        if (ret == -1 && errno == EINTR)
             continue;
-        else if(ret == -1)
+        else if (ret == -1)
             return GEN_RANDOM_BYTES_FAIL;
         dst += ret;
         byte_len -= ret;
@@ -120,9 +125,9 @@ msg get_random_string(OUT char** str, IN int str_len, IN int base){
     const char binary_chars[] = "01";
     const char decimal_chars[] = "0123456789";
     const char hex_chars[] = "0123456789abcdef";
-    const char* chars;
+    const char *chars;
     int chars_len;
-
+  
     switch(base) {
         case 2:
             chars = binary_chars;
