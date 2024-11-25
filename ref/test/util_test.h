@@ -93,4 +93,6 @@ msg test_bi_get_lower();
 msg test_bi_cat();
 
 msg test_bi_squ();
+
+msg test_bi_exp();
 #endif // UTIL_TEST_H

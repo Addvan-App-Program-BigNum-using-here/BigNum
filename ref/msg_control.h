@@ -58,6 +58,8 @@ enum MemoryMSGCodes
     BI_RESIZE_FAIL      = MSG_TYPE_MEMORY | 0x001E, // Bigint resize 실패
     BI_SQU_SUCCESS      = MSG_TYPE_MEMORY | 0x001F, // Bigint 제곱 성공
     BI_SQU_FAIL         = MSG_TYPE_MEMORY | 0x0020, // Bigint 제곱 실패
+    BI_EXP_MS_SUCCESS    = MSG_TYPE_MEMORY | 0x0021, // Bigint 나머지 연산 성공
+    BI_EXP_MS_FAIL       = MSG_TYPE_MEMORY | 0x0022, // Bigint 나머지 연산 실패
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -127,6 +129,8 @@ enum TestMSGCodes
     Test_BI_CAT_FAIL        = MSG_TYPE_TEST | 0x001D, // Test Bigint 이어붙이기 실패
     Test_BI_SQU_SUCCESS     = MSG_TYPE_TEST | 0x001E, // Test Bigint 제곱 성공
     Test_BI_SQU_FAIL        = MSG_TYPE_TEST | 0x001F, // Test Bigint 제곱 실패
+    Test_BI_EXP_SUCCESS     = MSG_TYPE_TEST | 0x0020, // Test Bigint 확장 성공
+    Test_BI_EXP_FAIL        = MSG_TYPE_TEST | 0x0021, // Test Bigint 확장 실패
     // 추가 테스트 관련 에러 코드...
 };
 

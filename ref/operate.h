@@ -120,4 +120,14 @@ msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b);
  */
 msg bi_squ(OUT bigint** dst, IN bigint** a);
 
+/**
+ * @brief bigint structure squaring operation
+ * @param dst pointer to square of bigint result
+ * @param src pointer to squred of bigint
+ * @param x pointer to square of bigint
+ * @param n pointer to modulo of bigint
+ * @return msg
+ */
+msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
+
 #endif // OPERATE_H

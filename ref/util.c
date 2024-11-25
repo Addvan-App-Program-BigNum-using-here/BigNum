@@ -635,11 +635,12 @@ msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
 }
 
 msg bi_is_zero(bigint **num){
+    msg result_msg = BI_IS_ZERO;
     if(*num == NULL)    return BI_NOT_USING;
-    if((*num)->word_len == 0)  return BI_IS_ZERO;
+    // time attack으로 인해 중간에 return 하면 안된다.
     for (int i = 0; i < (*num)->word_len; i++){
         if ((*num)->a[i] != 0)
-            return BI_NOT_ZERO;
+            result_msg = BI_NOT_ZERO;
     }
-    return BI_IS_ZERO; // 모든 요소가 0이면 true 반환
+    return result_msg; // 모든 요소가 0이면 true 반환
 }
