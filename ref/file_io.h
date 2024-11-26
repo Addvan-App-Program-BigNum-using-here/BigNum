@@ -5,7 +5,15 @@
 #include "data_type.h"
 #include "msg_control.h"
 
-#define Test_file "./test.txt"
+#define Test_main_file "./test.txt"
+#define Test_file_add "./test_add.txt"
+#define Test_file_sub "./test_sub.txt"
+#define Test_file_mul "./test_mul.txt"
+#define Test_file_mul_karachuba "./test_mul_karachuba.txt"
+#define Test_file_div "./test_div.txt"
+#define Test_file_squ "./test_squ.txt"
+#define Test_file_squ_karachuba "./test_squ_karachuba.txt"
+#define Test_file_exp "./test_exp.txt"
 
 /**
  * @brief file write
@@ -14,7 +22,7 @@
  * @param option CLEAR or APPEND (CLEAR => clear file, APPEND => append file)
  * @return result of integer
  */
-msg Test_file_write(IN char* str, const IN int option);
+msg Test_file_write(IN char* Test_file, IN char* str, const IN int option);
 
 /**
  * @brief file write without enter
@@ -23,6 +31,6 @@ msg Test_file_write(IN char* str, const IN int option);
  * @param option CLEAR or APPEND (CLEAR => clear file, APPEND => append file)
  * @return result of integer
  */
-msg Test_file_write_non_enter(IN char *str, const IN int option);
+msg Test_file_write_non_enter(IN char* Test_file, IN char *str, const IN int option);
 
 #endif // FILE_IO_H

@@ -9,7 +9,7 @@
 *              - int option: CLEAR or APPEND (CLEAR => clear file, APPEND => append file)
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
-msg Test_file_write(IN char* str, const IN int option){
+msg Test_file_write(IN char* Test_file, IN char* str, const IN int option){
     FILE* fp = (option == CLEAR) ? fopen(Test_file, "w") : fopen(Test_file, "a");
     if (fp == NULL) {
         printf("Failed to run command\n");
@@ -30,7 +30,7 @@ msg Test_file_write(IN char* str, const IN int option){
 *              - int option: CLEAR or APPEND (CLEAR => clear file, APPEND => append file)
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
-msg Test_file_write_non_enter(IN char *str, const IN int option){
+msg Test_file_write_non_enter(IN char* Test_file, IN char *str, const IN int option){
     FILE *fp = (option == CLEAR) ? fopen(Test_file, "w") : fopen(Test_file, "a");
     if (fp == NULL){
         printf("Failed to run command\n");

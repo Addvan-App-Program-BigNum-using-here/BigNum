@@ -14,9 +14,9 @@
 #include "../data_type.h"
 #include "../file_io.h"
 
-#define test_word_size  3               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
+#define test_word_size  64               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
 #define test_word_size_limit 64        // 랜덤 word 크기 사용 시 제한 범위
-#define test_size  1                  // 테스트 횟수
+#define test_size  5                  // 테스트 횟수
 
 /**
  * @brief Test bigint structure allocation and deallocation
@@ -51,28 +51,28 @@ msg test_bi_random();
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_add();
+msg test_bi_add(OUT double* total_time_add, IN bigint** a, IN bigint** b, IN char* str);
 
 /**
  * @brief Test bigint structure Sub operation
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_sub();
+msg test_bi_sub(OUT double* total_time_sub, IN bigint** a, IN bigint** b, IN char* str);
 
 /**
  * @brief Test bigint structure Mul operation
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_mul();
+msg test_bi_mul(OUT double* total_time_mul, IN bigint** a, IN bigint** b, IN char* str);
 
 /**
  * @brief Test bigint structure Mul operation using Karachuba algorithm
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_mul_karachuba();
+msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, IN bigint** b, IN char* str);
 
 /**
  * @brief Test multiplication classic and Karachuba algorithm same value
@@ -89,7 +89,7 @@ msg compare_multiplicaiton(int start_size, int end_size, int step_size);
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_div();
+msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
 
 /**
  * @brief Test bigint structure Shift operation
@@ -117,19 +117,19 @@ msg test_bi_cat();
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_squ();
+msg test_bi_squ(OUT double* total_time_squ, IN bigint** a, IN char* str);
 
 /**
  * @brief Test bigint structure Squaring operation by using Karachuba algorithm
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_squ_karachuba();
+msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, IN char* str);
 
 /**
  * @brief Test bigint structure Exponentional operation
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_exp();
+msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN bigint** c, IN char* str);
 #endif // UTIL_TEST_H
