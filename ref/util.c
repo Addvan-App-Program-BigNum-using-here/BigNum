@@ -359,7 +359,9 @@ msg bi_assign(OUT bigint** dst, IN bigint** src){
         }
     }
     (*dst)->sign = (*src)->sign;
-    memcpy((*dst)->a, (*src)->a, (*src)->word_len * sizeof(word));
+    for(int i = 0; i < (*src)->word_len; i++){
+        (*dst)->a[i] = (*src)->a[i];
+    }
     return BI_SET_ASSIGN_SUCCESS;
 }
 

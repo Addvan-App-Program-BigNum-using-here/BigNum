@@ -15,8 +15,7 @@ TEST_SRC = $(LIB_SOURCES) ./$(TEST_SOURCE)
 # Library names
 SHARED_LIB = $(LIB_DIR)/$(SHARED_PREFIX)bignum.$(SHARED_EXT)
 STATIC_LIB = $(LIB_DIR)/libbignum.a
-# Sage test file
-TEST_SAGE = ../../sage_test/test.sage.py
+
 # Detect operating system
 ifeq ($(OS),Windows_NT)
     # Windows settings
@@ -103,7 +102,7 @@ ifeq ($(UNAME_S),Darwin)
 else
 	./$(TEST_PROGRAM)
 endif
-	sage ../../sage_test/test.sage >/dev/null 2>&1
+	python3 ../../sage_test/test.py
 	cat ./main_result.txt
 # Rebuild and run
 rerun: clean run
@@ -116,7 +115,6 @@ ifeq ($(OS),Windows_NT)
 	@$(RM) *.txt
 	@$(RM) $(subst /,\,$(SHARED_LIB))
 	@$(RM) $(subst /,\,$(STATIC_LIB))
-	@$(RM) $(subst /,\,$(TEST_SAGE))
 else
 	$(RM) $(LIB_OBJECTS)
 	$(RM) $(TEST_OBJECT)
@@ -124,7 +122,6 @@ else
 	$(RM) *.txt
 	$(RM) $(SHARED_LIB)
 	$(RM) $(STATIC_LIB)
-	$(RM) $(TEST_SAGE)
 endif
 # Debug target
 debug:
