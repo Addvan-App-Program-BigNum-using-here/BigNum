@@ -5,7 +5,8 @@
 #include "msg_control.h"
 #include "util.h"
 
-#define karachuba_flag 20  // karachuba에서 base case 수행 시 일반 곱셈의 기준 6이 가장 높은 듯??
+#define karachuba_flag 15  // karachuba에서 base case 수행 시 일반 곱셈의 기준 6이 가장 높은 듯??
+#define squ_karachuba_flag 2 // squ_karachuba에서 base case 수행 시 일반 곱셈의 기준
 #define MAX_RECURSION_DEPTH 32 // 재귀 깊이
 #define POOL_SIZE 8            // 카라츄바에 필요한 임시 변수 개수 (a_0, b_0, a_1, b_1, a_0b_0, a_1b_1, a_1_a_0, b_1_b_0)
 
@@ -103,21 +104,31 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b);
 msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b);
 
 /**
- * @brief bigint structure division operation using word division
- * @param q pointer to quotient of bigint division
- * @param r pointer to remainder of bigint division
- * @param a dividend bigint operand
- * @param b divisor bigint operand
- * @return msg
- */
-msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b);
-
-/**
  * @brief bigint structure squaring operation
  * @param dst pointer to square of bigint
  * @param a dividend bigint to be squared
  * @return msg
  */
 msg bi_squ(OUT bigint** dst, IN bigint** a);
+
+/**
+ * @brief bigint structure squaring operation version to Multiplication and Squaring
+ * @param dst pointer to square of bigint result
+ * @param src pointer to squred of bigint
+ * @param x pointer to square of bigint
+ * @param n pointer to modulo of bigint
+ * @return msg
+ */
+msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
+
+/**
+ * @brief bigint structure squaring operation version to Right to Left
+ * @param dst pointer to square of bigint result
+ * @param src pointer to squred of bigint
+ * @param x pointer to square of bigint
+ * @param n pointer to modulo of bigint
+ * @return msg
+ */
+msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
 
 #endif // OPERATE_H

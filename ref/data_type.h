@@ -29,6 +29,7 @@
 #define GET_LOWER_init "[Get Lower]"
 #define CAT_init "[Cat]"
 #define SEQ_init "[Sequence]"
+#define EXP_init "[Exponentiation]"
 
 typedef uint8_t byte;   ///< byte type
 typedef uint16_t hword; ///< Half word type
@@ -52,8 +53,7 @@ typedef uint64_t dword; ///< Double word type
  * @var bigint::a
  * array of word
  */
-typedef struct
-{
+typedef struct{
     byte sign;    ///< positive or negative (positive == 0, negative == 1)
     int word_len; ///< length of bigint struct
     word *a;      ///< array of word

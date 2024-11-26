@@ -171,7 +171,7 @@ msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b){
     // 나중에 자료형 단위가 달라져도 동작할 수 있게 수정하기
     if(*a == NULL || *b == NULL)    return MEM_NOT_ALLOC;
 
-    msg result_msg = 0;
+    msg result_msg = BI_MUL_FAIL;
     if(bi_compare_abs(a, b) == -1){ // a < b
         result_msg = bi_mul(dst, b, a);
         if(result_msg != BI_MUL_SUCCESS)    return result_msg;
@@ -234,7 +234,7 @@ msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b){
     (*a)->sign = a_sign;
     (*b)->sign = b_sign;
 
-    if(bi_assign(dst, &dst_temp) != BI_SET_ASSIGN_SUCCESS)    goto MUL_EXIT;
+    if (bi_assign(dst, &dst_temp) != BI_SET_ASSIGN_SUCCESS)    goto MUL_EXIT;
     if (bi_refine(dst) != BI_SET_REFINE_SUCCESS)   goto MUL_EXIT;
     result_msg = BI_MUL_SUCCESS;
 
@@ -255,7 +255,7 @@ MUL_EXIT:
 **************************************************/
 msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
     if (*a == NULL || *b == NULL) return MEM_NOT_ALLOC;
-    msg result_msg = 0;
+    msg result_msg = BI_MUL_FAIL;
 
     if(bi_refine(a) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
     if(bi_refine(b) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
@@ -446,7 +446,7 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b){
     // 몫과 나머지가 같은 메모리를 가리키면 안됨
     if(*q != NULL && *q == *r)    return DIV_FAIL;
 
-    msg result_msg = BI_DIV_SUCCESS;
+    msg result_msg = BI_DIV_FAIL;
     bigint* temp_r = NULL;
 
     // b가 0이거나 할당이 안되었을 경우
@@ -521,11 +521,6 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b){
             (*q)->a[0] = (word)(*a)->sign;
             (*q)->sign = (*a)->sign;
             // r 메모리 할당
-            if(*r == NULL){
-                if(bi_new(r, (*a)->word_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-            }else if(*r != NULL && (*r) != (*a)){
-                if(bi_resize(r, (*a)->word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-            }
             // a가 음수인 경우 r = b + a, a가 양수인 경우 r = a
             if(bi_assign(r, a) != BI_SET_ASSIGN_SUCCESS)    return BI_ALLOC_FAIL; // 어차피 *r == *a 인경우 assign에서 바로 return
 
@@ -550,17 +545,10 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b){
     result_msg = divc(&temp_q, &temp_r, a, b);
     if(result_msg != DIVC_SUCCESS)  goto EXIT_DIV;
 
-    if(*q == NULL){
-        result_msg = bi_new(q, (*b)->word_len);
-        if(result_msg != BI_ALLOC_SUCCESS)    goto EXIT_DIV;
-    }
     result_msg = bi_assign(q, &temp_q);
     if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_DIV;
+
     // r이 NULL이면 할당
-    if(*r == NULL){
-        result_msg = bi_new(r, (*b)->word_len);
-        if(result_msg != BI_ALLOC_SUCCESS)    goto EXIT_DIV;
-    }
     result_msg = bi_refine(&temp_r);
     if(result_msg != BI_SET_REFINE_SUCCESS)   goto EXIT_DIV;
     result_msg = bi_assign(r, &temp_r);
@@ -604,24 +592,6 @@ msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
     return DIVC_SUCCESS;
 }
 
-///*************************************************
-// * Name:        divc_gener
-// *
-// * Description: Bigint division using word division
-// *
-// * Arguments:   - bigint** q: pointer to bigint struct
-// *              - bigint** r: pointer to bigint struct
-// *              - bigint** a: bigint struct
-// *              - bigint** b: bigint struct
-// **************************************************/
-//msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
-//    if(*a == NULL || *b == NULL)    return MEM_NOT_ALLOC;
-//
-//    word Q_hat = 0;
-//
-//    Q_hat =
-//}
-
 /*************************************************
  * Name:        bi_squ
  *
@@ -633,7 +603,7 @@ msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
 // 데이터 넣을 때 조금 더 최적화 할 수 있는 방법 생각해보기
 msg bi_squ(OUT bigint** dst, IN bigint** a){
     if(*a == NULL)    return MEM_NOT_ALLOC;
-    msg result_msg = 0;
+    msg result_msg = BI_SQU_FAIL;
     word T2 = 0; // Ai * Aj 결과 저장
     word temp = 0; // Aj 저장
     bigint* C1 = NULL;  // 제곱 결과 저장
@@ -692,5 +662,129 @@ EXIT_SQU:
     if(bi_delete(&C3) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     if(bi_delete(&mid) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
 
+    return result_msg;
+}
+
+/*************************************************
+ * Name:        bi_exp_MS
+ *
+ * Description: Bigint modular exponentiation using Montgomery Square
+ *
+ * Arguments:   - bigint** dst: pointer to bigint struct
+ *              - bigint** src: bigint struct to be squared
+ *              - bigint** x: bigint struct square
+ *             - bigint** n: bigint struct modulus
+ **************************************************/
+msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
+    if(*src == NULL || *n == NULL)    return MEM_NOT_ALLOC;
+
+    // src가 음수인 경우도 사실 부호 처리만 하면 되니까 상관 없기는 한데 일단 test에서 전처리를 수행함
+    // 음수인 경우 -> 이거는 역원 찾는거라서 일단 패스 -> 이거 test에서 전처리 함
+    if((*x)->sign)    return BI_EXP_MS_FAIL;
+    // 0인 경우 time attack을 방지하고자 0값 할당해서 수행하자.
+    if(bi_is_zero(x) == BI_IS_ZERO){
+        (*x)->word_len = 1;
+        (*x)->a[0] = 0;
+        (*x)->sign = 0;
+    }
+
+    bigint** t = NULL; // t0, t1을 할당
+    bigint* temp = NULL;
+    msg result_msg = BI_EXP_MS_FAIL;
+    byte bit = 0;
+
+    // timeattack을 방지하고자 배열로 선언
+    t = (bigint**)calloc(sizeof(bigint*), 2);
+    if(t == NULL)    return BI_ALLOC_FAIL;
+
+    // bit 연산 수행할 건데 refine이 되어 있지 않으면 0bit에 대한 쓰레기 연산이 있을 수 있기에 수행
+    result_msg = bi_refine(x);
+    if(result_msg != BI_SET_REFINE_SUCCESS)    goto EXIT_EXP_T;
+    // t0 = 1
+    result_msg = bi_new(&t[0], 1);
+    t[0]->a[0] = 1;
+    if(result_msg != BI_ALLOC_SUCCESS)    goto EXIT_EXP_T;
+    // t1 = x (t1 = src)
+    result_msg = bi_assign(&t[1], src);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_EXP_T0;
+
+    for(int i = (*x)->word_len * WORD_BITS - 1; i >= 0; i--){
+        // 상위 비트부터 가져오기
+        bit = ((*x)->a[i / WORD_BITS] >> (i % WORD_BITS)) & 1;
+        // t[1-bit] = t[0] * t[1] mod n (mod 연산은 추후)
+        result_msg = bi_mul_karachuba(&t[1-bit], &t[0], &t[1]);
+        if(result_msg != BI_MUL_SUCCESS)    goto EXIT_EXP;
+        result_msg = bi_div(&temp, &t[1-bit], &t[1-bit], n);
+        if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
+
+        // t[bit] = t[bit] * t[bit] mod n (mod 연산은 추후)
+        result_msg = bi_squ(&t[bit], &t[bit]);
+        if(result_msg != BI_SQU_SUCCESS)    goto EXIT_EXP;
+        result_msg = bi_div(&temp, &t[bit], &t[bit], n);
+        if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
+    }
+
+    result_msg = bi_assign(dst, &t[0]);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_EXP;
+
+    result_msg = BI_EXP_MS_SUCCESS;
+
+EXIT_EXP:
+    if(bi_delete(&t[1]) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+EXIT_EXP_T0:
+    if(bi_delete(&t[0]) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+EXIT_EXP_T:
+    free(t);
+    return result_msg;
+}
+
+msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
+    if(*src == NULL || *n == NULL)    return MEM_NOT_ALLOC;
+
+    // src가 음수인 경우도 사실 부호 처리만 하면 되니까 상관 없기는 한데 일단 test에서 전처리를 수행함
+    // 음수인 경우 -> 이거는 역원 찾는거라서 일단 패스 -> 이거 test에서 전처리 함
+    if((*x)->sign)    return BI_EXP_MS_FAIL;
+    // 0인 경우 time attack을 방지하고자 0값 할당해서 수행하자.
+    if(bi_is_zero(x) == BI_IS_ZERO){
+        (*x)->word_len = 1;
+        (*x)->a[0] = 0;
+        (*x)->sign = 0;
+    }
+
+    bigint* t0 = NULL;
+    bigint* t1 = NULL;
+    bigint* temp = NULL;
+    msg result_msg = BI_EXP_R_TO_L_FAIL;
+    byte bit = 0;
+
+    // t0 = 1 초기 값 세탱
+    if(bi_new(&t0, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
+    t0->a[0] = 1;
+    // t1 = src 초기 값 세팅
+    result_msg = bi_assign(&t1, src);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_EXP;
+
+    for(int i = 0; i < (*x)->word_len * WORD_BITS - 1; i++){
+        bit = ((*x)->a[i / WORD_BITS] >> (i % WORD_BITS)) & 1; // 하위 비트 가져오기
+        // bit가 1일 경우에만 곱셈 수행
+        if(bit){
+            result_msg = bi_mul_karachuba(&t0, &t0, &t1);
+            if(result_msg != BI_MUL_SUCCESS)    goto EXIT_EXP;
+            result_msg = bi_div(&temp, &t0, &t0, n);
+            if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
+        }
+        result_msg = bi_squ(&t1, &t1);
+        if(result_msg != BI_SQU_SUCCESS)    goto EXIT_EXP;
+        result_msg = bi_div(&temp, &t1, &t1, n);
+        if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
+    }
+
+    result_msg = bi_assign(dst, &t0);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_EXP;
+    result_msg = BI_EXP_R_TO_L_SUCCESS;
+
+EXIT_EXP:
+    if(bi_delete(&t1) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(bi_delete(&t0) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     return result_msg;
 }

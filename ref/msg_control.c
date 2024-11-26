@@ -126,6 +126,12 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case Test_BI_SQU_FAIL: return "Test Bigint square operation failed";
         case BI_SQU_SUCCESS: return "Bigint square operation successful";
         case BI_SQU_FAIL: return "Bigint square operation failed";
+        case BI_EXP_MS_SUCCESS: return "Bigint modulo operation successful";
+        case BI_EXP_MS_FAIL: return "Bigint modulo operation failed";
+        case Test_BI_EXP_SUCCESS: return "Test Bigint expansion successful";
+        case Test_BI_EXP_FAIL: return "Test Bigint expansion failed";
+        case BI_EXP_R_TO_L_SUCCESS: return "Bigint exp right shift successful";
+        case BI_EXP_R_TO_L_FAIL: return "Bigint exp right shift failed";
         default: return "Unknown error code";
     }
 }
