@@ -253,7 +253,7 @@ MUL_EXIT:
 *              - bigint** a: bigint struct
 *              - bigint** b: bigint struct
 **************************************************/
-msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
+msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b, IN int karachuba_flag){
     if (*a == NULL || *b == NULL) return MEM_NOT_ALLOC;
     msg result_msg = BI_MUL_FAIL;
 
@@ -261,14 +261,15 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
     if(bi_refine(b) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
 
     if(bi_compare_abs(a, b) == -1){ // a < b
-        result_msg = bi_mul_karachuba(dst, b, a);
+        result_msg = bi_mul_karachuba(dst, b, a, karachuba_flag);
         if(result_msg != BI_MUL_SUCCESS)    return result_msg;
         return BI_MUL_SUCCESS;
     }
 
     // base case에서 카라츄바가 아닌 일반 곱셈 수행을 위한 연산
     int min_word_len = min((*a)->word_len, (*b)->word_len);
-    if(karachuba_flag > min_word_len){
+
+    if(karachuba_flag > min_word_len || karachuba_flag == 1){
         result_msg = bi_mul(dst, a, b);
         if(result_msg != BI_MUL_SUCCESS)    return result_msg;
         return BI_MUL_SUCCESS;
@@ -314,10 +315,10 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
     if (result_msg != BI_GET_LOWER_SUCCESS)
         goto karachuba_exit;
 
-    result_msg = bi_mul_karachuba(&a_0b_0, &a_0, &b_0);
+    result_msg = bi_mul_karachuba(&a_0b_0, &a_0, &b_0, karachuba_flag);
     if(result_msg != BI_MUL_SUCCESS)    goto karachuba_exit;
 
-    result_msg = bi_mul_karachuba(&a_1b_1, &a_1, &b_1);
+    result_msg = bi_mul_karachuba(&a_1b_1, &a_1, &b_1, karachuba_flag);
     if (result_msg != BI_MUL_SUCCESS)
         goto karachuba_exit;
 
@@ -345,7 +346,7 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b){
         goto karachuba_exit;
 
     // (A_1 - A_0) * (B_1 - B_0) => a_1_a_0 / 분할 정복
-    result_msg = bi_mul_karachuba(&a_1_a_0, &a_1_a_0, &b_1_b_0);
+    result_msg = bi_mul_karachuba(&a_1_a_0, &a_1_a_0, &b_1_b_0, karachuba_flag);
     if (result_msg != BI_MUL_SUCCESS)
         goto karachuba_exit;
 
@@ -743,6 +744,7 @@ msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a){
     bigint* a_1a_0 = g_pool.pool[g_pool.current_depth][4];
     byte a_sign = (*a)->sign;
     (*a)->sign = 0;
+    int max_len = 0;
 
     g_pool.current_depth++;
 
@@ -778,7 +780,8 @@ msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a){
         goto karachuba_exit;
 
     // A_1 * A_0  분할 정복
-    result_msg = bi_mul_karachuba(&a_1a_0, &a_1, &a_0);
+    max_len = max(a_1->word_len, a_0->word_len);
+    result_msg = bi_mul_karachuba(&a_1a_0, &a_1, &a_0, max_len / mul_karachuba_ratio);
     if (result_msg != BI_MUL_SUCCESS)
         goto karachuba_exit;
 
@@ -853,7 +856,7 @@ msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
         // 상위 비트부터 가져오기
         bit = ((*x)->a[i / WORD_BITS] >> (i % WORD_BITS)) & 1;
         // t[1-bit] = t[0] * t[1] mod n (mod 연산은 추후)
-        result_msg = bi_mul_karachuba(&t[1-bit], &t[0], &t[1]);
+        result_msg = bi_mul_karachuba(&t[1-bit], &t[0], &t[1], t[1]->word_len / mul_karachuba_ratio);
         if(result_msg != BI_MUL_SUCCESS)    goto EXIT_EXP;
         result_msg = bi_div(&temp, &t[1-bit], &t[1-bit], n);
         if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
@@ -909,7 +912,7 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
         bit = ((*x)->a[i / WORD_BITS] >> (i % WORD_BITS)) & 1; // 하위 비트 가져오기
         // bit가 1일 경우에만 곱셈 수행
         if(bit){
-            result_msg = bi_mul_karachuba(&t0, &t0, &t1);
+            result_msg = bi_mul_karachuba(&t0, &t0, &t1, t1->word_len / mul_karachuba_ratio);
             if(result_msg != BI_MUL_SUCCESS)    goto EXIT_EXP;
             result_msg = bi_div(&temp, &t0, &t0, n);
             if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;

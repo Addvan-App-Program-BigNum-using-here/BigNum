@@ -79,58 +79,75 @@ int main(){
             result_msg = MEM_NOT_ALLOC;
             goto TEST_EXIT;
         }
+
         // bigint 덧셈 테스트
-        if(test_bi_add(&op_total_time[0], &a, &b, str) != Test_BI_ADD_SUCCESS){
+        result_msg = test_bi_add(&op_total_time[0], &a, &b, str);
+        if(result_msg != Test_BI_ADD_SUCCESS){
             log_msg(Test_BI_ADD_FAIL);
+            log_msg(result_msg);
             return Test_FAIL;
         }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 뺄셈 테스트
-        if(test_bi_sub(&op_total_time[1], &a, &b, str) != Test_BI_SUB_SUCCESS){
+        result_msg = test_bi_sub(&op_total_time[1], &a, &b, str);
+        if(result_msg != Test_BI_SUB_SUCCESS){
             log_msg(Test_BI_SUB_FAIL);
+            log_msg(result_msg);
             return Test_FAIL;
         }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 나눗셈 테스트
-        if(test_bi_div(&op_total_time[2], &a, &b, str) != Test_BI_DIV_SUCCESS){
+        result_msg = test_bi_div(&op_total_time[2], &a, &b, str);
+        if(result_msg != Test_BI_DIV_SUCCESS){
             log_msg(Test_BI_DIV_FAIL);
+            log_msg(result_msg);
             return Test_FAIL;
         }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 곱셈 테스트
-        if(test_bi_mul(&op_total_time[3], &a, &b, str) != Test_BI_MUL_SUCCESS){
+        result_msg = test_bi_mul(&op_total_time[3], &a, &b, str);
+        if(result_msg != Test_BI_MUL_SUCCESS){
             log_msg(Test_BI_MUL_FAIL);
+            log_msg(result_msg);
             return Test_FAIL;
         }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 카라츄바 곱셈 테스트
-        if(test_bi_mul_karachuba(&op_total_time[4], &a, &b, str) != Test_BI_MUL_KARACHUBA_SUCCESS){
+        result_msg = test_bi_mul_karachuba(&op_total_time[4], &a, &b, str, test_max_word_size / mul_karachuba_ratio);
+        if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS){
             log_msg(Test_BI_MUL_KARACHUBA_FAIL);
+            log_msg(result_msg);
             return Test_FAIL;
         }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 제곱 테스트
-        if(test_bi_squ(&op_total_time[5], &a, str) != Test_BI_SQU_SUCCESS){
+        result_msg = test_bi_squ(&op_total_time[5], &a, str);
+        if(result_msg != Test_BI_SQU_SUCCESS){
             log_msg(Test_BI_SQU_FAIL);
+            log_msg(result_msg);
             return Test_FAIL;
         }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 카라츄바 제곱 테스트
-        if(test_bi_squ_karachuba(&op_total_time[6], &a, str) != Test_BI_SQU_KARACHUBA_SUCCESS){
+        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str);
+        if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
             log_msg(Test_BI_SQU_KARACHUBA_FAIL);
+            log_msg(result_msg);
             return Test_FAIL;
         }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 지수승 테스트
-        if(test_bi_exp(op_exp_time, &a, &b, &c, str) != Test_BI_EXP_SUCCESS){
+        result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
+        if(result_msg != Test_BI_EXP_SUCCESS){
             log_msg(Test_BI_EXP_FAIL);
+            log_msg(result_msg);
             return Test_FAIL;
         }
     }
@@ -168,7 +185,7 @@ int main(){
 
 
     printf("\n");
-//
+
 //    if(compare_multiplicaiton(10, 100, 10) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 
     log_msg(Test_SUCCESS);
@@ -872,7 +889,7 @@ MUL_EXIT:
 }
 
 
-msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, IN bigint** b, IN char* str){
+msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, IN bigint** b, IN char* str, IN int karachuba_flag){
     bigint *c = NULL;
     msg result_msg = Test_BI_MUL_KARACHUBA_SUCCESS;
 
@@ -890,8 +907,11 @@ msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, I
     result_msg = Test_file_write_non_enter(Test_file_mul_karachuba, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto MUL_KARACHUBA_EXIT;
 
-    *total_time_mul_karachuba += check_function_run_one_time_three_parm_bigint(bi_mul_karachuba, &c, a, b, &result_msg);
+    c_start = clock();
+    result_msg = bi_mul_karachuba(&c, a, b, karachuba_flag);
+    c_end = clock();
     if (result_msg != BI_MUL_SUCCESS)   goto MUL_KARACHUBA_EXIT;
+    *total_time_mul_karachuba += ((double)(c_end - c_start)) / CLOCKS_PER_SEC;
 
     if (bigint_to_hex(str, &c) == -1)   goto MUL_KARACHUBA_EXIT;
     result_msg = Test_file_write(Test_file_mul_karachuba, str, APPEND);
@@ -903,7 +923,7 @@ MUL_KARACHUBA_EXIT:
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     return result_msg;
 }
-/*
+
 msg compare_multiplicaiton(int start_size, int end_size, int step_size){
     printf("\n=== Comparing Multiplication Methods ===\n");
     printf("Size\titeration\tClassic(s)\tKaratsuba(s)\tRatio\tCrossover\n");
@@ -947,7 +967,7 @@ msg compare_multiplicaiton(int start_size, int end_size, int step_size){
             total_time_classic += ((double)(end - start)) / CLOCKS_PER_SEC;
 
             start = clock();
-            result_msg = bi_mul_karachuba(&c, &a, &b);
+            result_msg = bi_mul_karachuba(&c, &a, &b, word_size / mul_karachuba_ratio);
             if (result_msg != BI_MUL_SUCCESS)
                 goto COMAPARE_MUL_EXIT;
             end = clock();
@@ -983,7 +1003,7 @@ COMAPARE_MUL_EXIT:
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     return result_msg;
 }
-*/
+
 
 msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str){
     bigint *q = NULL;

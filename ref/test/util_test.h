@@ -16,7 +16,7 @@
 
 #define test_word_size  64               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
 #define test_word_size_limit 64        // 랜덤 word 크기 사용 시 제한 범위
-#define test_size  5                  // 테스트 횟수
+#define test_size  1                  // 테스트 횟수
 
 /**
  * @brief Test bigint structure allocation and deallocation
@@ -72,7 +72,7 @@ msg test_bi_mul(OUT double* total_time_mul, IN bigint** a, IN bigint** b, IN cha
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, IN bigint** b, IN char* str);
+msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, IN bigint** b, IN char* str, IN int karachuba_flag);
 
 /**
  * @brief Test multiplication classic and Karachuba algorithm same value

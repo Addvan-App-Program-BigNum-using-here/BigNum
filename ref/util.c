@@ -410,12 +410,12 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     // shift_len이 0일 경우
     if(shift_len == 0){
         if(*dst == *src)    return BI_SHIFT_SUCCESS;
-        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SET_ASSIGN_FAIL;
         return BI_SHIFT_SUCCESS;
     }
 
     int max_src_len = (*src)->word_len;
-    if(bi_refine(src) != BI_SET_REFINE_SUCCESS)    return BI_SHIFT_FAIL;
+    if(bi_refine(src) != BI_SET_REFINE_SUCCESS)    return BI_RESIZE_FAIL;
     int word_len = (*src)->word_len;
     int shift_word = shift_len / WORD_BITS; // word 단위로 시프트
     int shift_bit = shift_len % WORD_BITS; // bit 단위로 시프트
@@ -423,9 +423,9 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     max_src_len = max(max_src_len, new_word_len);
 
     if(*dst == NULL){
-        if(bi_new(dst, max_src_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_new(dst, max_src_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
     }else if(*dst != NULL && (*dst)->word_len != max_src_len){ // dst가 이미 할당되어 있을 경우
-        if(bi_resize(dst, max_src_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_resize(dst, max_src_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
     }
     // 부호 복사
     (*dst)->sign = (*src)->sign;
@@ -468,7 +468,7 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     // shift_len이 0일 경우
     if(shift_len == 0){
         if(*dst == *src)    return BI_SHIFT_SUCCESS;
-        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SET_ASSIGN_FAIL;
         return BI_SHIFT_SUCCESS;
     }
 
@@ -480,27 +480,27 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     bigint* one = NULL;
 
     if(*dst == NULL){
-        if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SET_ASSIGN_FAIL;
         flag = 1;
     }else if(*dst != NULL && (*dst)->word_len != new_word_len){ // dst가 이미 할당되어 있을 경우
-        if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
     }
     // 부호 복사
     (*dst)->sign = (*src)->sign;
-    if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+    if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SET_ASSIGN_FAIL;
 
     // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 부호 뺀 값에 -1을 해준다.
     if((*dst)->sign){
         // 1 생성
         if(bi_new(&one, 1) != BI_ALLOC_SUCCESS){
-            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
+            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
             return BI_SHIFT_FAIL;
         }
         one->a[0] = 1;
         one->sign = 1;
         if(bi_sub(dst, dst, &one) != BI_SUB_SUCCESS){
-            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
-            if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
+            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+            if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
             return BI_SHIFT_FAIL;
         }
     }
@@ -519,19 +519,19 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 시프트 해준 결과 값에 +1을 한다.
     if((*dst)->sign){
         if(bi_add(dst, dst, &one) != BI_ADD_SUCCESS){
-            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
-            if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
+            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+            if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
             return BI_SHIFT_FAIL;
         }
     }
 
     // 사용한 1 값 해제
-    if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
+    if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
 
     // 반환 전에 크기에 맞게 배열 resize
     if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS){
         if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-        return BI_SHIFT_FAIL;
+        return BI_RESIZE_FAIL;
     }
 
     return BI_SHIFT_SUCCESS;
