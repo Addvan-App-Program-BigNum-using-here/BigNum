@@ -31,7 +31,6 @@
 - 본 BigNum 프로젝트의 연산 검증은 python를 활용하기에 사전에 설치되어야 한다.
 ### MAC OS
 ```
-// MAC OS
 # Homebrew 설치 (아직 설치하지 않았다면)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
@@ -57,7 +56,44 @@ python3 --version
 https://www.python.org/downloads/
 ```
 
-## BigNum Test
+## Make Install
+- 또한 make 기능을 활용하여 프로젝트를 관리하기 때문에 make 설치도 사전에 진행되어야 한다.
+### MAC OS
+```
+# Homebrew로 make 설치
+brew install make
+
+# Command Line Tools 설치 (XCode)
+xcode-select --install
+```
+
+### Linux OS (Ubuntu/Debian)
+```
+# make 설치
+sudo apt update
+sudo apt install make build-essential
+```
+
+### Windows OS
+```
+# 방법 1
+# Chocolatey 설치
+# Chocolatey로 make 설치
+choco install make
+
+# 방법 2
+# MinGW 설치
+# MinGW로 make 설치
+
+# 방법 3
+# WSL
+# WSL 설치 (PowerShell 관리자 모드)
+wsl --install
+sudo apt update
+sudo apt install make
+```
+
+## BigNum Build
 ```
 git clone https://github.com/Addvan-App-Program-BigNum-using-here/BigNum.git
 cd ./ref/test
