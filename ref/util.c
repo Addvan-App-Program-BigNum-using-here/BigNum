@@ -491,6 +491,7 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
 
     // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 부호 뺀 값에 -1을 해준다.
     if((*dst)->sign){
+        // 1 생성
         if(bi_new(&one, 1) != BI_ALLOC_SUCCESS){
             if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
             return BI_SHIFT_FAIL;
@@ -636,6 +637,14 @@ msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
     return BI_CAT_SUCCESS;
 }
 
+/*************************************************
+* Name:        bi_is_zero
+*
+* Description: check bigint is zero
+*
+* Arguments:   - bigint** dst: checked bigint pointer
+* Return:      - msg : message. ZERO or NOT_ZERO, NOT_USING
+**************************************************/
 msg bi_is_zero(bigint **num){
     msg result_msg = BI_IS_ZERO;
     if(*num == NULL)    return BI_NOT_USING;
@@ -645,4 +654,55 @@ msg bi_is_zero(bigint **num){
             result_msg = BI_NOT_ZERO;
     }
     return result_msg; // 모든 요소가 0이면 true 반환
+}
+
+/*************************************************
+* Name:        check_function_runtime
+*
+* Description: get function runtime
+*
+* Arguments:   - msg (*func): test function pointer
+*              - bigint** dst: pointer to bigint struct result
+*              - bigint** a: pointer to bigint struct of input1
+*              - bigint** b : pointer to bigint struct of input2
+* Return:      - msg : message. SUCESS or FAIL
+**************************************************/
+double check_function_run_one_time_two_parm_bigint(IN msg (*func)(OUT bigint**, IN bigint**), OUT bigint** dst, IN bigint** a, IN msg* result_msg){
+    clock_t start, end;
+    start = clock();
+    *result_msg = func(dst, a);
+    end = clock();
+    return (double)(end - start) / CLOCKS_PER_SEC;
+}
+
+double check_function_run_one_time_two_parm_int(IN msg (*func)(OUT bigint**, IN int), OUT bigint** dst, IN int n, IN msg* result_msg){
+    clock_t start, end;
+    start = clock();
+    *result_msg = func(dst, n);
+    end = clock();
+    return (double)(end - start) / CLOCKS_PER_SEC;
+}
+
+double check_function_run_one_time_three_parm_bigint(IN msg (*func)(OUT bigint**, IN bigint**, IN bigint**), OUT bigint** dst, IN bigint** a, IN bigint** b, IN msg* result_msg){
+    clock_t start, end;
+    start = clock();
+    *result_msg = func(dst, a, b);
+    end = clock();
+    return (double)(end - start) / CLOCKS_PER_SEC;
+}
+
+double check_function_run_one_time_three_parm_int(IN msg (*func)(OUT bigint**, IN bigint**, IN int), OUT bigint** dst, IN bigint** a, IN int n, IN msg* result_msg){
+    clock_t start, end;
+    start = clock();
+    *result_msg = func(dst, a, n);
+    end = clock();
+    return (double)(end - start) / CLOCKS_PER_SEC;
+}
+
+double check_function_run_one_time_four_parm_bigint(IN msg (*func)(OUT bigint**, IN bigint**, IN bigint**, IN bigint**), OUT bigint** dst, IN bigint** a, IN bigint** b, IN bigint** c, IN msg* result_msg){
+    clock_t start, end;
+    start = clock();
+    *result_msg = func(dst, a, b, c);
+    end = clock();
+    return (double)(end - start) / CLOCKS_PER_SEC;
 }

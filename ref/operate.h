@@ -59,6 +59,13 @@ msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b);
  */
 msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b);
 
+/**
+ * @brief word mul operation
+ * @param dst pointer to result of bigint mul
+ * @param a word a
+ * @param b word b
+ * @return msg
+ */
 msg bi_mul_word(OUT bigint **dst, IN word a, IN word b);
 
 /**
@@ -104,12 +111,30 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b);
 msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b);
 
 /**
+ * @brief bigint structure division operation using word division
+ * @param q pointer to quotient of bigint division
+ * @param r pointer to remainder of bigint division
+ * @param a dividend bigint operand
+ * @param b divisor bigint operand
+ * @return msg
+ */
+msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b);
+
+/**
  * @brief bigint structure squaring operation
  * @param dst pointer to square of bigint
  * @param a dividend bigint to be squared
  * @return msg
  */
 msg bi_squ(OUT bigint** dst, IN bigint** a);
+
+/**
+ * @brief bigint structure squaring operation by using Karachuba algorithm
+ * @param dst pointer to square of bigint
+ * @param a dividend bigint to be squared
+ * @return msg
+ */
+msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a);
 
 /**
  * @brief bigint structure squaring operation version to Multiplication and Squaring

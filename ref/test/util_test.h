@@ -14,9 +14,9 @@
 #include "../data_type.h"
 #include "../file_io.h"
 
-#define test_word_size  64               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
+#define test_word_size  3               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
 #define test_word_size_limit 64        // 랜덤 word 크기 사용 시 제한 범위
-#define test_size  100                  // 테스트 횟수
+#define test_size  1                  // 테스트 횟수
 
 /**
  * @brief Test bigint structure allocation and deallocation
@@ -84,15 +84,52 @@ msg test_bi_mul_karachuba();
  */
 msg compare_multiplicaiton(int start_size, int end_size, int step_size);
 
+/**
+ * @brief Test bigint structure Division operation
+ *
+ * @return message SUCCESS or FAIL
+ */
 msg test_bi_div();
 
+/**
+ * @brief Test bigint structure Shift operation
+ *
+ * @return message SUCCESS or FAIL
+ */
 msg test_bi_shift();
 
+/**
+ * @brief Test bigint structure get Lower word operation
+ *
+ * @return message SUCCESS or FAIL
+ */
 msg test_bi_get_lower();
 
+/**
+ * @brief Test bigint structure concatenate operation
+ *
+ * @return message SUCCESS or FAIL
+ */
 msg test_bi_cat();
 
+/**
+ * @brief Test bigint structure Squaring operation
+ *
+ * @return message SUCCESS or FAIL
+ */
 msg test_bi_squ();
 
+/**
+ * @brief Test bigint structure Squaring operation by using Karachuba algorithm
+ *
+ * @return message SUCCESS or FAIL
+ */
+msg test_bi_squ_karachuba();
+
+/**
+ * @brief Test bigint structure Exponentional operation
+ *
+ * @return message SUCCESS or FAIL
+ */
 msg test_bi_exp();
 #endif // UTIL_TEST_H

@@ -2,6 +2,7 @@
 
 struct timeval start, end;
 double time_used;
+clock_t c_start, c_end;
 
 int main(){
     FILE *fp = NULL;
@@ -21,10 +22,23 @@ int main(){
     test_bi_add();              // bigint 덧셈 테스트
     test_bi_sub();              // bigint 뺄셈 테스트
     test_bi_div();              // bigint 나눗셈 테스트
-    test_bi_squ();              // bigint 제곱 테스트
     test_bi_exp();              // bigint exponetion 테스트
-    test_bi_mul();              // bigint 곱셈 테스트
+    test_bi_squ();              // bigint 제곱 테스트
+    // ************** bigint 제곱 karachuba 테스트 **************
+    // bigint 곱셈 karachub 테스트
+    if(init_karachuba_pool(test_word_size) != INIT_KARACHUBA_POOL_SUCCESS){
+        log_msg(INIT_KARACHUBA_POOL_FAIL);
+        return Test_FAIL;
+    }
+    test_bi_squ_karachuba();
 
+    if(clear_karachuba_pool() != CLEAR_KARACHUBA_POOL_SUCCESS){
+        log_msg(CLEAR_KARACHUBA_POOL_FAIL);
+        return Test_FAIL;
+    }
+    // **********************************************************
+
+    test_bi_mul();              // bigint 곱셈 테스트
     // ************** bigint 곱셈 karachuba 테스트 **************
     // bigint 곱셈 karachub 테스트
     if(init_karachuba_pool(test_word_size) != INIT_KARACHUBA_POOL_SUCCESS){
@@ -72,9 +86,10 @@ msg test_bi_new_delete(){
     bigint *a = NULL;
     int rand_test_word_size = test_word_size;
     msg result_msg = 0;
+    double total_time_new = 0;
+    double total_time_delete = 0;
 
     printf("\n============ Testing bi_new_delete ============\n");
-    gettimeofday(&start, NULL);
 
     for (int i = 0; i < test_size; i++){
         // test_word_size가 0보다 작거나 같으면 랜덤으로 rand_test_word_size를 할당해준다. (0 ~ 99)
@@ -88,24 +103,27 @@ msg test_bi_new_delete(){
             }while(rand_test_word_size <= 0);
         }
 
-        if(bi_new(&a, rand_test_word_size) != BI_ALLOC_SUCCESS)
-            return BI_ALLOC_FAIL;
+        total_time_new += check_function_run_one_time_two_parm_int(bi_new, &a, rand_test_word_size, &result_msg);
+        if(result_msg != BI_ALLOC_SUCCESS)  return BI_ALLOC_FAIL;
+
         if(a->word_len != rand_test_word_size){
             result_msg = bi_delete(&a);
             if(result_msg != BI_FREE_SUCCESS)    goto EXIT_NEW_DEL;
             return BI_ALLOC_FAIL;
         }
+        c_start = clock();
         result_msg = bi_delete(&a);
+        c_end = clock();
+        total_time_delete += (double)(c_end - c_start) / CLOCKS_PER_SEC;
         if(result_msg != BI_FREE_SUCCESS)   goto EXIT_NEW_DEL;
     }
     result_msg = Test_BI_NEW_DELETE_SUCCESS;
 
 EXIT_NEW_DEL:
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_NEW_DELETE_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken new : %f seconds\n", total_time_new / test_size);
+    printf("Time taken delete : %f seconds\n", total_time_delete / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -119,13 +137,14 @@ msg test_bi_shift(){
     bigint *d = NULL;
     int shift_size_left = 0;
     int shift_size_right = 0;
+    double total_time_left_shift = 0;
+    double total_time_right_shift = 0;
     byte temp[1] = {0}; // 랜덤 값을 받아오기 위한
     char* shift_left_size_str = NULL;
     char* shift_right_size_str = NULL;
     char* str = NULL;
 
     printf("\n============ Testing bi_shfit ============\n");
-    gettimeofday(&start, NULL);
 
     if (Test_file_write(SHIFT_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
@@ -180,7 +199,7 @@ msg test_bi_shift(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         // left shift 수행
-        result_msg = bi_shift_left(&c, &a, shift_size_left);
+        total_time_left_shift += check_function_run_one_time_three_parm_int(bi_shift_left, &c, &a, shift_size_left, &result_msg);
         if (result_msg != BI_SHIFT_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(" = ", APPEND);
@@ -206,7 +225,7 @@ msg test_bi_shift(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         // right shift 수행
-        result_msg = bi_shift_right(&d, &b, shift_size_right);
+        total_time_right_shift += check_function_run_one_time_three_parm_int(bi_shift_right, &d, &b, shift_size_right, &result_msg);
         if (result_msg != BI_SHIFT_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(" = ", APPEND);
@@ -233,13 +252,10 @@ SHIFT_EXIT:
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&d) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    if (bi_delete(&a) != BI_FREE_SUCCESS)   result_msg = BI_FREE_FAIL;
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_SHIFT_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken left shift : %f seconds\n", total_time_left_shift / test_size);
+    printf("Time taken right shift : %f seconds\n", total_time_right_shift / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -253,9 +269,9 @@ msg test_bi_get_lower(){
     char* lower_bit_str = NULL;
     byte temp[1] = {0}; // 랜덤 값을 받아오기 위한
     int lower_bit_size = 0;
+    double total_time_get_lower = 0;
 
     printf("\n============ Testing bi_get_lower ============\n");
-    gettimeofday(&start, NULL);
 
     if(test_word_size > 0){
         if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
@@ -305,7 +321,7 @@ msg test_bi_get_lower(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto GET_LOWER_EXIT_FREE;
 
         // get_lower 수행
-        result_msg = bi_get_lower(&b, &a, lower_bit_size);
+        total_time_get_lower += check_function_run_one_time_three_parm_int(bi_get_lower, &b, &a, lower_bit_size, &result_msg);
         if (result_msg != BI_GET_LOWER_SUCCESS)   goto GET_LOWER_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(" = ", APPEND);
@@ -328,16 +344,12 @@ GET_LOWER_EXIT_FREE:
 GET_LOWER_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_GET_LOWER_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken: %f seconds\n", total_time_get_lower / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
-
 
 msg test_bi_cat(){
     int rand_test_word_size = test_word_size;
@@ -349,9 +361,9 @@ msg test_bi_cat(){
     int a_len = 0;
     int b_len = 0;
     byte temp[1] = {0};
+    double total_time_cat = 0;
 
     printf("\n============ Testing cat ============\n");
-    gettimeofday(&start, NULL);
 
     if(test_word_size < 3){
         printf("random test size is too small\n");
@@ -413,8 +425,9 @@ msg test_bi_cat(){
         if (bigint_to_hex(str, &b) == -1)   goto CAT_EXIT_FREE;
         result_msg = Test_file_write_non_enter(str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto CAT_EXIT_FREE;
+
         // get_lower 수행
-        result_msg = bi_cat(&c, &a, &b);
+        total_time_cat += check_function_run_one_time_three_parm_bigint(bi_cat, &c, &a, &b, &result_msg);
         if (result_msg != BI_CAT_SUCCESS)   goto CAT_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(" = ", APPEND);
@@ -436,12 +449,9 @@ CAT_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_CAT_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken: %f seconds\n", total_time_cat / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -451,9 +461,10 @@ msg test_bi_set_from(){
     word *test_array = NULL;
     int result_msg = Test_BI_SET_FROM_SUCCESS;
     int rand_test_word_size = test_word_size;
+    double total_set_from_array_little = 0;
+    double total_set_from_array_big = 0;
 
     printf("\n============ Testing bi_set_from ============\n");
-    gettimeofday(&start, NULL);
 
     if (Test_file_write(FROM_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
@@ -479,8 +490,11 @@ msg test_bi_set_from(){
         if (result_msg != GEN_RANDOM_SUCCESS)   goto FROM_EXIT_TEST_ARRAY;
 
         // little endian set test
+        c_start = clock();
         result_msg = bi_set_from_array(&a, 1, rand_test_word_size, test_array, little_endian);
+        c_end = clock();
         if (result_msg != BI_SET_ARRAY_SUCCESS) goto FROM_EXIT_TEST_ARRAY;
+        total_set_from_array_little += (double)(c_end - c_start) / CLOCKS_PER_SEC;
 
         // 할당이 잘 되었는지 확인
         for (int i = 0; i < rand_test_word_size; i++){
@@ -491,8 +505,11 @@ msg test_bi_set_from(){
         }
 
         // big_endian set test
+        c_start = clock();
         result_msg = bi_set_from_array(&a, 1, rand_test_word_size, test_array, big_endian);
+        c_end = clock();
         if (result_msg != BI_SET_ARRAY_SUCCESS) goto FROM_EXIT_TEST_ARRAY;
+        total_set_from_array_big += (double)(c_end - c_start) / CLOCKS_PER_SEC;
 
         for (int i = 0; i < rand_test_word_size; i++){
             if (a->a[(rand_test_word_size - 1) - i] != test_array[i]){
@@ -536,15 +553,13 @@ FROM_EXIT_TEST_ARRAY:
     free(test_array);
 FROM_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   result_msg = BI_FREE_FAIL;
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_SET_FROM_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken from array(little): %f seconds\n", total_set_from_array_little / test_size);
+    printf("Time taken from array(big): %f seconds\n", total_set_from_array_big / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
-
 
 msg test_bi_set_from_base(const IN int base){
     bigint *a = NULL;
@@ -552,6 +567,7 @@ msg test_bi_set_from_base(const IN int base){
     char *str_base = NULL;
     msg result_msg = 0;
     int array_size = test_word_size; // 최대 4바이트 크기의 정수
+    double total_set_from_base = 0;
 
     for (int i = 0; i < test_size; i++){
         if(test_word_size <= 0){
@@ -576,8 +592,11 @@ msg test_bi_set_from_base(const IN int base){
         if (result_msg != FILE_WRITE_SUCCESS)   goto FROM_BASE_EXIT_FREE;
 
         // base 테스트
+        c_start = clock();
         result_msg = bi_set_from_string(&a, str_base, base); // base 테스트
+        c_end = clock();
         if (result_msg != BI_SET_STRING_SUCCESS)    goto FROM_BASE_EXIT_FREE;
+        total_set_from_base += (double)(c_end - c_start) / CLOCKS_PER_SEC;
 
         // bigint to hex string
         if (bigint_to_hex(str, &a) == -1)   goto FROM_BASE_EXIT_FREE;
@@ -595,8 +614,8 @@ FROM_BASE_EXIT_FREE:
     free(str);
 FROM_BASE_EXIT:
     free(str_base);
-    if (bi_delete(&a) != BI_FREE_SUCCESS)
-        return BI_FREE_FAIL;
+    if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    printf("Time taken from string %d digit: %f seconds\n", base, total_set_from_base / test_size);
     return result_msg;
 }
 
@@ -604,9 +623,9 @@ msg test_bi_random(){
     bigint *dst = NULL;
     msg result_msg = 0;
     int rand_test_word_size = test_word_size;
+    double total_time_random = 0;
 
     printf("\n============ Testing bi_random ============\n");
-    gettimeofday(&start, NULL);
 
     for (int i = 0; i < test_size; i++){
         // test_word_size가 0보다 작거나 같으면 랜덤으로 test_word_size를 할당해준다. (0 ~ 99)
@@ -619,7 +638,7 @@ msg test_bi_random(){
             }while(rand_test_word_size <= 0);
         }
 
-        result_msg = bi_get_random(&dst, rand_test_word_size);
+        total_time_random += check_function_run_one_time_two_parm_int(bi_get_random, &dst, rand_test_word_size, &result_msg);
         if (result_msg != BI_GET_RANDOM_SUCCESS){
             result_msg = bi_delete(&dst);
             if (result_msg != BI_FREE_SUCCESS) goto EXIT_RANDOM;
@@ -633,11 +652,9 @@ msg test_bi_random(){
     result_msg = Test_BI_GET_RANDOM_SUCCESS;
 
 EXIT_RANDOM:
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_GET_RANDOM_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken: %f seconds\n", total_time_random / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -648,13 +665,12 @@ msg test_bi_add(){
     bigint *c = NULL;
     char *str = NULL;
     msg result_msg = Test_BI_ADD_SUCCESS;
-
     int test_word_size_a = test_word_size;
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
+    double total_time_add = 0;
 
     printf("\n============ Testing bi_add ============\n");
-    gettimeofday(&start, NULL);
 
     if (Test_file_write(add_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
@@ -704,7 +720,7 @@ msg test_bi_add(){
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto ADD_EXIT_FREE;
 
-        result_msg = bi_add(&c, &a, &b);
+        total_time_add += check_function_run_one_time_three_parm_bigint(bi_add, &c, &a, &b, &result_msg);
         if (result_msg != BI_ADD_SUCCESS)   goto ADD_EXIT_FREE;
 
         if (bigint_to_hex(str, &c) == -1)   goto ADD_EXIT_FREE;
@@ -722,12 +738,9 @@ ADD_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_ADD_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken: %f seconds\n", total_time_add / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -738,13 +751,12 @@ msg test_bi_sub(){
     bigint *c = NULL;
     char *str = NULL;
     msg result_msg = Test_BI_SUB_SUCCESS;
-
     int test_word_size_a = test_word_size;
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
+    double total_time_sub = 0;
 
     printf("\n============ Testing bi_sub ============\n");
-    gettimeofday(&start, NULL);
 
     if (Test_file_write(sub_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
@@ -794,7 +806,7 @@ msg test_bi_sub(){
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto SUB_EXIT_FREE;
 
-        result_msg = bi_sub(&c, &a, &b);
+        total_time_sub = check_function_run_one_time_three_parm_bigint(bi_sub, &c, &a, &b, &result_msg);
         if (result_msg != BI_SUB_SUCCESS)   goto SUB_EXIT_FREE;
 
         if (bigint_to_hex(str, &c) == -1)   goto SUB_EXIT_FREE;
@@ -812,12 +824,9 @@ SUB_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_SUB_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken: %f seconds\n", total_time_sub / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -828,13 +837,12 @@ msg test_bi_mul(){
     bigint *c = NULL;
     char *str = NULL;
     msg result_msg = Test_BI_MUL_SUCCESS;
-
     int test_word_size_a = test_word_size;
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
+    double total_time_mul = 0;
 
     printf("\n============ Testing bi_mul ============\n");
-    gettimeofday(&start, NULL);
 
     if (Test_file_write(mul_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
@@ -884,7 +892,7 @@ msg test_bi_mul(){
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto MUL_EXIT_FREE;
 
-        result_msg = bi_mul(&c, &a, &b);
+        total_time_mul += check_function_run_one_time_three_parm_bigint(bi_mul, &c, &a, &b, &result_msg);
         if (result_msg != BI_MUL_SUCCESS)   goto MUL_EXIT_FREE;
 
         if (bigint_to_hex(str, &c) == -1)   goto MUL_EXIT_FREE;
@@ -902,12 +910,9 @@ MUL_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_MUL_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken: %f seconds\n", total_time_mul / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -921,9 +926,9 @@ msg test_bi_mul_karachuba(){
     int test_word_size_a = test_word_size;
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
+    double total_time_mul_karachuba = 0;
 
     printf("\n============ Testing bi_mul_karachuba ============\n");
-    gettimeofday(&start, NULL);
 
     if (Test_file_write(mul_karachuba_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
@@ -973,7 +978,7 @@ msg test_bi_mul_karachuba(){
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto MUL_KARACHUBA_EXIT_FREE;
 
-        result_msg = bi_mul_karachuba(&c, &a, &b);
+        total_time_mul_karachuba += check_function_run_one_time_three_parm_bigint(bi_mul_karachuba, &c, &a, &b, &result_msg);
         if (result_msg != BI_MUL_SUCCESS)   goto MUL_KARACHUBA_EXIT_FREE;
 
         if (bigint_to_hex(str, &c) == -1)   goto MUL_KARACHUBA_EXIT_FREE;
@@ -991,12 +996,9 @@ MUL_KARACHUBA_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_MUL_KARACHUBA_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken: %f seconds\n", total_time_mul_karachuba / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -1088,13 +1090,12 @@ msg test_bi_div(){
     bigint *r = NULL;
     char *str = NULL;
     msg result_msg = Test_BI_DIV_SUCCESS;
-
     int test_word_size_a = test_word_size;
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
+    double total_time_div = 0;
 
     printf("\n============ Testing bi_div ============\n");
-    gettimeofday(&start, NULL);
 
     if (Test_file_write(div_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
@@ -1144,12 +1145,15 @@ msg test_bi_div(){
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto DIV_EXIT_FREE;
 
+        c_start = clock();
         result_msg = bi_div(&q, &r, &a, &b);
+        c_end = clock();
         if(result_msg == BI_DIV_BY_ZERO){
             result_msg = Test_file_write("DIVISION BY ZERO", APPEND);
             if (result_msg != FILE_WRITE_SUCCESS)   goto DIV_EXIT_FREE;
             continue;
         }
+        total_time_div += ((double)(c_end - c_start)) / CLOCKS_PER_SEC;
         if (result_msg != BI_DIV_SUCCESS)   goto DIV_EXIT_FREE;
 
         if (bigint_to_hex(str, &q) == -1)   goto DIV_EXIT_FREE;
@@ -1175,12 +1179,9 @@ DIV_EXIT:
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&q) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&r) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_DIV_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken: %f seconds\n", total_time_div / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -1191,11 +1192,11 @@ msg test_bi_squ(){
     char *str = NULL;
     msg result_msg = Test_BI_SQU_SUCCESS;
     int test_max_word_size = test_word_size;
+    double total_time_squ = 0;
 
     printf("\n============ Testing bi_squ ============\n");
-    gettimeofday(&start, NULL);
 
-    if (Test_file_write(SEQ_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
+    if (Test_file_write(SQU_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
     for (int i = 0; i < test_size; i++){
        if(test_word_size <= 0){
@@ -1229,7 +1230,7 @@ msg test_bi_squ(){
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto SQU_EXIT_FREE;
 
-        result_msg = bi_squ(&b, &a);
+        total_time_squ += check_function_run_one_time_two_parm_bigint(bi_squ, &b, &a, &result_msg);
         if (result_msg != BI_SQU_SUCCESS)   goto SQU_EXIT_FREE;
 
         if (bigint_to_hex(str, &b) == -1)   goto SQU_EXIT_FREE;
@@ -1247,12 +1248,78 @@ SQU_EXIT_FREE:
 SQU_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_SQU_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken: %f seconds\n", total_time_squ / test_size);
+    log_msg(result_msg);
+    if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
+    return Test_SUCCESS;
+}
+
+msg test_bi_squ_karachuba(){
+    bigint *a = NULL;
+    bigint *b = NULL;
+    char *str = NULL;
+    msg result_msg = Test_BI_SQU_SUCCESS;
+    int test_max_word_size = test_word_size;
+    double total_time_squ_karachuba = 0;
+
+    printf("\n============ Testing bi_squ_karachuba ============\n");
+
+    if (Test_file_write(SQU_karachuba_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
+
+    for (int i = 0; i < test_size; i++){
+       if(test_word_size <= 0){
+            byte temp[1] = {0}; // 랜덤 값을 받아오기 위한
+            do{
+                if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
+                test_max_word_size = temp[0] % test_word_size_limit;
+            }while(test_max_word_size <= 0);
+        }
+
+       str = (char *)calloc((test_max_word_size * 8) * 2 + 100, sizeof(char)); // 12는 0x문자열과 operator, =, \n,\n을 위한 공간
+       if (str == NULL) return MEM_NOT_ALLOC;
+
+        result_msg = bi_get_random(&a, test_max_word_size);
+        if(result_msg != BI_GET_RANDOM_SUCCESS) goto SQU_EXIT_FREE;
+        else if(a->word_len != test_max_word_size){
+            result_msg = BI_GET_RANDOM_LENGTH_NOT_MATCH;
+            goto SQU_EXIT_FREE;
+        }
+
+        if (bigint_to_hex(str, &a) == -1)   goto SQU_EXIT_FREE;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)goto SQU_EXIT_FREE;
+
+        result_msg = Test_file_write_non_enter(" * ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto SQU_EXIT_FREE;
+
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto SQU_EXIT_FREE;
+
+        result_msg = Test_file_write_non_enter(" = ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto SQU_EXIT_FREE;
+
+        total_time_squ_karachuba += check_function_run_one_time_two_parm_bigint(bi_squ_karachuba, &b, &a, &result_msg);
+        if (result_msg != BI_SQU_SUCCESS)   goto SQU_EXIT_FREE;
+
+        if (bigint_to_hex(str, &b) == -1)   goto SQU_EXIT_FREE;
+        result_msg = Test_file_write(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto SQU_EXIT_FREE;
+
+        free(str);
+    }
+    result_msg = Test_BI_SQU_SUCCESS;
+    goto SQU_EXIT;
+
+SQU_EXIT_FREE:
+    free(str);
+
+SQU_EXIT:
+    if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (result_msg != Test_BI_SQU_SUCCESS)   return Test_FAIL;
+    printf("Time taken: %f seconds\n", total_time_squ_karachuba / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }
@@ -1262,13 +1329,13 @@ msg test_bi_exp(){
     bigint *b = NULL; // exp 지수 bigint
     bigint *c = NULL; // mod bigint
     bigint *d = NULL; // 결과 bigint
-
     char *str = NULL;
     msg result_msg = Test_BI_EXP_SUCCESS;
     int test_max_word_size = test_word_size;
+    double total_time_exp_MS = 0;
+    double total_time_exp_R_TO_L = 0;
 
     printf("\n============ Testing bi_exp ============\n");
-    gettimeofday(&start, NULL);
 
     if (Test_file_write(EXP_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
 
@@ -1291,7 +1358,6 @@ msg test_bi_exp(){
             result_msg = BI_GET_RANDOM_LENGTH_NOT_MATCH;
             goto EXP_EXIT_FREE;
         }
-
         a->sign = 0; // 여기도 일단 양수로만 하자
 
         if (bigint_to_hex(str, &a) == -1)   goto EXP_EXIT_FREE;
@@ -1341,7 +1407,7 @@ msg test_bi_exp(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT_FREE;
 
         // Multipliation Squaring 구현
-        result_msg = bi_exp_MS(&d, &a, &b, &c);
+        total_time_exp_MS += check_function_run_one_time_four_parm_bigint(bi_exp_MS, &d, &a, &b, &c, &result_msg);
         if (result_msg != BI_EXP_MS_SUCCESS)   goto EXP_EXIT_FREE;
 
         if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT_FREE;
@@ -1352,7 +1418,7 @@ msg test_bi_exp(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT_FREE;
 
         // Right to Left 구현
-        result_msg = bi_exp_R_TO_L(&d, &a, &b, &c);
+        total_time_exp_R_TO_L += check_function_run_one_time_four_parm_bigint(bi_exp_R_TO_L, &d, &a, &b, &c, &result_msg);
         if (result_msg != BI_EXP_R_TO_L_SUCCESS)   goto EXP_EXIT_FREE;
 
         if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT_FREE;
@@ -1372,12 +1438,10 @@ EXP_EXIT:
     if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&d) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-
-    gettimeofday(&end, NULL);
-    time_used = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    log_msg(result_msg);
     if (result_msg != Test_BI_EXP_SUCCESS)   return Test_FAIL;
-    printf("Time taken: %f seconds\n", time_used);
+    printf("Time taken (MS): %f seconds\n", total_time_exp_MS / test_size);
+    printf("Time taken (R_TO_L): %f seconds\n", total_time_exp_R_TO_L / test_size);
+    log_msg(result_msg);
     if (Test_file_write(seperator, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
     return Test_SUCCESS;
 }

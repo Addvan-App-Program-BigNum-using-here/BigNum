@@ -386,7 +386,7 @@ karachuba_exit:
 *              - bigint** a: bigint struct
 *              - bigint** b: bigint struct
 **************************************************/
-msg init_karachuba_pool(int max_word_size){
+msg init_karachuba_pool(IN int max_word_size){
     if (g_pool.initialized) return INIT_KARACHUBA_POOL_SUCCESS;
     g_pool.max_word_size = max_word_size;
     g_pool.current_depth = 0;
@@ -593,6 +593,56 @@ msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
 }
 
 /*************************************************
+ * Name:        divc_gener
+ *
+ * Description: Bigint division using word division
+ *
+ * Arguments:   - bigint** q: pointer to bigint struct
+ *              - bigint** r: pointer to bigint struct
+ *              - bigint** a: bigint struct
+ *              - bigint** b: bigint struct
+ **************************************************/
+// 0 < B < A < BW 조건에서 보통 수행한다.
+//msg div_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
+//    if(*a == NULL || *b == NULL)    return MEM_NOT_ALLOC;
+//
+//    msg result_msg = BI_DIV_FAIL;
+//    // b가 0인 경우 False
+//    if(bi_is_zero(b) == BI_IS_ZERO)    return BI_DIV_BY_ZERO;
+//    // A혹은 B가 음수인 경우 그냥 DIV 처리
+//    if((*a)->sign || (*b)->sign){
+//        result_msg = bi_div(q, r, a, b);
+//        return result_msg;
+//    }
+//    // A >= BW인 경우 그냥 DIV 처리
+//    bigint temp = NULL;
+//    result_msg = bi_shift_left(&temp, b, WORD_BITS); // 이거 temp 안쓰고 하는 방법 생각해보기
+//    if(result_msg != BI_SHIFT_SUCCESS)    return result_msg; // BW계산
+//    if(bi_compare_abs(a, temp) >= 0){ // A >= BW
+//        result_msg = bi_div(q, r, a, b);
+//        return result_msg;
+//    }
+//
+//    // A < WB에서
+//    // A < B인 경우 -> Q = 0, R = A
+//    if(bi_compare_abs(a, b) == -1){
+//        if(*q == NULL){
+//            if(bi_new(q, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
+//        }else if((*q)->word_len != 1){
+//            if(bi_resize(q, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+//            (*q)->a[0] = 0;
+//        }
+//
+//        if(bi_assign(r, a) != BI_SET_ASSIGN_SUCCESS)    return BI_SET_ASSIGN_FAIL;
+//        return DIVC_SUCCESS;
+//    }
+//
+//    word Q_hat = 0;
+//
+//    Q_hat =
+//}
+
+/*************************************************
  * Name:        bi_squ
  *
  * Description: Bigint squaring
@@ -662,6 +712,97 @@ EXIT_SQU:
     if(bi_delete(&C3) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     if(bi_delete(&mid) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
 
+    return result_msg;
+}
+
+/*************************************************
+ * Name:        bi_squ_karachuba
+ *
+ * Description: Bigint squaring by using karachuba algorithm
+ *
+ * Arguments:   - bigint** dst: pointer to bigint struct
+ *              - bigint** a: bigint struct to be squared
+ **************************************************/
+msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a){
+    if (*a == NULL) return MEM_NOT_ALLOC;
+    msg result_msg = 0;
+
+    if(bi_refine(a) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
+
+    // base case에서 카라츄바가 아닌 일반 제곱 수행을 위한 연산
+    if(squ_karachuba_flag > (*a)->word_len){
+        result_msg = bi_squ(dst, a);
+        if(result_msg != BI_SQU_SUCCESS)    return result_msg;
+        return BI_SQU_SUCCESS;
+    }
+
+    bigint* a_0 = g_pool.pool[g_pool.current_depth][0];
+    bigint* a_1 = g_pool.pool[g_pool.current_depth][1];
+    bigint* a_1a_1 = g_pool.pool[g_pool.current_depth][2];
+    bigint* a_0a_0 = g_pool.pool[g_pool.current_depth][3];
+    bigint* a_1a_0 = g_pool.pool[g_pool.current_depth][4];
+    byte a_sign = (*a)->sign;
+    (*a)->sign = 0;
+
+    g_pool.current_depth++;
+
+    int dst_word_len = (*a)->word_len + (*a)->word_len;
+    int half_word_len = (((*a)->word_len) + 1) >> 1; // 길이의 절반 가져오기
+
+    // A_1 계산
+    result_msg = bi_shift_right(&a_1, a, half_word_len * WORD_BITS);
+    if (result_msg != BI_SHIFT_SUCCESS)
+        goto karachuba_exit;
+
+    // A_0 계산
+    result_msg = bi_get_lower(&a_0, a, half_word_len * WORD_BITS);
+    if (result_msg != BI_GET_LOWER_SUCCESS)
+        goto karachuba_exit;
+
+    result_msg = bi_squ_karachuba(&a_1a_1, &a_1);
+    if(result_msg != BI_SQU_SUCCESS)    goto karachuba_exit;
+
+    result_msg = bi_squ_karachuba(&a_0a_0, &a_0);
+    if (result_msg != BI_SQU_SUCCESS)
+        goto karachuba_exit;
+
+    if(*dst == NULL){
+        if(bi_new(dst, dst_word_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
+    }else if(*dst != NULL && (*dst)->word_len < (*a)->word_len){
+        if(bi_resize(dst, dst_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+    }
+
+    // (A_1 * A_1) || (A_0 * A_0) => dst
+    result_msg = bi_cat(dst, &a_1a_1, &a_0a_0);
+    if (result_msg != BI_CAT_SUCCESS)
+        goto karachuba_exit;
+
+    // A_1 * A_0  분할 정복
+    result_msg = bi_mul_karachuba(&a_1a_0, &a_1, &a_0);
+    if (result_msg != BI_MUL_SUCCESS)
+        goto karachuba_exit;
+
+    // ((A_1 * A_0) << half_word_len * WORD_BITS + 1 => 2 * a_1a_0
+    result_msg = bi_shift_left(&a_1a_0, &a_1a_0, half_word_len * WORD_BITS + 1);
+    if (result_msg != BI_SHIFT_SUCCESS)
+        goto karachuba_exit;
+
+    // (A_1 * A_1) + 2 * A_1 * A_0 + (A_0 * A_0)
+    result_msg = bi_add(dst, dst, &a_1a_0);
+    if (result_msg != BI_ADD_SUCCESS)
+        goto karachuba_exit;
+
+    // 부호 처리
+    (*dst)->sign = 0; // 제곱 연산이므로 항상 양수
+
+    if(bi_resize(dst, dst_word_len) != BI_RESIZE_SUCCESS)    goto karachuba_exit;
+    result_msg = BI_SQU_SUCCESS;
+
+    (*dst)->sign = 0;
+    (*a)->sign = a_sign;
+
+karachuba_exit:
+    g_pool.current_depth--;
     return result_msg;
 }
 

@@ -28,7 +28,8 @@
 #define SHIFT_init "[Shift]"
 #define GET_LOWER_init "[Get Lower]"
 #define CAT_init "[Cat]"
-#define SEQ_init "[Sequence]"
+#define SQU_init "[Sequence]"
+#define SQU_karachuba_init "[Karachuba Sequence]"
 #define EXP_init "[Exponentiation]"
 
 typedef uint8_t byte;   ///< byte type

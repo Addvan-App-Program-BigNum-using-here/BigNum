@@ -280,6 +280,28 @@ def test_seq(f, p):
             k.write('\n')
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
+
+def test_karachuba_seq(f, p):
+    k = open('./result/result_seq_karachuba.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 카라츄바 제곱 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if "----------" in shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[4], 16)
+        tmp = int(shiftif_tmp[0], 0) * int(shiftif_tmp[2], 0)
+        if(result != tmp):
+            False_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+
 def test_exp(f, p):
     k = open('./result/result_exp.txt', 'w')
     p.write('------------------------------------------------------------\n')
@@ -328,6 +350,8 @@ def bi_test(f):
                 test_seq(f, p)
             elif '[Exponentiation]' in line:
                 test_exp(f, p)
+            elif '[Karachuba Sequence]' in line:
+                test_karachuba_seq(f, p)
             elif '[TEST CASE END]' in line:
                 break
 

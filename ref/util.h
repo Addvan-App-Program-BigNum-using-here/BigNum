@@ -9,6 +9,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <sys/time.h>
+// 윈도우일 때는 time.h 인 것으로 판단
+#include <time.h>
 
 /**
  * @brief New allocate memory for bigint struct
@@ -159,4 +162,18 @@ msg bi_cat(OUT bigint **dst, IN bigint **a, IN bigint **b);
  */
 msg bi_is_zero(bigint **num);
 
+/**
+ * @brief get function runtime
+ *
+ * @param msg (*func) test function pointer
+ * @param dst pointer to bigint struct result
+ * @param a pointer to bigint struct of input1
+ * @param b pointer to bigint struct of input2
+ * @return runtime
+ */
+double check_function_run_one_time_two_parm_bigint(IN msg (*func)(OUT bigint**, IN bigint**), OUT bigint** dst, IN bigint** a, IN msg* result_msg);
+double check_function_run_one_time_two_parm_int(IN msg (*func)(OUT bigint**, IN int), OUT bigint** dst, IN int n, IN msg* result_msg);
+double check_function_run_one_time_three_parm_bigint(IN msg (*func)(OUT bigint**, IN bigint**, IN bigint**), OUT bigint** dst, IN bigint** a, IN bigint** b, IN msg* result_msg);
+double check_function_run_one_time_three_parm_int(IN msg (*func)(OUT bigint**, IN bigint**, IN int), OUT bigint** dst, IN bigint** a, IN int n, IN msg* result_msg);
+double check_function_run_one_time_four_parm_bigint(IN msg (*func)(OUT bigint**, IN bigint**, IN bigint**, IN bigint**), OUT bigint** dst, IN bigint** a, IN bigint** b, IN bigint** c, IN msg* result_msg);
 #endif // UTIL_H
