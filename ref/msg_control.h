@@ -45,8 +45,8 @@ enum MemoryMSGCodes
     BI_SHIFT_FAIL        = MSG_TYPE_MEMORY | 0x0011,  // Bigint shift 실패
     BI_MUL_SUCCESS      = MSG_TYPE_MEMORY | 0x0012,  // Bigint 곱셈 성공
     BI_MUL_FAIL         = MSG_TYPE_MEMORY | 0x0013,  // Bigint 곱셈 실패
-    BI_MOD_SUCCESS      = MSG_TYPE_MEMORY | 0x0014,  // Bigint 나머지 연산 성공
-    BI_MOD_FAIL         = MSG_TYPE_MEMORY | 0x0015,  // Bigint 나머지 연산 실패
+    BI_GET_LOWER_SUCCESS      = MSG_TYPE_MEMORY | 0x0014,  // Bigint 나머지 연산 성공
+    BI_GET_LOWER_FAIL         = MSG_TYPE_MEMORY | 0x0015,  // Bigint 나머지 연산 실패
     BI_CAT_SUCCESS      = MSG_TYPE_MEMORY | 0x0016,  // Bigint 이어붙이기 성공
     BI_CAT_FAIL         = MSG_TYPE_MEMORY | 0x0017,  // Bigint 이어붙이기 실패
     INIT_KARACHUBA_POOL_SUCCESS = MSG_TYPE_MEMORY | 0x0018, // 카라츄바 풀 초기화 성공
@@ -56,9 +56,10 @@ enum MemoryMSGCodes
     RAND_LENGTH_INVALID = MSG_TYPE_MEMORY | 0x001C, // 랜덤 길이가 유효하지 않을 경우
     BI_RESIZE_SUCCESS   = MSG_TYPE_MEMORY | 0x001D, // Bigint resize 성공
     BI_RESIZE_FAIL      = MSG_TYPE_MEMORY | 0x001E, // Bigint resize 실패
-    BI_SQU_SUCCESS = MSG_TYPE_MEMORY | 0x001F, // Bigint 제곱 성공
-    BI_SQU_FAIL = MSG_TYPE_MEMORY | 0x0020, // Bigint 제곱 실패
-
+    BI_SQU_SUCCESS      = MSG_TYPE_MEMORY | 0x001F, // Bigint 제곱 성공
+    BI_SQU_FAIL         = MSG_TYPE_MEMORY | 0x0020, // Bigint 제곱 실패
+    BI_EXP_MS_SUCCESS    = MSG_TYPE_MEMORY | 0x0021, // Bigint 나머지 연산 성공
+    BI_EXP_MS_FAIL       = MSG_TYPE_MEMORY | 0x0022, // Bigint 나머지 연산 실패
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -91,6 +92,7 @@ enum IOMSGCodes
     PRINT_SUCCESS = MSG_TYPE_IO | 0x0007,         // print success
     FILE_WRITE_SUCCESS = MSG_TYPE_IO | 0x0008,    // 파일 쓰기 성공
     FILE_WRITE_FAIL = MSG_TYPE_IO | 0x0009,       // 파일 쓰기 실패
+    BI_GET_RANDOM_LENGTH_NOT_MATCH = MSG_TYPE_IO | 0x000A, // Bigint 랜덤 할당 길이 불일치
     // 추가 입출력 관련 에러 코드...
 };
 
@@ -119,8 +121,16 @@ enum TestMSGCodes
     COMPARE_MULTIPLICATION_FAIL = MSG_TYPE_TEST | 0x0015,    // Test Bigint 곱셈 비교 실패
     Test_BI_DIV_SUCCESS = MSG_TYPE_TEST | 0x0016,            // Test Bigint 나눗셈 성공
     Test_BI_DIV_FAIL = MSG_TYPE_TEST | 0x0017,               // Test Bigint 나눗셈 실패
-    Test_BI_SQU_SUCCESS = MSG_TYPE_TEST | 0x0018,            // Test Bigint 제곱 성공
-    Test_BI_SQU_FAIL = MSG_TYPE_TEST | 0x0019,            // Test Bigint 제곱 실패
+    Test_BI_SHIFT_SUCCESS = MSG_TYPE_TEST | 0x0018,          // Test Bigint shift 성공
+    Test_BI_SHIFT_FAIL = MSG_TYPE_TEST | 0x0019,             // Test Bigint shift 실패
+    Test_BI_GET_LOWER_SUCCESS   = MSG_TYPE_TEST | 0x001A, // Test Bigint 나머지 연산 성공
+    Test_BI_GET_LOWER_FAIL      = MSG_TYPE_TEST | 0x001B, // Test Bigint 나머지 연산 실패
+    Test_BI_CAT_SUCCESS     = MSG_TYPE_TEST | 0x001C, // Test Bigint 이어붙이기 성공
+    Test_BI_CAT_FAIL        = MSG_TYPE_TEST | 0x001D, // Test Bigint 이어붙이기 실패
+    Test_BI_SQU_SUCCESS     = MSG_TYPE_TEST | 0x001E, // Test Bigint 제곱 성공
+    Test_BI_SQU_FAIL        = MSG_TYPE_TEST | 0x001F, // Test Bigint 제곱 실패
+    Test_BI_EXP_SUCCESS     = MSG_TYPE_TEST | 0x0020, // Test Bigint 확장 성공
+    Test_BI_EXP_FAIL        = MSG_TYPE_TEST | 0x0021, // Test Bigint 확장 실패
     // 추가 테스트 관련 에러 코드...
 };
 
@@ -135,6 +145,13 @@ enum OperateMSGCodes
     // ================= 2024-11-14 수정 ========================
     BI_DIV_SUCCESS = MSG_TYPE_OPERATE | 0x0007, // Bigint 나눗셈 성공
     BI_DIV_FAIL = MSG_TYPE_OPERATE | 0x0008,    // Bigint 나눗셈 실패
+    DIV_FAIL = MSG_TYPE_OPERATE | 0x0009,       // 나눗셈 실패
+    DIV_SUCCESS = MSG_TYPE_OPERATE | 0x000A,    // 나눗셈 성공
+    BI_IS_ZERO = MSG_TYPE_OPERATE | 0x000B,    // 0으로 나누기
+    BI_NOT_ZERO = MSG_TYPE_OPERATE | 0x000C, // 0이 아닌 수로 나누기
+    DIVC_SUCCESS = MSG_TYPE_OPERATE | 0x000D, // 나눗셈 성공
+    DIVC_FAIL = MSG_TYPE_OPERATE | 0x000E,    // 나눗셈 실패
+    BI_DIV_BY_ZERO = MSG_TYPE_OPERATE | 0x000F,     // 나눗셈 금지
 };
 
 // 에러 처리 함수 프로토타입

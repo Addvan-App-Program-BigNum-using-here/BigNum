@@ -17,9 +17,7 @@ msg Test_file_write(IN char* str, const IN int option){
     }
 
     fprintf(fp, "%s\n", str);
-
     fclose(fp);
-
     return FILE_WRITE_SUCCESS;
 }
 
@@ -34,8 +32,7 @@ msg Test_file_write(IN char* str, const IN int option){
 **************************************************/
 msg Test_file_write_non_enter(IN char *str, const IN int option){
     FILE *fp = (option == CLEAR) ? fopen(Test_file, "w") : fopen(Test_file, "a");
-    if (fp == NULL)
-    {
+    if (fp == NULL){
         printf("Failed to run command\n");
         return FILE_WRITE_FAIL;
     }

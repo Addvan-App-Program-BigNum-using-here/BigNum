@@ -61,18 +61,15 @@ msg array_random(word* dst, int word_len) {
  *              - int byte_len: length of bigint struct
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg randombytes(IN byte *dst, IN int byte_len)
-{
+msg randombytes(IN byte *dst, IN int byte_len){
 #ifdef _WIN32
     // Windows 버전
     HCRYPTPROV hProvider = 0;
-    if (!CryptAcquireContext(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
-    {
+    if (!CryptAcquireContext(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)){
         return GEN_RANDOM_BYTES_FAIL;
     }
 
-    if (!CryptGenRandom(hProvider, byte_len, dst))
-    {
+    if (!CryptGenRandom(hProvider, byte_len, dst)){
         CryptReleaseContext(hProvider, 0);
         return GEN_RANDOM_BYTES_FAIL;
     }
@@ -84,8 +81,7 @@ msg randombytes(IN byte *dst, IN int byte_len)
     static int fd = -1;
     ssize_t ret;
 
-    while (fd == -1)
-    {
+    while (fd == -1){
         fd = open("/dev/urandom", O_RDONLY);
         if (fd == -1 && errno == EINTR)
             continue;
@@ -93,8 +89,7 @@ msg randombytes(IN byte *dst, IN int byte_len)
             return GEN_RANDOM_BYTES_FAIL;
     }
 
-    while (byte_len > 0)
-    {
+    while (byte_len > 0){
         ret = read(fd, dst, byte_len);
         if (ret == -1 && errno == EINTR)
             continue;
@@ -161,8 +156,6 @@ msg get_random_string(OUT char** str, IN int str_len, IN int base){
 
 
     int str_idx = str_len;
-
-    printf("str len: %d\n", str_len);
     while(str_idx > 0) {
         if(randombytes(&temp, 1) != GEN_RANDOM_BYTES_SUCCESS)  return GEN_RANDOM_BYTES_FAIL;
         int random_index = (int)temp % chars_len;
