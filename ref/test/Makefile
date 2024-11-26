@@ -15,6 +15,8 @@ TEST_SRC = $(LIB_SOURCES) ./$(TEST_SOURCE)
 # Library names
 SHARED_LIB = $(LIB_DIR)/$(SHARED_PREFIX)bignum.$(SHARED_EXT)
 STATIC_LIB = $(LIB_DIR)/libbignum.a
+# Result directory
+RESULT_DIR = ./result
 
 # Detect operating system
 ifeq ($(OS),Windows_NT)
@@ -120,6 +122,7 @@ else
 	$(RM) $(TEST_OBJECT)
 	$(RM) $(TEST_PROGRAM)
 	$(RM) *.txt
+	$(RM) $(RESULT_DIR)/*.txt
 	$(RM) $(SHARED_LIB)
 	$(RM) $(STATIC_LIB)
 endif
