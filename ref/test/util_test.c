@@ -1165,7 +1165,7 @@ msg test_bi_div(){
     int test_word_size_b = test_word_size;
     int test_max_word_size = max(test_word_size_a, test_word_size_b);
 
-    printf("\n\n============ Testing bi_div ============\n");
+    printf("\n============ Testing bi_div ============\n");
     gettimeofday(&start, NULL);
 
     if (Test_file_write(div_init, APPEND) != FILE_WRITE_SUCCESS)   return FILE_WRITE_FAIL;
@@ -1412,8 +1412,31 @@ msg test_bi_exp(){
         result_msg = Test_file_write_non_enter(" = ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT_FREE;
 
+        // Multipliation Squaring 구현
         result_msg = bi_exp_MS(&d, &a, &b, &c);
         if (result_msg != BI_EXP_MS_SUCCESS)   goto EXP_EXIT_FREE;
+
+        if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT_FREE;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT_FREE;
+
+        result_msg = Test_file_write_non_enter(" , ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT_FREE;
+
+        // Right to Left 구현
+        result_msg = bi_exp_R_TO_L(&d, &a, &b, &c);
+        if (result_msg != BI_EXP_R_TO_L_SUCCESS)   goto EXP_EXIT_FREE;
+
+        if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT_FREE;
+        result_msg = Test_file_write_non_enter(str, APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT_FREE;
+        result_msg = Test_file_write_non_enter(" , ", APPEND);
+        if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT_FREE;
+
+
+        // Left to Right 구현
+        result_msg = bi_exp_L_TO_R(&d, &a, &b, &c);
+        if (result_msg != BI_EXP_R_TO_L_SUCCESS)   goto EXP_EXIT_FREE;
 
         if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT_FREE;
         result_msg = Test_file_write(str, APPEND);

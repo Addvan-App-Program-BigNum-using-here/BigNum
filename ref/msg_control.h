@@ -60,6 +60,10 @@ enum MemoryMSGCodes
     BI_SQU_FAIL         = MSG_TYPE_MEMORY | 0x0020, // Bigint 제곱 실패
     BI_EXP_MS_SUCCESS    = MSG_TYPE_MEMORY | 0x0021, // Bigint 나머지 연산 성공
     BI_EXP_MS_FAIL       = MSG_TYPE_MEMORY | 0x0022, // Bigint 나머지 연산 실패
+    BI_EXP_R_TO_L_SUCCESS  = MSG_TYPE_MEMORY | 0x0023, // Bigint 나머지 연산 성공
+    BI_EXP_R_TO_L_FAIL     = MSG_TYPE_MEMORY | 0x0024, // Bigint 나머지 연산 실패
+    BI_EXP_L_TO_R_SUCCESS  = MSG_TYPE_MEMORY | 0x0025, // Bigint 지수승 연산 성공
+    BI_EXP_L_TO_R_FAIL     = MSG_TYPE_MEMORY | 0x0026 // Bigint 지수승 연산 실패패
     // 추가 메모리 관련 에러 코드...
 };
 

@@ -53,8 +53,7 @@ typedef uint64_t dword; ///< Double word type
  * @var bigint::a
  * array of word
  */
-typedef struct
-{
+typedef struct{
     byte sign;    ///< positive or negative (positive == 0, negative == 1)
     int word_len; ///< length of bigint struct
     word *a;      ///< array of word
