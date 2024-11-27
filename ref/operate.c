@@ -253,23 +253,21 @@ MUL_EXIT:
 *              - bigint** a: bigint struct
 *              - bigint** b: bigint struct
 **************************************************/
+// 카라츄바의 조건상 두 입력 값의 크기는 동일한 크기이다.
 msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b, IN int karachuba_flag){
     if (*a == NULL || *b == NULL) return MEM_NOT_ALLOC;
     msg result_msg = BI_MUL_FAIL;
 
-    if(bi_refine(a) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
-    if(bi_refine(b) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
+    // 입력 값이 동일한 조건으로 인해 아래 함수는 필요 없음 -> 입력 값이 다를 경우 필요
+//    if(bi_refine(a) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
+//    if(bi_refine(b) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
+    int word_len = (*a)->word_len; // 입력 값이 같기에 하나만 가져오면 된다.
 
-    if(bi_compare_abs(a, b) == -1){ // a < b
-        result_msg = bi_mul_karachuba(dst, b, a, karachuba_flag);
-        if(result_msg != BI_MUL_SUCCESS)    return result_msg;
-        return BI_MUL_SUCCESS;
-    }
+//    int max_word_len = max((*a)->word_len, (*b)->word_len); // 입력 값 중 최댓값 가져오기 -> 입력 값 크기가 다를 경우 필요
+//    int min_word_len = min((*a)->word_len, (*b)->word_len); // 입력 값 중 최솟값 가져오기 -> 입력 값 크기가 다를 경우 필요
 
-    // base case에서 카라츄바가 아닌 일반 곱셈 수행을 위한 연산
-    int min_word_len = min((*a)->word_len, (*b)->word_len);
-
-    if(karachuba_flag > min_word_len || karachuba_flag == 1){
+    // base case에서 카라츄바가 아닌 일반 곱셈 수행을 위한 연산 -> 입력 값 크기가 다를 경우 word_len을 max_word_len으로 변경
+    if(karachuba_flag >= word_len || karachuba_flag <= 1){
         result_msg = bi_mul(dst, a, b);
         if(result_msg != BI_MUL_SUCCESS)    return result_msg;
         return BI_MUL_SUCCESS;
@@ -283,15 +281,19 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b, IN int kara
     bigint* a_1b_1 = g_pool.pool[g_pool.current_depth][5];
     bigint* a_1_a_0 = g_pool.pool[g_pool.current_depth][6];
     bigint* b_1_b_0 = g_pool.pool[g_pool.current_depth][7];
-
     g_pool.current_depth++;
 
     byte a_sign = 0, b_sign = 0;
-    int dst_word_len = (*a)->word_len + (*b)->word_len;
-    int max_word_len = max((*a)->word_len, (*b)->word_len); // 길이의 절반 가져오기
-    int half_word_len = (max_word_len + 1) >> 1;
+    int half_word_len = (word_len + 1) >> 1; // 입력 값 중 최댓값의 절반 값        -> 입력 값 크기가 같은 경우
 
-    if(bi_resize(b, max_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+//    int half_word_len = (max_word_len + 1) >> 1; // 입력 값 중 최댓값의 절반 값  -> 입력 값 크기가 다를 경우
+//    // a와 b의 사이즈가 다른 경우 사이즈를 동일하게 맞춰줘야 함 -> 이것도 입력 값 크기가 다를 경우에만 사용
+//    if((*a)->word_len != max_word_len){ // a < b
+//        if(bi_resize(a, max_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+//    }else if((*b)->word_len != max_word_len){ // a > b
+//        if(bi_resize(b, max_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+//    }
+
     a_sign = (*a)->sign;
     b_sign = (*b)->sign;
     (*a)->sign = 0;
@@ -299,78 +301,59 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b, IN int kara
 
     // A_1, B_1 계산
     result_msg = bi_shift_right(&a_1, a, half_word_len * WORD_BITS);
-    if (result_msg != BI_SHIFT_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_SHIFT_SUCCESS) goto karachuba_exit;
 
     result_msg = bi_shift_right(&b_1, b, half_word_len * WORD_BITS);
-    if (result_msg != BI_SHIFT_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_SHIFT_SUCCESS) goto karachuba_exit;
 
     // A_0, B_0 계산
     result_msg = bi_get_lower(&a_0, a, half_word_len * WORD_BITS);
-    if (result_msg != BI_GET_LOWER_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_GET_LOWER_SUCCESS) goto karachuba_exit;
 
     result_msg = bi_get_lower(&b_0, b, half_word_len * WORD_BITS);
-    if (result_msg != BI_GET_LOWER_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_GET_LOWER_SUCCESS) goto karachuba_exit;
 
     result_msg = bi_mul_karachuba(&a_0b_0, &a_0, &b_0, karachuba_flag);
     if(result_msg != BI_MUL_SUCCESS)    goto karachuba_exit;
 
     result_msg = bi_mul_karachuba(&a_1b_1, &a_1, &b_1, karachuba_flag);
-    if (result_msg != BI_MUL_SUCCESS)
-        goto karachuba_exit;
-
-    if(*dst == NULL){
-        if(bi_new(dst, dst_word_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-    }else if(*dst != NULL && (*dst)->word_len < max_word_len){
-        if(bi_resize(dst, dst_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-    }
+    if (result_msg != BI_MUL_SUCCESS)   goto karachuba_exit;
 
     // (A_1 * B_1) || (A_0 * B_0) => dst
     result_msg = bi_cat(dst, &a_1b_1, &a_0b_0);
-    if (result_msg != BI_CAT_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_CAT_SUCCESS)   goto karachuba_exit;
 
     // (A_1 * B_1) + (A_0 * B_0) - (A_1 - A_0) * (B_1 - B_0)
     result_msg = bi_sub(&a_1_a_0, &a_1, &a_0); // A_1 - A_0 => a_1_a_0
     if(result_msg != BI_SUB_SUCCESS)    goto karachuba_exit;
 
     result_msg = bi_sub(&b_1_b_0, &b_1, &b_0); // B_1 - B_0 => b_1_b_0
-    if (result_msg != BI_SUB_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_SUB_SUCCESS)   goto karachuba_exit;
 
     result_msg = bi_add(&a_1b_1, &a_1b_1, &a_0b_0); // (A_1 * B_1) + (A_0 * B_0) => a_1b_1
-    if (result_msg != BI_ADD_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_ADD_SUCCESS)   goto karachuba_exit;
 
-    // (A_1 - A_0) * (B_1 - B_0) => a_1_a_0 / 분할 정복
+    // (A_1 - A_0) * (B_1 - B_0) => a_1_a_0 // 분할 정복
     result_msg = bi_mul_karachuba(&a_1_a_0, &a_1_a_0, &b_1_b_0, karachuba_flag);
-    if (result_msg != BI_MUL_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_MUL_SUCCESS)   goto karachuba_exit;
 
     // (A_1 * B_1) + (A_0 * B_0) - (A_1 - A_0) * (B_1 - B_0) => a_1b_1
     result_msg = bi_sub(&a_1b_1, &a_1b_1, &a_1_a_0);
-    if (result_msg != BI_SUB_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_SUB_SUCCESS)   goto karachuba_exit;
 
     // ((A_1 * B_1) + (A_0 * B_0) - (A_1 - A_0) * (B_1 - B_0)) << half_word_len * WORD_BITS => a_1b_1
     result_msg = bi_shift_left(&a_1b_1, &a_1b_1, half_word_len * WORD_BITS);
-    if (result_msg != BI_SHIFT_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_SHIFT_SUCCESS) goto karachuba_exit;
 
     // (A_1 * B_1) + ((A_1 * B_1) + (A_0 * B_0) - (A_1 - A_0) * (B_1 - B_0)) + (A_0 * B_0)
     result_msg = bi_add(dst, dst, &a_1b_1);
-    if (result_msg != BI_ADD_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_ADD_SUCCESS)   goto karachuba_exit;
 
     // 부호 처리
     (*dst)->sign = a_sign ^ b_sign; // XOR 연산으로 부호 처리 다르면 음수, 같으면 양수
     if(*dst != *a)  (*a)->sign = a_sign;
     if(*dst != *b)  (*b)->sign = b_sign;
 
-    if(bi_resize(dst, dst_word_len) != BI_RESIZE_SUCCESS)    goto karachuba_exit;
     result_msg = BI_MUL_SUCCESS;
 
 karachuba_exit:

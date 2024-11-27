@@ -97,14 +97,14 @@ int main(){
             return Test_FAIL;
         }
 
-        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // bigint 나눗셈 테스트
-        result_msg = test_bi_div(&op_total_time[2], &a, &b, str);
-        if(result_msg != Test_BI_DIV_SUCCESS){
-            log_msg(Test_BI_DIV_FAIL);
-            log_msg(result_msg);
-            return Test_FAIL;
-        }
+//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+//        // bigint 나눗셈 테스트
+//        result_msg = test_bi_div(&op_total_time[2], &a, &b, str);
+//        if(result_msg != Test_BI_DIV_SUCCESS){
+//            log_msg(Test_BI_DIV_FAIL);
+//            log_msg(result_msg);
+//            return Test_FAIL;
+//        }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 곱셈 테스트
@@ -124,38 +124,32 @@ int main(){
             return Test_FAIL;
         }
 
-        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // bigint 제곱 테스트
-        result_msg = test_bi_squ(&op_total_time[5], &a, str);
-        if(result_msg != Test_BI_SQU_SUCCESS){
-            log_msg(Test_BI_SQU_FAIL);
-            log_msg(result_msg);
-            return Test_FAIL;
-        }
-
-        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // bigint 카라츄바 제곱 테스트
-        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str);
-        if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
-            log_msg(Test_BI_SQU_KARACHUBA_FAIL);
-            log_msg(result_msg);
-            return Test_FAIL;
-        }
-
-        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // bigint 지수승 테스트
-        result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
-        if(result_msg != Test_BI_EXP_SUCCESS){
-            log_msg(Test_BI_EXP_FAIL);
-            log_msg(result_msg);
-            return Test_FAIL;
-        }
-    }
-
-    // 카라츄바 세팅 해제
-    if(clear_karachuba_pool() != CLEAR_KARACHUBA_POOL_SUCCESS){
-        log_msg(CLEAR_KARACHUBA_POOL_FAIL);
-        return Test_FAIL;
+//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+//        // bigint 제곱 테스트
+//        result_msg = test_bi_squ(&op_total_time[5], &a, str);
+//        if(result_msg != Test_BI_SQU_SUCCESS){
+//            log_msg(Test_BI_SQU_FAIL);
+//            log_msg(result_msg);
+//            return Test_FAIL;
+//        }
+//
+//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+//        // bigint 카라츄바 제곱 테스트
+//        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str);
+//        if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
+//            log_msg(Test_BI_SQU_KARACHUBA_FAIL);
+//            log_msg(result_msg);
+//            return Test_FAIL;
+//        }
+//
+//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+//        // bigint 지수승 테스트
+//        result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
+//        if(result_msg != Test_BI_EXP_SUCCESS){
+//            log_msg(Test_BI_EXP_FAIL);
+//            log_msg(result_msg);
+//            return Test_FAIL;
+//        }
     }
 
     printf("\n============ Testing bi_add ============\n");
@@ -186,7 +180,13 @@ int main(){
 
     printf("\n");
 
-//    if(compare_multiplicaiton(10, 100, 10) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
+    if(compare_multiplicaiton(10, 100, 10) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
+
+    // 카라츄바 세팅 해제
+    if(clear_karachuba_pool() != CLEAR_KARACHUBA_POOL_SUCCESS){
+        log_msg(CLEAR_KARACHUBA_POOL_FAIL);
+        return Test_FAIL;
+    }
 
     log_msg(Test_SUCCESS);
 
@@ -265,16 +265,12 @@ msg test_bi_shift(){
     int rand_test_word_size = test_word_size;
     msg result_msg = Test_BI_SHIFT_SUCCESS;
     bigint *a = NULL;
-    bigint *b = NULL;
     bigint *c = NULL;
-    bigint *d = NULL;
-    int shift_size_left = 0;
-    int shift_size_right = 0;
+    int shift_size = 0;
     double total_time_left_shift = 0;
     double total_time_right_shift = 0;
     byte temp[1] = {0}; // 랜덤 값을 받아오기 위한
-    char* shift_left_size_str = NULL;
-    char* shift_right_size_str = NULL;
+    char* shift_size_str = NULL;
     char* str = NULL;
 
     printf("\n============ Testing bi_shfit ============\n");
@@ -290,15 +286,10 @@ msg test_bi_shift(){
             }while(rand_test_word_size <= 0);
         }
 
-       // left shift size
+       // shift size
         if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
-        shift_size_left = temp[0] % (rand_test_word_size * WORD_BITS);
-        shift_left_size_str = int_to_string(shift_size_left);
-
-        // right shift size
-        if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
-        shift_size_right = temp[0] % (rand_test_word_size * WORD_BITS);
-        shift_right_size_str = int_to_string(shift_size_right);
+        shift_size = temp[0] % (rand_test_word_size * WORD_BITS);
+        shift_size_str = int_to_string(shift_size);
 
         str = (char*)calloc(2 * rand_test_word_size * WORD_BITS + 1, sizeof(char));
         if (str == NULL)    return MEM_NOT_ALLOC;
@@ -311,13 +302,7 @@ msg test_bi_shift(){
             goto SHIFT_EXIT_FREE;
         }
 
-        // 랜덤한 bigint 생성
-        result_msg = bi_get_random(&b, rand_test_word_size);
-        if (result_msg != BI_GET_RANDOM_SUCCESS)    goto SHIFT_EXIT_FREE;
-        else if(b->word_len != rand_test_word_size){
-            result_msg = BI_GET_RANDOM_LENGTH_NOT_MATCH;
-            goto SHIFT_EXIT_FREE;
-        }
+//        a->sign = 0;
 
         if (bigint_to_hex(str, &a) == -1)   goto SHIFT_EXIT_FREE;
         result_msg = Test_file_write_non_enter(Test_main_file, str, APPEND);
@@ -328,11 +313,11 @@ msg test_bi_shift(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         // shift size 저장
-        result_msg = Test_file_write_non_enter(Test_main_file, shift_left_size_str, APPEND);
+        result_msg = Test_file_write_non_enter(Test_main_file, shift_size_str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         // left shift 수행
-        total_time_left_shift += check_function_run_one_time_three_parm_int(bi_shift_left, &c, &a, shift_size_left, &result_msg);
+        total_time_left_shift += check_function_run_one_time_three_parm_int(bi_shift_left, &c, &a, shift_size, &result_msg);
         if (result_msg != BI_SHIFT_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(Test_main_file, " = ", APPEND);
@@ -345,7 +330,7 @@ msg test_bi_shift(){
 
 
         // shift right test
-        if (bigint_to_hex(str, &b) == -1)   goto SHIFT_EXIT_FREE;
+        if (bigint_to_hex(str, &a) == -1)   goto SHIFT_EXIT_FREE;
         result_msg = Test_file_write_non_enter(Test_main_file, str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
@@ -354,37 +339,33 @@ msg test_bi_shift(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         // shift size 저장
-        result_msg = Test_file_write_non_enter(Test_main_file, shift_right_size_str, APPEND);
+        result_msg = Test_file_write_non_enter(Test_main_file, shift_size_str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         // right shift 수행
-        total_time_right_shift += check_function_run_one_time_three_parm_int(bi_shift_right, &d, &b, shift_size_right, &result_msg);
+        total_time_right_shift += check_function_run_one_time_three_parm_int(bi_shift_right, &c, &a, shift_size, &result_msg);
         if (result_msg != BI_SHIFT_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(Test_main_file, " = ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         // 결과 값 저장
-        if (bigint_to_hex(str, &d) == -1)   goto SHIFT_EXIT_FREE;
+        if (bigint_to_hex(str, &c) == -1)   goto SHIFT_EXIT_FREE;
         result_msg = Test_file_write(Test_main_file, str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         free(str);
-        free(shift_right_size_str);
-        free(shift_left_size_str);
+        free(shift_size_str);
     }
     result_msg = Test_BI_SHIFT_SUCCESS;
     goto SHIFT_EXIT;
 
 SHIFT_EXIT_FREE:
     free(str);
-    free(shift_left_size_str);
-    free(shift_right_size_str);
+    free(shift_size_str);
 SHIFT_EXIT:
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-    if (bi_delete(&d) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
     if (result_msg != Test_BI_SHIFT_SUCCESS)   return Test_FAIL;
     printf("Time taken left shift : %f seconds\n", total_time_left_shift / test_size);
     printf("Time taken right shift : %f seconds\n", total_time_right_shift / test_size);

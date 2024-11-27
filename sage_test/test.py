@@ -332,42 +332,24 @@ def test_exp(f, p):
     # p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 
-def bi_test(f):
-    with open('./main_result.txt', 'w') as p:
-        p.write('[Test result]\n')
-        while True:
-            line = f.readline()
-            if 'BI SET FROM' in line:
-                test_bi_set_from(f, p)
-            elif '[Addition]' in line:
-                test_addition(f, p)
-            elif '[Subtraction]' in line:
-                test_subtraction(f, p)
-            elif '[Multiplication]' in line:
-                test_multiplication(f, p)
-            elif '[Karachuba Multiplication]' in line:
-                test_karachuba_multiplication(f, p)
-            elif '[Division]' in line:
-                test_division(f, p)
-            elif '[Shift]' in line:
-                test_shift(f, p)
-            elif '[Get Lower]' in line:
-                test_get_lower(f, p)
-            elif '[Cat]' in line:
-                test_cat(f, p)
-            elif '[Sequence]' in line:
-                test_seq(f, p)
-            elif '[Exponentiation]' in line:
-                test_exp(f, p)
-            elif '[Karachuba Sequence]' in line:
-                test_karachuba_seq(f, p)
-            elif '[TEST CASE END]' in line:
-                break
-
-        p.write('[End Test]\n')
+def bi_test(f, p):
+    while True:
+        line = f.readline()
+        if not line:
+            break
+        if 'BI SET FROM' in line:
+            test_bi_set_from(f, p)
+        elif '[Shift]' in line:
+            test_shift(f, p)
+        elif '[Get Lower]' in line:
+            test_get_lower(f, p)
+        elif '[Cat]' in line:
+            test_cat(f, p)
 
 if __name__ == '__main__':
     with open('./main_result.txt', 'w') as p:
+        with open('./test.txt') as f:
+            bi_test(f, p)
         with open('./test_add.txt', 'r') as f:
             test_addition(f, p)
         with open('./test_sub.txt', 'r') as f:

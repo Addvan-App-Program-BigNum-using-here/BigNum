@@ -17,20 +17,10 @@
 #define OUT
 #define IN
 #define seperator "-----------------------------------------"
-#define TEST_init "[TEST CASE START]"
-#define TEST_end "[TEST CASE END]"
-#define FROM_init "\n[BI SET FROM]"
-#define add_init "[Addition]"
-#define sub_init "[Subtraction]"
-#define mul_init "[Multiplication]"
-#define mul_karachuba_init "[Karachuba Multiplication]"
-#define div_init "[Division]"
+#define FROM_init "[BI SET FROM]"
 #define SHIFT_init "[Shift]"
 #define GET_LOWER_init "[Get Lower]"
 #define CAT_init "[Cat]"
-#define SQU_init "[Sequence]"
-#define SQU_karachuba_init "[Karachuba Sequence]"
-#define EXP_init "[Exponentiation]"
 
 typedef uint8_t byte;   ///< byte type
 typedef uint16_t hword; ///< Half word type
