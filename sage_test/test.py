@@ -17,7 +17,7 @@ def test_addition(f, p):
     False_count = 0
     while True:
         addif = f.readline()
-        if "----------" in addif:
+        if not addif:
             break
         count += 1
         result, tmp = addition(addif)
@@ -44,7 +44,7 @@ def test_subtraction(f, p):
     False_count = 0
     while True:
         subif = f.readline()
-        if "----------" in subif:
+        if not subif:
             break
         count += 1
         result, tmp = subtraction(subif)
@@ -71,7 +71,7 @@ def test_multiplication(f, p):
     False_count = 0
     while True:
         subif = f.readline()
-        if "----------" in subif:
+        if not subif:
             break
         count += 1
         result, tmp = multiplicaiton(subif)
@@ -132,7 +132,7 @@ def test_karachuba_multiplication(f, p):
     False_count = 0
     while True:
         subif = f.readline()
-        if "----------" in subif:
+        if not subif:
             break
         count += 1
         result, tmp = multiplicaiton(subif)
@@ -168,7 +168,7 @@ def test_division(f, p):
     False_count = 0
     while True:
         subif = f.readline()
-        if "----------" in subif:
+        if not subif:
             break
         count += 1
         result, q, r = division(subif)
@@ -267,7 +267,29 @@ def test_seq(f, p):
     False_count = 0
     while True:
         shiftif = f.readline()
-        if "----------" in shiftif:
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[4], 16)
+        tmp = int(shiftif_tmp[0], 0) * int(shiftif_tmp[2], 0)
+        if(result != tmp):
+            False_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+
+
+def test_karachuba_seq(f, p):
+    k = open('./result/result_seq_karachuba.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 카라츄바 제곱 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
             break
         count += 1
         shiftif_tmp = shiftif.split(' ')
@@ -285,54 +307,62 @@ def test_exp(f, p):
     p.write('------------------------------------------------------------\n')
     p.write('[빅넘 모듈러 지수승 연산]\n')
     count = 0
-    False_count = 0
+    False_count_MS = 0
+    False_count_R_TO_L = 0
+    False_count_L_TO_R = 0
     while True:
         shiftif = f.readline()
-        if "----------" in shiftif:
+        if not shiftif:
             break
         count += 1
         shiftif_tmp = shiftif.split(' ')
-        result = int(shiftif_tmp[6], 16)
+        result_MS = int(shiftif_tmp[6], 16)
+        result_R_TO_L = int(shiftif_tmp[8], 16)
         tmp = pow(int(shiftif_tmp[0], 0), int(shiftif_tmp[2], 0), int(shiftif_tmp[4], 0))
-        if(result != tmp):
-            False_count += 1
+        if result_MS != tmp or result_R_TO_L != tmp:
+            if result_MS != tmp:
+                False_count_MS += 1
+            elif result_R_TO_L != tmp:
+                False_count_R_TO_L += 1
             k.write(shiftif)
             k.write(str(hex(tmp)))
             k.write('\n')
-    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count_MS} / 실패 횟수 : {False_count_MS}\n")
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count_R_TO_L} / 실패 횟수 : {False_count_R_TO_L}\n")
+    # p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
-def bi_test(f):
-    with open('./main_result.txt', 'w') as p:
-        p.write('[Test result]\n')
-        while True:
-            line = f.readline()
-            if 'BI SET FROM' in line:
-                test_bi_set_from(f, p)
-            elif '[Addition]' in line:
-                test_addition(f, p)
-            elif '[Subtraction]' in line:
-                test_subtraction(f, p)
-            elif '[Multiplication]' in line:
-                test_multiplication(f, p)
-            elif '[Karachuba Multiplication]' in line:
-                test_karachuba_multiplication(f, p)
-            elif '[Division]' in line:
-                test_division(f, p)
-            elif '[Shift]' in line:
-                test_shift(f, p)
-            elif '[Get Lower]' in line:
-                test_get_lower(f, p)
-            elif '[Cat]' in line:
-                test_cat(f, p)
-            elif '[Sequence]' in line:
-                test_seq(f, p)
-            elif '[Exponentiation]' in line:
-                test_exp(f, p)
-            elif '[TEST CASE END]' in line:
-                break
 
-        p.write('[End Test]\n')
+def bi_test(f, p):
+    while True:
+        line = f.readline()
+        if not line:
+            break
+        if 'BI SET FROM' in line:
+            test_bi_set_from(f, p)
+        elif '[Shift]' in line:
+            test_shift(f, p)
+        elif '[Get Lower]' in line:
+            test_get_lower(f, p)
+        elif '[Cat]' in line:
+            test_cat(f, p)
 
 if __name__ == '__main__':
-    with open('./test.txt', 'r') as f:
-        bi_test(f)
+    with open('./main_result.txt', 'w') as p:
+        with open('./test.txt') as f:
+            bi_test(f, p)
+        with open('./test_add.txt', 'r') as f:
+            test_addition(f, p)
+        with open('./test_sub.txt', 'r') as f:
+            test_subtraction(f, p)
+        with open('./test_div.txt', 'r') as f:
+            test_division(f, p)
+        with open('./test_mul.txt', 'r') as f:
+            test_multiplication(f, p)
+        with open('./test_mul_karachuba.txt', 'r') as f:
+            test_karachuba_multiplication(f, p)
+        with open('./test_squ.txt', 'r') as f:
+            test_seq(f, p)
+        with open('./test_squ_karachuba.txt', 'r') as f:
+            test_karachuba_seq(f, p)
+        with open('./test_exp.txt', 'r') as f:
+            test_exp(f, p)
