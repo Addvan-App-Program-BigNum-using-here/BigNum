@@ -7,8 +7,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define big_endian 0    ///< big endian
-#define little_endian 1 ///< little endian
 #define WORD_BITS 32    ///< Word bits
 #define APPEND 0        ///< File append
 #define CLEAR 1         ///< File clear and write

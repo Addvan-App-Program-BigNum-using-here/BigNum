@@ -97,14 +97,14 @@ int main(){
             return Test_FAIL;
         }
 
-//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-//        // bigint 나눗셈 테스트
-//        result_msg = test_bi_div(&op_total_time[2], &a, &b, str);
-//        if(result_msg != Test_BI_DIV_SUCCESS){
-//            log_msg(Test_BI_DIV_FAIL);
-//            log_msg(result_msg);
-//            return Test_FAIL;
-//        }
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // bigint 나눗셈 테스트
+        result_msg = test_bi_div(&op_total_time[2], &a, &b, str);
+        if(result_msg != Test_BI_DIV_SUCCESS){
+            log_msg(Test_BI_DIV_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 곱셈 테스트
@@ -117,39 +117,40 @@ int main(){
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 카라츄바 곱셈 테스트
-        result_msg = test_bi_mul_karachuba(&op_total_time[4], &a, &b, str, test_max_word_size / mul_karachuba_ratio);
+        int karachuba_flag = test_max_word_size / mul_karachuba_ratio;
+        result_msg = test_bi_mul_karachuba(&op_total_time[4], &a, &b, str, &karachuba_flag);
         if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS){
             log_msg(Test_BI_MUL_KARACHUBA_FAIL);
             log_msg(result_msg);
             return Test_FAIL;
         }
 
-//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-//        // bigint 제곱 테스트
-//        result_msg = test_bi_squ(&op_total_time[5], &a, str);
-//        if(result_msg != Test_BI_SQU_SUCCESS){
-//            log_msg(Test_BI_SQU_FAIL);
-//            log_msg(result_msg);
-//            return Test_FAIL;
-//        }
-//
-//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-//        // bigint 카라츄바 제곱 테스트
-//        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str);
-//        if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
-//            log_msg(Test_BI_SQU_KARACHUBA_FAIL);
-//            log_msg(result_msg);
-//            return Test_FAIL;
-//        }
-//
-//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-//        // bigint 지수승 테스트
-//        result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
-//        if(result_msg != Test_BI_EXP_SUCCESS){
-//            log_msg(Test_BI_EXP_FAIL);
-//            log_msg(result_msg);
-//            return Test_FAIL;
-//        }
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // bigint 제곱 테스트
+        result_msg = test_bi_squ(&op_total_time[5], &a, str);
+        if(result_msg != Test_BI_SQU_SUCCESS){
+            log_msg(Test_BI_SQU_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
+
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // bigint 카라츄바 제곱 테스트
+        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str);
+        if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
+            log_msg(Test_BI_SQU_KARACHUBA_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
+
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // bigint 지수승 테스트
+        result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
+        if(result_msg != Test_BI_EXP_SUCCESS){
+            log_msg(Test_BI_EXP_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
     }
 
     printf("\n============ Testing bi_add ============\n");
@@ -180,7 +181,7 @@ int main(){
 
     printf("\n");
 
-    if(compare_multiplicaiton(10, 100, 10) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
+    if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 
     // 카라츄바 세팅 해제
     if(clear_karachuba_pool() != CLEAR_KARACHUBA_POOL_SUCCESS){
@@ -221,13 +222,12 @@ msg test_bi_new_delete(){
     msg result_msg = 0;
     double total_time_new = 0;
     double total_time_delete = 0;
+    ParamType param_types[1] = {TYPE_INT_PTR};
 
     printf("\n============ Testing bi_new_delete ============\n");
 
     for (int i = 0; i < test_size; i++){
-        // test_word_size가 0보다 작거나 같으면 랜덤으로 rand_test_word_size를 할당해준다. (0 ~ 99)
         if(test_word_size <= 0){
-            // test_word_size가 0보다 작거나 같으면 랜덤으로 test_word_size를 할당해준다. (0 ~ 99)
             do{
                 byte temp[1] = {0}; // 랜덤 값을 받아오기 위한
                 result_msg = randombytes(temp, 1);
@@ -236,7 +236,7 @@ msg test_bi_new_delete(){
             }while(rand_test_word_size <= 0);
         }
 
-        total_time_new += check_function_run_one_time_two_parm_int(bi_new, &a, rand_test_word_size, &result_msg);
+        total_time_new += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_new, &a, &result_msg, param_types, &rand_test_word_size);
         if(result_msg != BI_ALLOC_SUCCESS)  return BI_ALLOC_FAIL;
 
         if(a->word_len != rand_test_word_size){
@@ -272,6 +272,7 @@ msg test_bi_shift(){
     byte temp[1] = {0}; // 랜덤 값을 받아오기 위한
     char* shift_size_str = NULL;
     char* str = NULL;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_INT_PTR};
 
     printf("\n============ Testing bi_shfit ============\n");
 
@@ -302,7 +303,7 @@ msg test_bi_shift(){
             goto SHIFT_EXIT_FREE;
         }
 
-//        a->sign = 0;
+        a->sign = 0;
 
         if (bigint_to_hex(str, &a) == -1)   goto SHIFT_EXIT_FREE;
         result_msg = Test_file_write_non_enter(Test_main_file, str, APPEND);
@@ -317,7 +318,7 @@ msg test_bi_shift(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         // left shift 수행
-        total_time_left_shift += check_function_run_one_time_three_parm_int(bi_shift_left, &c, &a, shift_size, &result_msg);
+        total_time_left_shift += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_shift_left, &c, &result_msg, param_types, &a, &shift_size);
         if (result_msg != BI_SHIFT_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(Test_main_file, " = ", APPEND);
@@ -343,7 +344,7 @@ msg test_bi_shift(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         // right shift 수행
-        total_time_right_shift += check_function_run_one_time_three_parm_int(bi_shift_right, &c, &a, shift_size, &result_msg);
+        total_time_right_shift += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_shift_right, &c, &result_msg, param_types, &a, &shift_size);\
         if (result_msg != BI_SHIFT_SUCCESS)   goto SHIFT_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(Test_main_file, " = ", APPEND);
@@ -384,6 +385,7 @@ msg test_bi_get_lower(){
     byte temp[1] = {0}; // 랜덤 값을 받아오기 위한
     int lower_bit_size = 0;
     double total_time_get_lower = 0;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_INT_PTR};
 
     printf("\n============ Testing bi_get_lower ============\n");
 
@@ -397,11 +399,9 @@ msg test_bi_get_lower(){
 
     for(int i = 0; i < test_size; i++){
         if(test_word_size <= 0){
-            // test_word_size가 0보다 작거나 같으면 랜덤으로 test_word_size를 할당해준다. (0 ~ 99)
             do{
                 if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
                 rand_test_word_size = temp[0] % test_word_size_limit;
-
                 // lower size
                 if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
                 lower_bit_size = temp[0] % (rand_test_word_size * WORD_BITS);
@@ -435,7 +435,7 @@ msg test_bi_get_lower(){
         if (result_msg != FILE_WRITE_SUCCESS)   goto GET_LOWER_EXIT_FREE;
 
         // get_lower 수행
-        total_time_get_lower += check_function_run_one_time_three_parm_int(bi_get_lower, &b, &a, lower_bit_size, &result_msg);
+        total_time_get_lower += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_get_lower, &b, &result_msg, param_types, &a, &lower_bit_size);
         if (result_msg != BI_GET_LOWER_SUCCESS)   goto GET_LOWER_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(Test_main_file, " = ", APPEND);
@@ -476,6 +476,7 @@ msg test_bi_cat(){
     int b_len = 0;
     byte temp[1] = {0};
     double total_time_cat = 0;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
 
     printf("\n============ Testing cat ============\n");
 
@@ -540,8 +541,8 @@ msg test_bi_cat(){
         result_msg = Test_file_write_non_enter(Test_main_file, str, APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto CAT_EXIT_FREE;
 
-        // get_lower 수행
-        total_time_cat += check_function_run_one_time_three_parm_bigint(bi_cat, &c, &a, &b, &result_msg);
+        // bi_cat 수행
+        total_time_cat += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_cat, &c, &result_msg, param_types, &a, &b);
         if (result_msg != BI_CAT_SUCCESS)   goto CAT_EXIT_FREE;
 
         result_msg = Test_file_write_non_enter(Test_main_file, " = ", APPEND);
@@ -573,10 +574,12 @@ CAT_EXIT:
 msg test_bi_set_from(){
     bigint *a = NULL;
     word *test_array = NULL;
-    int result_msg = Test_BI_SET_FROM_SUCCESS;
     int rand_test_word_size = test_word_size;
     double total_set_from_array_little = 0;
     double total_set_from_array_big = 0;
+    ParamType param_types[3] = {TYPE_INT_PTR, TYPE_WORD_ARR_PTR, TYPE_INT_PTR};
+    msg result_msg = Test_BI_SET_FROM_FAIL;
+    int base = 2;
 
     printf("\n============ Testing bi_set_from ============\n");
 
@@ -603,12 +606,10 @@ msg test_bi_set_from(){
         result_msg = array_random(test_array, rand_test_word_size);
         if (result_msg != GEN_RANDOM_SUCCESS)   goto FROM_EXIT_TEST_ARRAY;
 
+        int little_endian = 1;
         // little endian set test
-        c_start = clock();
-        result_msg = bi_set_from_array(&a, 1, rand_test_word_size, test_array, little_endian);
-        c_end = clock();
+        total_set_from_array_little += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_set_from_array, &a, &result_msg, param_types, &rand_test_word_size, test_array, &little_endian);
         if (result_msg != BI_SET_ARRAY_SUCCESS) goto FROM_EXIT_TEST_ARRAY;
-        total_set_from_array_little += (double)(c_end - c_start) / CLOCKS_PER_SEC;
 
         // 할당이 잘 되었는지 확인
         for (int i = 0; i < rand_test_word_size; i++){
@@ -618,12 +619,10 @@ msg test_bi_set_from(){
             }
         }
 
+        int big_endian = 0;
         // big_endian set test
-        c_start = clock();
-        result_msg = bi_set_from_array(&a, 1, rand_test_word_size, test_array, big_endian);
-        c_end = clock();
+        total_set_from_array_big += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_set_from_array, &a, &result_msg, param_types, &rand_test_word_size, test_array, &big_endian);
         if (result_msg != BI_SET_ARRAY_SUCCESS) goto FROM_EXIT_TEST_ARRAY;
-        total_set_from_array_big += (double)(c_end - c_start) / CLOCKS_PER_SEC;
 
         for (int i = 0; i < rand_test_word_size; i++){
             if (a->a[(rand_test_word_size - 1) - i] != test_array[i]){
@@ -636,7 +635,7 @@ msg test_bi_set_from(){
     // 2진수 테스트
     result_msg = Test_file_write(Test_main_file, "[2]", APPEND);
     if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;
-    result_msg = test_bi_set_from_base(2);
+    result_msg = test_bi_set_from_base(&base);
     if(result_msg != Test_BI_SET_FROM_BASE_SUCCESS)    goto FROM_EXIT;
 
     result_msg = Test_file_write(Test_main_file, seperator, APPEND); // 구분자
@@ -651,10 +650,11 @@ msg test_bi_set_from(){
     result_msg = Test_file_write(Test_main_file, seperator, APPEND); // 구분자
     if (result_msg != FILE_WRITE_SUCCESS)   goto FROM_EXIT;
 
+    base = 16;
     // 16진수 테스트
     result_msg = Test_file_write(Test_main_file, "[16]", APPEND);
     if(result_msg != FILE_WRITE_SUCCESS)    goto FROM_EXIT;;
-    result_msg = test_bi_set_from_base(16);
+    result_msg = test_bi_set_from_base(&base);
     if(result_msg != Test_BI_SET_FROM_BASE_SUCCESS)    goto FROM_EXIT;;
 
     result_msg = Test_file_write(Test_main_file, seperator, APPEND); // 구분자
@@ -675,13 +675,14 @@ FROM_EXIT:
     return Test_SUCCESS;
 }
 
-msg test_bi_set_from_base(const IN int base){
+msg test_bi_set_from_base(IN int* base){
     bigint *a = NULL;
     char *str = NULL;
     char *str_base = NULL;
     msg result_msg = 0;
     int array_size = test_word_size; // 최대 4바이트 크기의 정수
     double total_set_from_base = 0;
+    ParamType param_types[2] = {TYPE_STR_PTR, TYPE_INT_PTR};
 
     for (int i = 0; i < test_size; i++){
         if(test_word_size <= 0){
@@ -698,7 +699,7 @@ msg test_bi_set_from_base(const IN int base){
         if(str == NULL) return MEM_NOT_ALLOC;
 
         // base 기준 랜덤한 str 가져오기
-        result_msg = get_random_string(&str_base, array_size, base); // 오버플로우 나면 여기 먼저 수정
+        result_msg = get_random_string(&str_base, array_size, *base); // 오버플로우 나면 여기 먼저 수정
         if(result_msg != RAND_STRING_SUCCESS) goto FROM_BASE_EXIT_FREE;
 
         // 랜덤한 문자열 저장
@@ -706,11 +707,8 @@ msg test_bi_set_from_base(const IN int base){
         if (result_msg != FILE_WRITE_SUCCESS)   goto FROM_BASE_EXIT_FREE;
 
         // base 테스트
-        c_start = clock();
-        result_msg = bi_set_from_string(&a, str_base, base); // base 테스트
-        c_end = clock();
+        total_set_from_base += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_set_from_string, &a, &result_msg, param_types, str_base, base);
         if (result_msg != BI_SET_STRING_SUCCESS)    goto FROM_BASE_EXIT_FREE;
-        total_set_from_base += (double)(c_end - c_start) / CLOCKS_PER_SEC;
 
         // bigint to hex string
         if (bigint_to_hex(str, &a) == -1)   goto FROM_BASE_EXIT_FREE;
@@ -729,7 +727,7 @@ FROM_BASE_EXIT_FREE:
 FROM_BASE_EXIT:
     free(str_base);
     if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-    printf("Time taken from string %d digit: %f seconds\n", base, total_set_from_base / test_size);
+    printf("Time taken from string %d digit: %f seconds\n", *base, total_set_from_base / test_size);
     return result_msg;
 }
 
@@ -738,6 +736,7 @@ msg test_bi_random(){
     msg result_msg = 0;
     int rand_test_word_size = test_word_size;
     double total_time_random = 0;
+    ParamType param_types[1] = {TYPE_INT_PTR};
 
     printf("\n============ Testing bi_random ============\n");
 
@@ -752,7 +751,7 @@ msg test_bi_random(){
             }while(rand_test_word_size <= 0);
         }
 
-        total_time_random += check_function_run_one_time_two_parm_int(bi_get_random, &dst, rand_test_word_size, &result_msg);
+        total_time_random += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_get_random, &dst, &result_msg, param_types, &rand_test_word_size);
         if (result_msg != BI_GET_RANDOM_SUCCESS){
             result_msg = bi_delete(&dst);
             if (result_msg != BI_FREE_SUCCESS) goto EXIT_RANDOM;
@@ -776,6 +775,7 @@ EXIT_RANDOM:
 msg test_bi_add(OUT double* total_time_add, IN bigint** a, IN bigint** b, IN char* str){
     bigint *c = NULL;
     msg result_msg = Test_BI_ADD_SUCCESS;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
 
     if (bigint_to_hex(str, a) == -1)   goto ADD_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_add, str, APPEND);
@@ -791,7 +791,7 @@ msg test_bi_add(OUT double* total_time_add, IN bigint** a, IN bigint** b, IN cha
     result_msg = Test_file_write_non_enter(Test_file_add, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto ADD_EXIT;
 
-    *total_time_add += check_function_run_one_time_three_parm_bigint(bi_add, &c, a, b, &result_msg);
+    *total_time_add += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_add, &c, &result_msg, param_types, a, b);
     if (result_msg != BI_ADD_SUCCESS)   goto ADD_EXIT;
 
     if (bigint_to_hex(str, &c) == -1)   goto ADD_EXIT;
@@ -808,6 +808,7 @@ ADD_EXIT:
 msg test_bi_sub(OUT double* total_time_sub, IN bigint** a, IN bigint** b, IN char* str){
     bigint *c = NULL;
     msg result_msg = Test_BI_SUB_SUCCESS;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
 
     if (bigint_to_hex(str, a) == -1)   goto SUB_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_sub, str, APPEND);
@@ -823,7 +824,7 @@ msg test_bi_sub(OUT double* total_time_sub, IN bigint** a, IN bigint** b, IN cha
     result_msg = Test_file_write_non_enter(Test_file_sub, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto SUB_EXIT;
 
-    *total_time_sub = check_function_run_one_time_three_parm_bigint(bi_sub, &c, a, b, &result_msg);
+    *total_time_sub += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_sub, &c, &result_msg, param_types, a, b);
     if (result_msg != BI_SUB_SUCCESS)   goto SUB_EXIT;
 
     if (bigint_to_hex(str, &c) == -1)   goto SUB_EXIT;
@@ -840,6 +841,7 @@ SUB_EXIT:
 msg test_bi_mul(OUT double* total_time_mul, IN bigint** a, IN bigint** b, IN char* str){
     bigint *c = NULL;
     msg result_msg = Test_BI_MUL_SUCCESS;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
 
     if (bigint_to_hex(str, a) == -1)   goto MUL_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_mul, str, APPEND);
@@ -855,7 +857,7 @@ msg test_bi_mul(OUT double* total_time_mul, IN bigint** a, IN bigint** b, IN cha
     result_msg = Test_file_write_non_enter(Test_file_mul, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto MUL_EXIT;
 
-    *total_time_mul += check_function_run_one_time_three_parm_bigint(bi_mul, &c, a, b, &result_msg);
+    *total_time_mul += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_mul, &c, &result_msg, param_types, a, b);
     if (result_msg != BI_MUL_SUCCESS)   goto MUL_EXIT;
 
     if (bigint_to_hex(str, &c) == -1)   goto MUL_EXIT;
@@ -870,9 +872,10 @@ MUL_EXIT:
 }
 
 
-msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, IN bigint** b, IN char* str, IN int karachuba_flag){
+msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, IN bigint** b, IN char* str, IN int* karachuba_flag){
     bigint *c = NULL;
     msg result_msg = Test_BI_MUL_KARACHUBA_SUCCESS;
+    ParamType param_types[3] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_INT_PTR};
 
     if (bigint_to_hex(str, a) == -1)   goto MUL_KARACHUBA_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_mul_karachuba, str, APPEND);
@@ -888,11 +891,8 @@ msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, I
     result_msg = Test_file_write_non_enter(Test_file_mul_karachuba, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto MUL_KARACHUBA_EXIT;
 
-    c_start = clock();
-    result_msg = bi_mul_karachuba(&c, a, b, karachuba_flag);
-    c_end = clock();
+    *total_time_mul_karachuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_mul_karachuba, &c, &result_msg, param_types, a, b, karachuba_flag);
     if (result_msg != BI_MUL_SUCCESS)   goto MUL_KARACHUBA_EXIT;
-    *total_time_mul_karachuba += ((double)(c_end - c_start)) / CLOCKS_PER_SEC;
 
     if (bigint_to_hex(str, &c) == -1)   goto MUL_KARACHUBA_EXIT;
     result_msg = Test_file_write(Test_file_mul_karachuba, str, APPEND);
@@ -916,14 +916,15 @@ msg compare_multiplicaiton(int start_size, int end_size, int step_size){
     msg result_msg = COMPARE_MULTIPLICATION_SUCCESS;
     int crossover_found = 0;
     int crossover_point = 0;
+    int karachuba_flag = 0;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
+    ParamType param_types_karachuba[3] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_INT_PTR};
 
     for (int word_size = start_size; word_size <= end_size; word_size += step_size){
         double total_time_classic = 0;
         double total_time_karatsuba = 0;
 
         for (int i = 0; i < test_size; i++){
-            clock_t start, end;
-
             result_msg = bi_get_random(&a, word_size);
             if (result_msg != BI_GET_RANDOM_SUCCESS)
                 goto COMAPARE_MUL_EXIT;
@@ -940,19 +941,14 @@ msg compare_multiplicaiton(int start_size, int end_size, int step_size){
                 goto COMAPARE_MUL_EXIT;
             }
 
-            start = clock();
-            result_msg = bi_mul(&c, &a, &b);
+            total_time_classic += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_mul, &c, &result_msg, param_types, &a, &b);
             if (result_msg != BI_MUL_SUCCESS)
                 goto COMAPARE_MUL_EXIT;
-            end = clock();
-            total_time_classic += ((double)(end - start)) / CLOCKS_PER_SEC;
 
-            start = clock();
-            result_msg = bi_mul_karachuba(&c, &a, &b, word_size / mul_karachuba_ratio);
+            karachuba_flag = word_size / mul_karachuba_ratio;
+            total_time_karatsuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_mul_karachuba, &c, &result_msg, param_types_karachuba, &a, &b, &karachuba_flag);
             if (result_msg != BI_MUL_SUCCESS)
                 goto COMAPARE_MUL_EXIT;
-            end = clock();
-            total_time_karatsuba += ((double)(end - start)) / CLOCKS_PER_SEC;
         }
         double avg_time_classic = total_time_classic / test_size;
         double avg_time_karatsuba = total_time_karatsuba / test_size;
@@ -990,6 +986,7 @@ msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN cha
     bigint *q = NULL;
     bigint *r = NULL;
     msg result_msg = Test_BI_DIV_SUCCESS;
+    ParamType param_types[3] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
 
     if (bigint_to_hex(str, a) == -1)   goto DIV_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_div, str, APPEND);
@@ -1005,15 +1002,12 @@ msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN cha
     result_msg = Test_file_write_non_enter(Test_file_div, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto DIV_EXIT;
 
-    c_start = clock();
-    result_msg = bi_div(&q, &r, a, b);
-    c_end = clock();
+    *total_time_div += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_div, &q, &result_msg, param_types, &r, a, b);
     if(result_msg == BI_DIV_BY_ZERO){
         result_msg = Test_file_write(Test_file_div, "DIVISION BY ZERO", APPEND);
         goto DIV_EXIT;
     }
 
-    *total_time_div += ((double)(c_end - c_start)) / CLOCKS_PER_SEC;
     if (result_msg != BI_DIV_SUCCESS)   goto DIV_EXIT;
 
     if (bigint_to_hex(str, &q) == -1)   goto DIV_EXIT;
@@ -1038,6 +1032,7 @@ DIV_EXIT:
 msg test_bi_squ(OUT double* total_time_squ, IN bigint** a, IN char* str){
     bigint *b = NULL;
     msg result_msg = Test_BI_SQU_SUCCESS;
+    ParamType param_types[1] = {TYPE_BIGINT_PTR};
 
     if (bigint_to_hex(str, a) == -1)   goto SQU_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_squ, str, APPEND);
@@ -1052,7 +1047,7 @@ msg test_bi_squ(OUT double* total_time_squ, IN bigint** a, IN char* str){
     result_msg = Test_file_write_non_enter(Test_file_squ, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto SQU_EXIT;
 
-    *total_time_squ += check_function_run_one_time_two_parm_bigint(bi_squ, &b, a, &result_msg);
+    *total_time_squ += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ, &b, &result_msg, param_types, a);
     if (result_msg != BI_SQU_SUCCESS)   goto SQU_EXIT;
 
     if (bigint_to_hex(str, &b) == -1)   goto SQU_EXIT;
@@ -1069,6 +1064,7 @@ SQU_EXIT:
 msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, IN char* str){
     bigint *b = NULL;
     msg result_msg = Test_BI_SQU_KARACHUBA_SUCCESS;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
 
     if (bigint_to_hex(str, a) == -1)   goto SQU_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_squ_karachuba, str, APPEND);
@@ -1083,7 +1079,8 @@ msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, I
     result_msg = Test_file_write_non_enter(Test_file_squ_karachuba, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto SQU_EXIT;
 
-    *total_time_squ_karachuba += check_function_run_one_time_two_parm_bigint(bi_squ_karachuba, &b, a, &result_msg);
+
+    *total_time_squ_karachuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ_karachuba, &b, &result_msg, param_types, a);
     if (result_msg != BI_SQU_SUCCESS)   goto SQU_EXIT;
 
     if (bigint_to_hex(str, &b) == -1)   goto SQU_EXIT;
@@ -1100,6 +1097,7 @@ SQU_EXIT:
 msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN bigint** c, IN char* str){
     bigint *d = NULL; // 결과 bigint
     msg result_msg = Test_BI_EXP_SUCCESS;
+    ParamType param_types[3] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
 
     (*a)->sign = 0; // 여기도 일단 양수로만 하자
 
@@ -1134,7 +1132,7 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
     // Multipliation Squaring 구현
-    total_time_exp[0] += check_function_run_one_time_four_parm_bigint(bi_exp_MS, &d, a, b, c, &result_msg);
+    total_time_exp[0] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_MS, &d, &result_msg, param_types, a, b, c);
     if (result_msg != BI_EXP_MS_SUCCESS)   goto EXP_EXIT;
 
     if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;
@@ -1145,7 +1143,7 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
     // Right to Left 구현
-    total_time_exp[1] += check_function_run_one_time_four_parm_bigint(bi_exp_R_TO_L, &d, a, b, c, &result_msg);
+    total_time_exp[1] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_R_TO_L, &d, &result_msg, param_types, a, b, c);
     if (result_msg != BI_EXP_R_TO_L_SUCCESS)   goto EXP_EXIT;
 
     if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;

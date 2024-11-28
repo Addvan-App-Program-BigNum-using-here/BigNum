@@ -69,7 +69,7 @@ msg bi_delete(OUT bigint** dst){
 *              - int endian: little endian == 0, big endian == 1
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
-msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len, const IN word* data, const IN int endian){
+msg bi_set_from_array(OUT bigint** dst, const IN int word_len, const IN word* data, const IN int endian){
     int endian_idx = endian ? 0 : word_len - 1;
     int idx = endian ? 1 : -1;
     if (*dst == NULL){
@@ -79,7 +79,6 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
     }
 
     // sign bit set
-    (*dst)->sign = sign;
     for (int i = 0; i < word_len; i++){
         if (data[endian_idx] > 0xFFFFFFFF)
         {
@@ -104,7 +103,7 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
  *              - int base: base of string (2, 10, 16)
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base){
+msg bi_set_from_string(OUT bigint **dst, IN char *int_str, IN int base){
     msg result_msg = 0;
     int sign = 0, a_idx = 0, digit = 0, block_size = 0, word_idx = 0, word_len = 0;
     int str_len = strlen(int_str);
@@ -118,20 +117,20 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base){
 
     // extract word length
     switch (base){
-    case 2:
-        word_len = (str_len + 31) / 32;
-        block_size = WORD_BITS;
-        break;
-    case 10:
-        //            word_len = (str_len + 9) / 10;
-        break;
-    case 16:
-        word_len = (str_len + 7) / 8;
-        block_size = WORD_BITS / 4;
-        break;
-    default:
-        printf("%d base is not supported\n", base);
-        return BI_SET_STRING_FAIL;
+        case 2:
+            word_len = (str_len + 31) / 32;
+            block_size = WORD_BITS;
+            break;
+        case 10:
+            //            word_len = (str_len + 9) / 10;
+            break;
+        case 16:
+            word_len = (str_len + 7) / 8;
+            block_size = WORD_BITS / 4;
+            break;
+        default:
+            printf("%d base is not supported\n", base);
+            return BI_SET_STRING_FAIL;
     }
 
     a_idx = (str_len % block_size == 0) ? block_size : str_len % block_size;
@@ -517,10 +516,6 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     // 부호
     (*dst)->sign = (*src)->sign;
 
-//    // 반환 전에 크기에 맞게 배열 resize
-//    result_msg = bi_resize(dst, new_word_len);
-//    if(result_msg != BI_RESIZE_SUCCESS) goto EXIT_SHIFT;
-
     return  BI_SHIFT_SUCCESS;
 
 EXIT_SHIFT:
@@ -550,11 +545,9 @@ msg bi_get_lower(OUT bigint **dst, IN bigint **src, IN int mod_len){
     int mod_word = mod_len / WORD_BITS; // mod_len에 대한 word_len
     int mod_bit = mod_len % WORD_BITS; // bit 단위로 시프트
     int new_word_len = mod_word + (mod_bit > 0); // 새로 할당할 bigint 길이
-    int flag = 0;
 
     if(*dst == NULL){
         if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
-        flag = 1;
     }else if(*dst != NULL && (*dst)->word_len != new_word_len){ // dst가 이미 할당되어 있을 경우
         if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
     }
@@ -589,12 +582,9 @@ msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
     if ((*a)->sign != (*b)->sign)   return BI_SIGN_NOT_MATCH;
   
     int new_word_len = (*a)->word_len + (*b)->word_len;
-    word* temp = NULL; // dst가 a와 같을 경우 연산에서 사용됨.
-    int flag = 0;
 
     if(*dst == NULL){
         if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
-        flag = 1;
     }else if(*dst != NULL && (*dst)->word_len != new_word_len){ // dst가 이미 할당되어 있을 경우
         if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
     }
@@ -603,23 +593,16 @@ msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
 
     if(*dst == *a || *dst == *b){
         if(*dst == *a && *dst != *b){ // dst가 a와 같고 dst가 b와 다를 경우
-            temp = (word*)calloc((*a)->word_len, sizeof(word));
-            if(temp == NULL){
-                if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-                return BI_CAT_FAIL;
-            }
-            for(int i = 0; i < (*a)->word_len; i++)  temp[i] = (*a)->a[i]; // a를 temp에 옮기기
+            if(bi_shift_left(dst, a, (*b)->word_len * WORD_BITS) != BI_SHIFT_SUCCESS)    return BI_SHIFT_FAIL;
             for(int i = 0; i < (*b)->word_len; i++) (*dst)->a[i] = (*b)->a[i]; // b를 dst에 옮기기
-            for(int i = 0; i < (*a)->word_len; i++)  (*dst)->a[i + (*b)->word_len] = temp[i]; // temp를 dst에 옮기기
-            free(temp);
             return BI_CAT_SUCCESS;
         }
     }else{ // a, b만 같은 경우 / dst, a, b 모두 다른 경우
-        for(int i = 0; i < (*b)->word_len; i++)  (*dst)->a[i] = (*b)->a[i]; // a를 dst에 옮기기
+        for(int i = 0; i < (*b)->word_len; i++)  (*dst)->a[i] = (*b)->a[i]; // b를 dst에 옮기기
     }
 
     // 모두 같은 경우 / dst와 b가 같고 a가 다른 경우 / dst, a, b 모두 다른 경우의 a 옮기기
-    for(int i = 0; i < (*a)->word_len; i++) (*dst)->a[i + (*b)->word_len] = (*a)->a[i]; // b를 dst에 옮기기
+    for(int i = 0; i < (*a)->word_len; i++) (*dst)->a[i + (*b)->word_len] = (*a)->a[i]; // a를 dst에 옮기기
 
     return BI_CAT_SUCCESS;
 }
@@ -644,52 +627,84 @@ msg bi_is_zero(bigint **num){
 }
 
 /*************************************************
-* Name:        check_function_runtime
+* Name:        check_function_run_one_time
 *
 * Description: get function runtime
 *
-* Arguments:   - msg (*func): test function pointer
+* Arguments:   - void* func: test function pointer
 *              - bigint** dst: pointer to bigint struct result
-*              - bigint** a: pointer to bigint struct of input1
-*              - bigint** b : pointer to bigint struct of input2
+*              - msg* result_msg: pointer to result_msg
+*              - ParamType* param_types : parameter type
+*              - int param_count : parameter count
 * Return:      - msg : message. SUCESS or FAIL
 **************************************************/
-double check_function_run_one_time_two_parm_bigint(IN msg (*func)(OUT bigint**, IN bigint**), OUT bigint** dst, IN bigint** a, IN msg* result_msg){
-    clock_t start, end;
-    start = clock();
-    *result_msg = func(dst, a);
-    end = clock();
-    return (double)(end - start) / CLOCKS_PER_SEC;
-}
+double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, ParamType* param_types, int param_count, ...){
+    va_list args;
+    void* params[MAX_PARAMS];  // 최대 파라미터 개수에 맞게 조정
+    va_start(args, param_count);
+    clock_t start = 0;
+    clock_t end = 0;
 
-double check_function_run_one_time_two_parm_int(IN msg (*func)(OUT bigint**, IN int), OUT bigint** dst, IN int n, IN msg* result_msg){
-    clock_t start, end;
-    start = clock();
-    *result_msg = func(dst, n);
-    end = clock();
-    return (double)(end - start) / CLOCKS_PER_SEC;
-}
+    // 가변 인자들을 params 배열에 저장
+    for (int i = 0; i < param_count; i++) {
+        params[i] = va_arg(args, void*);
+    }
+    va_end(args);
 
-double check_function_run_one_time_three_parm_bigint(IN msg (*func)(OUT bigint**, IN bigint**, IN bigint**), OUT bigint** dst, IN bigint** a, IN bigint** b, IN msg* result_msg){
-    clock_t start, end;
-    start = clock();
-    *result_msg = func(dst, a, b);
-    end = clock();
-    return (double)(end - start) / CLOCKS_PER_SEC;
-}
-
-double check_function_run_one_time_three_parm_int(IN msg (*func)(OUT bigint**, IN bigint**, IN int), OUT bigint** dst, IN bigint** a, IN int n, IN msg* result_msg){
-    clock_t start, end;
-    start = clock();
-    *result_msg = func(dst, a, n);
-    end = clock();
-    return (double)(end - start) / CLOCKS_PER_SEC;
-}
-
-double check_function_run_one_time_four_parm_bigint(IN msg (*func)(OUT bigint**, IN bigint**, IN bigint**, IN bigint**), OUT bigint** dst, IN bigint** a, IN bigint** b, IN bigint** c, IN msg* result_msg){
-    clock_t start, end;
-    start = clock();
-    *result_msg = func(dst, a, b, c);
-    end = clock();
+    // dst를 제외한 파라미터 개수
+    switch(param_count) {
+        case 1:
+            if(param_types[0] == TYPE_INT_PTR){
+                msg (*func_1_ptr)(bigint**, int) = (msg (*)(bigint**, int))(func);
+                start = clock();
+                *result_msg = func_1_ptr(dst, *(int*)params[0]);
+                end = clock();
+            }else if(param_types[0] == TYPE_BIGINT_PTR){
+                msg (*func_1_ptr)(bigint**, bigint**) = (msg (*)(bigint**, bigint**))(func);
+                start = clock();
+                *result_msg = func_1_ptr(dst, (bigint**)params[0]);
+                end = clock();
+            }
+            break;
+        case 2:
+            if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR){
+                msg (*func_2_ptr)(bigint**, bigint**, bigint**) = (msg (*)(bigint**, bigint**, bigint**))(func);
+                start = clock();
+                *result_msg = func_2_ptr(dst, (bigint**)params[0], (bigint**)params[1]);
+                end = clock();
+            }else if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_INT_PTR){
+                msg (*func_2_ptr)(bigint**, bigint**, int) = (msg (*)(bigint**, bigint**, int))(func);
+                start = clock();
+                *result_msg = func_2_ptr(dst, (bigint**)params[0], *(int*)params[1]);
+                end = clock();
+            }else if(param_types[0] == TYPE_STR_PTR && param_types[1] == TYPE_INT_PTR){
+                msg (*func_2_ptr)(bigint**, char*, int) = (msg (*)(bigint**, char*, int))(func);
+                start = clock();
+                *result_msg = func_2_ptr(dst, (char*)params[0], *(int*)params[1]);
+                end = clock();
+            }
+            break;
+        case 3:
+            if(param_types[2] == TYPE_BIGINT_PTR){
+                msg (*func_3_ptr)(bigint**, bigint**, bigint**, bigint**) = (msg (*)(bigint**, bigint**, bigint**, bigint**))(func);
+                start = clock();
+                *result_msg = func_3_ptr(dst, (bigint**)params[0], (bigint**)params[1], (bigint**)params[2]);
+                end = clock();
+            }else if(param_types[0] == TYPE_BIGINT_PTR && param_types[2] == TYPE_INT_PTR){
+                msg (*func_3_ptr)(bigint**, bigint**, bigint**, int) = (msg (*)(bigint**, bigint**, bigint**, int))(func);
+                start = clock();
+                *result_msg = func_3_ptr(dst, (bigint**)params[0], (bigint**)params[1], *(int*)params[2]);
+                end = clock();
+            }else if(param_types[0] == TYPE_INT_PTR && param_types[1] == TYPE_WORD_ARR_PTR && param_types[2] == TYPE_INT_PTR){
+                msg (*func_3_ptr)(bigint**, int, word*, int) = (msg (*)(bigint**, int, word*, int))(func);
+                start = clock();
+                *result_msg = func_3_ptr(dst, *(int*)params[0], (word*)params[1], *(int*)params[2]);
+                end = clock();
+            }
+            break;
+        // 필요에 따라 더 많은 케이스 추가 가능
+        default:
+            return 0;
+    }
     return (double)(end - start) / CLOCKS_PER_SEC;
 }
