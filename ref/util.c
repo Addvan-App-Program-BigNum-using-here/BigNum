@@ -478,6 +478,12 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     bigint* one = NULL;
     msg result_msg = BI_SHIFT_FAIL;
 
+    // shift 결과 값이 0인 경우
+    if(new_word_len <= 0){
+        if(bi_new(dst, 1) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
+        return BI_SHIFT_SUCCESS;
+    }
+
     if(*dst == NULL){
         if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
         flag = 1;
@@ -504,8 +510,9 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
         for (int i = 0; i < new_word_len - 1; i++){
             (*dst)->a[i] = ((*dst)->a[i] >> shift_bit) | ((*dst)->a[i + 1] << (WORD_BITS - shift_bit));
         }
+        (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] >> shift_bit; // 마지막 인덱스 처리
     }
-    (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] >> shift_bit; // 마지막 인덱스 처리
+
 
     // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 시프트 해준 결과 값에 1을 빼준다.
     if((*src)->sign){
@@ -702,9 +709,36 @@ double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, Pa
                 end = clock();
             }
             break;
+        case 4:
+            if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[3] == TYPE_INT_PTR){
+                msg (*func_4_ptr)(bigint**, bigint**, bigint**, bigint**, int) = (msg (*)(bigint**, bigint**, bigint**, bigint**, int))(func);
+                start = clock();
+                *result_msg = func_4_ptr(dst, (bigint**)params[0], (bigint**)params[1], (bigint**)params[2], *(int*)params[3]);
+                end = clock();
+            }
+            break;
         // 필요에 따라 더 많은 케이스 추가 가능
         default:
             return 0;
     }
     return (double)(end - start) / CLOCKS_PER_SEC;
+}
+
+/*************************************************
+* Name:        get_power_decomposition
+*
+* Description: get power decomposition
+*
+* Arguments:   - word n: word size number
+*              - int* powers: pointer to integer array
+* Return:      - int : count of power
+**************************************************/
+int get_power_decomposition(word n, int* powers){
+    int count = 0;
+    while (n > 0 && count < WORD_BITS) {
+        if (n & 1)  powers[count] = 1;
+        n >>= 1;
+        count++;
+    }
+    return count;
 }
