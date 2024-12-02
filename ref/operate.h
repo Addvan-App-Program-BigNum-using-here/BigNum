@@ -166,4 +166,6 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
  */
 msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
 
+
+msg bi_Euclidean(OUT bigint** dst, IN bigint** a, IN bigint** b);
 #endif // OPERATE_H

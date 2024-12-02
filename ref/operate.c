@@ -697,7 +697,7 @@ EXIT_SQU:
     if(bi_delete(&mid) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
 
     return result_msg;
-}}
+}
 
 
 /*************************************************
@@ -871,7 +871,7 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
 
     // src가 음수인 경우도 사실 부호 처리만 하면 되니까 상관 없기는 한데 일단 test에서 전처리를 수행함
     // 음수인 경우 -> 이거는 역원 찾는거라서 일단 패스 -> 이거 test에서 전처리 함
-    if((*x)->sign)    return BI_EXP_MS_FAIL;
+    if((*x)->sign)    return BI_EXP_R_TO_L_FAIL;
     // 0인 경우 time attack을 방지하고자 0값 할당해서 수행하자.
     if(bi_is_zero(x) == BI_IS_ZERO){
         (*x)->word_len = 1;
@@ -947,13 +947,13 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
         bit = ((*x)->a[i / WORD_BITS] >> (i % WORD_BITS)) & 1;
 
         // t 제곱 수행 ( t <- t^2 )
-        result_msg = bi_squ_karachuba(dst, dst);
+        result_msg = bi_squ_karachuba(dst, dst, 5);
         if(result_msg != BI_SQU_SUCCESS)    return result_msg;
         result_msg = bi_div(&temp, dst, dst, n);
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;
        // bit가 1일 경우에만 곱셈 수행 ( t <- t * src)
         if(bit){
-            result_msg = bi_mul_karachuba(dst, dst, src);
+            result_msg = bi_mul_karachuba(dst, dst, src, 10);
             if(result_msg != BI_MUL_SUCCESS)    return result_msg;
             result_msg = bi_div(&temp, dst, dst, n); // 몫은 필요없으니까 일단 temp에 저장
             if(result_msg != BI_DIV_SUCCESS)    return result_msg;
@@ -965,3 +965,39 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
 
     return result_msg;
 }
+
+msg bi_Euclidean(OUT bigint** dst, IN bigint** a, IN bigint** b){
+    // a, b 부호 확인 필요
+
+    bigint* t1;
+    bigint* t2;
+    bigint* temp;
+    msg result_msg = BI_EUCLIDEAN_FAIL;
+    
+    // (dst, t1) <- (a, b)
+    result_msg = bi_assign(dst, a);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+    result_msg = bi_assign(&t1, b);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+
+    // t1 = 0이 될 때까지 반복문 수행
+    while(bi_is_zero(&t1) != BI_IS_ZERO){
+        // t2 <- dst
+        result_msg = bi_assign(&t2, dst);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EXIT_EUC;
+        // dst <- t1
+        result_msg = bi_assign(dst, &t1);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EXIT_EUC;
+        // t1 <- t2 mod t1
+        result_msg = bi_div(&temp, &t1, &t2, &t1); // 몫은 필요없어서 일단 temp에 저장
+        if(result_msg != BI_DIV_SUCCESS) goto EXIT_EUC;
+    }
+    result_msg = BI_EUCLIDEAN_SUCCESS;
+
+EXIT_EUC:
+    if(bi_delete(&t1) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(bi_delete(&t2) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    return result_msg;
+}
+
+//msg bi_Extended_Euclidean(OUT bigint** dst, IN bigint** a, IN bigint** b)

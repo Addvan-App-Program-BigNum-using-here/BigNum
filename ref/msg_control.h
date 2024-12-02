@@ -63,7 +63,9 @@ enum MemoryMSGCodes
     BI_EXP_R_TO_L_SUCCESS  = MSG_TYPE_MEMORY | 0x0023, // Bigint 나머지 연산 성공
     BI_EXP_R_TO_L_FAIL     = MSG_TYPE_MEMORY | 0x0024, // Bigint 나머지 연산 실패
     BI_EXP_L_TO_R_SUCCESS  = MSG_TYPE_MEMORY | 0x0025, // Bigint 지수승 연산 성공
-    BI_EXP_L_TO_R_FAIL     = MSG_TYPE_MEMORY | 0x0026 // Bigint 지수승 연산 실패패
+    BI_EXP_L_TO_R_FAIL     = MSG_TYPE_MEMORY | 0x0026, // Bigint 지수승 연산 실패
+    BI_EUCLIDEAN_SUCCESS   = MSG_TYPE_MEMORY | 0x0027, // Bigint gcd 연산 성공
+    BI_EUCLIDEAN_FAIL      = MSG_TYPE_MEMORY | 0x0028 // Bigint gcd 연산 실패
     // 추가 메모리 관련 에러 코드...
 };
 
