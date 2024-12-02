@@ -334,6 +334,26 @@ def test_exp(f, p):
     p.write(f"[Right to Left]\n실행 횟수 : {count} / 성공 횟수 : {count - False_count_R_TO_L} / 실패 횟수 : {False_count_R_TO_L}\n")
     p.write(f"[Left to Right]\n실행 횟수 : {count} / 성공 횟수 : {count - False_count_L_TO_R} / 실패 횟수 : {False_count_L_TO_R}\n")
 
+def test_barrett(f, p):
+    k = open('./result/result_barrett_reduction.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 barrett reduction 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[4], 16)
+        tmp = int(shiftif_tmp[0], 0) % int(shiftif_tmp[2], 0)
+        if(result != tmp):
+            False_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def bi_test(f, p):
     while True:
@@ -385,3 +405,6 @@ if __name__ == '__main__':
 
         f = file_open('./test_exp.txt')
         if f != None:   test_exp(f, p)
+
+        f = file_open('./test_barrett_reduction.txt')
+        if f != None:   test_barrett(f, p)

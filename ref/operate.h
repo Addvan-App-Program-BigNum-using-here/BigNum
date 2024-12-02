@@ -4,6 +4,7 @@
 #include "data_type.h"
 #include "msg_control.h"
 #include "util.h"
+#include "random.h"
 
 #define mul_karachuba_ratio 4   // 카라츄바 곱셈 시 분할 기준
 #define squ_karachuba_ratio 2   // 카라츄바 제곱 시 분할 기준
@@ -166,4 +167,21 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
  */
 msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
 
+/**
+ * @brief bigint structure barret reduction
+ * @param dst pointer to reduction of bigint result
+ * @param a pointer to reduced of bigint
+ * @param n pointer to modular of bigint
+ * @return msg
+ */
+msg barret_reduction(OUT IN bigint** dst, IN bigint** a, IN bigint** n, IN bigint** n_barret);
+
+/**
+ * @brief Initialize barret reduction
+ * @param barret_t pointer to pre calculate bigint using barret reduction
+ * @param barret_n pointer to modular of bigint
+ * @param barret_word_len pointer to word length of bigint
+ * @return msg
+ */
+msg init_barret_N(OUT bigint** barret_t, IN bigint** barret_n, IN int barret_word_len);
 #endif // OPERATE_H

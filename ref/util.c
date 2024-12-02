@@ -478,6 +478,12 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     bigint* one = NULL;
     msg result_msg = BI_SHIFT_FAIL;
 
+    // shift 결과 값이 0인 경우
+    if(new_word_len <= 0){
+        if(bi_new(dst, 1) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
+        return BI_SHIFT_SUCCESS;
+    }
+
     if(*dst == NULL){
         if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
         flag = 1;
@@ -506,6 +512,7 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
         }
         (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] >> shift_bit; // 마지막 인덱스 처리
     }
+
 
     // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 시프트 해준 결과 값에 1을 빼준다.
     if((*src)->sign){

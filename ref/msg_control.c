@@ -137,6 +137,12 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case COMPARE_SQUARING_SUCCESS : return "Compare squaring successful";
         case BI_EXP_L_TO_R_SUCCESS : return "Bigint exp left shift successful";
         case BI_EXP_L_TO_R_FAIL : return "Bigint exp left shift failed";
+        case BI_BARRET_REDUCTION_SUCCESS : return "Bigint barret reduction successful";
+        case BI_BARRET_REDUCTION_FAIL : return "Bigint barret reduction failed";
+        case INIT_BARRET_N_SUCCESS : return "Barret N initialization successful";
+        case INIT_BARRET_N_FAIL : return "Barret N initialization failed";
+        case Test_BI_BARRETT_REDUCTION_SUCCESS : return "Test Bigint barret reduction successful";
+        case Test_BI_BARRETT_REDUCTION_FAIL : return "Test Bigint barret reduction failed";
         default: return "Unknown error code";
     }
 }
