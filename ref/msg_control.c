@@ -143,6 +143,10 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case INIT_BARRET_N_FAIL : return "Barret N initialization failed";
         case Test_BI_BARRETT_REDUCTION_SUCCESS : return "Test Bigint barret reduction successful";
         case Test_BI_BARRETT_REDUCTION_FAIL : return "Test Bigint barret reduction failed";
+        case DIVCC_SUCCESS : return "SUBDivision calculation successful";
+        case DIVCC_FAIL : return "SUBDivision calculation failed";
+        case COMPARE_DIVISION_SUCCESS : return "Compare division successful";
+        case COMPARE_DIVISION_FAIL : return "Compare division failed";
         default: return "Unknown error code";
     }
 }

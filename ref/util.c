@@ -709,9 +709,36 @@ double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, Pa
                 end = clock();
             }
             break;
+        case 4:
+            if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[3] == TYPE_INT_PTR){
+                msg (*func_4_ptr)(bigint**, bigint**, bigint**, bigint**, int) = (msg (*)(bigint**, bigint**, bigint**, bigint**, int))(func);
+                start = clock();
+                *result_msg = func_4_ptr(dst, (bigint**)params[0], (bigint**)params[1], (bigint**)params[2], *(int*)params[3]);
+                end = clock();
+            }
+            break;
         // 필요에 따라 더 많은 케이스 추가 가능
         default:
             return 0;
     }
     return (double)(end - start) / CLOCKS_PER_SEC;
+}
+
+/*************************************************
+* Name:        get_power_decomposition
+*
+* Description: get power decomposition
+*
+* Arguments:   - word n: word size number
+*              - int* powers: pointer to integer array
+* Return:      - int : count of power
+**************************************************/
+int get_power_decomposition(word n, int* powers){
+    int count = 0;
+    while (n > 0 && count < WORD_BITS) {
+        if (n & 1)  powers[count] = 1;
+        n >>= 1;
+        count++;
+    }
+    return count;
 }

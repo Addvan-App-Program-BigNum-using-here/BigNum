@@ -6,7 +6,7 @@ clock_t c_start, c_end;
 
 int main(){
     FILE *fp = NULL;
-    double op_total_time[8] = {0, };
+    double op_total_time[9] = {0, };
     double op_exp_time[3] = {0, };
     byte temp[1] = {0};
     int test_word_size_a = test_word_size;
@@ -15,6 +15,7 @@ int main(){
     int test_max_word_size = test_word_size;
     int karachuba_flag = 0;
     int squ_karachuba_flag = 0;
+    int DIVISION_METHOD = 0;
     char* str = NULL;
     msg result_msg = Test_SUCCESS;
     bigint* a = NULL;
@@ -110,8 +111,19 @@ int main(){
         }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // bigint 나눗셈 테스트
-        result_msg = test_bi_div(&op_total_time[2], &a, &b, str);
+        // BINARY LONG bigint 나눗셈 테스트
+        DIVISION_METHOD = 0;
+        result_msg = test_bi_div(&op_total_time[2], &a, &b, str, &DIVISION_METHOD);
+        if(result_msg != Test_BI_DIV_SUCCESS){
+            log_msg(Test_BI_DIV_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
+
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // WORD LONG bigint 나눗셈 테스트
+        DIVISION_METHOD = 1;
+        result_msg = test_bi_div(&op_total_time[3], &a, &b, str, &DIVISION_METHOD);
         if(result_msg != Test_BI_DIV_SUCCESS){
             log_msg(Test_BI_DIV_FAIL);
             log_msg(result_msg);
@@ -120,7 +132,7 @@ int main(){
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 곱셈 테스트
-        result_msg = test_bi_mul(&op_total_time[3], &a, &b, str);
+        result_msg = test_bi_mul(&op_total_time[4], &a, &b, str);
         if(result_msg != Test_BI_MUL_SUCCESS){
             log_msg(Test_BI_MUL_FAIL);
             log_msg(result_msg);
@@ -130,7 +142,7 @@ int main(){
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 카라츄바 곱셈 테스트
         karachuba_flag = test_max_word_size / mul_karachuba_ratio;
-        result_msg = test_bi_mul_karachuba(&op_total_time[4], &a, &b, str, &karachuba_flag);
+        result_msg = test_bi_mul_karachuba(&op_total_time[5], &a, &b, str, &karachuba_flag);
         if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS){
             log_msg(Test_BI_MUL_KARACHUBA_FAIL);
             log_msg(result_msg);
@@ -139,7 +151,7 @@ int main(){
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 제곱 테스트
-        result_msg = test_bi_squ(&op_total_time[5], &a, str);
+        result_msg = test_bi_squ(&op_total_time[6], &a, str);
         if(result_msg != Test_BI_SQU_SUCCESS){
             log_msg(Test_BI_SQU_FAIL);
             log_msg(result_msg);
@@ -149,7 +161,7 @@ int main(){
         squ_karachuba_flag = test_max_word_size / squ_karachuba_ratio;
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 카라츄바 제곱 테스트
-        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str, &squ_karachuba_flag);
+        result_msg = test_bi_squ_karachuba(&op_total_time[7], &a, str, &squ_karachuba_flag);
         if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
             log_msg(Test_BI_SQU_KARACHUBA_FAIL);
             log_msg(result_msg);
@@ -168,14 +180,13 @@ int main(){
         if(test_word_size == barret_word_size){ // 사전 연산 값이 고정되어 있기에 test_word_size가 기존 사이즈와 같을 때만 수행
             memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
             // bigint Barrett Reduction 테스트
-            result_msg = test_bi_barrett_reduction(&op_total_time[7], &a, &barret_N, &barret_T, str);
+            result_msg = test_bi_barrett_reduction(&op_total_time[8], &a, &barret_N, &barret_T, str);
             if(result_msg != Test_BI_BARRETT_REDUCTION_SUCCESS){
                 log_msg(Test_BI_BARRETT_REDUCTION_FAIL);
                 log_msg(result_msg);
                 return Test_FAIL;
             }
         }
-
     }
 
     printf("\n============ Testing bi_add ============\n");
@@ -184,20 +195,23 @@ int main(){
     printf("\n============ Testing bi_sub ============\n");
     printf("Time taken sub : %f seconds\n", op_total_time[1] / test_size);
 
-    printf("\n============ Testing bi_div ============\n");
-    printf("Time taken div : %f seconds\n", op_total_time[2] / test_size);
+    printf("\n============ Testing bi_div (Binary Long Division) ============\n");
+    printf("Time taken div(Binary) : %f seconds\n", op_total_time[2] / test_size);
+
+    printf("\n============ Testing bi_div (WORD Long Division) ============\n");
+    printf("Time taken div(Long) : %f seconds\n", op_total_time[3] / test_size);
 
     printf("\n============ Testing bi_mul ============\n");
-    printf("Time taken mul : %f seconds\n", op_total_time[3] / test_size);
+    printf("Time taken mul : %f seconds\n", op_total_time[4] / test_size);
 
     printf("\n============ Testing bi_mul_karachuba ============\n");
-    printf("Time taken mul_karachuba : %f seconds\n", op_total_time[4] / test_size);
+    printf("Time taken mul_karachuba : %f seconds\n", op_total_time[5] / test_size);
 
     printf("\n============ Testing bi_squ ============\n");
-    printf("Time taken squ : %f seconds\n", op_total_time[5] / test_size);
+    printf("Time taken squ : %f seconds\n", op_total_time[6] / test_size);
 
     printf("\n============ Testing bi_squ_karachuba ============\n");
-    printf("Time taken squ_karachuba : %f seconds\n", op_total_time[6] / test_size);
+    printf("Time taken squ_karachuba : %f seconds\n", op_total_time[7] / test_size);
 
     printf("\n============ Testing bi_exp ============\n");
     printf("Time taken exp (MS) : %f seconds\n", op_exp_time[0] / test_size);
@@ -205,12 +219,13 @@ int main(){
     printf("Time taken exp (L TO R) : %f seconds\n", op_exp_time[2] / test_size);
 
     printf("\n============ Testing bi_barrett_reduction ============\n");
-    printf("Time taken barret_reduction : %f seconds\n", op_total_time[7] / test_size);
+    printf("Time taken barret_reduction : %f seconds\n", op_total_time[8] / test_size);
 
     printf("\n");
 
-//    if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
-//    if(compare_squaring(16, 120, 16) != COMPARE_SQUARING_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
+    if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
+    if(compare_squaring(16, 120, 16) != COMPARE_SQUARING_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
+    if(compare_division(16, 120, 16) != COMPARE_DIVISION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 
     // 카라츄바 세팅 해제
     if(clear_karachuba_pool() != CLEAR_KARACHUBA_POOL_SUCCESS){
@@ -1076,12 +1091,90 @@ COMAPARE_SQU_EXIT:
     return result_msg;
 }
 
+msg compare_division(int start_size, int end_size, int step_size){
+    printf("\n=== Comparing Division Methods ===\n");
+    printf("Size\titeration\tbinary Long(s)\tWord Long(s)\tRatio\tCrossover\n");
+    printf("------------------------------------------------------------------------------\n");
 
-msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str){
+    bigint *a = NULL;
+    bigint *b = NULL;
+    bigint *c = NULL;
+    bigint *d = NULL;
+    msg result_msg = COMPARE_DIVISION_SUCCESS;
+    int crossover_found = 0;
+    int crossover_point = 0;
+    int div_option = 0;
+    ParamType param_types[4] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_INT_PTR};
+
+    for (int word_size = start_size; word_size <= end_size; word_size += step_size){
+        double total_time_binary = 0;
+        double total_time_word = 0;
+
+        for (int i = 0; i < test_size; i++){
+            result_msg = bi_get_random(&a, word_size);
+            if (result_msg != BI_GET_RANDOM_SUCCESS)
+                goto COMAPARE_DIV_EXIT;
+            else if(a->word_len != word_size){
+                result_msg = BI_GET_RANDOM_LENGTH_NOT_MATCH;
+                goto COMAPARE_DIV_EXIT;
+            }
+
+            result_msg = bi_get_random(&b, word_size);
+            if (result_msg != BI_GET_RANDOM_SUCCESS)
+                goto COMAPARE_DIV_EXIT;
+            else if(b->word_len != word_size){
+                result_msg = BI_GET_RANDOM_LENGTH_NOT_MATCH;
+                goto COMAPARE_DIV_EXIT;
+            }
+            div_option = 0;
+            total_time_binary += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_div, &d, &result_msg, param_types, &c, &a, &b, &div_option);
+            if (result_msg != BI_DIV_SUCCESS)
+                goto COMAPARE_DIV_EXIT;
+
+            div_option = 1;
+            total_time_word += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_div, &d, &result_msg, param_types, &c, &a, &b, &div_option);
+            if (result_msg != BI_DIV_SUCCESS)
+                goto COMAPARE_DIV_EXIT;
+        }
+        double avg_time_binary = total_time_binary / test_size;
+        double avg_time_word = total_time_word / test_size;
+        double ratio = avg_time_binary / avg_time_word;
+
+        // Crossover point 찾기 (Karatsuba가 더 빨라지는 지점)
+        if (!crossover_found && ratio > 1.0){
+            crossover_found = 1;
+            crossover_point = word_size;
+        }
+
+        printf("%d\t%d\t\t%.6f\t%.6f\t%.2f\t%s\n",
+               word_size,
+               test_size,
+               avg_time_binary,
+               avg_time_word,
+               ratio,
+               (word_size == crossover_point) ? "<=== Crossover" : "");
+    }
+
+    if (crossover_found){
+        printf("\nKaratsuba becomes faster at word size: %d\n\n", crossover_point);
+    }
+    result_msg = COMPARE_DIVISION_SUCCESS;
+
+COMAPARE_DIV_EXIT:
+    if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&d) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    log_msg(result_msg);
+    return result_msg;
+}
+
+
+msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str, IN int* option){
     bigint *q = NULL;
     bigint *r = NULL;
     msg result_msg = Test_BI_DIV_SUCCESS;
-    ParamType param_types[3] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
+    ParamType param_types[4] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_INT_PTR};
 
     if (bigint_to_hex(str, a) == -1)   goto DIV_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_div, str, APPEND);
@@ -1097,7 +1190,7 @@ msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN cha
     result_msg = Test_file_write_non_enter(Test_file_div, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto DIV_EXIT;
 
-    *total_time_div += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_div, &q, &result_msg, param_types, &r, a, b);
+    *total_time_div += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_div, &q, &result_msg, param_types, &r, a, b, option);
     if(result_msg == BI_DIV_BY_ZERO){
         result_msg = Test_file_write(Test_file_div, "DIVISION BY ZERO", APPEND);
         goto DIV_EXIT;
