@@ -6,7 +6,7 @@
 #include "util.h"
 
 #define mul_karachuba_ratio 4   // 카라츄바 곱셈 시 분할 기준
-#define squ_karachuba_flag 5    // squ_karachuba에서 base case 수행 시 일반 곱셈의 기준
+#define squ_karachuba_ratio 2   // 카라츄바 제곱 시 분할 기준
 #define MAX_RECURSION_DEPTH 32  // 재귀 깊이
 #define POOL_SIZE 8             // 카라츄바에 필요한 임시 변수 개수 (a_0, b_0, a_1, b_1, a_0b_0, a_1b_1, a_1_a_0, b_1_b_0)
 
@@ -134,7 +134,7 @@ msg bi_squ(OUT bigint** dst, IN bigint** a);
  * @param a dividend bigint to be squared
  * @return msg
  */
-msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a);
+msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a, IN int karachuba_flag);
 
 /**
  * @brief bigint structure squaring operation version to Multiplication and Squaring
@@ -155,5 +155,15 @@ msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
  * @return msg
  */
 msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
+
+/**
+ * @brief bigint structure squaring operation version to Left to Right
+ * @param dst pointer to square of bigint result
+ * @param src pointer to squred of bigint
+ * @param x pointer to square of bigint
+ * @param n pointer to modulo of bigint
+ * @return msg
+ */
+msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
 
 #endif // OPERATE_H

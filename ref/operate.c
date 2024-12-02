@@ -707,14 +707,12 @@ EXIT_SQU:
  * Arguments:   - bigint** dst: pointer to bigint struct
  *              - bigint** a: bigint struct to be squared
  **************************************************/
-msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a){
+msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a, IN int squ_karachuba_flag){
     if (*a == NULL) return MEM_NOT_ALLOC;
     msg result_msg = 0;
 
-    if(bi_refine(a) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
-
     // base case에서 카라츄바가 아닌 일반 제곱 수행을 위한 연산
-    if(squ_karachuba_flag > (*a)->word_len){
+    if(squ_karachuba_flag >= (*a)->word_len){
         result_msg = bi_squ(dst, a);
         if(result_msg != BI_SQU_SUCCESS)    return result_msg;
         return BI_SQU_SUCCESS;
@@ -724,68 +722,46 @@ msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a){
     bigint* a_1 = g_pool.pool[g_pool.current_depth][1];
     bigint* a_1a_1 = g_pool.pool[g_pool.current_depth][2];
     bigint* a_0a_0 = g_pool.pool[g_pool.current_depth][3];
-    bigint* a_1a_0 = g_pool.pool[g_pool.current_depth][4];
-    byte a_sign = (*a)->sign;
-    (*a)->sign = 0;
-    int max_len = 0;
-
     g_pool.current_depth++;
 
-    int dst_word_len = (*a)->word_len + (*a)->word_len;
+    (*a)->sign = 0;
+
     int half_word_len = (((*a)->word_len) + 1) >> 1; // 길이의 절반 가져오기
 
-    // A_1 계산
-    result_msg = bi_shift_right(&a_1, a, half_word_len * WORD_BITS);
-    if (result_msg != BI_SHIFT_SUCCESS)
-        goto karachuba_exit;
+    // A_1, A_0 계산
+    if(bi_resize(&a_1, half_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
+    if(bi_resize(&a_0, half_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
+    for(int i = 0; i < half_word_len; i++){
+        a_1->a[i] = (*a)->a[i + half_word_len];
+        a_0->a[i] = (*a)->a[i];
+    }
 
-    // A_0 계산
-    result_msg = bi_get_lower(&a_0, a, half_word_len * WORD_BITS);
-    if (result_msg != BI_GET_LOWER_SUCCESS)
-        goto karachuba_exit;
-
-    result_msg = bi_squ_karachuba(&a_1a_1, &a_1);
+    result_msg = bi_squ_karachuba(&a_1a_1, &a_1, squ_karachuba_flag);
     if(result_msg != BI_SQU_SUCCESS)    goto karachuba_exit;
 
-    result_msg = bi_squ_karachuba(&a_0a_0, &a_0);
-    if (result_msg != BI_SQU_SUCCESS)
-        goto karachuba_exit;
-
-    if(*dst == NULL){
-        if(bi_new(dst, dst_word_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-    }else if(*dst != NULL && (*dst)->word_len < (*a)->word_len){
-        if(bi_resize(dst, dst_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-    }
+    result_msg = bi_squ_karachuba(&a_0a_0, &a_0, squ_karachuba_flag);
+    if (result_msg != BI_SQU_SUCCESS)   goto karachuba_exit;
 
     // (A_1 * A_1) || (A_0 * A_0) => dst
     result_msg = bi_cat(dst, &a_1a_1, &a_0a_0);
-    if (result_msg != BI_CAT_SUCCESS)
-        goto karachuba_exit;
+    if (result_msg != BI_CAT_SUCCESS)   goto karachuba_exit;
 
     // A_1 * A_0  분할 정복
-    max_len = max(a_1->word_len, a_0->word_len);
-    result_msg = bi_mul_karachuba(&a_1a_0, &a_1, &a_0, max_len / mul_karachuba_ratio);
-    if (result_msg != BI_MUL_SUCCESS)
-        goto karachuba_exit;
+    result_msg = bi_mul_karachuba(&a_0a_0, &a_1, &a_0, a_1->word_len / mul_karachuba_ratio);
+    if (result_msg != BI_MUL_SUCCESS)   goto karachuba_exit;
 
     // ((A_1 * A_0) << half_word_len * WORD_BITS + 1 => 2 * a_1a_0
-    result_msg = bi_shift_left(&a_1a_0, &a_1a_0, half_word_len * WORD_BITS + 1);
-    if (result_msg != BI_SHIFT_SUCCESS)
-        goto karachuba_exit;
+    result_msg = bi_shift_left(&a_0a_0, &a_0a_0, half_word_len * WORD_BITS + 1);
+    if (result_msg != BI_SHIFT_SUCCESS) goto karachuba_exit;
 
     // (A_1 * A_1) + 2 * A_1 * A_0 + (A_0 * A_0)
-    result_msg = bi_add(dst, dst, &a_1a_0);
-    if (result_msg != BI_ADD_SUCCESS)
-        goto karachuba_exit;
+    result_msg = bi_add(dst, dst, &a_0a_0);
+    if (result_msg != BI_ADD_SUCCESS)   goto karachuba_exit;
 
     // 부호 처리
     (*dst)->sign = 0; // 제곱 연산이므로 항상 양수
 
-    if(bi_resize(dst, dst_word_len) != BI_RESIZE_SUCCESS)    goto karachuba_exit;
     result_msg = BI_SQU_SUCCESS;
-
-    (*dst)->sign = 0;
-    (*a)->sign = a_sign;
 
 karachuba_exit:
     g_pool.current_depth--;
@@ -913,5 +889,55 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
 EXIT_EXP:
     if(bi_delete(&t1) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     if(bi_delete(&t0) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    return result_msg;
+}
+
+
+msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
+    if(*src == NULL || *n == NULL)    return MEM_NOT_ALLOC;
+
+    // src가 음수인 경우도 사실 부호 처리만 하면 되니까 상관 없기는 한데 일단 test에서 전처리를 수행함
+    // 음수인 경우 -> 이거는 역원 찾는거라서 일단 패스 -> 이거 test에서 전처리 함
+    if((*x)->sign)    return BI_EXP_L_TO_R_FAIL;
+    // 0인 경우 time attack을 방지하고자 0값 할당해서 수행하자.
+    if(bi_is_zero(x) == BI_IS_ZERO){
+        (*x)->word_len = 1;
+        (*x)->a[0] = 0;
+        (*x)->sign = 0;
+    }
+
+    msg result_msg = BI_EXP_L_TO_R_FAIL;
+    byte bit = 0;
+    bigint* temp = NULL;
+
+    // bit 연산 수행할 건데 refine이 되어 있지 않으면 0bit에 대한 쓰레기 연산이 있을 수 있기에 수행
+    result_msg = bi_refine(x);
+    if(result_msg != BI_SET_REFINE_SUCCESS)    return result_msg;
+    // t = 1
+    result_msg = bi_new(dst, 1);
+    (*dst)->a[0] = 1;
+    if(result_msg != BI_ALLOC_SUCCESS)    return result_msg;
+
+    for(int i = (*x)->word_len * WORD_BITS - 1; i >= 0; i--){
+        // 상위 비트부터 가져오기
+        bit = ((*x)->a[i / WORD_BITS] >> (i % WORD_BITS)) & 1;
+
+        // t 제곱 수행 ( t <- t^2 )
+//        result_msg = bi_squ_karachuba(dst, dst, (*dst)->word_len / squ_karachuba_flag);
+        result_msg = bi_squ(dst, dst);
+        if(result_msg != BI_SQU_SUCCESS)    return result_msg;
+        result_msg = bi_div(&temp, dst, dst, n);
+        if(result_msg != BI_DIV_SUCCESS)    return result_msg;
+       // bit가 1일 경우에만 곱셈 수행 ( t <- t * src)
+        if(bit){
+            result_msg = bi_mul_karachuba(dst, dst, src, (*dst)->word_len / mul_karachuba_ratio);
+            if(result_msg != BI_MUL_SUCCESS)    return result_msg;
+            result_msg = bi_div(&temp, dst, dst, n); // 몫은 필요없으니까 일단 temp에 저장
+            if(result_msg != BI_DIV_SUCCESS)    return result_msg;
+        }
+    }
+
+    result_msg = BI_EXP_L_TO_R_SUCCESS;
+
     return result_msg;
 }

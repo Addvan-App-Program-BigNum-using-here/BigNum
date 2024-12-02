@@ -135,6 +135,9 @@ enum TestMSGCodes
     Test_BI_EXP_FAIL        = MSG_TYPE_TEST | 0x0021, // Test Bigint 확장 실패
     Test_BI_SQU_KARACHUBA_SUCCESS = MSG_TYPE_TEST | 0x0022, // Test Bigint 카라츄바 제곱 성공
     Test_BI_SQU_KARACHUBA_FAIL   = MSG_TYPE_TEST | 0x0023, // Test Bigint 카라츄바 제곱 실패
+    COMPARE_SQUARING_SUCCESS = MSG_TYPE_TEST | 0x0024, // Test Bigint 제곱 비교 성공
+    BI_EXP_L_TO_R_SUCCESS  = MSG_TYPE_TEST | 0x0025, // Bigint 나머지 연산 성공
+    BI_EXP_L_TO_R_FAIL     = MSG_TYPE_TEST | 0x0026, // Bigint 나머지 연산 실패
     // 추가 테스트 관련 에러 코드...
 };
 

@@ -134,6 +134,9 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case BI_EXP_R_TO_L_FAIL: return "Bigint exp right shift failed";
         case Test_BI_SQU_KARACHUBA_SUCCESS : return "Test Bigint Karachuba square successful";
         case Test_BI_SQU_KARACHUBA_FAIL : return "Test Bigint Karachuba square failed";
+        case COMPARE_SQUARING_SUCCESS : return "Compare squaring successful";
+        case BI_EXP_L_TO_R_SUCCESS : return "Bigint exp left shift successful";
+        case BI_EXP_L_TO_R_FAIL : return "Bigint exp left shift failed";
         default: return "Unknown error code";
     }
 }
