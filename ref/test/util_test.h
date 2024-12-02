@@ -14,7 +14,7 @@
 #include "../data_type.h"
 #include "../file_io.h"
 
-#define test_word_size  10               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
+#define test_word_size  64               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
 #define test_word_size_limit 64        // 랜덤 word 크기 사용 시 제한 범위
 #define test_size  10                  // 테스트 횟수
 

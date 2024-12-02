@@ -712,7 +712,7 @@ msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a, IN int squ_karachuba_flag)
     msg result_msg = 0;
 
     // base case에서 카라츄바가 아닌 일반 제곱 수행을 위한 연산
-    if(squ_karachuba_flag >= (*a)->word_len){
+    if(squ_karachuba_flag >= (*a)->word_len || squ_karachuba_flag <= 1){
         result_msg = bi_squ(dst, a);
         if(result_msg != BI_SQU_SUCCESS)    return result_msg;
         return BI_SQU_SUCCESS;
@@ -923,8 +923,10 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
         bit = ((*x)->a[i / WORD_BITS] >> (i % WORD_BITS)) & 1;
 
         // t 제곱 수행 ( t <- t^2 )
-//        result_msg = bi_squ_karachuba(dst, dst, (*dst)->word_len / squ_karachuba_flag);
-        result_msg = bi_squ(dst, dst);
+        // 제곱 카라츄바의 경우 아직 최적화가 안되어 있기 때문에 일단 제곱 수행
+//        result_msg = bi_squ_karachuba(dst, dst, (*dst)->word_len / squ_karachuba_ratio); // 카라츄바 사용
+        result_msg = bi_squ(dst, dst); // non 카라츄바
+
         if(result_msg != BI_SQU_SUCCESS)    return result_msg;
         result_msg = bi_div(&temp, dst, dst, n);
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;

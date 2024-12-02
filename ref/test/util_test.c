@@ -127,24 +127,24 @@ int main(){
             return Test_FAIL;
         }
 */
-//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-//        // bigint 제곱 테스트
-//        result_msg = test_bi_squ(&op_total_time[5], &a, str);
-//        if(result_msg != Test_BI_SQU_SUCCESS){
-//            log_msg(Test_BI_SQU_FAIL);
-//            log_msg(result_msg);
-//            return Test_FAIL;
-//        }
-//
-//        squ_karachuba_flag = test_max_word_size / squ_karachuba_ratio;
-//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-//        // bigint 카라츄바 제곱 테스트
-//        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str, &squ_karachuba_flag);
-//        if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
-//            log_msg(Test_BI_SQU_KARACHUBA_FAIL);
-//            log_msg(result_msg);
-//            return Test_FAIL;
-//        }
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // bigint 제곱 테스트
+        result_msg = test_bi_squ(&op_total_time[5], &a, str);
+        if(result_msg != Test_BI_SQU_SUCCESS){
+            log_msg(Test_BI_SQU_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
+
+        squ_karachuba_flag = test_max_word_size / squ_karachuba_ratio;
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // bigint 카라츄바 제곱 테스트
+        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str, &squ_karachuba_flag);
+        if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
+            log_msg(Test_BI_SQU_KARACHUBA_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 지수승 테스트
