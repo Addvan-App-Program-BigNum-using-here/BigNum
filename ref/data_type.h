@@ -7,8 +7,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define big_endian 0    ///< big endian
-#define little_endian 1 ///< little endian
 #define WORD_BITS 32    ///< Word bits
 #define APPEND 0        ///< File append
 #define CLEAR 1         ///< File clear and write
@@ -17,19 +15,10 @@
 #define OUT
 #define IN
 #define seperator "-----------------------------------------"
-#define TEST_init "[TEST CASE START]"
-#define TEST_end "[TEST CASE END]"
-#define FROM_init "\n[BI SET FROM]"
-#define add_init "[Addition]"
-#define sub_init "[Subtraction]"
-#define mul_init "[Multiplication]"
-#define mul_karachuba_init "[Karachuba Multiplication]"
-#define div_init "[Division]"
+#define FROM_init "[BI SET FROM]"
 #define SHIFT_init "[Shift]"
 #define GET_LOWER_init "[Get Lower]"
 #define CAT_init "[Cat]"
-#define SEQ_init "[Sequence]"
-#define EXP_init "[Exponentiation]"
 
 typedef uint8_t byte;   ///< byte type
 typedef uint16_t hword; ///< Half word type

@@ -15,6 +15,8 @@ TEST_SRC = $(LIB_SOURCES) ./$(TEST_SOURCE)
 # Library names
 SHARED_LIB = $(LIB_DIR)/$(SHARED_PREFIX)bignum.$(SHARED_EXT)
 STATIC_LIB = $(LIB_DIR)/libbignum.a
+# Result directory
+RESULT_DIR = ./result
 
 # Detect operating system
 ifeq ($(OS),Windows_NT)
@@ -26,6 +28,7 @@ ifeq ($(OS),Windows_NT)
     RM = del /Q /F
     CP = copy
     MKDIR = mkdir
+    TOUCH = type nul >
     CFLAGS = -Wall -Wextra -std=c99 -I..
     TEST_RUN_CMD = set "PATH=$(LIB_DIR);$(PATH)" && .\$(TEST_PROGRAM)
 else
@@ -39,6 +42,7 @@ else
         RM = rm -f
         CP = cp
         MKDIR = mkdir -p
+        TOUCH = touch
         CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
         LDFLAGS = -g -fsanitize=address -Wl,-rpath,'$$ORIGIN/../lib'
         TEST_RUN_CMD = LD_LIBRARY_PATH=../lib ./$(TEST_PROGRAM)
@@ -51,6 +55,7 @@ else
         RM = rm -f
         CP = cp
         MKDIR = mkdir -p
+        TOUCH = touch
         UNAME_M := $(shell uname -m)
         ifeq ($(UNAME_M),x86_64)
             CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
@@ -115,13 +120,33 @@ ifeq ($(OS),Windows_NT)
 	@$(RM) *.txt
 	@$(RM) $(subst /,\,$(SHARED_LIB))
 	@$(RM) $(subst /,\,$(STATIC_LIB))
+
+	@$(TOUCH) ./test_add.txt
+	@$(TOUCH) ./test_div.txt
+	@$(TOUCH) ./test_exp.txt
+	@$(TOUCH) ./test_mul.txt
+	@$(TOUCH) ./test_mul_karachuba.txt
+	@$(TOUCH) ./test_squ.txt
+	@$(TOUCH) ./test_squ_karachuba.txt
+	@$(TOUCH) ./test_sub.txt
 else
 	$(RM) $(LIB_OBJECTS)
 	$(RM) $(TEST_OBJECT)
 	$(RM) $(TEST_PROGRAM)
 	$(RM) *.txt
+	$(RM) $(RESULT_DIR)/*.txt
 	$(RM) $(SHARED_LIB)
 	$(RM) $(STATIC_LIB)
+
+	$(TOUCH) ./test_add.txt
+	$(TOUCH) ./test_div.txt
+	$(TOUCH) ./test_exp.txt
+	$(TOUCH) ./test_mul.txt
+	$(TOUCH) ./test_mul_karachuba.txt
+	$(TOUCH) ./test_squ.txt
+	$(TOUCH) ./test_squ_karachuba.txt
+	$(TOUCH) ./test_sub.txt
+
 endif
 # Debug target
 debug:
