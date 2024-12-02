@@ -1,0 +1,2 @@
+ld: file cannot be mmap()ed, errno=22 path=../.. in '../..'
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
