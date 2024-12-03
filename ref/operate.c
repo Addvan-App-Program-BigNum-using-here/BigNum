@@ -467,8 +467,8 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int 
         (*a)->sign = 1; // a는 음수로
         result_msg = bi_div(q, r, a, b, option);
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;
-        (*a)->sign = 0;
-        (*b)->sign = 1;
+        if(*a != *r && *a != *q)    (*a)->sign = 0;
+        if(*b != *r && *b != *q)    (*b)->sign = 1;
         result_msg = BI_DIV_SUCCESS;
         goto EXIT_DIV_REFINE;
     }else if((*a)->sign){ // a가 음수, b가 양수인 경우
@@ -1146,7 +1146,8 @@ msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b){
     bigint* t2 = NULL;
     bigint* temp = NULL;
     msg result_msg = BI_GCD_FAIL;
-    
+    int div_option = 1;
+
     // a = 0이면 gcd(a,b) = b
     if(bi_is_zero(a) == BI_IS_ZERO){
         result_msg = bi_assign(dst,b);
@@ -1174,7 +1175,7 @@ msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b){
         result_msg = bi_assign(dst, &t1);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EXIT_EUC;
         // t1 <- t2 mod t1
-        result_msg = bi_div(&temp, &t1, &t2, &t1); // 몫은 필요없어서 일단 temp에 저장
+        result_msg = bi_div(&temp, &t1, &t2, &t1, div_option); // 몫은 필요없어서 일단 temp에 저장
         if(result_msg != BI_DIV_SUCCESS) goto EXIT_EUC;
     }
     // gcd(a, b) = gcd(|a|, |b|) (a,b 부호 상관 x)
@@ -1238,6 +1239,7 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     bigint* q = NULL;
     bigint* r = NULL;
     bigint* temp = NULL;
+    int div_option = 1;
     // (t0, t1) <- (a, b)
     result_msg = bi_assign(gcd, a);
     if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
@@ -1261,7 +1263,7 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     // t1 != 0인 동안 반복문 수행
     while(bi_is_zero(&t1) != BI_IS_ZERO){
         //(q, r) <- div(t0, t1)
-        result_msg = bi_div(&q, &r, gcd, &t1);
+        result_msg = bi_div(&q, &r, gcd, &t1, div_option);
         if(result_msg != BI_DIV_SUCCESS) return result_msg;
         //(t0, t1) <- (t1, r)
         result_msg = bi_assign(gcd, &t1);
@@ -1296,3 +1298,6 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     // 일단 x,y(u0, v0)가 음수가 돼도 상관없도록 구현함(음수를 허용할지 항상 양수만 나오게 할지는 선택사항)
     return result_msg;
 }
+
+
+
