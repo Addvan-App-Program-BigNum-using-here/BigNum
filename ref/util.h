@@ -9,7 +9,23 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <sys/time.h>
+// 윈도우일 때는 time.h 인 것으로 판단
+#include <time.h>
+#include <stdarg.h>
 
+#define CHECK_FUNCTION_RUN_ONE_TIME(func, dst, result_msg, param_types, ...) \
+    check_function_run_one_time(func, dst, result_msg, param_types, \
+        (sizeof((void*[]){__VA_ARGS__}) / sizeof(void*)), \
+        __VA_ARGS__)
+
+#define MAX_PARAMS 5
+typedef enum {
+    TYPE_BIGINT_PTR,     // bigint**
+    TYPE_INT_PTR,       // int*
+    TYPE_WORD_ARR_PTR,  // word array*
+    TYPE_STR_PTR        // char*
+} ParamType;
 /**
  * @brief New allocate memory for bigint struct
  *
@@ -72,7 +88,7 @@ msg bi_expand(OUT bigint **dst, const IN int word_len, const IN word data);
  * @param endian little endian == 0, big endian == 1
  * @return message SUCCESS or FAIL
  */
-msg bi_set_from_array(OUT bigint **dst, const IN int sign, const IN int word_len, const IN word *data, const IN int endian);
+msg bi_set_from_array(OUT bigint **dst, const IN int word_len, const IN word *data, const IN int endian);
 
 /**
  * @brief Set bigint struct from string
@@ -82,7 +98,7 @@ msg bi_set_from_array(OUT bigint **dst, const IN int sign, const IN int word_len
  * @param base base of string (2, 10, 16)
  * @return message SUCCESS or FAIL
  */
-msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base);
+msg bi_set_from_string(OUT bigint **dst, IN char *int_str, IN int base);
 
 /**
  * @brief Print bigint struct
@@ -159,4 +175,24 @@ msg bi_cat(OUT bigint **dst, IN bigint **a, IN bigint **b);
  */
 msg bi_is_zero(bigint **num);
 
+/**
+ * @brief get function runtime
+ *
+ * @param func test function pointer
+ * @param dst pointer to bigint struct result
+ * @param result_msg pointer to result_msg
+ * @param param_types parameter type
+ * @param param_count parameter count
+ * @return runtime
+ */
+double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, ParamType* param_types, int param_count, ...);
+
+/**
+ * @brief get function power decomposition
+ *
+ * @param n word number
+ * @param powers power decomposition array
+ * @return array size
+ */
+int get_power_decomposition(word n, int* powers);
 #endif // UTIL_H

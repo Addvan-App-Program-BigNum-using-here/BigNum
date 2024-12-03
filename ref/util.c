@@ -69,7 +69,7 @@ msg bi_delete(OUT bigint** dst){
 *              - int endian: little endian == 0, big endian == 1
 * Return:      - msg : message. SUCCESS or FAIL
 **************************************************/
-msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len, const IN word* data, const IN int endian){
+msg bi_set_from_array(OUT bigint** dst, const IN int word_len, const IN word* data, const IN int endian){
     int endian_idx = endian ? 0 : word_len - 1;
     int idx = endian ? 1 : -1;
     if (*dst == NULL){
@@ -79,7 +79,6 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
     }
 
     // sign bit set
-    (*dst)->sign = sign;
     for (int i = 0; i < word_len; i++){
         if (data[endian_idx] > 0xFFFFFFFF)
         {
@@ -104,7 +103,7 @@ msg bi_set_from_array(OUT bigint** dst, const IN int sign, const IN int word_len
  *              - int base: base of string (2, 10, 16)
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base){
+msg bi_set_from_string(OUT bigint **dst, IN char *int_str, IN int base){
     msg result_msg = 0;
     int sign = 0, a_idx = 0, digit = 0, block_size = 0, word_idx = 0, word_len = 0;
     int str_len = strlen(int_str);
@@ -118,20 +117,20 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, const IN int base){
 
     // extract word length
     switch (base){
-    case 2:
-        word_len = (str_len + 31) / 32;
-        block_size = WORD_BITS;
-        break;
-    case 10:
-        //            word_len = (str_len + 9) / 10;
-        break;
-    case 16:
-        word_len = (str_len + 7) / 8;
-        block_size = WORD_BITS / 4;
-        break;
-    default:
-        printf("%d base is not supported\n", base);
-        return BI_SET_STRING_FAIL;
+        case 2:
+            word_len = (str_len + 31) / 32;
+            block_size = WORD_BITS;
+            break;
+        case 10:
+            //            word_len = (str_len + 9) / 10;
+            break;
+        case 16:
+            word_len = (str_len + 7) / 8;
+            block_size = WORD_BITS / 4;
+            break;
+        default:
+            printf("%d base is not supported\n", base);
+            return BI_SET_STRING_FAIL;
     }
 
     a_idx = (str_len % block_size == 0) ? block_size : str_len % block_size;
@@ -354,12 +353,13 @@ msg bi_assign(OUT bigint** dst, IN bigint** src){
         if(bi_new(dst, (*src)->word_len) != BI_ALLOC_SUCCESS)    return BI_SET_ASSIGN_FAIL;
     }else if(*dst != NULL){
         if (*dst == *src)   return BI_SET_ASSIGN_SUCCESS; // 자기 자신에게 할당하는 경우
-        else if((*dst)->word_len != (*src)->word_len){
+        else if((*dst)->word_len < (*src)->word_len){
             if(bi_resize(dst, (*src)->word_len) != BI_RESIZE_SUCCESS)    return BI_SET_ASSIGN_FAIL;
         }
     }
     (*dst)->sign = (*src)->sign;
-    memcpy((*dst)->a, (*src)->a, (*src)->word_len * sizeof(word));
+    for(int i = 0; i < (*src)->word_len; i++)   (*dst)->a[i] = (*src)->a[i];
+    for(int i = (*src)->word_len; i < (*dst)->word_len; i++)    (*dst)->a[i] = 0;
     return BI_SET_ASSIGN_SUCCESS;
 }
 
@@ -408,12 +408,12 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     // shift_len이 0일 경우
     if(shift_len == 0){
         if(*dst == *src)    return BI_SHIFT_SUCCESS;
-        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SET_ASSIGN_FAIL;
         return BI_SHIFT_SUCCESS;
     }
 
     int max_src_len = (*src)->word_len;
-    if(bi_refine(src) != BI_SET_REFINE_SUCCESS)    return BI_SHIFT_FAIL;
+    if(bi_refine(src) != BI_SET_REFINE_SUCCESS)    return BI_RESIZE_FAIL;
     int word_len = (*src)->word_len;
     int shift_word = shift_len / WORD_BITS; // word 단위로 시프트
     int shift_bit = shift_len % WORD_BITS; // bit 단위로 시프트
@@ -421,9 +421,9 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     max_src_len = max(max_src_len, new_word_len);
 
     if(*dst == NULL){
-        if(bi_new(dst, max_src_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_new(dst, max_src_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
     }else if(*dst != NULL && (*dst)->word_len != max_src_len){ // dst가 이미 할당되어 있을 경우
-        if(bi_resize(dst, max_src_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_resize(dst, max_src_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
     }
     // 부호 복사
     (*dst)->sign = (*src)->sign;
@@ -442,7 +442,7 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len){
             (*dst)->a[i] = ((*dst)->a[i] << shift_bit) | ((*dst)->a[i - 1] >> (WORD_BITS - shift_bit));
         }
     }
-    (*dst)->a[0] = (*dst)->a[0] << shift_bit;
+    (*dst)->a[0] = (*dst)->a[0] << shift_bit; // bit 이동 시 수식으로 인해 0번째는 수행 못하기에 여기서 수행
     (*dst)->a[new_word_len - 1] &= 0xffffffff >> (WORD_BITS - shift_bit); // 메모리 재활용 할 때 사용하지 않은 bit는 0 처리
     for(int i = new_word_len; i < max_src_len; i++) (*dst)->a[i] = 0; // 메모리 재활용 할 때 사용하지 않은 word는 0 처리
 
@@ -466,7 +466,7 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     // shift_len이 0일 경우
     if(shift_len == 0){
         if(*dst == *src)    return BI_SHIFT_SUCCESS;
-        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
+        if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SET_ASSIGN_FAIL;
         return BI_SHIFT_SUCCESS;
     }
 
@@ -476,6 +476,13 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     int new_word_len = word_len - shift_word; // 새로 할당할 bigint 길이
     int flag = 0;
     bigint* one = NULL;
+    msg result_msg = BI_SHIFT_FAIL;
+
+    // shift 결과 값이 0인 경우
+    if(new_word_len <= 0){
+        if(bi_new(dst, 1) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
+        return BI_SHIFT_SUCCESS;
+    }
 
     if(*dst == NULL){
         if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
@@ -483,55 +490,45 @@ msg bi_shift_right(OUT bigint **dst, IN bigint **src, const IN int shift_len){
     }else if(*dst != NULL && (*dst)->word_len != new_word_len){ // dst가 이미 할당되어 있을 경우
         if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
     }
-    // 부호 복사
-    (*dst)->sign = (*src)->sign;
-    if(bi_assign(dst, src) != BI_SET_ASSIGN_SUCCESS)    return BI_SHIFT_FAIL;
 
-    // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 부호 뺀 값에 -1을 해준다.
-    if((*dst)->sign){
-        if(bi_new(&one, 1) != BI_ALLOC_SUCCESS){
-            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
-            return BI_SHIFT_FAIL;
-        }
+    // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 부호 뺀 값에 1을 더해준다
+    if((*src)->sign){
+        // 1 생성
+        result_msg = bi_new(&one, 1);
+        if(result_msg != BI_ALLOC_SUCCESS)  goto EXIT_SHIFT;
         one->a[0] = 1;
-        one->sign = 1;
-        if(bi_sub(dst, dst, &one) != BI_SUB_SUCCESS){
-            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
-            if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
-            return BI_SHIFT_FAIL;
-        }
+        // 1 더하기
+        result_msg = bi_add(src, src, &one);
+        if(result_msg != BI_ADD_SUCCESS)    goto EXIT_SHIFT;
     }
 
     // word 이동
-    for(int i = shift_word; i < word_len; i++)  (*dst)->a[i - shift_word] = (*dst)->a[i];
+    for(int i = shift_word; i < word_len; i++)  (*dst)->a[i - shift_word] = (*src)->a[i];
 
     // bit 이동
     if (shift_bit != 0){
         for (int i = 0; i < new_word_len - 1; i++){
             (*dst)->a[i] = ((*dst)->a[i] >> shift_bit) | ((*dst)->a[i + 1] << (WORD_BITS - shift_bit));
         }
-    }
-    (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] >> shift_bit;
-
-    // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 시프트 해준 결과 값에 +1을 한다.
-    if((*dst)->sign){
-        if(bi_add(dst, dst, &one) != BI_ADD_SUCCESS){
-            if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
-            if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
-            return BI_SHIFT_FAIL;
-        }
+        (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] >> shift_bit; // 마지막 인덱스 처리
     }
 
-    // 사용한 1 값 해제
-    if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_SHIFT_FAIL;
 
-    // 반환 전에 크기에 맞게 배열 resize
-    if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS){
-        if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-        return BI_SHIFT_FAIL;
+    // 음수의 경우 2의 보수 처럼 해야 한다. => 여기서는 시프트 해준 결과 값에 1을 빼준다.
+    if((*src)->sign){
+        result_msg = bi_sub(dst, dst, &one);
+        if(result_msg != BI_SUB_SUCCESS)    goto EXIT_SHIFT;
     }
 
-    return BI_SHIFT_SUCCESS;
+    // 부호
+    (*dst)->sign = (*src)->sign;
+
+    return  BI_SHIFT_SUCCESS;
+
+EXIT_SHIFT:
+    if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(bi_delete(&one) != BI_FREE_SUCCESS)    return BI_FREE_FAIL; // 사용한 1 해제
+    return result_msg;
 }
 
 /*************************************************
@@ -555,31 +552,22 @@ msg bi_get_lower(OUT bigint **dst, IN bigint **src, IN int mod_len){
     int mod_word = mod_len / WORD_BITS; // mod_len에 대한 word_len
     int mod_bit = mod_len % WORD_BITS; // bit 단위로 시프트
     int new_word_len = mod_word + (mod_bit > 0); // 새로 할당할 bigint 길이
-    int flag = 0;
 
     if(*dst == NULL){
         if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
-        flag = 1;
-    }else if(*dst != NULL && (*dst)->word_len < new_word_len){ // dst가 이미 할당되어 있을 경우
+    }else if(*dst != NULL && (*dst)->word_len != new_word_len){ // dst가 이미 할당되어 있을 경우
         if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
     }
 
     // word 이동 / dst와 src가 다를 경우
     if(*dst != *src){
         (*dst)->sign = (*src)->sign; // 부호 복사
-        for(int i = 0; i < new_word_len; i++){
-            (*dst)->a[i] = (*src)->a[i];
-        }
+        for(int i = 0; i < new_word_len; i++)   (*dst)->a[i] = (*src)->a[i];
     }
 
     // bit 이동
     if(mod_bit != 0 && mod_bit != 31)    (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] & ((1 << (mod_bit + 1)) - 1);
     else if(mod_bit == 31)    (*dst)->a[new_word_len - 1] = (*dst)->a[new_word_len - 1] & ((1 << mod_bit) - 1);
-    // 반환 전에 크기에 맞게 배열 resize
-    if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS){
-        if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-        return BI_SHIFT_FAIL;
-    }
 
     return BI_GET_LOWER_SUCCESS;
 }
@@ -601,45 +589,156 @@ msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
     if ((*a)->sign != (*b)->sign)   return BI_SIGN_NOT_MATCH;
   
     int new_word_len = (*a)->word_len + (*b)->word_len;
-    word* temp = NULL; // dst가 a와 같을 경우 연산에서 사용됨.
-    int flag = 0;
 
     if(*dst == NULL){
         if(bi_new(dst, new_word_len) != BI_ALLOC_SUCCESS)    return BI_SHIFT_FAIL;
-        flag = 1;
     }else if(*dst != NULL && (*dst)->word_len != new_word_len){ // dst가 이미 할당되어 있을 경우
         if(bi_resize(dst, new_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
     }
     // 부호 복사
     (*dst)->sign = (*a)->sign;
 
-    // dst가 a와 같고 dst가 b와 다를 경우
-    if(*dst == *a && *dst != *b){
-       temp = (word*)calloc((*a)->word_len, sizeof(word));
-       if(temp == NULL){
-          if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-          return BI_CAT_FAIL;
-       }
-       for(int i = 0; i < (*a)->word_len; i++)  temp[i] = (*a)->a[i]; // a를 temp에 옮기기
-       for(int i = 0; i < (*b)->word_len; i++) (*dst)->a[i] = (*b)->a[i]; // b를 dst에 옮기기
-       for(int i = 0; i < (*a)->word_len; i++)  (*dst)->a[i + (*b)->word_len] = temp[i]; // temp를 dst에 옮기기
+    if(*dst == *a || *dst == *b){
+        if(*dst == *a && *dst != *b){ // dst가 a와 같고 dst가 b와 다를 경우
+            if(bi_shift_left(dst, a, (*b)->word_len * WORD_BITS) != BI_SHIFT_SUCCESS)    return BI_SHIFT_FAIL;
+            for(int i = 0; i < (*b)->word_len; i++) (*dst)->a[i] = (*b)->a[i]; // b를 dst에 옮기기
+            return BI_CAT_SUCCESS;
+        }
+    }else{ // a, b만 같은 경우 / dst, a, b 모두 다른 경우
+        for(int i = 0; i < (*b)->word_len; i++)  (*dst)->a[i] = (*b)->a[i]; // b를 dst에 옮기기
     }
-    // b 값 넣기
-    if(*dst != *b){
-        for(int i = 0; i < (*b)->word_len; i++) (*dst)->a[i] = (*b)->a[i];
-    }
-    // a 값 넣기
-    for(int i = 0; i < (*a)->word_len; i++) (*dst)->a[i + (*b)->word_len] = (*a)->a[i];
+
+    // 모두 같은 경우 / dst와 b가 같고 a가 다른 경우 / dst, a, b 모두 다른 경우의 a 옮기기
+    for(int i = 0; i < (*a)->word_len; i++) (*dst)->a[i + (*b)->word_len] = (*a)->a[i]; // a를 dst에 옮기기
 
     return BI_CAT_SUCCESS;
 }
 
+/*************************************************
+* Name:        bi_is_zero
+*
+* Description: check bigint is zero
+*
+* Arguments:   - bigint** dst: checked bigint pointer
+* Return:      - msg : message. ZERO or NOT_ZERO, NOT_USING
+**************************************************/
 msg bi_is_zero(bigint **num){
+    msg result_msg = BI_IS_ZERO;
     if(*num == NULL)    return BI_NOT_USING;
-    if((*num)->word_len == 0)  return BI_IS_ZERO;
+    // time attack으로 인해 중간에 return 하면 안된다.
     for (int i = 0; i < (*num)->word_len; i++){
         if ((*num)->a[i] != 0)
-            return BI_NOT_ZERO;
+            result_msg = BI_NOT_ZERO;
     }
-    return BI_IS_ZERO; // 모든 요소가 0이면 true 반환
+    return result_msg; // 모든 요소가 0이면 true 반환
+}
+
+/*************************************************
+* Name:        check_function_run_one_time
+*
+* Description: get function runtime
+*
+* Arguments:   - void* func: test function pointer
+*              - bigint** dst: pointer to bigint struct result
+*              - msg* result_msg: pointer to result_msg
+*              - ParamType* param_types : parameter type
+*              - int param_count : parameter count
+* Return:      - msg : message. SUCESS or FAIL
+**************************************************/
+double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, ParamType* param_types, int param_count, ...){
+    va_list args;
+    void* params[MAX_PARAMS];  // 최대 파라미터 개수에 맞게 조정
+    va_start(args, param_count);
+    clock_t start = 0;
+    clock_t end = 0;
+
+    // 가변 인자들을 params 배열에 저장
+    for (int i = 0; i < param_count; i++) {
+        params[i] = va_arg(args, void*);
+    }
+    va_end(args);
+
+    // dst를 제외한 파라미터 개수
+    switch(param_count) {
+        case 1:
+            if(param_types[0] == TYPE_INT_PTR){
+                msg (*func_1_ptr)(bigint**, int) = (msg (*)(bigint**, int))(func);
+                start = clock();
+                *result_msg = func_1_ptr(dst, *(int*)params[0]);
+                end = clock();
+            }else if(param_types[0] == TYPE_BIGINT_PTR){
+                msg (*func_1_ptr)(bigint**, bigint**) = (msg (*)(bigint**, bigint**))(func);
+                start = clock();
+                *result_msg = func_1_ptr(dst, (bigint**)params[0]);
+                end = clock();
+            }
+            break;
+        case 2:
+            if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR){
+                msg (*func_2_ptr)(bigint**, bigint**, bigint**) = (msg (*)(bigint**, bigint**, bigint**))(func);
+                start = clock();
+                *result_msg = func_2_ptr(dst, (bigint**)params[0], (bigint**)params[1]);
+                end = clock();
+            }else if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_INT_PTR){
+                msg (*func_2_ptr)(bigint**, bigint**, int) = (msg (*)(bigint**, bigint**, int))(func);
+                start = clock();
+                *result_msg = func_2_ptr(dst, (bigint**)params[0], *(int*)params[1]);
+                end = clock();
+            }else if(param_types[0] == TYPE_STR_PTR && param_types[1] == TYPE_INT_PTR){
+                msg (*func_2_ptr)(bigint**, char*, int) = (msg (*)(bigint**, char*, int))(func);
+                start = clock();
+                *result_msg = func_2_ptr(dst, (char*)params[0], *(int*)params[1]);
+                end = clock();
+            }
+            break;
+        case 3:
+            if(param_types[2] == TYPE_BIGINT_PTR){
+                msg (*func_3_ptr)(bigint**, bigint**, bigint**, bigint**) = (msg (*)(bigint**, bigint**, bigint**, bigint**))(func);
+                start = clock();
+                *result_msg = func_3_ptr(dst, (bigint**)params[0], (bigint**)params[1], (bigint**)params[2]);
+                end = clock();
+            }else if(param_types[0] == TYPE_BIGINT_PTR && param_types[2] == TYPE_INT_PTR){
+                msg (*func_3_ptr)(bigint**, bigint**, bigint**, int) = (msg (*)(bigint**, bigint**, bigint**, int))(func);
+                start = clock();
+                *result_msg = func_3_ptr(dst, (bigint**)params[0], (bigint**)params[1], *(int*)params[2]);
+                end = clock();
+            }else if(param_types[0] == TYPE_INT_PTR && param_types[1] == TYPE_WORD_ARR_PTR && param_types[2] == TYPE_INT_PTR){
+                msg (*func_3_ptr)(bigint**, int, word*, int) = (msg (*)(bigint**, int, word*, int))(func);
+                start = clock();
+                *result_msg = func_3_ptr(dst, *(int*)params[0], (word*)params[1], *(int*)params[2]);
+                end = clock();
+            }
+            break;
+        case 4:
+            if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[3] == TYPE_INT_PTR){
+                msg (*func_4_ptr)(bigint**, bigint**, bigint**, bigint**, int) = (msg (*)(bigint**, bigint**, bigint**, bigint**, int))(func);
+                start = clock();
+                *result_msg = func_4_ptr(dst, (bigint**)params[0], (bigint**)params[1], (bigint**)params[2], *(int*)params[3]);
+                end = clock();
+            }
+            break;
+        // 필요에 따라 더 많은 케이스 추가 가능
+        default:
+            return 0;
+    }
+    return (double)(end - start) / CLOCKS_PER_SEC;
+}
+
+/*************************************************
+* Name:        get_power_decomposition
+*
+* Description: get power decomposition
+*
+* Arguments:   - word n: word size number
+*              - int* powers: pointer to integer array
+* Return:      - int : count of power
+**************************************************/
+int get_power_decomposition(word n, int* powers){
+    int count = 0;
+    while (n > 0 && count < WORD_BITS) {
+        if (n & 1)  powers[count] = 1;
+        n >>= 1;
+        count++;
+    }
+    return count;
 }

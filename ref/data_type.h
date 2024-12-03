@@ -7,28 +7,20 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define big_endian 0    ///< big endian
-#define little_endian 1 ///< little endian
 #define WORD_BITS 32    ///< Word bits
 #define APPEND 0        ///< File append
 #define CLEAR 1         ///< File clear and write
 #define _POSIX_C_SOURCE 200809L
+#define WORD_BINARY_DIV 0 ///< Word long division
+#define WORD_LONG_DIV 1 ///< Word karatsuba division
 
 #define OUT
 #define IN
 #define seperator "-----------------------------------------"
-#define TEST_init "[TEST CASE START]"
-#define TEST_end "[TEST CASE END]"
-#define FROM_init "\n[BI SET FROM]"
-#define add_init "[Addition]"
-#define sub_init "[Subtraction]"
-#define mul_init "[Multiplication]"
-#define mul_karachuba_init "[Karachuba Multiplication]"
-#define div_init "[Division]"
+#define FROM_init "[BI SET FROM]"
 #define SHIFT_init "[Shift]"
 #define GET_LOWER_init "[Get Lower]"
 #define CAT_init "[Cat]"
-#define SEQ_init "[Sequence]"
 
 typedef uint8_t byte;   ///< byte type
 typedef uint16_t hword; ///< Half word type
@@ -36,9 +28,13 @@ typedef uint32_t msg;   ///< Error message control variation
 typedef uint32_t word;  ///< Word type
 typedef uint64_t dword; ///< Double word type
 
+#ifndef min
 #define min(a, b) ((a) < (b) ? (a) : (b)) ///< min value
-#define max(a, b) ((a) > (b) ? (a) : (b)) ///< max value
+#endif
 
+#ifndef max
+#define max(a, b) ((a) > (b) ? (a) : (b)) ///< max value
+#endif
 /**
  * @struct bigint
  * @brief big num information struct
@@ -52,8 +48,7 @@ typedef uint64_t dword; ///< Double word type
  * @var bigint::a
  * array of word
  */
-typedef struct
-{
+typedef struct{
     byte sign;    ///< positive or negative (positive == 0, negative == 1)
     int word_len; ///< length of bigint struct
     word *a;      ///< array of word

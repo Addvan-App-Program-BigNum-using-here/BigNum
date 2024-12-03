@@ -59,5 +59,9 @@ dkms.conf
 
 
 # test file ignore
-result.txt
-test.txt
+*.txt
+result/
+util_test
+
+# env file
+.vscode

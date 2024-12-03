@@ -58,6 +58,12 @@ enum MemoryMSGCodes
     BI_RESIZE_FAIL      = MSG_TYPE_MEMORY | 0x001E, // Bigint resize 실패
     BI_SQU_SUCCESS      = MSG_TYPE_MEMORY | 0x001F, // Bigint 제곱 성공
     BI_SQU_FAIL         = MSG_TYPE_MEMORY | 0x0020, // Bigint 제곱 실패
+    BI_EXP_MS_SUCCESS    = MSG_TYPE_MEMORY | 0x0021, // Bigint 나머지 연산 성공
+    BI_EXP_MS_FAIL       = MSG_TYPE_MEMORY | 0x0022, // Bigint 나머지 연산 실패
+    BI_EXP_R_TO_L_SUCCESS  = MSG_TYPE_MEMORY | 0x0023, // Bigint 나머지 연산 성공
+    BI_EXP_R_TO_L_FAIL     = MSG_TYPE_MEMORY | 0x0024, // Bigint 나머지 연산 실패
+    DIVCC_SUCCESS = MSG_TYPE_MEMORY | 0x0025, // Bigint 나머지 연산 성공
+    DIVCC_FAIL = MSG_TYPE_MEMORY | 0x0026, // Bigint 나머지 연산 실패
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -127,6 +133,22 @@ enum TestMSGCodes
     Test_BI_CAT_FAIL        = MSG_TYPE_TEST | 0x001D, // Test Bigint 이어붙이기 실패
     Test_BI_SQU_SUCCESS     = MSG_TYPE_TEST | 0x001E, // Test Bigint 제곱 성공
     Test_BI_SQU_FAIL        = MSG_TYPE_TEST | 0x001F, // Test Bigint 제곱 실패
+    Test_BI_EXP_SUCCESS     = MSG_TYPE_TEST | 0x0020, // Test Bigint 확장 성공
+    Test_BI_EXP_FAIL        = MSG_TYPE_TEST | 0x0021, // Test Bigint 확장 실패
+    Test_BI_SQU_KARACHUBA_SUCCESS = MSG_TYPE_TEST | 0x0022, // Test Bigint 카라츄바 제곱 성공
+    Test_BI_SQU_KARACHUBA_FAIL   = MSG_TYPE_TEST | 0x0023, // Test Bigint 카라츄바 제곱 실패
+    COMPARE_SQUARING_SUCCESS = MSG_TYPE_TEST | 0x0024, // Test Bigint 제곱 비교 성공
+    BI_EXP_L_TO_R_SUCCESS  = MSG_TYPE_TEST | 0x0025, // Bigint Left to right exponention 연산 성공
+    BI_EXP_L_TO_R_FAIL     = MSG_TYPE_TEST | 0x0026, // Bigint Left to right exponention 연산 실패
+    BI_BARRET_REDUCTION_SUCCESS = MSG_TYPE_TEST | 0x0027, // Bigint Barret Reduction 연산 성공
+    BI_BARRET_REDUCTION_FAIL    = MSG_TYPE_TEST | 0x0028, // Bigint Barret Reduction 연산 실패
+    INIT_BARRET_N_SUCCESS = MSG_TYPE_TEST | 0x0029, // Barret N 초기화 성공
+    INIT_BARRET_N_FAIL    = MSG_TYPE_TEST | 0x002A, // Barret N 초기화 실패
+    Test_BI_BARRETT_REDUCTION_SUCCESS = MSG_TYPE_TEST | 0x002B, // Test Bigint Barret Reduction 연산 성공
+    Test_BI_BARRETT_REDUCTION_FAIL    = MSG_TYPE_TEST | 0x002C, // Test Bigint Barret Reduction 연산 실패
+    COMPARE_DIVISION_SUCCESS = MSG_TYPE_TEST | 0x002D, // Test Bigint 나눗셈 비교 성공
+    COMPARE_DIVISION_FAIL = MSG_TYPE_TEST | 0x002E,    // Test Bigint 나눗셈 비교 실패
+
     // 추가 테스트 관련 에러 코드...
 };
 
