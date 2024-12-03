@@ -186,4 +186,13 @@ msg bi_is_zero(bigint **num);
  * @return runtime
  */
 double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, ParamType* param_types, int param_count, ...);
+
+/**
+ * @brief get function power decomposition
+ *
+ * @param n word number
+ * @param powers power decomposition array
+ * @return array size
+ */
+int get_power_decomposition(word n, int* powers);
 #endif // UTIL_H

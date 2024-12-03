@@ -87,13 +87,14 @@ msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, I
  */
 msg compare_multiplicaiton(int start_size, int end_size, int step_size);
 msg compare_squaring(int start_size, int end_size, int step_size);
+msg compare_division(int start_size, int end_size, int step_size);
 
 /**
  * @brief Test bigint structure Division operation
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
+msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str, IN int* option);
 
 /**
  * @brief Test bigint structure Shift operation

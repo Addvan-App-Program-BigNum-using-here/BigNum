@@ -97,9 +97,10 @@ msg clear_karachuba_pool();
  * @param r pointer to remainder of bigint division
  * @param a dividend bigint operand
  * @param b divisor bigint operand
+ * @param option option for WORD OR BINARY DIVISION
  * @return msg
  */
-msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b);
+msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int option);
 
 /**
  * @brief bigint structure division operation using binary division
@@ -117,9 +118,20 @@ msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b);
  * @param r pointer to remainder of bigint division
  * @param a dividend bigint operand
  * @param b divisor bigint operand
+ * @param k b_m-1 * 2^k <= a < b_m * 2^k
  * @return msg
  */
-msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b);
+msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN int k);
+
+/**
+ * @brief bigint structure division sub operation
+ * @param q pointer to quotient of word
+ * @param r pointer to remainder of bigint division
+ * @param a dividend bigint operand
+ * @param b divisor bigint operand
+ * @return msg
+ */
+msg divcc(OUT word* q, OUT bigint** r, IN bigint** a, IN bigint** b);
 
 /**
  * @brief bigint structure squaring operation

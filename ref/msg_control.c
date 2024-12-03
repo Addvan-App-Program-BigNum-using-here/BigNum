@@ -151,6 +151,10 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case Test_BI_GCD_FAIL : return "Test Bigint gcd opertaion failed";
         case Test_BI_EEA_SUCCESS : return "Test Bigint E.E.A gcd operation successful";
         case Test_BI_EEA_FAIL : return "Test Bigint E.E.A gcd operation failed";
+        case DIVCC_SUCCESS : return "SUBDivision calculation successful";
+        case DIVCC_FAIL : return "SUBDivision calculation failed";
+        case COMPARE_DIVISION_SUCCESS : return "Compare division successful";
+        case COMPARE_DIVISION_FAIL : return "Compare division failed";
         default: return "Unknown error code";
     }
 }
