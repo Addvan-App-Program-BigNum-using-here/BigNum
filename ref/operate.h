@@ -4,9 +4,10 @@
 #include "data_type.h"
 #include "msg_control.h"
 #include "util.h"
+#include "random.h"
 
-// #define mul_karachuba_ratio 4   // 카라츄바 곱셈 시 분할 기준
-// #define squ_karachuba_flag 5    // squ_karachuba에서 base case 수행 시 일반 곱셈의 기준
+#define mul_karachuba_ratio 4   // 카라츄바 곱셈 시 분할 기준
+#define squ_karachuba_ratio 2   // 카라츄바 제곱 시 분할 기준
 #define MAX_RECURSION_DEPTH 32  // 재귀 깊이
 #define POOL_SIZE 8             // 카라츄바에 필요한 임시 변수 개수 (a_0, b_0, a_1, b_1, a_0b_0, a_1b_1, a_1_a_0, b_1_b_0)
 
@@ -19,7 +20,7 @@ typedef struct {
 } karatsuba_mem_pool;
 
 // 전역 메모리 풀 선언
-static karatsuba_mem_pool g_pool = {0};
+__attribute__((used)) static karatsuba_mem_pool g_pool = {0};
 
 /**
  * @brief bigint structure add operation
@@ -166,6 +167,38 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
  */
 msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n);
 
+/**
+ * @brief bigint structure barret reduction
+ * @param dst pointer to reduction of bigint result
+ * @param a pointer to reduced of bigint
+ * @param n pointer to modular of bigint
+ * @return msg
+ */
+msg barret_reduction(OUT IN bigint** dst, IN bigint** a, IN bigint** n, IN bigint** n_barret);
 
-msg bi_Euclidean(OUT bigint** dst, IN bigint** a, IN bigint** b);
+/**
+ * @brief Initialize barret reduction
+ * @param barret_t pointer to pre calculate bigint using barret reduction
+ * @param barret_n pointer to modular of bigint
+ * @param barret_word_len pointer to word length of bigint
+ * @return msg
+ */
+msg init_barret_N(OUT bigint** barret_t, IN bigint** barret_n, IN int barret_word_len);
+
+/**
+ * @brief bigint structure gcd operation by using Euclidean Algorithm
+ * @param dst pointer to gcd of bigint result
+ * @param a big int structure a
+ * @param b big int structure b
+ * @return msg
+ */
+msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b);
+
+/**
+ * @brief bigint structure squaring operation by using Extended Euclidean Algorithm
+ * @param dst pointer to square of bigint
+ * @param a dividend bigint to be squared
+ * @return msg
+ */
+msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b);
 #endif // OPERATE_H

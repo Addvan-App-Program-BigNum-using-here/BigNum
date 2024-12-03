@@ -16,9 +16,10 @@
 #include "../data_type.h"
 #include "../file_io.h"
 
-#define test_word_size  64               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
+#define test_word_size   2  // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
 #define test_word_size_limit 64        // 랜덤 word 크기 사용 시 제한 범위
-#define test_size  1                  // 테스트 횟수
+#define test_size  100       // 테스트 횟수
+#define barret_word_size test_word_size            // barret N 크기
 
 /**
  * @brief Test bigint structure allocation and deallocation
@@ -77,7 +78,7 @@ msg test_bi_mul(OUT double* total_time_mul, IN bigint** a, IN bigint** b, IN cha
 msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, IN bigint** b, IN char* str, IN int* karachuba_flag);
 
 /**
- * @brief Test multiplication classic and Karachuba algorithm same value
+ * @brief Test classic and Karachuba algorithm same value
  *
  * @param start_size start size of bigint
  * @param end_size end size of bigint
@@ -85,6 +86,7 @@ msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, I
  * @return message SUCCESS or FAIL
  */
 msg compare_multiplicaiton(int start_size, int end_size, int step_size);
+msg compare_squaring(int start_size, int end_size, int step_size);
 
 /**
  * @brief Test bigint structure Division operation
@@ -126,7 +128,7 @@ msg test_bi_squ(OUT double* total_time_squ, IN bigint** a, IN char* str);
  *
  * @return message SUCCESS or FAIL
  */
-msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, IN char* str);
+msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, IN char* str, IN int* squ_karachuba_flag);
 
 /**
  * @brief Test bigint structure Exponentional operation
@@ -135,7 +137,26 @@ msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, I
  */
 msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN bigint** c, IN char* str);
 
-int gettimeofday(struct timeval *tv, struct timezone *tz);
+/**
+ * @brief Test bigint structure Barret Reduction operation
+ *
+ * @return message SUCCESS or FAIL
+ */
+msg test_bi_barrett_reduction(OUT double* total_time_barret_reduction, IN bigint** a, IN bigint** barret_N, IN bigint** barret_T, IN char* str);
+
+/**   
+ * @brief Test bigint structure gcd operation
+ * 
+ * @return message SUCCESS or FAIL 
+*/
+msg test_bi_gcd(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
+
+/**   
+ * @brief Test bigint structure Extended Euclidean Algorithm gcd operation
+ * 
+ * @return message SUCCESS or FAIL 
+*/
+//msg test_bi_EEA(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
 #endif // UTIL_TEST_H
 
 

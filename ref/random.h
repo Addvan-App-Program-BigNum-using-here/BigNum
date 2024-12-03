@@ -39,7 +39,7 @@ msg array_random(OUT word *dst, IN int word_len);
 /**
  * @brief Make bigint String
  *
- * @param str pointer to char array
+ * @param g pointer to char array
  * @param str_len length of char array
  * @param base base of random string
  * @return message SUCCESS or FAIL

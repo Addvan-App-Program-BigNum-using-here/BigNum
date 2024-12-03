@@ -17,7 +17,6 @@ SHARED_LIB = $(LIB_DIR)/$(SHARED_PREFIX)bignum.$(SHARED_EXT)
 STATIC_LIB = $(LIB_DIR)/libbignum.a
 # Result directory
 RESULT_DIR = ./result
-
 # Detect operating system
 ifeq ($(OS),Windows_NT)
     # Windows settings
@@ -68,7 +67,6 @@ else
     endif
 endif
 .PHONY: all clean shared test run rerun retest
-
 all: clean $(LIB_DIR) shared run
 $(LIB_DIR):
 	$(MKDIR) $(LIB_DIR)
@@ -78,27 +76,22 @@ $(LIB_DIR)/%.o: ../%.c ../%.h | $(LIB_DIR)
 # Test object files
 $(TEST_OBJECT): $(TEST_SOURCE)
 	$(CC) $(CFLAGS) -c $< -o $@
-
 # Create shared library
 shared: $(LIB_OBJECTS)
 	$(CC) $(SHARED_FLAGS) -o $(SHARED_LIB) $(LIB_OBJECTS) $(LDFLAGS)
 ifeq ($(OS),Windows_NT)
 	$(CP) $(SHARED_LIB) .\\
 endif
-
 # Create static library
 static: $(LIB_OBJECTS)
 	$(AR) rcs $(STATIC_LIB) $(LIB_OBJECTS)
 	$(RANLIB) $(STATIC_LIB)
-
 # Build test program
 test: $(TEST_OBJECT) shared
 	$(CC) -o $(TEST_PROGRAM) $(TEST_OBJECT) -L$(LIB_DIR) -lbignum $(LDFLAGS)
-
 # Run test program
 run: test
 	$(TEST_RUN_CMD)
-
 # Rebuild and test with memory leak check
 retest: clean $(TEST_SRC)
 	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_SRC) -o $(TEST_PROGRAM) $(LDFLAGS)
@@ -113,45 +106,10 @@ endif
 rerun: clean run
 clean:
 	@echo "Cleaning up..."
-ifeq ($(OS),Windows_NT)
-	@if exist "$(LIB_DIR)" $(RM) $(subst /,\,$(LIB_OBJECTS))
-	@$(RM) $(subst /,\,$(TEST_OBJECT))
-	@$(RM) $(subst /,\,$(TEST_PROGRAM))
-	@$(RM) *.txt
-	@$(RM) $(subst /,\,$(SHARED_LIB))
-	@$(RM) $(subst /,\,$(STATIC_LIB))
-
-	@$(TOUCH) ./test_add.txt
-	@$(TOUCH) ./test_div.txt
-	@$(TOUCH) ./test_exp.txt
-	@$(TOUCH) ./test_mul.txt
-	@$(TOUCH) ./test_mul_karachuba.txt
-	@$(TOUCH) ./test_squ.txt
-	@$(TOUCH) ./test_squ_karachuba.txt
-	@$(TOUCH) ./test_sub.txt
-else
-	$(RM) $(LIB_OBJECTS)
-	$(RM) $(TEST_OBJECT)
-	$(RM) $(TEST_PROGRAM)
-	$(RM) *.txt
-	$(RM) $(RESULT_DIR)/*.txt
-	$(RM) $(SHARED_LIB)
-	$(RM) $(STATIC_LIB)
-
-	$(TOUCH) ./test_add.txt
-	$(TOUCH) ./test_div.txt
-	$(TOUCH) ./test_exp.txt
-	$(TOUCH) ./test_mul.txt
-	$(TOUCH) ./test_mul_karachuba.txt
-	$(TOUCH) ./test_squ.txt
-	$(TOUCH) ./test_squ_karachuba.txt
-	$(TOUCH) ./test_sub.txt
-
-endif
-# Debug target
-debug:
-	@echo "Operating System: $(OS)"
-	@echo "SHARED_LIB: $(SHARED_LIB)"
-	@echo "TEST_PROGRAM: $(TEST_PROGRAM)"
-	@echo "LIB_OBJECTS: $(LIB_OBJECTS)"
-	@echo "Current directory: $(shell pwd)"
+	@rm -f $(LIB_OBJECTS)
+	@rm -f $(TEST_OBJECT)
+	@rm -f $(TEST_PROGRAM)
+	@rm -f *.txt
+	@rm -f $(RESULT_DIR)/*.txt
+	@rm -f $(SHARED_LIB)
+	@rm -f $(STATIC_LIB)

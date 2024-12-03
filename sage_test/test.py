@@ -259,7 +259,7 @@ def test_cat(f, p):
             k.write('\n')
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
-def test_seq(f, p):
+def test_squ(f, p):
     k = open('./result/result_seq.txt', 'w')
     p.write('------------------------------------------------------------\n')
     p.write('[빅넘 제곱 연산]\n')
@@ -281,7 +281,7 @@ def test_seq(f, p):
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 
-def test_karachuba_seq(f, p):
+def test_karachuba_squ(f, p):
     k = open('./result/result_seq_karachuba.txt', 'w')
     p.write('------------------------------------------------------------\n')
     p.write('[빅넘 카라츄바 제곱 연산]\n')
@@ -318,19 +318,64 @@ def test_exp(f, p):
         shiftif_tmp = shiftif.split(' ')
         result_MS = int(shiftif_tmp[6], 16)
         result_R_TO_L = int(shiftif_tmp[8], 16)
+        result_L_TO_R = int(shiftif_tmp[10], 16)
         tmp = pow(int(shiftif_tmp[0], 0), int(shiftif_tmp[2], 0), int(shiftif_tmp[4], 0))
-        if result_MS != tmp or result_R_TO_L != tmp:
+        if result_MS != tmp or result_R_TO_L != tmp or result_L_TO_R != tmp:
             if result_MS != tmp:
                 False_count_MS += 1
             elif result_R_TO_L != tmp:
                 False_count_R_TO_L += 1
+            else:
+                False_count_L_TO_R += 1
             k.write(shiftif)
             k.write(str(hex(tmp)))
             k.write('\n')
-    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count_MS} / 실패 횟수 : {False_count_MS}\n")
-    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count_R_TO_L} / 실패 횟수 : {False_count_R_TO_L}\n")
-    # p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+    p.write(f"[Multiplication and Squaring]\n실행 횟수 : {count} / 성공 횟수 : {count - False_count_MS} / 실패 횟수 : {False_count_MS}\n")
+    p.write(f"[Right to Left]\n실행 횟수 : {count} / 성공 횟수 : {count - False_count_R_TO_L} / 실패 횟수 : {False_count_R_TO_L}\n")
+    p.write(f"[Left to Right]\n실행 횟수 : {count} / 성공 횟수 : {count - False_count_L_TO_R} / 실패 횟수 : {False_count_L_TO_R}\n")
 
+def test_barrett(f, p):
+    k = open('./result/result_barrett_reduction.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 barrett reduction 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[4], 16)
+        tmp = int(shiftif_tmp[0], 0) % int(shiftif_tmp[2], 0)
+        if(result != tmp):
+            False_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+
+def test_gcd(f, p):
+    k = open('./result/result_gcd.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 gcd 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[7], 16)
+        tmp = math.gcd(int(shiftif_tmp[2], 16), int(shiftif_tmp[4], 16))
+        
+        if(result != tmp):
+            False_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def bi_test(f, p):
     while True:
@@ -346,23 +391,45 @@ def bi_test(f, p):
         elif '[Cat]' in line:
             test_cat(f, p)
 
+def file_open(file_name):
+    try:
+        f = open(file_name, 'r')
+        return f
+    except:
+        # print(f'{file_name} 파일을 찾을 수 없습니다.')
+        return None
+
 if __name__ == '__main__':
     with open('./main_result.txt', 'w') as p:
-        with open('./test.txt') as f:
-            bi_test(f, p)
-        with open('./test_add.txt', 'r') as f:
-            test_addition(f, p)
-        with open('./test_sub.txt', 'r') as f:
-            test_subtraction(f, p)
-        with open('./test_div.txt', 'r') as f:
-            test_division(f, p)
-        with open('./test_mul.txt', 'r') as f:
-            test_multiplication(f, p)
-        with open('./test_mul_karachuba.txt', 'r') as f:
-            test_karachuba_multiplication(f, p)
-        with open('./test_squ.txt', 'r') as f:
-            test_seq(f, p)
-        with open('./test_squ_karachuba.txt', 'r') as f:
-            test_karachuba_seq(f, p)
-        with open('./test_exp.txt', 'r') as f:
-            test_exp(f, p)
+        f = file_open('./test.txt')
+        if f != None:   bi_test(f, p)
+
+        f = file_open('./test_add.txt')
+        if f != None:   test_addition(f, p)
+
+        f = file_open('./test_sub.txt')
+        if f != None:   test_subtraction(f, p)
+
+        f = file_open('./test_mul.txt')
+        if f != None:   test_multiplication(f, p)
+
+        f = file_open('./test_mul_karachuba.txt')
+        if f != None:   test_karachuba_multiplication(f, p)
+
+        f = file_open('./test_div.txt')
+        if f != None:   test_division(f, p)
+
+        f = file_open('./test_squ.txt')
+        if f != None:   test_squ(f, p)
+
+        f = file_open('./test_squ_karachuba.txt')
+        if f != None:   test_karachuba_squ(f, p)
+
+        f = file_open('./test_exp.txt')
+        if f != None:   test_exp(f, p)
+
+        f = file_open('./test_barrett_reduction.txt')
+        if f != None:   test_barrett(f, p)
+
+        f = file_open('./test_gcd.txt')
+        if f != None:   test_gcd(f, p)

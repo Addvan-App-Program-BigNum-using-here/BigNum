@@ -6,25 +6,37 @@ clock_t c_start, c_end;
 
 int main(){
     FILE *fp = NULL;
-    double op_total_time[7] = {0, };
+    double op_total_time[9] = {0, };
     double op_exp_time[3] = {0, };
     byte temp[1] = {0};
     int test_word_size_a = test_word_size;
     int test_word_size_b = test_word_size;
     int test_word_size_c = test_word_size;
     int test_max_word_size = test_word_size;
+    int karachuba_flag = 0;
+    int squ_karachuba_flag = 0;
     char* str = NULL;
     msg result_msg = Test_SUCCESS;
     bigint* a = NULL;
     bigint* b = NULL;
     bigint* c = NULL;
+    bigint* barret_N = NULL;
+    bigint* barret_T = NULL;
 
-    test_bi_new_delete();       // bigint 할당 및 해제 테스트
-    test_bi_random();           // 랜덤 bigint 생성 테스트
-    test_bi_set_from();         // string으로부터 bigint 생성 테스트
-    test_bi_shift();            // bigint shift 테스트
-    test_bi_get_lower();        // bigint modular 테스트
-    test_bi_cat();              // bigint cat 테스트
+//    test_bi_new_delete();       // bigint 할당 및 해제 테스트
+//    test_bi_random();           // 랜덤 bigint 생성 테스트
+//    test_bi_set_from();         // string으로부터 bigint 생성 테스트
+//    test_bi_shift();            // bigint shift 테스트
+//    test_bi_get_lower();        // bigint modular 테스트
+//    test_bi_cat();              // bigint cat 테스트
+
+    // barret N 생성
+    result_msg = init_barret_N(&barret_T, &barret_N, barret_word_size);
+    if (result_msg != INIT_BARRET_N_SUCCESS){
+        log_msg(result_msg);
+        return Test_FAIL;
+    }
+
 
     // 카라츄바 세팅
     if(init_karachuba_pool(test_word_size) != INIT_KARACHUBA_POOL_SUCCESS){
@@ -117,7 +129,7 @@ int main(){
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 카라츄바 곱셈 테스트
-        int karachuba_flag = test_max_word_size / mul_karachuba_ratio;
+        karachuba_flag = test_max_word_size / mul_karachuba_ratio;
         result_msg = test_bi_mul_karachuba(&op_total_time[4], &a, &b, str, &karachuba_flag);
         if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS){
             log_msg(Test_BI_MUL_KARACHUBA_FAIL);
@@ -134,23 +146,44 @@ int main(){
             return Test_FAIL;
         }
 
+        squ_karachuba_flag = test_max_word_size / squ_karachuba_ratio;
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 카라츄바 제곱 테스트
-        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str);
+        result_msg = test_bi_squ_karachuba(&op_total_time[6], &a, str, &squ_karachuba_flag);
         if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
             log_msg(Test_BI_SQU_KARACHUBA_FAIL);
             log_msg(result_msg);
             return Test_FAIL;
         }
 
+        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // // bigint 지수승 테스트
+        // result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
+        // if(result_msg != Test_BI_EXP_SUCCESS){
+        //     log_msg(Test_BI_EXP_FAIL);
+        //     log_msg(result_msg);
+        //     return Test_FAIL;
+        // }
+
+        if(test_word_size == barret_word_size){ // 사전 연산 값이 고정되어 있기에 test_word_size가 기존 사이즈와 같을 때만 수행
+            memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+            // bigint Barrett Reduction 테스트
+            result_msg = test_bi_barrett_reduction(&op_total_time[7], &a, &barret_N, &barret_T, str);
+            if(result_msg != Test_BI_BARRETT_REDUCTION_SUCCESS){
+                log_msg(Test_BI_BARRETT_REDUCTION_FAIL);
+                log_msg(result_msg);
+                return Test_FAIL;
+            }
+        }
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // bigint 지수승 테스트
-        result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
-        if(result_msg != Test_BI_EXP_SUCCESS){
-            log_msg(Test_BI_EXP_FAIL);
+        // bigint gcd 테스트
+        result_msg = test_bi_gcd(&op_total_time[8], &a, &b, str);
+        if(result_msg != Test_BI_GCD_SUCCESS){
+            log_msg(Test_BI_GCD_FAIL);
             log_msg(result_msg);
             return Test_FAIL;
         }
+
     }
 
     printf("\n============ Testing bi_add ============\n");
@@ -177,11 +210,17 @@ int main(){
     printf("\n============ Testing bi_exp ============\n");
     printf("Time taken exp (MS) : %f seconds\n", op_exp_time[0] / test_size);
     printf("Time taken exp (R TO L) : %f seconds\n", op_exp_time[1] / test_size);
+    printf("Time taken exp (L TO R) : %f seconds\n", op_exp_time[2] / test_size);
 
+    printf("\n============ Testing bi_barrett_reduction ============\n");
+    printf("Time taken barret_reduction : %f seconds\n", op_total_time[7] / test_size);
 
+    printf("\n============ Testing bi_gcd ============");
+    printf("Time taken gcd : %f seconds\n", op_total_time[8] / test_size);
     printf("\n");
 
-    if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
+//    if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
+//    if(compare_squaring(16, 120, 16) != COMPARE_SQUARING_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 
     // 카라츄바 세팅 해제
     if(clear_karachuba_pool() != CLEAR_KARACHUBA_POOL_SUCCESS){
@@ -981,6 +1020,72 @@ COMAPARE_MUL_EXIT:
     return result_msg;
 }
 
+msg compare_squaring(int start_size, int end_size, int step_size){
+    printf("\n=== Comparing Squaring Methods ===\n");
+    printf("Size\titeration\tClassic(s)\tKaratsuba(s)\tRatio\tCrossover\n");
+    printf("------------------------------------------------------------------------------\n");
+
+    bigint *a = NULL;
+    bigint *c = NULL;
+    msg result_msg = COMPARE_SQUARING_SUCCESS;
+    int crossover_found = 0;
+    int crossover_point = 0;
+    int squ_karachuba_flag = 0;
+    ParamType param_types[1] = {TYPE_BIGINT_PTR};
+    ParamType param_types_karachuba[2] = {TYPE_BIGINT_PTR, TYPE_INT_PTR};
+
+    for (int word_size = start_size; word_size <= end_size; word_size += step_size){
+        double total_time_classic = 0;
+        double total_time_karatsuba = 0;
+
+        for (int i = 0; i < test_size; i++){
+            result_msg = bi_get_random(&a, word_size);
+            if (result_msg != BI_GET_RANDOM_SUCCESS)
+                goto COMAPARE_SQU_EXIT;
+            else if(a->word_len != word_size){
+                result_msg = BI_GET_RANDOM_LENGTH_NOT_MATCH;
+                goto COMAPARE_SQU_EXIT;
+            }
+
+            total_time_classic += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ, &c, &result_msg, param_types, &a);
+            if (result_msg != BI_SQU_SUCCESS)
+                goto COMAPARE_SQU_EXIT;
+
+            squ_karachuba_flag = word_size / squ_karachuba_ratio;
+            total_time_karatsuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ_karachuba, &c, &result_msg, param_types_karachuba, &a, &squ_karachuba_flag);
+            if (result_msg != BI_SQU_SUCCESS)
+                goto COMAPARE_SQU_EXIT;
+        }
+        double avg_time_classic = total_time_classic / test_size;
+        double avg_time_karatsuba = total_time_karatsuba / test_size;
+        double ratio = avg_time_classic / avg_time_karatsuba;
+
+        // Crossover point 찾기 (Karatsuba가 더 빨라지는 지점)
+        if (!crossover_found && ratio > 1.0){
+            crossover_found = 1;
+            crossover_point = word_size;
+        }
+
+        printf("%d\t%d\t\t%.6f\t%.6f\t%.2f\t%s\n",
+               word_size,
+               test_size,
+               avg_time_classic,
+               avg_time_karatsuba,
+               ratio,
+               (word_size == crossover_point) ? "<=== Crossover" : "");
+    }
+
+    if (crossover_found){
+        printf("\nKaratsuba becomes faster at word size: %d\n\n", crossover_point);
+    }
+    result_msg = COMPARE_SQUARING_SUCCESS;
+
+COMAPARE_SQU_EXIT:
+    if (bi_delete(&a) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&c) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    return result_msg;
+}
+
 
 msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str){
     bigint *q = NULL;
@@ -1061,10 +1166,10 @@ SQU_EXIT:
     return result_msg;
 }
 
-msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, IN char* str){
+msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, IN char* str, IN int* squ_karachuba_flag){
     bigint *b = NULL;
     msg result_msg = Test_BI_SQU_KARACHUBA_SUCCESS;
-    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
+    ParamType param_types[2] = {TYPE_BIGINT_PTR, TYPE_INT_PTR};
 
     if (bigint_to_hex(str, a) == -1)   goto SQU_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_squ_karachuba, str, APPEND);
@@ -1079,8 +1184,7 @@ msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, I
     result_msg = Test_file_write_non_enter(Test_file_squ_karachuba, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto SQU_EXIT;
 
-
-    *total_time_squ_karachuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ_karachuba, &b, &result_msg, param_types, a);
+    *total_time_squ_karachuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ_karachuba, &b, &result_msg, param_types, a, squ_karachuba_flag);
     if (result_msg != BI_SQU_SUCCESS)   goto SQU_EXIT;
 
     if (bigint_to_hex(str, &b) == -1)   goto SQU_EXIT;
@@ -1147,6 +1251,17 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
     if (result_msg != BI_EXP_R_TO_L_SUCCESS)   goto EXP_EXIT;
 
     if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_exp, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
+
+    result_msg = Test_file_write_non_enter(Test_file_exp, " , ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
+
+    // Left to Right 구현
+    total_time_exp[2] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_L_TO_R, &d, &result_msg, param_types, a, b, c);
+    if (result_msg != BI_EXP_L_TO_R_SUCCESS)   goto EXP_EXIT;
+
+    if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;
     result_msg = Test_file_write(Test_file_exp, str, APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
@@ -1157,19 +1272,83 @@ EXP_EXIT:
     return result_msg;
 }
 
-int gettimeofday(struct timeval *tv, struct timezone *tz) {
-    struct _timeb timebuffer;
-    _ftime_s(&timebuffer);
-    
-    if (tv) {
-        tv->tv_sec = (long)timebuffer.time;
-        tv->tv_usec = (long)(timebuffer.millitm * 1000);
-    }
-    
-    // Windows에서는 tinemezo이 사용되지 않으므로, NULL로 설정할 수 있습니다.
-    // if (tz) {
-    //     tz->tz_minuteswest = 0;
-    //     tz->tz_dsttime = 0;
-    // }
-    return 0;
+msg test_bi_barrett_reduction(OUT double* total_time_barret_reduction, IN bigint** a, IN bigint** barret_N, IN bigint** barret_T, IN char* str){
+    bigint *b = NULL;
+    msg result_msg = Test_BI_BARRETT_REDUCTION_FAIL;
+
+    ParamType param_types[3] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
+
+    if (bigint_to_hex(str, a) == -1)   goto BARRET_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_barrett_reduction, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)goto BARRET_EXIT;
+
+    result_msg = Test_file_write_non_enter(Test_file_barrett_reduction, " mod ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto BARRET_EXIT;
+
+    if (bigint_to_hex(str, barret_N) == -1)   goto BARRET_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_barrett_reduction, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)goto BARRET_EXIT;
+
+    result_msg = Test_file_write_non_enter(Test_file_barrett_reduction, " = ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto BARRET_EXIT;
+
+    *total_time_barret_reduction += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())barret_reduction, &b, &result_msg, param_types, a, barret_N, barret_T);
+    if (result_msg != BI_BARRET_REDUCTION_SUCCESS)   goto BARRET_EXIT;
+
+    if (bigint_to_hex(str, &b) == -1)   goto BARRET_EXIT;
+    result_msg = Test_file_write(Test_file_barrett_reduction, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto BARRET_EXIT;
+
+    result_msg = Test_BI_BARRETT_REDUCTION_SUCCESS;
+
+BARRET_EXIT:
+    if (bi_delete(&b) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    return result_msg;
 }
+
+
+msg test_bi_gcd(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str){
+    bigint *d = NULL;
+    msg result_msg = Test_BI_GCD_FAIL;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR,TYPE_BIGINT_PTR};
+
+    result_msg = Test_file_write_non_enter(Test_file_gcd, "gcd ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+    result_msg = Test_file_write_non_enter(Test_file_gcd, "( ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    
+    if (bigint_to_hex(str, a) == -1)   goto GCD_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_gcd, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+    result_msg = Test_file_write_non_enter(Test_file_gcd, " , ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+     if (bigint_to_hex(str, b) == -1)   goto GCD_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_gcd, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+    result_msg = Test_file_write_non_enter(Test_file_gcd, " ) ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+    result_msg = Test_file_write_non_enter(Test_file_gcd, "= ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+   
+    *total_time_div += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_gcd, &d, &result_msg, param_types, a, b);
+    if (result_msg != BI_GCD_SUCCESS)   goto GCD_EXIT;
+
+    if (bigint_to_hex(str, &d) == -1)   goto GCD_EXIT;
+    result_msg = Test_file_write(Test_file_gcd, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+    result_msg = Test_BI_GCD_SUCCESS;
+
+GCD_EXIT:
+    if (bi_delete(&d) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    return result_msg;
+}
+
+// msg test_bi_EEA(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str){
+
+// }

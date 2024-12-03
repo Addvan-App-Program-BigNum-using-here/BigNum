@@ -26,9 +26,12 @@ typedef uint32_t msg;   ///< Error message control variation
 typedef uint32_t word;  ///< Word type
 typedef uint64_t dword; ///< Double word type
 
+#ifndef min
 #define min(a, b) ((a) < (b) ? (a) : (b)) ///< min value
+#endif
+#ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b)) ///< max value
-
+#endif
 /**
  * @struct bigint
  * @brief big num information struct

@@ -134,10 +134,23 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case BI_EXP_R_TO_L_FAIL: return "Bigint exp right shift failed";
         case Test_BI_SQU_KARACHUBA_SUCCESS : return "Test Bigint Karachuba square successful";
         case Test_BI_SQU_KARACHUBA_FAIL : return "Test Bigint Karachuba square failed";
-        case BI_EXP_L_TO_R_SUCCESS: return "Bigint exp left to right successful";
-        case BI_EXP_L_TO_R_FAIL: return "Bigint exp left to right failed";
-        case BI_EUCLIDEAN_SUCCESS: return "Bigint gcd operate successful";
-        case BI_EUCLIDEAN_FAIL: return "Bigint gcd operate failed";
+        case COMPARE_SQUARING_SUCCESS : return "Compare squaring successful";
+        case BI_EXP_L_TO_R_SUCCESS : return "Bigint exp left shift successful";
+        case BI_EXP_L_TO_R_FAIL : return "Bigint exp left shift failed";
+        case BI_BARRET_REDUCTION_SUCCESS : return "Bigint barret reduction successful";
+        case BI_BARRET_REDUCTION_FAIL : return "Bigint barret reduction failed";
+        case INIT_BARRET_N_SUCCESS : return "Barret N initialization successful";
+        case INIT_BARRET_N_FAIL : return "Barret N initialization failed";
+        case Test_BI_BARRETT_REDUCTION_SUCCESS : return "Test Bigint barret reduction successful";
+        case Test_BI_BARRETT_REDUCTION_FAIL : return "Test Bigint barret reduction failed";
+        case BI_GCD_SUCCESS: return "Bigint gcd operation successful";
+        case BI_GCD_FAIL : return "Bigint gcd operation failed";
+        case BI_EEA_SUCCESS : return "Bigint E.E.A operation successful";
+        case BI_EEA_FAIL : return "Bigint E.E.A operation failed";
+        case Test_BI_GCD_SUCCESS : return "Test Bigint gcd operation successful";
+        case Test_BI_GCD_FAIL : return "Test Bigint gcd opertaion failed";
+        case Test_BI_EEA_SUCCESS : return "Test Bigint E.E.A gcd operation successful";
+        case Test_BI_EEA_FAIL : return "Test Bigint E.E.A gcd operation failed";
         default: return "Unknown error code";
     }
 }
