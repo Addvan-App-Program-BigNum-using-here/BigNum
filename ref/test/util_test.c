@@ -194,6 +194,9 @@ int main(){
             return Test_FAIL;
         }
 */
+
+//        bi_set_from_string(&a, "bd", 16);
+//        bi_set_from_string(&b, "bd", 16);
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint EEA 테스트
         result_msg = test_bi_EEA(&op_total_time[10], &a, &b, str);
@@ -236,9 +239,9 @@ int main(){
     printf("\n============ Testing bi_barrett_reduction ============\n");
     printf("Time taken barret_reduction : %f seconds\n", op_total_time[8] / test_size);
 */
-    printf("\n============ Testing bi_gcd ============\n");
-    printf("Time taken gcd : %f seconds\n", op_total_time[10] / test_size);
-    printf("\n");
+    // printf("\n============ Testing bi_gcd ============\n");
+    // printf("Time taken gcd : %f seconds\n", op_total_time[10] / test_size);
+    // printf("\n");
 
 //    if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 //    if(compare_squaring(16, 120, 16) != COMPARE_SQUARING_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
@@ -1471,14 +1474,14 @@ msg test_bi_EEA(OUT double* total_time_eea, IN bigint** a, IN bigint** b, IN cha
 
     result_msg = Test_file_write_non_enter(Test_file_EEA, "= ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
-
+    printf("start\n");
     *total_time_eea += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_EEA, &gcd, &result_msg, param_types, &x, &y, a, b);
     if (result_msg != BI_EEA_SUCCESS)   goto EEA_EXIT;
-
+    printf("end\n");
     if (bigint_to_hex(str, &gcd) == -1)   goto EEA_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_EEA, str, APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
-
+    
     result_msg = Test_file_write_non_enter(Test_file_EEA, " , ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
 
