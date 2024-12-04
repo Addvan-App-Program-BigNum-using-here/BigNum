@@ -194,6 +194,9 @@ int main(){
             return Test_FAIL;
         }
 */
+
+//        bi_set_from_string(&a, "bd", 16);
+//        bi_set_from_string(&b, "bd", 16);
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint EEA 테스트
         result_msg = test_bi_EEA(&op_total_time[10], &a, &b, str);
