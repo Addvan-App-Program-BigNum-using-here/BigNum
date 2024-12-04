@@ -1070,7 +1070,6 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     // t = 1
     if(*dst == NULL){
         if(bi_new(dst, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-        flag = 1;
     }else if((*dst)->word_len != 1){
         if(bi_resize(dst, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
     }
@@ -1234,6 +1233,11 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     // a,b 부호 확인 필요
     // x,y 유일하게 하려면 어떻게 할지 생각해봐야됨 gcd(a,b) = ax + by
     msg result_msg = BI_EEA_FAIL;
+
+//    printf("A : ");
+//    bi_print(a, 16);
+//    printf("B : ");
+//    bi_print(b, 16);
     
     // a와 b 둘 다 0이면 gcd(a,b) = 0
     if((bi_is_zero(a) == BI_IS_ZERO) && (bi_is_zero(b) == BI_IS_ZERO)){
@@ -1268,8 +1272,10 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
         (*x)->a[0] = 1;
         return BI_EEA_SUCCESS;
     }
+
     // a < b면 a > b가 되도록 함수 다시 호출
     if(bi_compare(a,b) == -1) bi_EEA(gcd, x, y, b, a);
+
     bigint* t1 = NULL;
     bigint* u1 = NULL;
     bigint* u2 = NULL;
@@ -1279,11 +1285,13 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     bigint* r = NULL;
     bigint* temp = NULL;
     int div_option = 1;
+
     // (t0, t1) <- (a, b)
     result_msg = bi_assign(gcd, a);
     if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
     result_msg = bi_assign(&t1, b);
     if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+//    printf("step 1\n");
     // (u0, v0) <- (1, 0)
     result_msg = bi_new(x, 1);
     if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
@@ -1291,6 +1299,7 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
     (*x) -> a[0] = 1;
     (*y) -> a[0] = 0;
+//    printf("step 2\n");
     // (u1, v1) <- (0, 1)
     result_msg = bi_new(&u1, 1);
     if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
@@ -1298,41 +1307,56 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
     u1 -> a[0] = 0;
     v1 -> a[0] = 1;
+//    printf("step 3\n");
 
     // t1 != 0인 동안 반복문 수행
     while(bi_is_zero(&t1) != BI_IS_ZERO){
         //(q, r) <- div(t0, t1)
+//        printf("gcd : ");
+//        bi_print(gcd, 16);
+//        printf("t1 : ");
+//        bi_print(&t1, 16);
         result_msg = bi_div(&q, &r, gcd, &t1, div_option);
         if(result_msg != BI_DIV_SUCCESS) return result_msg;
+//        printf("step 4\n");
         //(t0, t1) <- (t1, r)
         result_msg = bi_assign(gcd, &t1);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
         result_msg = bi_assign(&t1, &r);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+//        printf("step 5\n");
         //(u2, v2) <- (u0 - q * u1, v0 - q*v1)
         result_msg = bi_mul_karachuba(&temp, &q, &u1, q->word_len / mul_karachuba_ratio);
         if(result_msg != BI_MUL_SUCCESS) return result_msg;
+        bi_refine(&q);
         result_msg = bi_sub(&u2, x, &temp);
         if(result_msg != BI_SUB_SUCCESS) return result_msg;
         result_msg = bi_mul_karachuba(&temp, &q, &v1, q->word_len / mul_karachuba_ratio);
         if(result_msg != BI_MUL_SUCCESS) return result_msg;
+        bi_refine(&q);
         result_msg = bi_sub(&v2, y, &temp);
         if(result_msg != BI_SUB_SUCCESS) return result_msg;
+//        printf("step 6\n");
         //(u0, v0) <- (u1, v1)
         result_msg = bi_assign(x, &u1);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
         result_msg = bi_assign(y, &v1);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+//        printf("step 7\n");
         //(u1, v1) <- (u2, v2)
         result_msg = bi_assign(&u1, &u2);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
         result_msg = bi_assign(&v1, &v2);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
-        
+//        printf("step 8\n");
         // u2, v2 초기화
         for(int i = 0; i < u2 -> word_len; i++) u2 -> a[i] = 0;
         for(int i = 0; i < v2 -> word_len; i++) v2 -> a[i] = 0;
+//        printf("step 9\n");
+//        printf("t1 : ");
+//        bi_print(&t1, 16);
     }
+//    printf("inner end\n");
     result_msg = BI_EEA_SUCCESS;
     // 일단 x,y(u0, v0)가 음수가 돼도 상관없도록 구현함(음수를 허용할지 항상 양수만 나오게 할지는 선택사항)
     return result_msg;

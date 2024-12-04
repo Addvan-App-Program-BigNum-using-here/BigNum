@@ -14,7 +14,7 @@
 #include "../data_type.h"
 #include "../file_io.h"
 
-#define BITS_SIZE 2048                              // 테스트 비트 크기
+#define BITS_SIZE 8                              // 테스트 비트 크기
 #define test_word_size BITS_SIZE / WORD_BITS               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
 #define test_word_size_limit BITS_SIZE / WORD_BITS          // 랜덤 word 크기 사용 시 제한 범위
 #define test_size  10                                   // 테스트 횟수
@@ -144,5 +144,17 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
  */
 msg test_bi_barrett_reduction(OUT double* total_time_barret_reduction, IN bigint** a, IN bigint** barret_N, IN bigint** barret_T, IN char* str);
 
+/**
+ * @brief Test bigint structure GCD operation
+ *
+ * @return message SUCCESS or FAIL
+ */
 msg test_bi_gcd(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
+
+/**
+ * @brief Test bigint structure Extended Eucliean Algorithm operation
+ *
+ * @return message SUCCESS or FAIL
+ */
+msg test_bi_EEA(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
 #endif // UTIL_TEST_H
