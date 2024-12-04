@@ -38,8 +38,8 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
     int max_word_len = max((*a)->word_len, (*b)->word_len);
     int dst_word_len = max_word_len + 1;
     word temp_a = 0, temp_b = 0; // dst가 a와 b 중 같은 값일 경우 사용
-//    int word_size_a = (*a)->word_len;
-//    int word_size_b = (*b)->word_len;
+    int word_size_a = (*a)->word_len;
+    int word_size_b = (*b)->word_len;
 
     if(*dst == NULL){
         if(bi_new(dst, dst_word_len) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
@@ -57,18 +57,18 @@ msg bi_add(OUT bigint** dst, IN bigint** a, IN bigint** b){
         temp_a = (*a)->a[i];
         temp_b = (*b)->a[i];
         (*dst)->a[i] = (word)(temp_a + temp_b + carry);
-        carry = (temp_a > 0xffffffff - (temp_b + carry) || temp_b > 0xffffffff - (temp_a + carry) || (temp_a == 0xffffffff && temp_b == 0xffffffff)) ? 1 : 0; // carry bit 계산
+        carry = (temp_a > MAX_VALUE - (temp_b + carry) || temp_b > MAX_VALUE - (temp_a + carry) || (temp_a == MAX_VALUE && temp_b == MAX_VALUE)) ? 1 : 0; // carry bit 계산
     }
     if (carry)  (*dst)->a[max_word_len] = carry;
     (*dst)->sign = 0;
 
-    if(bi_resize(dst, dst_word_len - (carry ^ 1)) != BI_RESIZE_SUCCESS){ // carry ^ 1을 한 이유는 마지막 carry가 발생하지 않으면 사이즈를 1 word 줄여도 되서
+    if(bi_resize(dst, dst_word_len - !carry) != BI_RESIZE_SUCCESS){ // carry ^ 1을 한 이유는 마지막 carry가 발생하지 않으면 사이즈를 1 word 줄여도 되서
         if(bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
         return BI_RESIZE_FAIL;
     }
 
-//    if(bi_resize(a, word_size_a) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-//    if(bi_resize(b, word_size_b) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+    if(*dst != *a && bi_resize(a, word_size_a) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+    if(*dst != *b && bi_resize(b, word_size_b) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
 
     return BI_ADD_SUCCESS;
 }
@@ -128,18 +128,18 @@ msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b){
     }else if(*dst != NULL && (*dst)->word_len < max_word_len){ // 해당 부분은 나중에 bi_resize 함수 만들어서 최적화 해보자
         if(bi_resize(dst, max_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
     }
-    // dst가 a와 b가 아닌 경우 길이는 동일하게 위에서 체크 했으니까 재사용
 
-    // 상수 시간 연산을 위해 a와 b의 크기를 맞춰서 연산 수행 -> 무조건 a >= b
     if(bi_expand(b, max_word_len, 0) != BI_EXPAND_SUCCESS)    return BI_EXPAND_FAIL;
     // 뺄셈 연산 수행
+
     for(int i = 0; i < (*a)->word_len - 1; i++){
         // borrow를 사용할 경우 0x100000000을 더해줘야 하는데 이를 0xffffffff + 0x1로 나누어 더해 준다. 그리고 이전에 빌려갔던 borrow_temp를 빼준다.
-        (*dst)->a[i] = (word)(borrow * 0xFFFFFFFF - (*b)->a[i] + (*a)->a[i] + borrow - borrow_temp);
+        (*dst)->a[i] = (word)(borrow * MAX_VALUE - (*b)->a[i] + (*a)->a[i] + borrow - borrow_temp);
         borrow_temp = borrow;
-        borrow = ((*a)->a[i + 1] < (*b)->a[i + 1] || ((*b)->a[i + 1] == 0xffffffff && borrow)) ? 1 : 0; // borrow bit 계산
+        borrow = ((*a)->a[i + 1] < (*b)->a[i + 1] + borrow || ((*b)->a[i + 1] == MAX_VALUE && borrow)) ? 1 : 0; // borrow bit 계산
     }
-    (*dst)->a[max_word_len - 1] = (word)(borrow * 0xFFFFFFFF - (*b)->a[max_word_len - 1] + (*a)->a[max_word_len - 1] + borrow - borrow_temp);
+    (*dst)->a[max_word_len - 1] = (word)(borrow * MAX_VALUE - (*b)->a[max_word_len - 1] + (*a)->a[max_word_len - 1] + borrow - borrow_temp);
+
     // 부호 설정
     (*dst)->sign = 0;
     if(bi_resize(dst, max_word_len) != BI_RESIZE_SUCCESS){
@@ -147,8 +147,7 @@ msg bi_sub(OUT bigint** dst, IN bigint** a, IN bigint** b){
         return BI_RESIZE_FAIL;
     }
 
-    if(bi_resize(b, word_size_b) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-
+    if(*dst!= *b && bi_resize(b, word_size_b) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
     return BI_SUB_SUCCESS;
 }
 
@@ -208,9 +207,8 @@ msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b){
     (*a)->sign = 0;
     (*b)->sign = 0;
 
-    // 반복문 밖에가 작은 값, 안쪽이 큰 값
-    for (int i = (temp_len_b * 2) - 1; i >= 0; i--){ // word_len == 2
-        b_i = (i % 2 == 0) ? (*b)->a[i / 2] & 0xFFFF : (*b)->a[i / 2] >> 16; // 16비트 단위로 나누어 곱셈 수행
+    for (int i = (temp_len_b * 2) - 1; i >= 0; i--){
+        b_i = (i % 2 == 0) ? GET_LOWER_PART((*b)->a[i / 2]) : GET_UPPER_PART((*b)->a[i / 2]);
 
         idx_temp1 = 0;
         idx_temp2 = 0;
@@ -219,16 +217,16 @@ msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b){
         for(int j = 0; j < temp2->word_len; j++)    temp2->a[j] = 0;
 
         // 곱셈 수행
-        for (int j = 0; j < temp_len_a * 2; j++){ // word_len == 2
-            if(j % 2 == 0)  temp1->a[idx_temp1++] = (word)(b_i * ((*a)->a[j / 2] & 0xFFFF)); // 하위 16비트 곱
-            else    temp2->a[idx_temp2++] = (word)(b_i * ((*a)->a[j / 2] >> 16)); // 상위 16비트 곱
+        for (int j = 0; j < temp_len_a * 2; j++) { // word_len == 2
+            if (j % 2 == 0) temp1->a[idx_temp1++] = (word)(b_i * GET_LOWER_PART((*a)->a[j / 2]));
+            else    temp2->a[idx_temp2++] = (word)(b_i * GET_UPPER_PART((*a)->a[j / 2]));
         }
 
-        result_msg = bi_shift_left(&temp1, &temp1, i * 16); // 16비트 단위로 밀기
+        result_msg = bi_shift_left(&temp1, &temp1, i * WORD_SHIFT); // 16비트 단위로 밀기
         if (result_msg != BI_SHIFT_SUCCESS)
             goto MUL_EXIT;
 
-        result_msg = bi_shift_left(&temp2, &temp2, (i + 1) * 16); // 16비트 단위로 밀기
+        result_msg = bi_shift_left(&temp2, &temp2, (i + 1) * WORD_SHIFT); // 16비트 단위로 밀기
         if (result_msg != BI_SHIFT_SUCCESS)
             goto MUL_EXIT;
 
@@ -236,7 +234,6 @@ msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b){
         if(result_msg != BI_ADD_SUCCESS)  goto MUL_EXIT;
         result_msg = bi_add(&dst_temp, &dst_temp, &temp1); // 덧셈 수행
         if(result_msg != BI_ADD_SUCCESS)  goto MUL_EXIT;
-
     }
 
     // 부호 처리
@@ -245,7 +242,7 @@ msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b){
     (*b)->sign = b_sign;
 
     if (bi_assign(dst, &dst_temp) != BI_SET_ASSIGN_SUCCESS)    goto MUL_EXIT;
-    if (bi_refine(dst) != BI_SET_REFINE_SUCCESS)   goto MUL_EXIT;
+    if (bi_resize(dst, max_word_len) != BI_RESIZE_SUCCESS)    goto MUL_EXIT;
     result_msg = BI_MUL_SUCCESS;
 
 MUL_EXIT:
@@ -272,13 +269,16 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b, IN int kara
 //    if(bi_refine(a) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
 //    if(bi_refine(b) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
 
-    int word_len = (*a)->word_len; // 입력 값이 같기에 하나만 가져오면 된다.
+//    int word_len = (*a)->word_len; // 입력 값이 같기에 하나만 가져오면 된다.
 
-//    int max_word_len = max((*a)->word_len, (*b)->word_len); // 입력 값 중 최댓값 가져오기 -> 입력 값 크기가 다를 경우 필요
-//    int min_word_len = min((*a)->word_len, (*b)->word_len); // 입력 값 중 최솟값 가져오기 -> 입력 값 크기가 다를 경우 필요
+    int len_a = (*a)->word_len;
+    int len_b = (*b)->word_len;
+    int max_word_len = max(len_a, len_b); // 입력 값 중 최댓값 가져오기 -> 입력 값 크기가 다를 경우 필요
+    int min_word_len = min(len_a, len_b); // 입력 값 중 최솟값 가져오기 -> 입력 값 크기가 다를 경우 필요
+    int dst_word_len = len_a + len_b;
 
     // base case에서 카라츄바가 아닌 일반 곱셈 수행을 위한 연산 -> 입력 값 크기가 다를 경우 word_len을 max_word_len으로 변경
-    if(karachuba_flag >= word_len || karachuba_flag <= 1){
+    if(karachuba_flag >= min_word_len || karachuba_flag <= 1){
         result_msg = bi_mul(dst, a, b);
         if(result_msg != BI_MUL_SUCCESS)    return result_msg;
         return BI_MUL_SUCCESS;
@@ -295,15 +295,15 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b, IN int kara
     g_pool.current_depth++;
 
     byte a_sign = 0, b_sign = 0;
-    int half_word_len = (word_len + 1) >> 1; // 입력 값 중 최댓값의 절반 값        -> 입력 값 크기가 같은 경우
+//    int half_word_len = (word_len + 1) >> 1; // 입력 값 중 최댓값의 절반 값        -> 입력 값 크기가 같은 경우
 
-//    int half_word_len = (max_word_len + 1) >> 1; // 입력 값 중 최댓값의 절반 값  -> 입력 값 크기가 다를 경우
-//    // a와 b의 사이즈가 다른 경우 사이즈를 동일하게 맞춰줘야 함 -> 이것도 입력 값 크기가 다를 경우에만 사용
-//    if((*a)->word_len != max_word_len){ // a < b
-//        if(bi_resize(a, max_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-//    }else if((*b)->word_len != max_word_len){ // a > b
-//        if(bi_resize(b, max_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-//    }
+    int half_word_len = (max_word_len + 1) >> 1; // 입력 값 중 최댓값의 절반 값  -> 입력 값 크기가 다를 경우
+    // a와 b의 사이즈가 다른 경우 사이즈를 동일하게 맞춰줘야 함 -> 이것도 입력 값 크기가 다를 경우에만 사용
+    if((*a)->word_len != max_word_len){ // a < b
+        if(bi_resize(a, max_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+    }else if((*b)->word_len != max_word_len){ // a > b
+        if(bi_resize(b, max_word_len) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
+    }
 
     a_sign = (*a)->sign;
     b_sign = (*b)->sign;
@@ -364,6 +364,13 @@ msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b, IN int kara
     (*dst)->sign = a_sign ^ b_sign; // XOR 연산으로 부호 처리 다르면 음수, 같으면 양수
     if(*dst != *a)  (*a)->sign = a_sign;
     if(*dst != *b)  (*b)->sign = b_sign;
+
+    result_msg = bi_resize(dst, dst_word_len);
+    if(result_msg != BI_RESIZE_SUCCESS)    goto karachuba_exit;
+    if(*dst != *a)  result_msg = bi_resize(a, len_a);
+    if(result_msg != BI_RESIZE_SUCCESS)    goto karachuba_exit;
+    if(*dst != *b)  result_msg = bi_resize(b, len_b);
+    if(result_msg != BI_RESIZE_SUCCESS)    goto karachuba_exit;
 
     result_msg = BI_MUL_SUCCESS;
 
@@ -456,8 +463,8 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int 
             (*b)->sign = 0;
             result_msg = bi_div(q, r, a, b, option);
             if(result_msg != BI_DIV_SUCCESS)    return result_msg;
-            (*a)->sign = 1;
-            (*b)->sign = 1;
+            if(*a != *q && *a != *r)    (*a)->sign = 1;
+            if(*b != *q && *b != *r)    (*b)->sign = 1;
             (*r)->sign = 1;
             result_msg = BI_DIV_SUCCESS;
             goto EXIT_DIV_REFINE;
@@ -467,8 +474,8 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int 
         (*a)->sign = 1; // a는 음수로
         result_msg = bi_div(q, r, a, b, option);
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;
-        (*a)->sign = 0;
-        (*b)->sign = 1;
+        if(*a != *r && *a != *q)    (*a)->sign = 0;
+        if(*b != *r && *b != *q)    (*b)->sign = 1;
         result_msg = BI_DIV_SUCCESS;
         goto EXIT_DIV_REFINE;
     }else if((*a)->sign){ // a가 음수, b가 양수인 경우
@@ -480,7 +487,7 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int 
         (*a)->sign = 0;
         result_msg = bi_div(q, r, a, b, option);
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;
-        (*a)->sign = 1;
+        if(*a != *r && *a != *q)    (*a)->sign = 1;
 
         // q와 r 처리
         if(bi_sub(r, b, r) != BI_SUB_SUCCESS)    return BI_SUB_FAIL; // r = b - r 수행. 여기서 나눗셈 연산 과정에서 b가 변하면 안된다!
@@ -511,13 +518,12 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int 
             }
             (*r)->word_len = 1;
             (*r)->a[0] = 0;
-        }else{ // a < b인 경우
+        }else{ // case a < b
             (*q)->a[0] = (word)(*a)->sign;
             (*q)->sign = (*a)->sign;
             // r 메모리 할당
             // a가 음수인 경우 r = b + a, a가 양수인 경우 r = a
             if(bi_assign(r, a) != BI_SET_ASSIGN_SUCCESS)    return BI_ALLOC_FAIL; // 어차피 *r == *a 인경우 assign에서 바로 return
-
             if((*a)->sign){ // a가 음수인 경우
                 if(bi_add(r, r, b) != BI_ADD_SUCCESS)    return BI_ADD_FAIL;
             }
@@ -613,6 +619,7 @@ msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
 msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN int k){
     if(*a == NULL || *b == NULL)    return MEM_NOT_ALLOC;
     msg result_msg = DIVC_FAIL;
+
     int init_shift_size = (*a)->word_len - (*b)->word_len + 1;
     bigint* R = NULL;
     bigint* a_p = NULL;
@@ -675,44 +682,40 @@ msg divcc(OUT word* q, OUT bigint** r, IN bigint** a, IN bigint** b){
     int m = (*b)->word_len;
     bigint* temp_a = NULL;
     bigint* temp_b = NULL;
-    bigint* temp_r = NULL;
-    bigint* temp_q = NULL;
-    int power_decom[32] = {0, };
+    int power_decom[WORD_BITS] = {0, };
     int decom_size = 0;
+
 
     if(n == m)
         *q = (word)((*a)->a[m - 1] / (*b)->a[m - 1]); // q = a[n] / b[n]
     if(n == m + 1){
         if((*a)->a[m] == (*b)->a[m - 1])
-            (*q) = WORD_BITS - 1;
+            (*q) = (1ULL << WORD_BITS) - 1;
         else{
-            // 여기 조금 더 최적화 할 수 있게 해보자
             result_msg = bi_new(&temp_a, 2);
-            if(result_msg != BI_ALLOC_SUCCESS)    goto EXIT_DIVCC;
-            result_msg = bi_new(&temp_b, 1);
-            if(result_msg != BI_ALLOC_SUCCESS)    goto EXIT_DIVCC;
-            result_msg = bi_new(&temp_q, 2);
-            if(result_msg != BI_ALLOC_SUCCESS)    goto EXIT_DIVCC;
-            result_msg = bi_new(&temp_r, 1);
             if(result_msg != BI_ALLOC_SUCCESS)    goto EXIT_DIVCC;
             temp_a->a[1] = (*a)->a[m];
             temp_a->a[0] = (*a)->a[m - 1];
-            temp_b->a[0] = (*b)->a[m - 1];
-            result_msg = divc(&temp_q, &temp_r, &temp_a, &temp_b);
-            if(result_msg != DIVC_SUCCESS)    goto EXIT_DIVCC;
-            (*q) = temp_q->a[0];
+            result_msg = two_word_long_div(q, &temp_a, (*b)->a[m - 1]);
+            if(result_msg != TWO_WORD_LONG_DIV_SUCCESS)    goto EXIT_DIVCC;
         }
     }
-
     result_msg = bi_new(&temp_a, (*b)->word_len);
     if(result_msg != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
     // B * Q
     decom_size = get_power_decomposition(*q, power_decom); // Q에 대한 power decomposition
-    for(int i = 0; i < decom_size; i++){
-        if(power_decom[i] == 0) continue;
-        result_msg = bi_shift_left(&temp_b, b, i);
+    result_msg = bi_assign(&temp_b, b);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_DIVCC;
+    if(power_decom[0]){
+        result_msg = bi_assign(&temp_a, &temp_b);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_DIVCC;
+    }
+    for(int i = 1; i < decom_size; i++){
+        result_msg = bi_shift_left(&temp_b, &temp_b, 1);
+        bi_refine(&temp_b);
         if(result_msg != BI_SHIFT_SUCCESS)    goto EXIT_DIVCC;
-        result_msg = bi_add(&temp_a, &temp_b, &temp_a);
+        if(power_decom[i] == 0) continue;
+        result_msg = bi_add(&temp_a, &temp_b, &temp_a); // 여기서 덧셈 문제 발생
     }
 
     // A - B * Q
@@ -729,9 +732,30 @@ msg divcc(OUT word* q, OUT bigint** r, IN bigint** a, IN bigint** b){
 EXIT_DIVCC:
     if(bi_delete(&temp_a) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     if(bi_delete(&temp_b) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-    if(bi_delete(&temp_q) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
-    if(bi_delete(&temp_r) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     return result_msg;
+}
+
+msg two_word_long_div(OUT word* q, IN bigint** a, IN word b){
+    if(*a == NULL)    return MEM_NOT_ALLOC;
+    if(b == 0)    return BI_DIV_BY_ZERO;
+    if((*a)->word_len > 2)    return TWO_WORD_LONG_DIV_LENGTH_INVALID;
+
+    (*q) = 0;
+    word r_temp = (*a)->a[1]; // R <- A_1
+    for(int i = WORD_BITS - 1; i >= 0; i--){
+        if(r_temp >= (1ULL << (WORD_BITS - 1))){
+            (*q) |= 1ULL << i;
+            r_temp = (r_temp << 1) + (((*a)->a[0] >> i) & 1) - b; // R <- 2R + a_j - B
+        }else{
+            r_temp = (r_temp << 1) + (((*a)->a[0] >> i) & 1); // R <- 2R + a_j
+            if(r_temp >= b){
+                (*q) |= 1ULL << i;
+                r_temp -= b;
+            }
+        }
+    }
+
+    return TWO_WORD_LONG_DIV_SUCCESS;
 }
 
 /*************************************************
@@ -765,16 +789,16 @@ msg bi_squ(OUT bigint** dst, IN bigint** a){
 
     for(int j = 0; j < max_word_len; j++){
         C3->a[j] = 0; // C3 초기화 -> 처음에 j 번째만 초기화 하면 나머지는 덮어써짐
-        if(j % 2 == 0)  temp = ((*a)->a[j / 2]) & 0xffff;
-        else if(j % 2 == 1)    temp = ((*a)->a[j / 2]) >> 16;
+        if(j % 2 == 0)  temp = GET_LOWER_PART((*a)->a[j / 2]);
+        else if(j % 2 == 1)    temp = GET_UPPER_PART((*a)->a[j / 2]);
         C1 -> a[j] = temp * temp;
         for(int i = j + 1; i < max_word_len; i++){
-            if(i % 2 == 1)  T2 = (temp * (((*a)->a[i / 2]) >> 16)); // 위에서 연산했던 temp 재사용
-            else if(i % 2 == 0)    T2 = temp * (((*a) -> a[i / 2]) & 0xffff);
+            if(i % 2 == 1)  T2 = temp * GET_UPPER_PART((*a)->a[i / 2]); // 위에서 연산했던 temp 재사용
+            else if(i % 2 == 0) T2 = temp * GET_LOWER_PART((*a)->a[i / 2]);
             if((i + j) % 2 == 0)    C3 ->a[(i + j) / 2] = T2; // 짝수
             else C2 -> a[(i + j) / 2] = T2; // 홀수
         }
-        result_msg = bi_shift_left(&C2, &C2, 16); // 16비트 단위로 밀기
+        result_msg = bi_shift_left(&C2, &C2, WORD_SHIFT); // 16비트 단위로 밀기
         if(result_msg != BI_SHIFT_SUCCESS) goto EXIT_SQU;
         result_msg = bi_add(&mid, &mid, &C2);
         if(result_msg != BI_ADD_SUCCESS) goto EXIT_SQU;
@@ -791,8 +815,8 @@ msg bi_squ(OUT bigint** dst, IN bigint** a){
     result_msg = bi_add(dst, dst, &C1); // 제곱 더하기
     if(result_msg != BI_ADD_SUCCESS) goto EXIT_SQU;
 
-    result_msg = bi_refine(dst);
-    if(result_msg != BI_SET_REFINE_SUCCESS) goto EXIT_SQU;
+    result_msg = bi_resize(dst, max_word_len);
+    if(result_msg != BI_RESIZE_SUCCESS) goto EXIT_SQU;
 
     (*dst) -> sign = 0; // 부호 설정
 
@@ -837,10 +861,10 @@ msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a, IN int squ_karachuba_flag)
     int half_word_len = (((*a)->word_len) + 1) >> 1; // 길이의 절반 가져오기
     int loop_len = half_word_len - ((*a)->word_len % 2); // 반복 횟수
 
-    // A_1, A_0 계산
     if(bi_resize(&a_1, half_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
     if(bi_resize(&a_0, half_word_len) != BI_RESIZE_SUCCESS)    return BI_SHIFT_FAIL;
 
+    // a_1, a_0 나누기
     for(int i= 0; i < loop_len; i++){
         a_1->a[i] = (*a)->a[i + half_word_len];
         a_0->a[i] = (*a)->a[i];
@@ -914,6 +938,7 @@ msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
     // bit 연산 수행할 건데 refine이 되어 있지 않으면 0bit에 대한 쓰레기 연산이 있을 수 있기에 수행
     result_msg = bi_refine(x);
     if(result_msg != BI_SET_REFINE_SUCCESS)    goto EXIT_EXP_T;
+
     // t0 = 1
     result_msg = bi_new(&t[0], 1);
     t[0]->a[0] = 1;
@@ -928,16 +953,25 @@ msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
         // t[1-bit] = t[0] * t[1] mod n (mod 연산은 추후)
         result_msg = bi_mul_karachuba(&t[1-bit], &t[0], &t[1], t[1]->word_len / mul_karachuba_ratio);
         if(result_msg != BI_MUL_SUCCESS)    goto EXIT_EXP;
+        result_msg = bi_refine(&t[1-bit]);
+        if(result_msg != BI_SET_REFINE_SUCCESS)    goto EXIT_EXP;
         result_msg = bi_div(&temp, &t[1-bit], &t[1-bit], n, div_option);
         if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
 
+        result_msg = bi_refine(&t[1-bit]);
+        if(result_msg != BI_SET_REFINE_SUCCESS)    goto EXIT_EXP;
 
         // t[bit] = t[bit] * t[bit] mod n (mod 연산은 추후)
         result_msg = bi_squ(&t[bit], &t[bit]);
         if(result_msg != BI_SQU_SUCCESS)    goto EXIT_EXP;
+        result_msg = bi_refine(&t[bit]);
+        if(result_msg != BI_SET_REFINE_SUCCESS)    goto EXIT_EXP;
         result_msg = bi_div(&temp, &t[bit], &t[bit], n, div_option);
         if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
+        result_msg = bi_refine(&t[bit]);
+        if(result_msg != BI_SET_REFINE_SUCCESS)    goto EXIT_EXP;
     }
+
 
     result_msg = bi_assign(dst, &t[0]);
     if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_EXP;
@@ -965,45 +999,47 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
         (*x)->sign = 0;
     }
 
+    bigint* t0 = NULL;
     bigint* t1 = NULL;
     bigint* temp = NULL;
     msg result_msg = BI_EXP_R_TO_L_FAIL;
     byte bit = 0;
-    int flag = 0;
     int div_option = 1;
 
     // t0 = 1
-    if(*dst == NULL){
-        if(bi_new(dst, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-        flag = 1;
-    }else if((*dst)->word_len != 1){
-        if(bi_resize(dst, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-    }
-    (*dst)->a[0] = 1;
+    result_msg = bi_new(&t0, 1);
+    t0->a[0] = 1;
 
     // t1 = src 초기 값 세팅
     result_msg = bi_assign(&t1, src);
     if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_EXP;
 
-    for(int i = 0; i < (*x)->word_len * WORD_BITS - 1; i++){
+    for(int i = 0; i < (*x)->word_len * WORD_BITS; i++){
         bit = ((*x)->a[i / WORD_BITS] >> (i % WORD_BITS)) & 1; // 하위 비트 가져오기
         // bit가 1일 경우에만 곱셈 수행
         if(bit){
-            result_msg = bi_mul_karachuba(dst, dst, &t1, t1->word_len / mul_karachuba_ratio);
+            result_msg = bi_mul_karachuba(&t0, &t0, &t1, t1->word_len / mul_karachuba_ratio);
             if(result_msg != BI_MUL_SUCCESS)    goto EXIT_EXP;
-            result_msg = bi_div(&temp, dst, dst, n, div_option);
+            bi_refine(&t0);
+            result_msg = bi_div(&temp, &t0, &t0, n, div_option);
             if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
+            bi_refine(&t0);
         }
         result_msg = bi_squ(&t1, &t1);
         if(result_msg != BI_SQU_SUCCESS)    goto EXIT_EXP;
+        bi_refine(&t1);
         result_msg = bi_div(&temp, &t1, &t1, n, div_option);
         if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
+        bi_refine(&t1);
     }
+
+    result_msg = bi_assign(dst, &t0);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_EXP;
 
     result_msg = BI_EXP_R_TO_L_SUCCESS;
 
 EXIT_EXP:
-    if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(bi_delete(&t0) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     if(bi_delete(&t1) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     if(bi_delete(&temp) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     return result_msg;
@@ -1025,7 +1061,6 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     msg result_msg = BI_EXP_L_TO_R_FAIL;
     byte bit = 0;
     bigint* temp = NULL;
-    int flag = 0;
     int div_option = 1;
 
     // bit 연산 수행할 건데 refine이 되어 있지 않으면 0bit에 대한 쓰레기 연산이 있을 수 있기에 수행
@@ -1049,21 +1084,23 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
 //        result_msg = bi_squ_karachuba(dst, dst, (*dst)->word_len / squ_karachuba_ratio); // 카라츄바 사용
         result_msg = bi_squ(dst, dst); // non 카라츄바
         if(result_msg != BI_SQU_SUCCESS)    goto EXIT_EXP;
+        bi_refine(dst);
         result_msg = bi_div(&temp, dst, dst, n, div_option);
         if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
+        bi_refine(dst);
        // bit가 1일 경우에만 곱셈 수행 (t <- t * src)
         if(bit){
             result_msg = bi_mul_karachuba(dst, dst, src, (*src)->word_len / mul_karachuba_ratio);
             if(result_msg != BI_MUL_SUCCESS)    goto EXIT_EXP;
+            bi_refine(dst);
             result_msg = bi_div(&temp, dst, dst, n, div_option); // 몫은 필요없으니까 일단 temp에 저장
             if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
+            bi_refine(dst);
         }
     }
-
     result_msg = BI_EXP_L_TO_R_SUCCESS;
 
 EXIT_EXP:
-    if(flag && bi_delete(dst) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     return result_msg;
 }
 
@@ -1092,6 +1129,7 @@ msg barret_reduction(OUT IN bigint** dst, IN bigint** a, IN bigint** n, IN bigin
     // q_hat * n_barret 계산
     result_msg = bi_mul_karachuba(&q_hat, &q_hat, n_barret, (*n_barret)->word_len / mul_karachuba_ratio);
     if(result_msg != BI_MUL_SUCCESS)    return result_msg;
+    bi_refine(&q_hat);
 
     // floor(Q_hat / W^(k+1)) 계산
     result_msg = bi_shift_right(&q_hat, &q_hat, ((*n)->word_len + 2) * WORD_BITS);
@@ -1100,6 +1138,7 @@ msg barret_reduction(OUT IN bigint** dst, IN bigint** a, IN bigint** n, IN bigin
     // A - Q_hat * n 계산
     result_msg = bi_mul_karachuba(&q_hat, &q_hat, n, (*n)->word_len / mul_karachuba_ratio);
     if(result_msg != BI_MUL_SUCCESS)    return result_msg;
+    bi_refine(&q_hat);
 
     result_msg = bi_sub(dst, a, &q_hat);
     if(result_msg != BI_SUB_SUCCESS)    return result_msg;

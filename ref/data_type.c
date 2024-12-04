@@ -29,18 +29,52 @@ int char_to_int(IN char str){
 * Return:      - int : result of integer, FAIL == -1
 **************************************************/
 int bigint_to_hex(OUT char* str, IN bigint** src) {
-    // Assuming the bigint is stored in little-endian format
+    if (*src == NULL) return -1; // NULL 체크
+
     int idx = 0;
+    int buffer_size = 0;
+    const char* format = NULL; // 포맷 문자열 초기화
 
-    // src가 사용되고 있지 않은 경우
-    if(*src == NULL)    return -1;
-
-    idx += ((*src)->sign == 1) ? snprintf(&str[idx], 2, "-") : 0; // 부호 값 저장
-    idx += snprintf(&str[idx], 3, "0x");
-    for (int i = (*src)->word_len - 1; i >= 0; i--) {
-        idx += snprintf(&str[idx], 9, "%08X", (*src)->a[i]);
+    // WORD_BITS에 따른 형식과 버퍼 크기 설정
+    switch (WORD_BITS) {
+        case 64:
+            format = "%016" PRIx64;
+            buffer_size = 17;
+            break;
+        case 32:
+            format = "%08" PRIx32;
+            buffer_size = 9;
+            break;
+        case 16:
+            format = "%04" PRIx16;
+            buffer_size = 5;
+            break;
+        case 8:
+            format = "%02" PRIx8;
+            buffer_size = 3;
+            break;
+        default:
+            return -2; // Unsupported WORD_BITS
     }
-    return idx;
+
+    // 부호 처리
+    if ((*src)->sign == 1) {
+        str[idx++] = '-';
+    }
+
+    // 16진수 접두사 추가
+    str[idx++] = '0';
+    str[idx++] = 'x';
+
+    // 각 워드 값을 출력
+    for (int i = (*src)->word_len - 1; i >= 0; i--) {
+        idx += snprintf(&str[idx], buffer_size, format, (*src)->a[i]);
+    }
+
+    // 문자열 종료 처리
+    str[idx] = '\0';
+
+    return idx; // 최종 문자열 길이 반환
 }
 
 /*************************************************
@@ -57,7 +91,7 @@ word byte_to_uint(IN byte* input, const IN int byte_len){
     if(byte_len > 4)    return 0;
     word result = 0;
     for(int i = 0; i < byte_len; i++){
-        if(result > UINT32_MAX) return 0;
+        if(result > (word)MAX_VALUE) return 0;
         result = result * 256 + input[i];
     }
     return result;
