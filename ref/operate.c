@@ -1138,3 +1138,117 @@ msg init_barret_N(OUT bigint** barret_t, IN bigint** barret_n, IN int barret_wor
 
     return INIT_BARRET_N_SUCCESS;
 }
+
+// n-1 = 2^l * q를 계산 (q는 홀수)
+// ex) n = 221일 때, n-1 = 220 = 2^2 * 55 로
+// l = 2, q = 55
+
+#define COMPOSITE 0
+#define PRIME 1
+msg miller_rabin_primality(IN bigint **n, IN int k)
+{
+
+    // n이 NULL이거나 음수
+    if (*n == NULL || (*n)->sign == 1)
+        return "FAILED";
+
+    // 2 이하의 수 처리
+    if ((*n)->word_len == 1)
+    { // 1워드인 수 중에
+        if ((*n)->a[0] == 2)
+            return PRIME; // 2는 소수
+        if ((*n)->a[0] <= 1 || (*n)->a[0] % 2 == 0)
+            return COMPOSITE; // 1이하 또는 짝수는 합성수
+    }
+
+    // 필요한 변수
+    bigint *n_minus_1 = NULL; // n-1 값 저장
+    bigint *n_minus_2 = NULL; // n-2 값 저장
+    bigint *q = NULL;         // n-1 = 2^l * q에서 q값
+    bigint *a = NULL;         // 랜덤값 a
+    // bigint* temp = NULL;       // 임시 계산 결과
+    // bigint* remainder = NULL;  // 모듈러 연산 결과
+    bigint *one = NULL; // 상수 1 n-1할 때 쓸거임
+
+    // 제곱2연산을 위한 변수
+    // bigint *two = NULL;
+
+    int l = 0; // l 값 저장
+    msg ret = "MILLER_RABIN_FAIL";
+
+    // n-1을 하기위해서 one을 초기화
+    if (bi_new(&one, 1) != BI_ALLOC_SUCCESS)
+        goto clean;
+    // 값 1로 할당
+    one->a[0] = 1;
+
+    // n-1 계산
+    if (bi_sub(&n_minus_1, n, &one) != BI_SUB_SUCCESS)
+        goto clean;
+
+    // n-2 계산
+    if (bi_sub(&n_minus_2, &n_minus_1, &one) != BI_SUB_SUCCESS)
+        goto clean;
+
+    // n-1 = 2^l * q 형태로 분해
+    if (bi_assign(&q, &n_minus_1) != BI_SET_ASSIGN_SUCCESS)
+        goto clean;
+
+    // q가 홀수가 될 때까지 2로 나누기
+    while (q->a[0] % 2 == 0)
+    {
+        if (bi_shift_right(&q, &q, 1) != BI_SHIFT_SUCCESS) // q를 2로 나누기
+            goto clean;
+        l++; // 2로 나눌 때마다 l 증가
+    }
+    // refine 수행
+
+    
+
+    // 여기 까지 과정이 l, q 값 계산 하기 위한 1번임.
+
+    // k번 테스트
+    while(k > 0)
+    {
+        k--;
+        // 과정 3번 : 랜덤한 a 선택 2, n-2 사이의 랜덤한 수
+        do
+        {
+            if (bi_get_random(&a, (*n)->word_len) != BI_GET_RANDOM_SUCCESS)
+                goto clean;
+            // a가 2보다 작으면 다시 선택
+            if (a->word_len == 1 && a->a[0] < 2)
+                continue;
+            // a가 n-2보다 크면 다시 선택
+            if (bi_compare_abs(&a, &n_minus_2) > 0)
+                continue;
+            break;
+        } while (1);
+
+        // step 8 : a <- a^q mod n
+        if (bi_exp_L_TO_R(&a, &a, &q, n) != BI_EXP_L_TO_R_SUCCESS) goto clean;
+        // n값으로 모듈러 취해서 나와지니깐?
+        // step 9 : a가 1이면 다음 테스트로 , step 10
+        if (bi_compare_abs(&a, &one) == 0) continue;
+
+        // step 12 : j = 0 l-1까지
+        for (int j = 0; j < l - 1; j++) {
+            if (bi_compare_abs(&a, &n_minus_1) == 0) break;
+            // 2를 bigint 2로 바꿔줘야할듯..?
+            if (bi_exp_L_TO_R(&a, &a, 2, n) != BI_EXP_L_TO_R_SUCCESS) goto clean;
+            
+        }
+        return COMPOSITE;
+    }
+    return Probably Prime;
+
+clean:
+    // 메모리 해제
+    bi_delete(&n_minus_1);
+    bi_delete(&q);
+    bi_delete(&a);
+    // bi_delete(&temp);
+    // bi_delete(&remainder);
+    bi_delete(&one);
+    return ret;
+}
