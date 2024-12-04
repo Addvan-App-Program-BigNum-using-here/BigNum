@@ -1070,7 +1070,6 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     // t = 1
     if(*dst == NULL){
         if(bi_new(dst, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-        flag = 1;
     }else if((*dst)->word_len != 1){
         if(bi_resize(dst, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
     }

@@ -6,7 +6,7 @@ clock_t c_start, c_end;
 
 int main(){
     FILE *fp = NULL;
-    double op_total_time[10] = {0, };
+    double op_total_time[11] = {0, };
     double op_exp_time[3] = {0, };
     byte temp[1] = {0};
     int test_word_size_a = test_word_size;
@@ -193,6 +193,14 @@ int main(){
             log_msg(result_msg);
             return Test_FAIL;
         }
+
+        // bigint EEA 테스트
+        result_msg = test_bi_EEA(&op_total_time[10], &a, &b, str);
+        if(result_msg != Test_BI_EEA_SUCCESS){
+            log_msg(Test_BI_EEA_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
     }
 
     printf("\n============ Testing bi_add ============\n");
@@ -228,7 +236,10 @@ int main(){
     printf("Time taken barret_reduction : %f seconds\n", op_total_time[8] / test_size);
 
     printf("\n============ Testing bi_gcd ============");
-    printf("Time taken gcd : %f seconds\n", op_total_time[8] / test_size);
+    printf("Time taken gcd : %f seconds\n", op_total_time[9] / test_size);
+
+    printf("\n============ Testing bi_EEA ============");
+    printf("Time taken gcd : %f seconds\n", op_total_time[10] / test_size);
     printf("\n");
     if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
     if(compare_squaring(16, 120, 16) != COMPARE_SQUARING_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
