@@ -369,7 +369,6 @@ def test_gcd(f, p):
         shiftif_tmp = shiftif.split(' ')
         result = int(shiftif_tmp[7], 16)
         tmp = math.gcd(int(shiftif_tmp[2], 16), int(shiftif_tmp[4], 16))
-        
         if(result != tmp):
             False_count += 1
             k.write(shiftif)

@@ -187,6 +187,7 @@ int main(){
                 return Test_FAIL;
             }
         }
+        
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint gcd 테스트
         result_msg = test_bi_gcd(&op_total_time[8], &a, &b, str);
@@ -340,7 +341,6 @@ msg test_bi_shift(){
                 rand_test_word_size = temp[0] % test_word_size_limit;
             }while(rand_test_word_size <= 0);
         }
-
        // shift size
         if(randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS)    return GEN_RANDOM_BYTES_FAIL;
         shift_size = temp[0] % (rand_test_word_size * WORD_BITS);
@@ -1443,5 +1443,45 @@ GCD_EXIT:
 }
 
 // msg test_bi_EEA(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str){
+//     bigint *gcd = NULL;
+//     bigint *x = NULL;
+//     bigint *y = NULL;
+//     msg result_msg = Test_BI_EEA_FAIL;
+//     ParamType param_types[2] = {TYPE_BIGINT_PTR,TYPE_BIGINT_PTR};
 
+//     result_msg = Test_file_write_non_enter(Test_file_gcd, "gcd ", APPEND);
+//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+//     result_msg = Test_file_write_non_enter(Test_file_gcd, "( ", APPEND);
+//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    
+//     if (bigint_to_hex(str, a) == -1)   goto GCD_EXIT;
+//     result_msg = Test_file_write_non_enter(Test_file_gcd, str, APPEND);
+//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+//     result_msg = Test_file_write_non_enter(Test_file_gcd, " , ", APPEND);
+//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+//      if (bigint_to_hex(str, b) == -1)   goto GCD_EXIT;
+//     result_msg = Test_file_write_non_enter(Test_file_gcd, str, APPEND);
+//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+//     result_msg = Test_file_write_non_enter(Test_file_gcd, " ) ", APPEND);
+//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+//     result_msg = Test_file_write_non_enter(Test_file_gcd, "= ", APPEND);
+//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+   
+//     *total_time_div += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_gcd, &d, &result_msg, param_types, a, b);
+//     if (result_msg != BI_GCD_SUCCESS)   goto GCD_EXIT;
+
+//     if (bigint_to_hex(str, &d) == -1)   goto GCD_EXIT;
+//     result_msg = Test_file_write(Test_file_gcd, str, APPEND);
+//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+
+//     result_msg = Test_BI_GCD_SUCCESS;
+
+// GCD_EXIT:
+//     if (bi_delete(&d) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+//     return result_msg;
 // }

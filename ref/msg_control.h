@@ -64,10 +64,13 @@ enum MemoryMSGCodes
     BI_EXP_R_TO_L_FAIL     = MSG_TYPE_MEMORY | 0x0024, // Bigint 나머지 연산 실패
     DIVCC_SUCCESS = MSG_TYPE_MEMORY | 0x0025, // Bigint 나머지 연산 성공
     DIVCC_FAIL = MSG_TYPE_MEMORY | 0x0026, // Bigint 나머지 연산 실패
-    BI_GCD_SUCCESS   = MSG_TYPE_MEMORY | 0x0027, // Bigint gcd 연산 성공
-    BI_GCD_FAIL     = MSG_TYPE_MEMORY | 0x0028, // Bigint gcd 연산 실패
-    BI_EEA_SUCCESS      = MSG_TYPE_MEMORY | 0x0029, // Bigint E.E.A 연산 성공
-    BI_EEA_FAIL     = MSG_TYPE_MEMORY | 0x002A,  // Bigint E.E.A 연산 실패
+    TWO_WORD_LONG_DIV_SUCCESS = MSG_TYPE_MEMORY | 0x0027, // Bigint 나머지 연산 성공
+    TWO_WORD_LONG_DIV_FAIL = MSG_TYPE_MEMORY | 0x0028, // Bigint 나머지 연산 실패
+    TWO_WORD_LONG_DIV_LENGTH_INVALID = MSG_TYPE_MEMORY | 0x0029, // Bigint 나머지 연산 길이 불일치
+    BI_GCD_SUCCESS   = MSG_TYPE_MEMORY | 0x002A, // Bigint gcd 연산 성공
+    BI_GCD_FAIL     = MSG_TYPE_MEMORY | 0x002B, // Bigint gcd 연산 실패
+    BI_EEA_SUCCESS      = MSG_TYPE_MEMORY | 0x002C, // Bigint E.E.A 연산 성공
+    BI_EEA_FAIL     = MSG_TYPE_MEMORY | 0x002D,  // Bigint E.E.A 연산 실패
     // 추가 메모리 관련 에러 코드...
 };
 
