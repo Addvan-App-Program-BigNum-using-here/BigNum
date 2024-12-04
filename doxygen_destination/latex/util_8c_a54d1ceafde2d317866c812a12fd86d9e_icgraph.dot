@@ -1,0 +1,20 @@
+digraph "bi_refine"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [id="Node000001",label="bi_refine",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Refine bigint struct."];
+  Node1 -> Node2 [id="edge7_Node000001_Node000002",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node2 [id="Node000002",label="bi_get_random",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$random_8c.html#ad06b4fcdee651d9a008f5701e546af22",tooltip="New allocate bigint struct and fill it with random values."];
+  Node1 -> Node3 [id="edge8_Node000001_Node000003",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node3 [id="Node000003",label="bi_set_from_array",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util_8c.html#a21bba02ac8afadee74c053b4d0c5a62e",tooltip="Set bigint struct from array."];
+  Node3 -> Node4 [id="edge9_Node000003_Node000004",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node4 [id="Node000004",label="test_bi_set_from",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util__test_8c.html#ac17216bed470b2e9345c801bc1287d8b",tooltip="Test bigint structure set content from array and string."];
+  Node4 -> Node5 [id="edge10_Node000004_Node000005",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node5 [id="Node000005",label="main",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util__test_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4",tooltip=" "];
+  Node1 -> Node6 [id="edge11_Node000001_Node000006",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node6 [id="Node000006",label="bi_set_from_string",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$util_8c.html#a39115ec7b474450f20959f13362f5d5f",tooltip="Set bigint struct from string."];
+  Node6 -> Node4 [id="edge12_Node000006_Node000004",dir="back",color="steelblue1",style="solid",tooltip=" "];
+}

@@ -481,16 +481,17 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int 
     }else if((*a)->sign){ // a가 음수, b가 양수인 경우
         // 1 만들기
         bigint* one = NULL;
+        bigint* temp_r = NULL;
         if(bi_new(&one, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
         one->a[0] = 1;
 
         (*a)->sign = 0;
-        result_msg = bi_div(q, r, a, b, option);
+        result_msg = bi_div(q, &temp_r, a, b, option);
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;
-        if(*a != *r && *a != *q)    (*a)->sign = 1;
+        if(*a != temp_r && *a != *q)    (*a)->sign = 1;
 
         // q와 r 처리
-        if(bi_sub(r, b, r) != BI_SUB_SUCCESS)    return BI_SUB_FAIL; // r = b - r 수행. 여기서 나눗셈 연산 과정에서 b가 변하면 안된다!
+        if(bi_sub(r, b, &temp_r) != BI_SUB_SUCCESS)    return BI_SUB_FAIL; // r = b - r 수행. 여기서 나눗셈 연산 과정에서 b가 변하면 안된다!
 
         (*q)->sign = 0; // -q
         if(bi_add(q, q, &one) != BI_ADD_SUCCESS)    return BI_ADD_FAIL; // q = -q - 1 수행 // 일단 여기서 문제 발생
@@ -626,11 +627,11 @@ msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN 
     bigint* b_p = NULL;
     word q_p = 0;
     bigint* r_p = NULL;
-
+  
     // b와 동일한 사이즈 만큼 가져오기 -> b와 계속 비교하면서 수행할 것이에
     result_msg = bi_shift_right(&R, a, init_shift_size * WORD_BITS);
     if(result_msg != BI_SHIFT_SUCCESS)    return DIVC_FAIL;
-
+  
     for(int i = init_shift_size - 1; i >= 0; i--){
         result_msg = bi_shift_left(&R, &R, WORD_BITS); // r_p = r_p << WORD_BITS
         if(result_msg != BI_SHIFT_SUCCESS)    goto EXIT_DIVC_GENER;
@@ -684,7 +685,6 @@ msg divcc(OUT word* q, OUT bigint** r, IN bigint** a, IN bigint** b){
     bigint* temp_b = NULL;
     int power_decom[WORD_BITS] = {0, };
     int decom_size = 0;
-
 
     if(n == m)
         *q = (word)((*a)->a[m - 1] / (*b)->a[m - 1]); // q = a[n] / b[n]
@@ -991,7 +991,7 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     if(*src == NULL || *n == NULL)    return MEM_NOT_ALLOC;
     // src가 음수인 경우도 사실 부호 처리만 하면 되니까 상관 없기는 한데 일단 test에서 전처리를 수행함
     // 음수인 경우 -> 이거는 역원 찾는거라서 일단 패스 -> 이거 test에서 전처리 함
-    if((*x)->sign)    return BI_EXP_MS_FAIL;
+    if((*x)->sign)    return BI_EXP_R_TO_L_FAIL;
     // 0인 경우 time attack을 방지하고자 0값 할당해서 수행하자.
     if(bi_is_zero(x) == BI_IS_ZERO){
         (*x)->word_len = 1;
@@ -1177,3 +1177,166 @@ msg init_barret_N(OUT bigint** barret_t, IN bigint** barret_n, IN int barret_wor
 
     return INIT_BARRET_N_SUCCESS;
 }
+
+msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b){
+    // a,b의 부호와 상관없이 gcd 값은 항상 gcd(|a|, |b|)와 같아서 부호 신경 x
+    bigint* t1 = NULL;
+    bigint* t2 = NULL;
+    bigint* temp = NULL;
+    msg result_msg = BI_GCD_FAIL;
+    int div_option = 1;
+
+    // a = 0이면 gcd(a,b) = b
+    if(bi_is_zero(a) == BI_IS_ZERO){
+        result_msg = bi_assign(dst,b);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        return BI_GCD_SUCCESS;
+    }
+    // b = 0이면 gcd(a,b) = a
+    else if(bi_is_zero(b) == BI_IS_ZERO){
+        result_msg = bi_assign(dst,a);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        return BI_GCD_SUCCESS;
+    }
+
+    // (dst, t1) <- (a, b)
+    result_msg = bi_assign(dst, a);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+    result_msg = bi_assign(&t1, b);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+
+    // t1 = 0이 될 때까지 반복문 수행
+    while(bi_is_zero(&t1) != BI_IS_ZERO){
+        // t2 <- dst
+        result_msg = bi_assign(&t2, dst);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EXIT_EUC;
+        // dst <- t1
+        result_msg = bi_assign(dst, &t1);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EXIT_EUC;
+        // t1 <- t2 mod t1
+        result_msg = bi_div(&temp, &t1, &t2, &t1, div_option); // 몫은 필요없어서 일단 temp에 저장
+        if(result_msg != BI_DIV_SUCCESS) goto EXIT_EUC;
+    }
+    // gcd(a, b) = gcd(|a|, |b|) (a,b 부호 상관 x)
+    (*dst)->sign = 0;
+    result_msg = bi_refine(dst);
+    if(result_msg != BI_SET_REFINE_SUCCESS) return result_msg;
+
+    result_msg = BI_GCD_SUCCESS;
+
+EXIT_EUC:
+    if(bi_delete(&t1) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(bi_delete(&t2) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    return result_msg;
+}
+
+msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b){
+    // a,b 부호 확인 필요
+    // x,y 유일하게 하려면 어떻게 할지 생각해봐야됨 gcd(a,b) = ax + by
+    msg result_msg = BI_EEA_FAIL;
+    
+    // a와 b 둘 다 0이면 gcd(a,b) = 0
+    if((bi_is_zero(a) == BI_IS_ZERO) && (bi_is_zero(b) == BI_IS_ZERO)){
+        result_msg = bi_assign(gcd,a);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_assign(x,a);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_assign(y,a);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+    }
+    // a = 0이면 gcd(a,b) = b,
+    // x = 0, y = 1 (ax + by= b)
+    else if(bi_is_zero(a) == BI_IS_ZERO){
+        result_msg = bi_assign(gcd,b);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_assign(x, a);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_assign(y, a);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        (*y)->a[0] = 1;
+        return BI_EEA_SUCCESS;
+    }
+    // b = 0이면 gcd(a,b) = a
+    // x = 1, y = 0 (ax + by = a)
+    else if(bi_is_zero(b) == BI_IS_ZERO){
+        result_msg = bi_assign(gcd,a);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_assign(y, b);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_assign(x, b);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        (*x)->a[0] = 1;
+        return BI_EEA_SUCCESS;
+    }
+    // a < b면 a > b가 되도록 함수 다시 호출
+    if(bi_compare(a,b) == -1) bi_EEA(gcd, x, y, b, a);
+    bigint* t1 = NULL;
+    bigint* u1 = NULL;
+    bigint* u2 = NULL;
+    bigint* v1 = NULL;
+    bigint* v2 = NULL;
+    bigint* q = NULL;
+    bigint* r = NULL;
+    bigint* temp = NULL;
+    int div_option = 1;
+    // (t0, t1) <- (a, b)
+    result_msg = bi_assign(gcd, a);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+    result_msg = bi_assign(&t1, b);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+    // (u0, v0) <- (1, 0)
+    result_msg = bi_new(x, 1);
+    if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    result_msg = bi_new(y, 1);
+    if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    (*x) -> a[0] = 1;
+    (*y) -> a[0] = 0;
+    // (u1, v1) <- (0, 1)
+    result_msg = bi_new(&u1, 1);
+    if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    result_msg = bi_new(&v1, 1);
+    if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    u1 -> a[0] = 0;
+    v1 -> a[0] = 1;
+
+    // t1 != 0인 동안 반복문 수행
+    while(bi_is_zero(&t1) != BI_IS_ZERO){
+        //(q, r) <- div(t0, t1)
+        result_msg = bi_div(&q, &r, gcd, &t1, div_option);
+        if(result_msg != BI_DIV_SUCCESS) return result_msg;
+        //(t0, t1) <- (t1, r)
+        result_msg = bi_assign(gcd, &t1);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_assign(&t1, &r);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        //(u2, v2) <- (u0 - q * u1, v0 - q*v1)
+        result_msg = bi_mul_karachuba(&temp, &q, &u1, q->word_len / mul_karachuba_ratio);
+        if(result_msg != BI_MUL_SUCCESS) return result_msg;
+        result_msg = bi_sub(&u2, x, &temp);
+        if(result_msg != BI_SUB_SUCCESS) return result_msg;
+        result_msg = bi_mul_karachuba(&temp, &q, &v1, q->word_len / mul_karachuba_ratio);
+        if(result_msg != BI_MUL_SUCCESS) return result_msg;
+        result_msg = bi_sub(&v2, y, &temp);
+        if(result_msg != BI_SUB_SUCCESS) return result_msg;
+        //(u0, v0) <- (u1, v1)
+        result_msg = bi_assign(x, &u1);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_assign(y, &v1);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        //(u1, v1) <- (u2, v2)
+        result_msg = bi_assign(&u1, &u2);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_assign(&v1, &v2);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        
+        // u2, v2 초기화
+        for(int i = 0; i < u2 -> word_len; i++) u2 -> a[i] = 0;
+        for(int i = 0; i < v2 -> word_len; i++) v2 -> a[i] = 0;
+    }
+    result_msg = BI_EEA_SUCCESS;
+    // 일단 x,y(u0, v0)가 음수가 돼도 상관없도록 구현함(음수를 허용할지 항상 양수만 나오게 할지는 선택사항)
+    return result_msg;
+}
+
+
+

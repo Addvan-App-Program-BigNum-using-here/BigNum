@@ -1,0 +1,29 @@
+\doxysection{error\+\_\+msg.\+c}
+\hypertarget{error__msg_8c_source}{}\label{error__msg_8c_source}\index{BigNum/doxygen\_test/error\_msg.c@{BigNum/doxygen\_test/error\_msg.c}}
+\mbox{\hyperlink{error__msg_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{error__msg_8h}{error\_msg.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00003}\mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{00003}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{error\_msg\_list}}[6][10]\ =\ \{\{\textcolor{stringliteral}{"{}SUCCESS"{}},\ \textcolor{stringliteral}{"{}FAIL"{}}\},}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00004}00004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}BI\_ALLOC\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}BI\_ALLOC\_FAIL"{}},\ \textcolor{stringliteral}{"{}BI\_FREE\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}BI\_FREE\_FAIL"{}},\ \textcolor{stringliteral}{"{}BI\_NOT\_USING"{}},\ \textcolor{stringliteral}{"{}MEM\_NOT\_ALLOC"{}},\ \textcolor{stringliteral}{"{}BI\_SET\_ARRAY\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}BI\_SET\_ARRAY\_FAIL"{}}\},}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00005}00005\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}RANDOM\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}RANDOM\_FAIL"{}},\ \textcolor{stringliteral}{"{}BI\_SET\_REFINE\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}BI\_SET\_REFIEN\_FAIL"{}},\ \textcolor{stringliteral}{"{}DIVIDE\_STRING\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}DIVIDE\_STRING\_FAIL"{}},\ \textcolor{stringliteral}{"{}BI\_SET\_DIVIDE\_STRING\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}BI\_SET\_DIVIDE\_STRING\_FAIL"{}}\},}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00006}00006\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}PRINT\_FAIL"{}},\ \textcolor{stringliteral}{"{}PRINT\_NULL"{}}\},}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00007}00007\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\},}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00008}00008\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}Test\_FAIL"{}},\ \textcolor{stringliteral}{"{}Test\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}Test\_BI\_NEW\_DELETE\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}Test\_BI\_NEW\_DELETE\_FAIL"{}},\ \textcolor{stringliteral}{"{}Test\_BI\_SET\_FROM\_SUCCESS"{}},\ \textcolor{stringliteral}{"{}Test\_BI\_SET\_FROM\_FAIL"{}},\ \textcolor{stringliteral}{"{}Test\_Bigint\_ALLOC\_FAIL"{}}\}\};}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00010}\mbox{\hyperlink{error__msg_8c_ae6d938d0bc8b8ef290de03fe663420e8}{00010}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{error__msg_8c_ae6d938d0bc8b8ef290de03fe663420e8}{print\_log}}(\textcolor{keywordtype}{int}\ error\_code)}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00011}00011\ \{}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00012}00012\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ error\_index\ =\ error\_code\ /\ 10;}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00013}00013\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ error\_number\ =\ error\_code\ \%\ 10;}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00015}00015\ \ \ \ \ \textcolor{keywordflow}{if}\ (error\_code\ <\ 0\ ||\ error\_index\ >=\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{error\_msg\_list}})\ /\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{error\_msg\_list}}[0])\ ||\ \mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{error\_msg\_list}}[error\_index][error\_number]\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00016}00016\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00017}00017\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}Unknown\ error\ code\ \%d\(\backslash\)n"{}},\ error\_code);}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00018}00018\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00019}00019\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00020}00020\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00021}00021\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ \mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{error\_msg\_list}}[error\_code\ /\ 10][error\_code\ \%\ 10]);}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00022}00022\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{error__msg_8c_source_l00023}00023\ \}}
+
+\end{DoxyCode}

@@ -150,6 +150,14 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case TWO_WORD_LONG_DIV_SUCCESS : return "Two word long division successful";
         case TWO_WORD_LONG_DIV_FAIL : return "Two word long division failed";
         case TWO_WORD_LONG_DIV_LENGTH_INVALID : return "Two word long division length invalid";
+        case BI_GCD_SUCCESS: return "Bigint gcd operation successful";
+        case BI_GCD_FAIL : return "Bigint gcd operation failed";
+        case BI_EEA_SUCCESS : return "Bigint E.E.A operation successful";
+        case BI_EEA_FAIL : return "Bigint E.E.A operation failed";
+        case Test_BI_GCD_SUCCESS : return "Test Bigint gcd operation successful";
+        case Test_BI_GCD_FAIL : return "Test Bigint gcd opertaion failed";
+        case Test_BI_EEA_SUCCESS : return "Test Bigint E.E.A gcd operation successful";
+        case Test_BI_EEA_FAIL : return "Test Bigint E.E.A gcd operation failed";
         default: return "Unknown error code";
     }
 }

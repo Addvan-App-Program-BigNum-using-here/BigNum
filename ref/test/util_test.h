@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 // 윈도우일 때는 time.h 인 것으로 판단
 #include <time.h>
 #include "../util.h"
@@ -143,4 +143,6 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
  * @return message SUCCESS or FAIL
  */
 msg test_bi_barrett_reduction(OUT double* total_time_barret_reduction, IN bigint** a, IN bigint** barret_N, IN bigint** barret_T, IN char* str);
+
+msg test_bi_gcd(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
 #endif // UTIL_TEST_H
