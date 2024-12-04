@@ -173,7 +173,6 @@ def test_division(f, p):
         count += 1
         result, q, r = division(subif)
         if result == False:
-            print(subif)
             False_count += 1
             k.write(subif)
             k.write(str(hex(q)))
@@ -355,6 +354,27 @@ def test_barrett(f, p):
             k.write('\n')
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
+def test_gcd(f, p):
+    k = open('./result/result_gcd.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 gcd 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result = int(shiftif_tmp[7], 16)
+        tmp = math.gcd(int(shiftif_tmp[2], 16), int(shiftif_tmp[4], 16))
+        if(result != tmp):
+            False_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+
 def bi_test(f, p):
     while True:
         line = f.readline()
@@ -408,3 +428,6 @@ if __name__ == '__main__':
 
         f = file_open('./test_barrett_reduction.txt')
         if f != None:   test_barrett(f, p)
+
+        f = file_open('./test_gcd.txt')
+        if f != None:   test_gcd(f, p)

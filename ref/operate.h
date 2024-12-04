@@ -7,9 +7,30 @@
 #include "random.h"
 
 #define mul_karachuba_ratio 4   // 카라츄바 곱셈 시 분할 기준
-#define squ_karachuba_ratio 2   // 카라츄바 제곱 시 분할 기준
+#define squ_karachuba_ratio 4   // 카라츄바 제곱 시 분할 기준
 #define MAX_RECURSION_DEPTH 32  // 재귀 깊이
 #define POOL_SIZE 8             // 카라츄바에 필요한 임시 변수 개수 (a_0, b_0, a_1, b_1, a_0b_0, a_1b_1, a_1_a_0, b_1_b_0)
+
+// WORD_BITS에 따라 마스크와 시프트 연산을 처리하는 매크로 정의
+#if WORD_BITS == 64
+    #define WORD_MASK ((1ULL << 32) - 1)    // 16비트 마스크
+    #define WORD_SHIFT 32                   // 상위 16비트 시프트
+#elif WORD_BITS == 32
+    #define WORD_MASK ((1U << 16) - 1)      // 16비트 마스크
+    #define WORD_SHIFT 16                   // 상위 16비트 시프트
+#elif WORD_BITS == 16
+    #define WORD_MASK ((1U << 8) - 1)       // 8비트 마스크
+    #define WORD_SHIFT 8                    // 상위 8비트 시프트
+#elif WORD_BITS == 8
+    #define WORD_MASK ((1U << 4) - 1)       // 4비트 마스크
+    #define WORD_SHIFT 4                    // 상위 4비트 시프트
+#else
+    #error "Unsupported WORD_BITS value"
+#endif
+
+// 16비트 단위로 값을 추출하는 매크로
+#define GET_LOWER_PART(word) ((word) & WORD_MASK)
+#define GET_UPPER_PART(word) ((word) >> WORD_SHIFT)
 
 // 메모리 풀 구조체
 typedef struct {
@@ -41,15 +62,6 @@ msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b);
  * @return msg
  */
 msg bi_sub(OUT bigint **dst, IN bigint **a, IN bigint **b);
-
-// ================ 2024-11-11 수정 ========================
-/**
- * @brief bigint structure multiplication operation
- * @param dst pointer to result of bigint multiplication
- * @param a first bigint operand
- * @param b second bigint operand
- */
-msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b);
 
 /**
  * @brief bigint structure mul operation
@@ -134,6 +146,16 @@ msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN 
 msg divcc(OUT word* q, OUT bigint** r, IN bigint** a, IN bigint** b);
 
 /**
+ * @brief two word long division operation
+ * @param q pointer to quotient of word
+ * @param r pointer to remainder of bigint division
+ * @param a dividend bigint operand
+ * @param b divisor bigint operand
+ * @return msg
+ */
+msg two_word_long_div(OUT word* q, IN bigint** a, IN word b);
+
+/**
  * @brief bigint structure squaring operation
  * @param dst pointer to square of bigint
  * @param a dividend bigint to be squared
@@ -196,4 +218,25 @@ msg barret_reduction(OUT IN bigint** dst, IN bigint** a, IN bigint** n, IN bigin
  * @return msg
  */
 msg init_barret_N(OUT bigint** barret_t, IN bigint** barret_n, IN int barret_word_len);
+
+msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b);
+
+/**
+ * @brief bigint structure squaring operation by using Extended Euclidean Algorithm
+ * @param dst pointer to square of bigint
+ * @param a dividend bigint to be squared
+ * @return msg
+ */
+msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b)
 #endif // OPERATE_H
+
+
+
+
+
+
+
+
+
+
+;

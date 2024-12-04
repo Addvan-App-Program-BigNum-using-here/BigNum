@@ -64,6 +64,13 @@ enum MemoryMSGCodes
     BI_EXP_R_TO_L_FAIL     = MSG_TYPE_MEMORY | 0x0024, // Bigint 나머지 연산 실패
     DIVCC_SUCCESS = MSG_TYPE_MEMORY | 0x0025, // Bigint 나머지 연산 성공
     DIVCC_FAIL = MSG_TYPE_MEMORY | 0x0026, // Bigint 나머지 연산 실패
+    TWO_WORD_LONG_DIV_SUCCESS = MSG_TYPE_MEMORY | 0x0027, // Bigint 나머지 연산 성공
+    TWO_WORD_LONG_DIV_FAIL = MSG_TYPE_MEMORY | 0x0028, // Bigint 나머지 연산 실패
+    TWO_WORD_LONG_DIV_LENGTH_INVALID = MSG_TYPE_MEMORY | 0x0029, // Bigint 나머지 연산 길이 불일치
+    BI_GCD_SUCCESS   = MSG_TYPE_MEMORY | 0x002A, // Bigint gcd 연산 성공
+    BI_GCD_FAIL     = MSG_TYPE_MEMORY | 0x002B, // Bigint gcd 연산 실패
+    BI_EEA_SUCCESS      = MSG_TYPE_MEMORY | 0x002C, // Bigint E.E.A 연산 성공
+    BI_EEA_FAIL     = MSG_TYPE_MEMORY | 0x002D,  // Bigint E.E.A 연산 실패
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -147,7 +154,11 @@ enum TestMSGCodes
     Test_BI_BARRETT_REDUCTION_SUCCESS = MSG_TYPE_TEST | 0x002B, // Test Bigint Barret Reduction 연산 성공
     Test_BI_BARRETT_REDUCTION_FAIL    = MSG_TYPE_TEST | 0x002C, // Test Bigint Barret Reduction 연산 실패
     COMPARE_DIVISION_SUCCESS = MSG_TYPE_TEST | 0x002D, // Test Bigint 나눗셈 비교 성공
-    COMPARE_DIVISION_FAIL = MSG_TYPE_TEST | 0x002E,    // Test Bigint 나눗셈 비교 실패
+    COMPARE_DIVISION_FAIL = MSG_TYPE_TEST | 0x002E,   // Test Bigint 나눗셈 비교 실패
+    Test_BI_GCD_SUCCESS  = MSG_TYPE_TEST | 0x002F, // Test Bigint GCD operation successful
+    Test_BI_GCD_FAIL  = MSG_TYPE_TEST | 0x0030, // Test Bigint GCD operation failed
+    Test_BI_EEA_SUCCESS = MSG_TYPE_TEST | 0x0031, // TEST Bigint E.E.A gcd operation successful
+    Test_BI_EEA_FAIL= MSG_TYPE_TEST | 0x0032 // TEST Bigint E.E.A gcd operation failed
 
     // 추가 테스트 관련 에러 코드...
 };

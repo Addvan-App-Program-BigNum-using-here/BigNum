@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 // 윈도우일 때는 time.h 인 것으로 판단
 #include <time.h>
 #include <stdarg.h>

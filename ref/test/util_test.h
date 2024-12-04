@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 // 윈도우일 때는 time.h 인 것으로 판단
 #include <time.h>
 #include "../util.h"
@@ -14,10 +14,11 @@
 #include "../data_type.h"
 #include "../file_io.h"
 
-#define test_word_size  64               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
-#define test_word_size_limit 64        // 랜덤 word 크기 사용 시 제한 범위
-#define test_size  10                  // 테스트 횟수
-#define barret_word_size test_word_size            // barret N 크기
+#define BITS_SIZE 2048                              // 테스트 비트 크기
+#define test_word_size BITS_SIZE / WORD_BITS               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
+#define test_word_size_limit BITS_SIZE / WORD_BITS          // 랜덤 word 크기 사용 시 제한 범위
+#define test_size  10                                   // 테스트 횟수
+#define barret_word_size test_word_size                // barret N 크기
 
 /**
  * @brief Test bigint structure allocation and deallocation
@@ -142,4 +143,6 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
  * @return message SUCCESS or FAIL
  */
 msg test_bi_barrett_reduction(OUT double* total_time_barret_reduction, IN bigint** a, IN bigint** barret_N, IN bigint** barret_T, IN char* str);
+
+msg test_bi_gcd(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
 #endif // UTIL_TEST_H
