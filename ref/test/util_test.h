@@ -143,5 +143,17 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
  */
 msg test_bi_barrett_reduction(OUT double* total_time_barret_reduction, IN bigint** a, IN bigint** barret_N, IN bigint** barret_T, IN char* str);
 
+/**
+ * @brief Test bigint structure gcd operation
+ *
+ * @return message SUCCESS or FAIL
+ */
 msg test_bi_gcd(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
+
+/**
+ * @brief Test bigint structure gcd operation by using Extended Euclidean Algorithm
+ *
+ * @return message SUCCESS or FAIL
+ */
+msg test_bi_EEA(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str);
 #endif // UTIL_TEST_H

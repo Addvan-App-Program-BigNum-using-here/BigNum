@@ -1442,46 +1442,62 @@ GCD_EXIT:
     return result_msg;
 }
 
-// msg test_bi_EEA(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str){
-//     bigint *gcd = NULL;
-//     bigint *x = NULL;
-//     bigint *y = NULL;
-//     msg result_msg = Test_BI_EEA_FAIL;
-//     ParamType param_types[2] = {TYPE_BIGINT_PTR,TYPE_BIGINT_PTR};
+msg test_bi_EEA(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str){
+    bigint *gcd = NULL;
+    bigint *x = NULL;
+    bigint *y = NULL;
+    msg result_msg = Test_BI_EEA_FAIL;
+    ParamType param_types[2] = {TYPE_BIGINT_PTR,TYPE_BIGINT_PTR};
 
-//     result_msg = Test_file_write_non_enter(Test_file_gcd, "gcd ", APPEND);
-//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, "gcd ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
 
-//     result_msg = Test_file_write_non_enter(Test_file_gcd, "( ", APPEND);
-//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, "( ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
     
-//     if (bigint_to_hex(str, a) == -1)   goto GCD_EXIT;
-//     result_msg = Test_file_write_non_enter(Test_file_gcd, str, APPEND);
-//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    if (bigint_to_hex(str, a) == -1)   goto EEA_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
 
-//     result_msg = Test_file_write_non_enter(Test_file_gcd, " , ", APPEND);
-//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, " , ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
 
-//      if (bigint_to_hex(str, b) == -1)   goto GCD_EXIT;
-//     result_msg = Test_file_write_non_enter(Test_file_gcd, str, APPEND);
-//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    if (bigint_to_hex(str, b) == -1)   goto EEA_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
 
-//     result_msg = Test_file_write_non_enter(Test_file_gcd, " ) ", APPEND);
-//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, " ) ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
 
-//     result_msg = Test_file_write_non_enter(Test_file_gcd, "= ", APPEND);
-//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, "= ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
    
-//     *total_time_div += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_gcd, &d, &result_msg, param_types, a, b);
-//     if (result_msg != BI_GCD_SUCCESS)   goto GCD_EXIT;
+    *total_time_div += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_EEA, &gcd, &result_msg, param_types, &x, &y, a, b);
+    if (result_msg != BI_EEA_SUCCESS)   goto EEA_EXIT;
 
-//     if (bigint_to_hex(str, &d) == -1)   goto GCD_EXIT;
-//     result_msg = Test_file_write(Test_file_gcd, str, APPEND);
-//     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
+    if (bigint_to_hex(str, &gcd) == -1)   goto EEA_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
 
-//     result_msg = Test_BI_GCD_SUCCESS;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, " , ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
 
-// GCD_EXIT:
-//     if (bi_delete(&d) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
-//     return result_msg;
-// }
+    if (bigint_to_hex(str, &x) == -1)   goto EEA_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_EEA, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
+
+    result_msg = Test_file_write_non_enter(Test_file_EEA, " , ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
+
+    if (bigint_to_hex(str, &y) == -1)   goto EEA_EXIT;
+    result_msg = Test_file_write(Test_file_EEA, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EEA_EXIT;
+
+    result_msg = Test_BI_EEA_SUCCESS;
+
+EEA_EXIT:
+    if (bi_delete(&gcd) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&x) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    if (bi_delete(&y) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    return result_msg;
+}
