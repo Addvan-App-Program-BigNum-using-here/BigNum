@@ -161,18 +161,3 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         default: return "Unknown error code";
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        
-        

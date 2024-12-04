@@ -173,7 +173,6 @@ def test_division(f, p):
         count += 1
         result, q, r = division(subif)
         if result == False:
-            print(subif)
             False_count += 1
             k.write(subif)
             k.write(str(hex(q)))
