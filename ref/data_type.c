@@ -91,7 +91,7 @@ word byte_to_uint(IN byte* input, const IN int byte_len){
     if(byte_len > 4)    return 0;
     word result = 0;
     for(int i = 0; i < byte_len; i++){
-        if(result > MAX_VALUE) return 0;
+        if(result > (word)MAX_VALUE) return 0;
         result = result * 256 + input[i];
     }
     return result;

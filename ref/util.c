@@ -80,7 +80,7 @@ msg bi_set_from_array(OUT bigint** dst, const IN int word_len, const IN word* da
 
     // sign bit set
     for (int i = 0; i < word_len; i++){
-        if (data[endian_idx] > MAX_VALUE){
+        if (data[endian_idx] > (word)MAX_VALUE){
             printf("DATA_OVERFLOW\n");
             if(bi_delete(dst) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
             return BI_SET_ARRAY_FAIL;
