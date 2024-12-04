@@ -1337,6 +1337,3 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     // 일단 x,y(u0, v0)가 음수가 돼도 상관없도록 구현함(음수를 허용할지 항상 양수만 나오게 할지는 선택사항)
     return result_msg;
 }
-
-
-
