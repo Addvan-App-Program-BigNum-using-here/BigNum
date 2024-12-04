@@ -375,6 +375,15 @@ def test_gcd(f, p):
             k.write('\n')
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
+def EEA(a, b):
+    if b == 0:
+        return a, 1, 0  # gcd(a, 0) = a, x = 1, y = 0
+    else:
+        gcd, x1, y1 = EEA(b, a % b)
+        x = y1
+        y = x1 - (a // b) * y1
+        return gcd, x, y
+    
 def test_EEA(f, p):
     k = open('./result/result_gcd.txt', 'w')
     p.write('------------------------------------------------------------\n')
@@ -390,7 +399,7 @@ def test_EEA(f, p):
         result_gcd = int(shiftif_tmp[7], 16)
         result_x = int(shiftif_tmp[9], 16)
         result_y = int(shiftif_tmp[11], 16)
-        tmp = math.gcd(int(shiftif_tmp[2], 16), int(shiftif_tmp[4], 16))
+        temp_gcd, temp_x, temp_y = EEA()
         if(result_gcd != tmp):
             False_count += 1
             k.write(shiftif)
