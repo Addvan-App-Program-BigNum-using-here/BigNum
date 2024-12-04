@@ -121,14 +121,6 @@ ifeq ($(OS),Windows_NT)
 	@$(RM) $(subst /,\,$(SHARED_LIB))
 	@$(RM) $(subst /,\,$(STATIC_LIB))
 
-	@$(TOUCH) ./test_add.txt
-	@$(TOUCH) ./test_div.txt
-	@$(TOUCH) ./test_exp.txt
-	@$(TOUCH) ./test_mul.txt
-	@$(TOUCH) ./test_mul_karachuba.txt
-	@$(TOUCH) ./test_squ.txt
-	@$(TOUCH) ./test_squ_karachuba.txt
-	@$(TOUCH) ./test_sub.txt
 else
 	$(RM) $(LIB_OBJECTS)
 	$(RM) $(TEST_OBJECT)
@@ -137,15 +129,6 @@ else
 	$(RM) $(RESULT_DIR)/*.txt
 	$(RM) $(SHARED_LIB)
 	$(RM) $(STATIC_LIB)
-
-	$(TOUCH) ./test_add.txt
-	$(TOUCH) ./test_div.txt
-	$(TOUCH) ./test_exp.txt
-	$(TOUCH) ./test_mul.txt
-	$(TOUCH) ./test_mul_karachuba.txt
-	$(TOUCH) ./test_squ.txt
-	$(TOUCH) ./test_squ_karachuba.txt
-	$(TOUCH) ./test_sub.txt
 
 endif
 # Debug target
