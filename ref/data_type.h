@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-#define WORD_BITS 32   ///< Word bits
+#define WORD_BITS 8   ///< Word bits
 #define APPEND 0        ///< File append
 #define CLEAR 1         ///< File clear and write
 #define _POSIX_C_SOURCE 200809L
