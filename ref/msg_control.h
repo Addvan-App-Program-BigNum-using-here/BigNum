@@ -181,6 +181,11 @@ enum OperateMSGCodes
     DIVC_SUCCESS = MSG_TYPE_OPERATE | 0x000D, // 나눗셈 성공
     DIVC_FAIL = MSG_TYPE_OPERATE | 0x000E,    // 나눗셈 실패
     BI_DIV_BY_ZERO = MSG_TYPE_OPERATE | 0x000F,     // 나눗셈 금지
+
+    // ================= 2024-12-04 수정 ========================
+    BI_MILLER_RABIN_SUCCESS = MSG_TYPE_OPERATE | 0x0010, // Bigint Miller Rabin 성공
+    BI_MILLER_RABIN_FAIL = MSG_TYPE_OPERATE | 0x0011,    // Bigint Miller Rabin 실패
+
 };
 
 // 에러 처리 함수 프로토타입
