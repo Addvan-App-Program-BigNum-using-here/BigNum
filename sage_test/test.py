@@ -375,6 +375,43 @@ def test_gcd(f, p):
             k.write('\n')
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
+def EEA(a, b):
+    if b == 0:
+        return a, 1, 0  # gcd(a, 0) = a, x = 1, y = 0
+    else:
+        gcd, x1, y1 = EEA(b, a % b)
+        x = y1
+        y = x1 - (a // b) * y1
+        return gcd, x, y
+
+def test_EEA(f, p):
+    k = open('./result/result_EEA.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 EEA 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result_gcd = int(shiftif_tmp[7], 16)
+        result_x = int(shiftif_tmp[9], 16)
+        result_y = int(shiftif_tmp[11], 16)
+        temp_gcd, temp_x, temp_y = EEA(int(shiftif_tmp[2],16), int(shiftif_tmp[4],16))
+        if((result_gcd != temp_gcd) or (result_x != temp_x) or (result_y != temp_y)):
+            False_count += 1
+            k.write(shiftif)
+            k.write(str(hex(temp_gcd)))
+            k.write(str(" , "))
+            k.write(str(hex(temp_x)))
+            k.write(str(" , "))
+            k.write(str(temp_y))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+
+
 def bi_test(f, p):
     while True:
         line = f.readline()
@@ -431,3 +468,6 @@ if __name__ == '__main__':
 
         f = file_open('./test_gcd.txt')
         if f != None:   test_gcd(f, p)
+
+        f = file_open('./test_EEA.txt')
+        if f != None:   test_EEA(f, p)
