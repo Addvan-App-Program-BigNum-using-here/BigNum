@@ -6,7 +6,7 @@ clock_t c_start, c_end;
 
 int main(){
     FILE *fp = NULL;
-    double op_total_time[9] = {0, };
+    double op_total_time[10] = {0, };
     double op_exp_time[3] = {0, };
     byte temp[1] = {0};
     int test_word_size_a = test_word_size;
@@ -187,7 +187,7 @@ int main(){
         
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint gcd 테스트
-        result_msg = test_bi_gcd(&op_total_time[8], &a, &b, str);
+        result_msg = test_bi_gcd(&op_total_time[9], &a, &b, str);
         if(result_msg != Test_BI_GCD_SUCCESS){
             log_msg(Test_BI_GCD_FAIL);
             log_msg(result_msg);
