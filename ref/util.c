@@ -80,8 +80,7 @@ msg bi_set_from_array(OUT bigint** dst, const IN int word_len, const IN word* da
 
     // sign bit set
     for (int i = 0; i < word_len; i++){
-        if (data[endian_idx] > 0xFFFFFFFF)
-        {
+        if (data[endian_idx] > MAX_VALUE){
             printf("DATA_OVERFLOW\n");
             if(bi_delete(dst) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
             return BI_SET_ARRAY_FAIL;
@@ -116,16 +115,26 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, IN int base){
     }
 
     // extract word length
-    switch (base){
-        case 2:
-            word_len = (str_len + 31) / 32;
+    switch (base) {
+        case 2: // Binary
+            word_len = (str_len + (WORD_BITS - 1)) / WORD_BITS;
             block_size = WORD_BITS;
             break;
-        case 10:
-            //            word_len = (str_len + 9) / 10;
+        case 10: // Decimal
+            if (WORD_BITS == 64)
+                word_len = (str_len + 18) / 19; // 64비트는 10진수 19자리 표현 가능
+            else if (WORD_BITS == 32)
+                word_len = (str_len + 9) / 10;  // 32비트는 10자리 표현 가능
+            else if (WORD_BITS == 16)
+                word_len = (str_len + 4) / 5;   // 16비트는 5자리 표현 가능
+            else if (WORD_BITS == 8)
+                word_len = (str_len + 2) / 3;   // 8비트는 3자리 표현 가능
+            else
+                return BI_SET_STRING_FAIL;
+            block_size = 0; // 10진수는 블록 크기를 정의하지 않음
             break;
-        case 16:
-            word_len = (str_len + 7) / 8;
+        case 16: // Hexadecimal
+            word_len = (str_len + (WORD_BITS / 4 - 1)) / (WORD_BITS / 4);
             block_size = WORD_BITS / 4;
             break;
         default:
@@ -138,7 +147,6 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, IN int base){
     // memory allocate
     result_msg = bi_new(dst, word_len);
     if (result_msg != BI_ALLOC_SUCCESS){
-        log_msg(result_msg);
         return result_msg;
     }
     // sign bit set
@@ -372,18 +380,32 @@ msg bi_assign(OUT bigint** dst, IN bigint** src){
  *              - int base: base of bigint struct (2, 10, 16)
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg bi_print(IN bigint **dst, const IN int base){
-    if (*dst == NULL || (*dst)->a == NULL)
-        return PRINT_NULL;
+msg bi_print(IN bigint **dst, const IN int base) {
+    if (*dst == NULL || (*dst)->a == NULL)  return PRINT_NULL;
+    if ((*dst)->sign)   printf("-");
+    if (base == 16) printf("0x");
 
-    if ((*dst)->sign)
-        printf("-");
-    if (base == 16)
-        printf("0x");
+    const char *format = NULL;
+    switch (WORD_BITS) {
+        case 64:
+            format = "%016llx";
+            break;
+        case 32:
+            format = "%08x";
+            break;
+        case 16:
+            format = "%04x";
+            break;
+        case 8:
+            format = "%02x";
+            break;
+        default:
+            printf("Unsupported WORD_BITS value: %d\n", WORD_BITS);
+            return PRINT_FAIL;
+    }
 
-    // 간단한 16진수 출력 (10 진수는 이후 추가)
-    for (int i = (*dst)->word_len - 1; i >= 0; i--){
-        printf("%08x", (*dst)->a[i]);
+    for (int i = (*dst)->word_len - 1; i >= 0; i--) {
+        printf(format, (*dst)->a[i]);
     }
     printf("\n");
 
@@ -441,9 +463,9 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len){
         for (int i = max_src_len - 1; i > 0; i--){
             (*dst)->a[i] = ((*dst)->a[i] << shift_bit) | ((*dst)->a[i - 1] >> (WORD_BITS - shift_bit));
         }
+        (*dst)->a[new_word_len - 1] &= MAX_VALUE >> (WORD_BITS - shift_bit); // 메모리 재활용 할 때 사용하지 않은 bit는 0 처리
     }
     (*dst)->a[0] = (*dst)->a[0] << shift_bit; // bit 이동 시 수식으로 인해 0번째는 수행 못하기에 여기서 수행
-    (*dst)->a[new_word_len - 1] &= 0xffffffff >> (WORD_BITS - shift_bit); // 메모리 재활용 할 때 사용하지 않은 bit는 0 처리
     for(int i = new_word_len; i < max_src_len; i++) (*dst)->a[i] = 0; // 메모리 재활용 할 때 사용하지 않은 word는 0 처리
 
     return BI_SHIFT_SUCCESS;
@@ -587,7 +609,7 @@ msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
     if (*a == NULL || *b == NULL)   return BI_CAT_FAIL;
     // 연접하려는 두 값의 부호가 다를 경우
     if ((*a)->sign != (*b)->sign)   return BI_SIGN_NOT_MATCH;
-  
+
     int new_word_len = (*a)->word_len + (*b)->word_len;
 
     if(*dst == NULL){

@@ -44,7 +44,7 @@ msg bi_get_random(OUT bigint** dst, const IN int word_len) {
 msg array_random(word* dst, int word_len) {
     if (dst == NULL || word_len <= 0)   return BI_INVALID_LENGTH;
     msg result_msg = 0;
-    int byte_len = word_len * (sizeof(word) / sizeof(byte));
+    int byte_len = word_len * (WORD_BITS / sizeof(byte) / 8);
 
     result_msg = randombytes((byte*)dst, byte_len);
     if(result_msg != GEN_RANDOM_BYTES_SUCCESS)  return result_msg;
@@ -90,7 +90,9 @@ msg randombytes(IN byte *dst, IN int byte_len){
     }
 
     while (byte_len > 0){
-        ret = read(fd, dst, byte_len);
+        do{
+            ret = read(fd, dst, byte_len);
+        }while(dst[byte_len - 1] == 0);
         if (ret == -1 && errno == EINTR)
             continue;
         else if (ret == -1)

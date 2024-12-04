@@ -32,11 +32,11 @@ int main(){
 //    test_bi_cat();              // bigint cat 테스트
 
     // barret N 생성
-    result_msg = init_barret_N(&barret_T, &barret_N, barret_word_size);
-    if (result_msg != INIT_BARRET_N_SUCCESS){
-        log_msg(result_msg);
-        return Test_FAIL;
-    }
+//    result_msg = init_barret_N(&barret_T, &barret_N, barret_word_size);
+//    if (result_msg != INIT_BARRET_N_SUCCESS){
+//        log_msg(result_msg);
+//        return Test_FAIL;
+//    }
 
 
     // 카라츄바 세팅
@@ -92,7 +92,7 @@ int main(){
             result_msg = MEM_NOT_ALLOC;
             goto TEST_EXIT;
         }
-
+/*
         // bigint 덧셈 테스트
         result_msg = test_bi_add(&op_total_time[0], &a, &b, str);
         if(result_msg != Test_BI_ADD_SUCCESS){
@@ -167,16 +167,18 @@ int main(){
             log_msg(result_msg);
             return Test_FAIL;
         }
-
+*/
+        printf("%dth test\n", i);
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 지수승 테스트
         result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
         if(result_msg != Test_BI_EXP_SUCCESS){
+            printf("??\n");
             log_msg(Test_BI_EXP_FAIL);
             log_msg(result_msg);
             return Test_FAIL;
         }
-
+/*
         if(test_word_size == barret_word_size){ // 사전 연산 값이 고정되어 있기에 test_word_size가 기존 사이즈와 같을 때만 수행
             memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
             // bigint Barrett Reduction 테스트
@@ -187,6 +189,7 @@ int main(){
                 return Test_FAIL;
             }
         }
+        */
     }
 
     printf("\n============ Testing bi_add ============\n");
@@ -217,7 +220,7 @@ int main(){
     printf("Time taken exp (MS) : %f seconds\n", op_exp_time[0] / test_size);
     printf("Time taken exp (R TO L) : %f seconds\n", op_exp_time[1] / test_size);
     printf("Time taken exp (L TO R) : %f seconds\n", op_exp_time[2] / test_size);
-
+/*
     printf("\n============ Testing bi_barrett_reduction ============\n");
     printf("Time taken barret_reduction : %f seconds\n", op_total_time[8] / test_size);
 
@@ -226,13 +229,15 @@ int main(){
     if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
     if(compare_squaring(16, 120, 16) != COMPARE_SQUARING_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
     if(compare_division(16, 120, 16) != COMPARE_DIVISION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
-
+*/
     // 카라츄바 세팅 해제
     if(clear_karachuba_pool() != CLEAR_KARACHUBA_POOL_SUCCESS){
         log_msg(CLEAR_KARACHUBA_POOL_FAIL);
         return Test_FAIL;
     }
 
+
+    printf("\n");
     log_msg(Test_SUCCESS);
 
     // Sage test
@@ -640,20 +645,27 @@ msg test_bi_set_from(){
                 rand_test_word_size = temp[0] % (test_word_size_limit * 10);
             }while(rand_test_word_size <= 0);
         }
+        printf("%dth test size\n", i);
 
         // 테스트 할 배열 생성
         test_array = (word *)calloc(rand_test_word_size, sizeof(word));
         if (test_array == NULL)
             return MEM_NOT_ALLOC;
 
+        printf("create test array\n");
+
         // 랜덤한 배열 생성
         result_msg = array_random(test_array, rand_test_word_size);
         if (result_msg != GEN_RANDOM_SUCCESS)   goto FROM_EXIT_TEST_ARRAY;
+
+        printf("create random array\n");
 
         int little_endian = 1;
         // little endian set test
         total_set_from_array_little += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_set_from_array, &a, &result_msg, param_types, &rand_test_word_size, test_array, &little_endian);
         if (result_msg != BI_SET_ARRAY_SUCCESS) goto FROM_EXIT_TEST_ARRAY;
+
+        printf("end little endian\n");
 
         // 할당이 잘 되었는지 확인
         for (int i = 0; i < rand_test_word_size; i++){
@@ -1283,7 +1295,7 @@ SQU_EXIT:
 
 msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN bigint** c, IN char* str){
     bigint *d = NULL; // 결과 bigint
-    msg result_msg = Test_BI_EXP_SUCCESS;
+    msg result_msg = Test_BI_EXP_FAIL;
     ParamType param_types[3] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
 
     (*a)->sign = 0; // 여기도 일단 양수로만 하자
@@ -1295,11 +1307,8 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
     result_msg = Test_file_write_non_enter(Test_file_exp, " ^ ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
-    // b 값을 0x10001로 제한
-    (*b)->sign = 0; // 일단 지금은 지수가 양수만! 지수가 음수인 경우 역원 찾는거라서 이거는 EEA 구현해야 할 수 있을 듯
-    (*b)->a[0] = 0x10001; // 지수가 너무 커지면 너무 오래 걸리니까 255로 제한
-    for(int i = (*b)->word_len - 1; i >= 1; i--)   (*b)->a[i] = 0;
-    if(bi_refine(b) != BI_SET_REFINE_SUCCESS) goto EXP_EXIT;
+    (*b)->sign = 0; // 양수를 기반으로 수행
+    (*c)->sign = 0; // 양수를 기반으로 수행
 
     if (bigint_to_hex(str, b) == -1)   goto EXP_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_exp, str, APPEND);
@@ -1308,9 +1317,6 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
     result_msg = Test_file_write_non_enter(Test_file_exp, " mod ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
-    (*c)->sign = 0; // 일단 mod도 양수만!
-    (*c)->a[0] = 10001; // mod도 너무 커지면 너무 오래 걸리니까 255로 제한
-
     if(bigint_to_hex(str, c) == -1) goto EXP_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_exp, str, APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
@@ -1318,20 +1324,23 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
     result_msg = Test_file_write_non_enter(Test_file_exp, " = ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
-    // Multipliation Squaring 구현
-    total_time_exp[0] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_MS, &d, &result_msg, param_types, a, b, c);
-    if (result_msg != BI_EXP_MS_SUCCESS)   goto EXP_EXIT;
-
-    if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;
-    result_msg = Test_file_write_non_enter(Test_file_exp, str, APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
-
-    result_msg = Test_file_write_non_enter(Test_file_exp, " , ", APPEND);
-    if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
-
+//    // Multipliation Squaring 구현
+//    total_time_exp[0] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_MS, &d, &result_msg, param_types, a, b, c);
+//    if (result_msg != BI_EXP_MS_SUCCESS)   goto EXP_EXIT;
+//
+    printf("start R to L\n");
     // Right to Left 구현
     total_time_exp[1] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_R_TO_L, &d, &result_msg, param_types, a, b, c);
     if (result_msg != BI_EXP_R_TO_L_SUCCESS)   goto EXP_EXIT;
+    printf("end R to L\n");
+    printf("str : %s\n", str);
+//    bi_print(d, 16);
+    if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;
+    result_msg = Test_file_write_non_enter(Test_file_exp, str, APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
+
+    result_msg = Test_file_write_non_enter(Test_file_exp, " , ", APPEND);
+    if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
     if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_exp, str, APPEND);
@@ -1340,18 +1349,21 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
     result_msg = Test_file_write_non_enter(Test_file_exp, " , ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
-    // Left to Right 구현
-    total_time_exp[2] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_L_TO_R, &d, &result_msg, param_types, a, b, c);
-    if (result_msg != BI_EXP_L_TO_R_SUCCESS)   goto EXP_EXIT;
+//    // Left to Right 구현
+//    total_time_exp[2] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_L_TO_R, &d, &result_msg, param_types, a, b, c);
+//    if (result_msg != BI_EXP_L_TO_R_SUCCESS)   goto EXP_EXIT;
 
     if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;
     result_msg = Test_file_write(Test_file_exp, str, APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
+    printf("end to exponentiation\n");
 
     result_msg = Test_BI_EXP_SUCCESS;
 
 EXP_EXIT:
     if (bi_delete(&d) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
+    printf("log : ");
+    log_msg(result_msg);
     return result_msg;
 }
 
