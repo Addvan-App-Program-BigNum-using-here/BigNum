@@ -89,6 +89,8 @@ enum StringMSGCodes
     RAND_INIT_FAIL = MSG_TYPE_STRING | 0x000C,           // 랜덤 초기화 실패
     GEN_RANDOM_BYTES_SUCCESS = MSG_TYPE_STRING | 0x000D, // 랜덤 바이트 생성 성공
     GEN_RANDOM_BYTES_FAIL = MSG_TYPE_STRING | 0x000E,    // 랜덤 바이트 생성 실패
+    MR_SUCCESS = MSG_TYPE_STRING | 0x000F,               // Miller-Rabin 성공
+    MR_FAIL = MSG_TYPE_STRING | 0x0010,                  // Miller-Rabin 실패
     // 추가 문자열 관련 에러 코드...
 };
 
@@ -181,11 +183,8 @@ enum OperateMSGCodes
     DIVC_SUCCESS = MSG_TYPE_OPERATE | 0x000D, // 나눗셈 성공
     DIVC_FAIL = MSG_TYPE_OPERATE | 0x000E,    // 나눗셈 실패
     BI_DIV_BY_ZERO = MSG_TYPE_OPERATE | 0x000F,     // 나눗셈 금지
-
-    // ================= 2024-12-04 수정 ========================
-    BI_MILLER_RABIN_SUCCESS = MSG_TYPE_OPERATE | 0x0010, // Bigint Miller Rabin 성공
-    BI_MILLER_RABIN_FAIL = MSG_TYPE_OPERATE | 0x0011,    // Bigint Miller Rabin 실패
-
+    Test_MILLER_RABIN_SUCCESS = MSG_TYPE_OPERATE | 0x0010, // Miller Rabin 성공
+    Test_MILLER_RABIN_FAIL = MSG_TYPE_OPERATE | 0x0011,    // Miller Rabin 실패
 };
 
 // 에러 처리 함수 프로토타입
