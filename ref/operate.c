@@ -1070,6 +1070,7 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     // t = 1
     if(*dst == NULL){
         if(bi_new(dst, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
+
     }else if((*dst)->word_len != 1){
         if(bi_resize(dst, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
     }
@@ -1230,10 +1231,13 @@ EXIT_EUC:
 }
 
 msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b){
-    // a,b 부호 확인 필요
     // x,y 유일하게 하려면 어떻게 할지 생각해봐야됨 gcd(a,b) = ax + by
     msg result_msg = BI_EEA_FAIL;
     
+    // a랑 b 일단 둘 다 양수인 케이스만 생각
+    (*a)->sign = 0;
+    (*b)->sign = 0;
+
     // a와 b 둘 다 0이면 gcd(a,b) = 0
     if((bi_is_zero(a) == BI_IS_ZERO) && (bi_is_zero(b) == BI_IS_ZERO)){
         result_msg = bi_assign(gcd,a);
@@ -1242,6 +1246,7 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
         result_msg = bi_assign(y,a);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        return BI_EEA_SUCCESS;
     }
     // a = 0이면 gcd(a,b) = b,
     // x = 0, y = 1 (ax + by= b)
@@ -1250,8 +1255,9 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
         result_msg = bi_assign(x, a);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
-        result_msg = bi_assign(y, a);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_new(y, 1);
+        if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+        (*y)->sign = 0;
         (*y)->a[0] = 1;
         return BI_EEA_SUCCESS;
     }
@@ -1262,8 +1268,9 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
         result_msg = bi_assign(y, b);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
-        result_msg = bi_assign(x, b);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        result_msg = bi_new(x, 1);
+        if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+        (*x)->sign = 0;
         (*x)->a[0] = 1;
         return BI_EEA_SUCCESS;
     }
@@ -1283,20 +1290,26 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
     result_msg = bi_assign(&t1, b);
     if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
-    // (u0, v0) <- (1, 0)
+    // (u0, v0) <- (1, 0)  
+    // u0, v0 부호 나중에 assign 해줘서 상관 x
     result_msg = bi_new(x, 1);
     if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    (*x) -> a[0] = 1;
+    (*x) -> sign = 0;
     result_msg = bi_new(y, 1);
     if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
-    (*x) -> a[0] = 1;
     (*y) -> a[0] = 0;
+    (*y) -> sign = 0;
+
     // (u1, v1) <- (0, 1)
     result_msg = bi_new(&u1, 1);
     if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    u1 -> a[0] = 0;
+    u1 -> sign = 0;
     result_msg = bi_new(&v1, 1);
     if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
-    u1 -> a[0] = 0;
     v1 -> a[0] = 1;
+    v1 -> sign = 0;
 
     // t1 != 0인 동안 반복문 수행
     while(bi_is_zero(&t1) != BI_IS_ZERO){
@@ -1328,7 +1341,7 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
         result_msg = bi_assign(&v1, &v2);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
         
-        // u2, v2 초기화
+        // u2, v2 초기화. u2,v2는 assign이 아닌 sub 연산으로 값 변경되기 때문에
         for(int i = 0; i < u2 -> word_len; i++) u2 -> a[i] = 0;
         for(int i = 0; i < v2 -> word_len; i++) v2 -> a[i] = 0;
     }
