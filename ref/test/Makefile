@@ -60,7 +60,7 @@ else
             CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
             LDFLAGS = -g -fsanitize=address -arch x86_64 -Wl,-rpath,@executable_path/../lib
         else ifeq ($(UNAME_M),arm64)
-            CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
+            CFLAGS = -O3 -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
             LDFLAGS = -g -fsanitize=address -arch arm64 -Wl,-rpath,@executable_path/../lib
         endif
         TEST_RUN_CMD = DYLD_LIBRARY_PATH=../lib ./$(TEST_PROGRAM)
@@ -106,6 +106,7 @@ endif
 rerun: clean run
 clean:
 	@echo "Cleaning up..."
+ifeq ($(OS),Windows_NT)
 	@rm -f $(LIB_OBJECTS)
 	@rm -f $(TEST_OBJECT)
 	@rm -f $(TEST_PROGRAM)
@@ -113,3 +114,19 @@ clean:
 	@rm -f $(RESULT_DIR)/*.txt
 	@rm -f $(SHARED_LIB)
 	@rm -f $(STATIC_LIB)
+else
+	$(RM) $(LIB_OBJECTS)
+	$(RM) $(TEST_OBJECT)
+	$(RM) $(TEST_PROGRAM)
+	$(RM) *.txt
+	$(RM) $(RESULT_DIR)/*.txt
+	$(RM) $(SHARED_LIB)
+	$(RM) $(STATIC_LIB)
+endif
+# Debug target
+debug:
+	@echo "Operating System: $(OS)"
+	@echo "SHARED_LIB: $(SHARED_LIB)"
+	@echo "TEST_PROGRAM: $(TEST_PROGRAM)"
+	@echo "LIB_OBJECTS: $(LIB_OBJECTS)"
+	@echo "Current directory: $(shell pwd)"

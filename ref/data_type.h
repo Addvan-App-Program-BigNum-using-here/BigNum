@@ -24,26 +24,18 @@
 
 #if WORD_BITS == 64
     #define MAX_VALUE (~0ULL)  // 64비트 최대값
-#elif WORD_BITS == 32
-    #define MAX_VALUE ((1ULL << 32) - 1)  // 32비트 최대값
-#elif WORD_BITS == 16
-    #define MAX_VALUE ((1ULL << 16) - 1)  // 16비트 최대값
-#elif WORD_BITS == 8
-    #define MAX_VALUE ((1ULL << 8) - 1)   // 8비트 최대값
-#else
-    #error "Unsupported WORD_BITS value"
-#endif
-
-#if WORD_BITS == 64
     typedef uint64_t word;
 #elif WORD_BITS == 32
+    #define MAX_VALUE ((1ULL << 32) - 1)  // 32비트 최대값
     typedef uint32_t word;
 #elif WORD_BITS == 16
+    #define MAX_VALUE ((1ULL << 16) - 1)  // 16비트 최대값
     typedef uint16_t word;
 #elif WORD_BITS == 8
+    #define MAX_VALUE ((1ULL << 8) - 1)   // 8비트 최대값
     typedef uint8_t word;
 #else
-    #error "Unsupported WORD_BITS value. Please define WORD_BITS as 8, 16, 32, or 64."
+    #error "Unsupported WORD_BITS value"
 #endif
 
 typedef uint8_t byte;   ///< byte type
