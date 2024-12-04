@@ -769,3 +769,117 @@ int get_power_decomposition(word n, int* powers){
     }
     return count;
 }
+
+msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
+    // n이 NULL이거나 음수
+    if (*n == NULL || (*n)->sign == 1)  return MR_FAIL;
+
+    msg result_msg = MR_FAIL;
+
+    if(bi_new(temp, 1) != BI_ALLOC_SUCCESS)    return MR_FAIL;
+
+    // 짝수 or 0, 1 처리
+    if(((*n)->a[0] % 2 == 0) || ((*n)->word_len == 1 && (*n)->a[0] <= 1)){
+        (*temp)->a[0] = 0;
+        return MR_SUCCESS;
+    }
+
+    // 필요한 변수
+    bigint *n_minus_1 = NULL; // n-1 값 저장
+    bigint *n_minus_2 = NULL; // n-2 값 저장
+    bigint *q = NULL;         // n-1 = 2^l * q에서 q값
+    bigint *a = NULL;         // 랜덤값 a
+    bigint *one = NULL; // 상수 1 n-1할 때 쓸거임
+
+    // 제곱2연산을 위한 변수
+    bigint *two = NULL;
+
+    int l = 0; // l 값 저장
+
+    // n-1을 하기위해서 one 생성
+    result_msg = bi_new(&one, 1);
+    if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+    one->a[0] = 1;
+
+    // 2 생성
+    result_msg = bi_new(&two, 1);
+    if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+    two->a[0] = 2;
+
+    // n-1 계산
+    if (bi_sub(&n_minus_1, n, &one) != BI_SUB_SUCCESS)  goto clean;
+    // n-2 계산
+    if (bi_sub(&n_minus_2, &n_minus_1, &one) != BI_SUB_SUCCESS) goto clean;
+
+    // n-1 = 2^l * q 형태로 분해
+    result_msg = bi_assign(&q, &n_minus_1);
+    if (result_msg != BI_SET_ASSIGN_SUCCESS) goto clean;
+
+    // q가 홀수가 될 때까지 2로 나누기
+    while (q->a[0] % 2 == 0){
+        if (bi_shift_right(&q, &q, 1) != BI_SHIFT_SUCCESS)  goto clean; // q를 2로 나누기
+        l++; // 2로 나눌 때마다 l 증가
+    }
+
+    result_msg = bi_refine(&q);
+    if (result_msg != BI_SET_REFINE_SUCCESS) goto clean;
+
+    // k번 테스트
+    while (k > 0){
+        k--;
+        // 과정 3번 : 랜덤한 a 선택 2, n-2 사이의 랜덤한 수
+        do{
+            if (bi_get_random(&a, (*n)->word_len) != BI_GET_RANDOM_SUCCESS) goto clean;
+            // a가 2보다 작으면 다시 선택
+            if (a->word_len == 1 && a->a[0] < 2)    continue;
+            // a가 n-2보다 크면 다시 선택
+            if (bi_compare_abs(&a, &n_minus_2) > 0) continue;
+            break;
+        } while (1);
+
+        result_msg = bi_gcd(temp, &a, n);
+        if (result_msg != BI_GCD_SUCCESS)   goto clean;
+        bi_refine(temp);
+
+        // 과정 4번 : gcd(a, n) != 1인 경우 => ~(gcd(a, n) == 1) == ~(word_len == 1 && a[0] == 1) == word_len != 1 || a[0] != 1
+        if((*temp)->word_len != 1 || (*temp)->a[0] != 1){
+            result_msg = bi_new(temp, 1);
+            if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+            result_msg = MR_SUCCESS;
+            goto clean;
+        }
+
+        // step 8 : a <- a^q mod n
+        result_msg = bi_exp_L_TO_R(&a, &a, &q, n);
+        if (result_msg != BI_EXP_L_TO_R_SUCCESS)  goto clean;
+
+        // n값으로 모듈러 취해서 나와지니깐?
+        // step 9 : a가 1이면 다음 테스트로 , step 10
+        result_msg = bi_compare_abs(&a, &one);
+        if (result_msg == 0)  continue;
+        // step 12 : j = 0 l-1까지
+        for (int j = 0; j < l - 1; j++){
+            result_msg = bi_compare_abs(&a, &n_minus_1);
+            if (result_msg == 0)    break;
+            // step 11 : a <- a^2 mod n
+            result_msg = bi_exp_L_TO_R(&a, &a, &two, n); // 여기 나중에 squ로 하자 (modular squaring 구현 필요)
+            if (result_msg != BI_EXP_L_TO_R_SUCCESS)   goto clean;
+        }
+        if(!result_msg) continue;
+        return COMPOSITE;
+    }
+    result_msg = bi_new(temp, 1);
+    if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+    (*temp)->a[0] = 1;
+
+    result_msg = MR_SUCCESS;
+
+clean:
+    // 메모리 해제
+    bi_delete(&n_minus_1);
+    bi_delete(&n_minus_2);
+    bi_delete(&q);
+    bi_delete(&a);
+    bi_delete(&one);
+    return result_msg;
+}

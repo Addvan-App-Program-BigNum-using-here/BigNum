@@ -1,5 +1,8 @@
 import re
 import math
+import random
+import sys
+sys.setrecursionlimit(100000)  # 기본값인 1000보다 큰 값으로 변경
 
 def addition(add_str):
     add_str = add_str.split(' ')
@@ -407,10 +410,60 @@ def test_EEA(f, p):
             k.write(str(" , "))
             k.write(str(hex(temp_x)))
             k.write(str(" , "))
-            k.write(str(temp_y))
+            k.write(str(hex(temp_y)))
             k.write('\n')
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
+def miller_rabin(n, k=10):
+    if n < 2: return False
+    for p in [2,3,5,7,11,13,17,19,23,29]:
+        if n % p == 0: return n == p
+    s, d = 0, n-1
+    while d % 2 == 0:
+        s += 1
+        d //= 2
+    for _ in range(k):
+        x = pow(random.randint(2, n-1), d, n)
+        if x == 1 or x == n-1:
+            continue
+        for _ in range(s-1):
+            x = pow(x, 2, n)
+            if x == n-1:
+                break
+        else:
+            return False
+    return True
+
+def test_miller_rabin(f, p):
+    k = open('./result/result_Miller_Rabin.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 Miller Rabin 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        print(shiftif_tmp)
+        value = int(shiftif_tmp[1], 16)
+        result = shiftif_tmp[0]
+        mr_result = miller_rabin(value)
+        if mr_result == False:
+            if 'Composite' in result:
+                continue
+        else:
+            if 'Probably_Prime' in result:
+                continue
+        False_count += 1
+        k.write(shiftif)
+        if mr_result == False:
+            k.write('Composite')
+        else:
+            k.write('Prime')
+        k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def bi_test(f, p):
     while True:
@@ -471,3 +524,6 @@ if __name__ == '__main__':
 
         f = file_open('./test_EEA.txt')
         if f != None:   test_EEA(f, p)
+
+        f = file_open('./test_miller_rabin.txt')
+        if f != None:   test_miller_rabin(f, p)
