@@ -158,6 +158,21 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case Test_BI_GCD_FAIL : return "Test Bigint gcd opertaion failed";
         case Test_BI_EEA_SUCCESS : return "Test Bigint E.E.A gcd operation successful";
         case Test_BI_EEA_FAIL : return "Test Bigint E.E.A gcd operation failed";
+        case Test_MILLER_RABIN_SUCCESS : return "Test Miller Rabin successful";
+        case Test_MILLER_RABIN_FAIL : return "Test Miller Rabin failed";
+        case MR_SUCCESS : return "Miller Rabin successful";
+        case MR_FAIL : return "Miller Rabin failed";
+        case RSA_SUCCESS : return "RSA successful";
+        case RSA_FAIL : return "RSA failed";
+        case RSA_KEYGEN_SUCCESS : return "RSA key generation successful";
+        case RSA_KEYGEN_FAIL : return "RSA key generation failed";
+        case RSA_ENC_SUCCESS : return "RSA encryption successful";
+        case RSA_ENC_FAIL : return "RSA encryption failed";
+        case RSA_DEC_SUCCESS : return "RSA decryption successful";
+        case RSA_DEC_FAIL : return "RSA decryption failed";
+        case RSA_MISSMATCH : return "RSA key mismatch";
+        case RSA_CRT_SUCCESS : return "RSA CRT successful";
+        case RSA_CRT_FAIL : return "RSA CRT failed";
         default: return "Unknown error code";
     }
 }

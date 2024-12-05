@@ -11,6 +11,7 @@
 #define MSG_TYPE_TEST 0x00040000     // 테스트 에러
 #define MSG_TYPE_OPERATE 0x00050000  // 연산 관련된 에러
 #define MSG_TYPE_OTHER 0x00060000    // 그 외 에러
+#define MSG_TYPE_CRYPTO 0x00070000   // 암호 관련 에러
 // 추가 에러 타입...
 
 // 표준 메시지
@@ -89,6 +90,8 @@ enum StringMSGCodes
     RAND_INIT_FAIL = MSG_TYPE_STRING | 0x000C,           // 랜덤 초기화 실패
     GEN_RANDOM_BYTES_SUCCESS = MSG_TYPE_STRING | 0x000D, // 랜덤 바이트 생성 성공
     GEN_RANDOM_BYTES_FAIL = MSG_TYPE_STRING | 0x000E,    // 랜덤 바이트 생성 실패
+    MR_SUCCESS = MSG_TYPE_STRING | 0x000F,               // Miller-Rabin 성공
+    MR_FAIL = MSG_TYPE_STRING | 0x0010,                  // Miller-Rabin 실패
     // 추가 문자열 관련 에러 코드...
 };
 
@@ -181,6 +184,22 @@ enum OperateMSGCodes
     DIVC_SUCCESS = MSG_TYPE_OPERATE | 0x000D, // 나눗셈 성공
     DIVC_FAIL = MSG_TYPE_OPERATE | 0x000E,    // 나눗셈 실패
     BI_DIV_BY_ZERO = MSG_TYPE_OPERATE | 0x000F,     // 나눗셈 금지
+    Test_MILLER_RABIN_SUCCESS = MSG_TYPE_OPERATE | 0x0010, // Miller Rabin 성공
+    Test_MILLER_RABIN_FAIL = MSG_TYPE_OPERATE | 0x0011,    // Miller Rabin 실패
+};
+
+enum CryptoMSGCodes{
+    RSA_SUCCESS = MSG_TYPE_CRYPTO | 0x0001, // RSA 성공
+    RSA_FAIL = MSG_TYPE_CRYPTO | 0x0002,    // RSA 실패
+    RSA_KEYGEN_SUCCESS = MSG_TYPE_CRYPTO | 0x0003, // RSA 키 생성 성공
+    RSA_KEYGEN_FAIL = MSG_TYPE_CRYPTO | 0x0004,    // RSA 키 생성 실패
+    RSA_ENC_SUCCESS = MSG_TYPE_CRYPTO | 0x0005, // RSA 암호화 성공
+    RSA_ENC_FAIL = MSG_TYPE_CRYPTO | 0x0006,    // RSA 암호화 실패
+    RSA_DEC_SUCCESS = MSG_TYPE_CRYPTO | 0x0007, // RSA 복호화 성공
+    RSA_DEC_FAIL = MSG_TYPE_CRYPTO | 0x0008,    // RSA 복호화 실패
+    RSA_MISSMATCH = MSG_TYPE_CRYPTO | 0x0009,   // RSA 키 불일치
+    RSA_CRT_SUCCESS = MSG_TYPE_CRYPTO | 0x000A, // RSA CRT 성공
+    RSA_CRT_FAIL = MSG_TYPE_CRYPTO | 0x000B,    // RSA CRT 실패
 };
 
 // 에러 처리 함수 프로토타입
