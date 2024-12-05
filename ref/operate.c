@@ -1220,24 +1220,25 @@ msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b){
     while(bi_is_zero(&t1) != BI_IS_ZERO){
         // t2 <- dst
         result_msg = bi_assign(&t2, dst);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EXIT_EUC;
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EXIT_GCD;
         // dst <- t1
         result_msg = bi_assign(dst, &t1);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EXIT_EUC;
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EXIT_GCD;
         // t1 <- t2 mod t1
         result_msg = bi_div(&temp, &t1, &t2, &t1, div_option); // 몫은 필요없어서 일단 temp에 저장
-        if(result_msg != BI_DIV_SUCCESS) goto EXIT_EUC;
+        if(result_msg != BI_DIV_SUCCESS) goto EXIT_GCD;
     }
     // gcd(a, b) = gcd(|a|, |b|) (a,b 부호 상관 x)
     (*dst)->sign = 0;
     result_msg = bi_refine(dst);
-    if(result_msg != BI_SET_REFINE_SUCCESS) return result_msg;
+    if(result_msg != BI_SET_REFINE_SUCCESS) goto EXIT_GCD;
 
     result_msg = BI_GCD_SUCCESS;
 
-EXIT_EUC:
+EXIT_GCD:
     if(bi_delete(&t1) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     if(bi_delete(&t2) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(bi_delete(&temp) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     return result_msg;
 }
 

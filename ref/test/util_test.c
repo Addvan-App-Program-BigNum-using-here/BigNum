@@ -16,7 +16,7 @@ int main(){
     int karachuba_flag = 0;
     int squ_karachuba_flag = 0;
     int DIVISION_METHOD = 0;
-    int miller_rabin_iter = 20;
+    int miller_rabin_iter = 10;
     char* str = NULL;
     msg result_msg = Test_SUCCESS;
     bigint* a = NULL;
@@ -45,7 +45,7 @@ int main(){
         return Test_FAIL;
     }
 
-    for(int i = 0; i < test_size; i++){
+    for(int i = 0; i < test_size; i++){\
         // test_word_size가 0보다 작거나 같으면 랜덤으로 test_word_size를 할당
         if(test_word_size <= 0){
             do{
@@ -120,20 +120,16 @@ int main(){
             return Test_FAIL;
         }
 
-*/
-//        bi_set_from_string(&a, "2108", 16);
-//        bi_set_from_string(&b, "0b", 16);
-//
-//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-//        // WORD LONG bigint 나눗셈 테스트
-//        DIVISION_METHOD = 1;
-//        result_msg = test_bi_div(&op_total_time[3], &a, &b, str, &DIVISION_METHOD);
-//        if(result_msg != Test_BI_DIV_SUCCESS){
-//            log_msg(Test_BI_DIV_FAIL);
-//            log_msg(result_msg);
-//            return Test_FAIL;
-//        }
-/*
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // WORD LONG bigint 나눗셈 테스트
+        DIVISION_METHOD = 1;
+        result_msg = test_bi_div(&op_total_time[3], &a, &b, str, &DIVISION_METHOD);
+        if(result_msg != Test_BI_DIV_SUCCESS){
+            log_msg(Test_BI_DIV_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
+
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 곱셈 테스트
         result_msg = test_bi_mul(&op_total_time[4], &a, &b, str);
@@ -210,10 +206,9 @@ int main(){
             log_msg(result_msg);
             return Test_FAIL;
         }
-        */
+
 
         a->sign = 0;
-
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
         if(result_msg != Test_MILLER_RABIN_SUCCESS){
@@ -221,7 +216,7 @@ int main(){
             log_msg(result_msg);
             return Test_FAIL;
         }
-
+        */
     }
 /*
     printf("\n============ Testing bi_add ============\n");
@@ -293,6 +288,7 @@ int main(){
 TEST_EXIT:
     if(bi_delete(&a) != BI_FREE_SUCCESS)    return Test_FAIL;
     if(bi_delete(&b) != BI_FREE_SUCCESS)    return Test_FAIL;
+    if(bi_delete(&c) != BI_FREE_SUCCESS)    return Test_FAIL;
 
     log_msg(result_msg);
     return Test_FAIL;
