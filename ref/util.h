@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 // 윈도우일 때는 time.h 인 것으로 판단
 #include <time.h>
 #include <stdarg.h>
@@ -20,6 +20,8 @@
         __VA_ARGS__)
 
 #define MAX_PARAMS 5
+#define COMPOSITE 0
+#define PRIME 1
 typedef enum {
     TYPE_BIGINT_PTR,     // bigint**
     TYPE_INT_PTR,       // int*
@@ -195,4 +197,6 @@ double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, Pa
  * @return array size
  */
 int get_power_decomposition(word n, int* powers);
+
+msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k);
 #endif // UTIL_H

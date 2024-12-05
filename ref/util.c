@@ -80,8 +80,7 @@ msg bi_set_from_array(OUT bigint** dst, const IN int word_len, const IN word* da
 
     // sign bit set
     for (int i = 0; i < word_len; i++){
-        if (data[endian_idx] > 0xFFFFFFFF)
-        {
+        if (data[endian_idx] > (word)MAX_VALUE){
             printf("DATA_OVERFLOW\n");
             if(bi_delete(dst) != BI_FREE_SUCCESS)   return BI_FREE_FAIL;
             return BI_SET_ARRAY_FAIL;
@@ -116,16 +115,26 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, IN int base){
     }
 
     // extract word length
-    switch (base){
-        case 2:
-            word_len = (str_len + 31) / 32;
+    switch (base) {
+        case 2: // Binary
+            word_len = (str_len + (WORD_BITS - 1)) / WORD_BITS;
             block_size = WORD_BITS;
             break;
-        case 10:
-            //            word_len = (str_len + 9) / 10;
+        case 10: // Decimal
+            if (WORD_BITS == 64)
+                word_len = (str_len + 18) / 19; // 64비트는 10진수 19자리 표현 가능
+            else if (WORD_BITS == 32)
+                word_len = (str_len + 9) / 10;  // 32비트는 10자리 표현 가능
+            else if (WORD_BITS == 16)
+                word_len = (str_len + 4) / 5;   // 16비트는 5자리 표현 가능
+            else if (WORD_BITS == 8)
+                word_len = (str_len + 2) / 3;   // 8비트는 3자리 표현 가능
+            else
+                return BI_SET_STRING_FAIL;
+            block_size = 0; // 10진수는 블록 크기를 정의하지 않음
             break;
-        case 16:
-            word_len = (str_len + 7) / 8;
+        case 16: // Hexadecimal
+            word_len = (str_len + (WORD_BITS / 4 - 1)) / (WORD_BITS / 4);
             block_size = WORD_BITS / 4;
             break;
         default:
@@ -138,7 +147,6 @@ msg bi_set_from_string(OUT bigint **dst, IN char *int_str, IN int base){
     // memory allocate
     result_msg = bi_new(dst, word_len);
     if (result_msg != BI_ALLOC_SUCCESS){
-        log_msg(result_msg);
         return result_msg;
     }
     // sign bit set
@@ -372,18 +380,32 @@ msg bi_assign(OUT bigint** dst, IN bigint** src){
  *              - int base: base of bigint struct (2, 10, 16)
  * Return:      - msg : message. SUCCESS or FAIL
  **************************************************/
-msg bi_print(IN bigint **dst, const IN int base){
-    if (*dst == NULL || (*dst)->a == NULL)
-        return PRINT_NULL;
+msg bi_print(IN bigint **dst, const IN int base) {
+    if (*dst == NULL || (*dst)->a == NULL)  return PRINT_NULL;
+    if ((*dst)->sign)   printf("-");
+    if (base == 16) printf("0x");
 
-    if ((*dst)->sign)
-        printf("-");
-    if (base == 16)
-        printf("0x");
+    const char *format = NULL;
+    switch (WORD_BITS) {
+        case 64:
+            format = "%016llx";
+            break;
+        case 32:
+            format = "%08x";
+            break;
+        case 16:
+            format = "%04x";
+            break;
+        case 8:
+            format = "%02x";
+            break;
+        default:
+            printf("Unsupported WORD_BITS value: %d\n", WORD_BITS);
+            return PRINT_FAIL;
+    }
 
-    // 간단한 16진수 출력 (10 진수는 이후 추가)
-    for (int i = (*dst)->word_len - 1; i >= 0; i--){
-        printf("%08x", (*dst)->a[i]);
+    for (int i = (*dst)->word_len - 1; i >= 0; i--) {
+        printf(format, (*dst)->a[i]);
     }
     printf("\n");
 
@@ -441,9 +463,9 @@ msg bi_shift_left(OUT bigint **dst, IN bigint **src, const IN int shift_len){
         for (int i = max_src_len - 1; i > 0; i--){
             (*dst)->a[i] = ((*dst)->a[i] << shift_bit) | ((*dst)->a[i - 1] >> (WORD_BITS - shift_bit));
         }
+        (*dst)->a[new_word_len - 1] &= MAX_VALUE >> (WORD_BITS - shift_bit); // 메모리 재활용 할 때 사용하지 않은 bit는 0 처리
     }
     (*dst)->a[0] = (*dst)->a[0] << shift_bit; // bit 이동 시 수식으로 인해 0번째는 수행 못하기에 여기서 수행
-    (*dst)->a[new_word_len - 1] &= 0xffffffff >> (WORD_BITS - shift_bit); // 메모리 재활용 할 때 사용하지 않은 bit는 0 처리
     for(int i = new_word_len; i < max_src_len; i++) (*dst)->a[i] = 0; // 메모리 재활용 할 때 사용하지 않은 word는 0 처리
 
     return BI_SHIFT_SUCCESS;
@@ -587,7 +609,7 @@ msg bi_cat(OUT bigint** dst, IN bigint** a, IN bigint** b){
     if (*a == NULL || *b == NULL)   return BI_CAT_FAIL;
     // 연접하려는 두 값의 부호가 다를 경우
     if ((*a)->sign != (*b)->sign)   return BI_SIGN_NOT_MATCH;
-  
+
     int new_word_len = (*a)->word_len + (*b)->word_len;
 
     if(*dst == NULL){
@@ -710,10 +732,15 @@ double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, Pa
             }
             break;
         case 4:
-            if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[3] == TYPE_INT_PTR){
+            if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[2] == TYPE_BIGINT_PTR && param_types[3] == TYPE_INT_PTR){
                 msg (*func_4_ptr)(bigint**, bigint**, bigint**, bigint**, int) = (msg (*)(bigint**, bigint**, bigint**, bigint**, int))(func);
                 start = clock();
                 *result_msg = func_4_ptr(dst, (bigint**)params[0], (bigint**)params[1], (bigint**)params[2], *(int*)params[3]);
+                end = clock();
+            }else if(param_types[0] == TYPE_BIGINT_PTR && param_types[1] == TYPE_BIGINT_PTR && param_types[2] == TYPE_BIGINT_PTR && param_types[3] == TYPE_BIGINT_PTR){
+                msg (*func_4_ptr)(bigint**, bigint**, bigint**, bigint**, bigint**) = (msg (*)(bigint**, bigint**, bigint**, bigint**, bigint**))(func);
+                start = clock();
+                *result_msg = func_4_ptr(dst, (bigint**)params[0], (bigint**)params[1], (bigint**)params[2], (bigint**)params[3]);
                 end = clock();
             }
             break;
@@ -741,4 +768,134 @@ int get_power_decomposition(word n, int* powers){
         count++;
     }
     return count;
+}
+
+msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
+    // n이 NULL이거나 음수
+    if (*n == NULL || (*n)->sign == 1)  return MR_FAIL;
+
+    msg result_msg = MR_FAIL;
+
+    if(bi_new(temp, 1) != BI_ALLOC_SUCCESS)    return MR_FAIL;
+
+    // 짝수 or 0, 1 처리
+    if(((*n)->a[0] % 2 == 0) || ((*n)->word_len == 1 && (*n)->a[0] <= 1)){
+        (*temp)->a[0] = 0;
+        return MR_SUCCESS;
+    }
+
+    // 필요한 변수
+    bigint *n_minus_1 = NULL; // n-1 값 저장
+    bigint *n_minus_2 = NULL; // n-2 값 저장
+    bigint *q = NULL;         // n-1 = 2^l * q에서 q값
+    bigint *a = NULL;         // 랜덤값 a
+    bigint *one = NULL; // 상수 1 n-1할 때 쓸거임
+    bigint *two = NULL; // 제곱2연산을 위한 변수
+    bigint *temp_2 = NULL; // q값 저장
+
+    int l = 0; // l 값 저장
+
+    // n-1을 하기위해서 one 생성
+    result_msg = bi_new(&one, 1);
+    if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+    one->a[0] = 1;
+
+    // 2 생성
+    result_msg = bi_new(&two, 1);
+    if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+    two->a[0] = 2;
+
+    // n-1 계산
+    if (bi_sub(&n_minus_1, n, &one) != BI_SUB_SUCCESS)  goto clean;
+    // n-2 계산
+    if (bi_sub(&n_minus_2, &n_minus_1, &one) != BI_SUB_SUCCESS) goto clean;
+
+    // n-1 = 2^l * q 형태로 분해
+    result_msg = bi_assign(&q, &n_minus_1);
+    if (result_msg != BI_SET_ASSIGN_SUCCESS) goto clean;
+
+    // q가 홀수가 될 때까지 2로 나누기
+    while (q->a[0] % 2 == 0){
+        if (bi_shift_right(&q, &q, 1) != BI_SHIFT_SUCCESS)  goto clean; // q를 2로 나누기
+        l++; // 2로 나눌 때마다 l 증가
+    }
+
+    result_msg = bi_refine(&q);
+    if (result_msg != BI_SET_REFINE_SUCCESS) goto clean;
+
+    // k번 테스트
+    while (k > 0){
+        // 과정 3번 : 랜덤한 a 선택 2, n-2 사이의 랜덤한 수
+        do{
+            result_msg = bi_get_random(&a, (*n)->word_len);
+            if (result_msg != BI_GET_RANDOM_SUCCESS) goto clean;
+            // a가 2보다 작으면 다시 선택
+            if (bi_compare(&a, &two) < 0)   continue;
+            // a가 n-2보다 크면 다시 선택
+            if (bi_compare(&a, &n_minus_2) > 0) continue;
+            break;
+        } while (1);
+        k--;
+
+        result_msg = bi_gcd(&temp_2, &a, n);
+        if (result_msg != BI_GCD_SUCCESS)   goto clean;
+        bi_refine(&temp_2);
+
+        // 과정 4번 : gcd(a, n) != 1인 경우 => ~(gcd(a, n) == 1) == ~(word_len == 1 && a[0] == 1) == word_len != 1 || a[0] != 1
+        if((temp_2)->word_len != 1 || (temp_2)->a[0] != 1){
+            result_msg = bi_new(temp, 1);
+            if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+            result_msg = MR_SUCCESS;
+            goto clean;
+        }
+
+        // step 8 : a <- a^q mod n
+        result_msg = bi_exp_L_TO_R(&a, &a, &q, n);
+        if (result_msg != BI_EXP_L_TO_R_SUCCESS)  goto clean;
+
+//        printf("result exp : ");
+//        bi_print(&a, 16);
+
+        // step 9 : a가 1이면 다음 테스트로 , step 10
+        result_msg = bi_div(&temp_2, &a, &a, n, 1);
+        if (result_msg != BI_DIV_SUCCESS)    goto clean;
+        result_msg = bi_compare(&a, &one);
+        if (result_msg == 0)  continue;
+        // step 12 : j = 0 l-1까지
+
+//        printf("in for\n");
+//        printf("l : %d\n", l);
+        for (int j = 0; j <= l - 1; j++){
+            result_msg = bi_div(&temp_2, &a, &a, n, 1);
+            if (result_msg != BI_DIV_SUCCESS)    goto clean;
+
+            result_msg = bi_compare(&a, &n_minus_1);
+            if (result_msg == 0)    break;
+            // step 11 : a <- a^2 mod n
+            result_msg = bi_exp_L_TO_R(&a, &a, &two, n); // 여기 나중에 squ로 하자 (modular squaring 구현 필요)
+            if (result_msg != BI_EXP_L_TO_R_SUCCESS)   goto clean;
+//            printf("a : ");
+//            bi_print(&a, 16);
+        }
+        if(result_msg == 0) continue;
+        result_msg = bi_new(temp, 1);
+        if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+        (*temp)->a[0] = 0;
+        result_msg = MR_SUCCESS;
+        goto clean;
+    }
+    result_msg = bi_new(temp, 1);
+    if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+    (*temp)->a[0] = 1;
+
+    result_msg = MR_SUCCESS;
+
+clean:
+    // 메모리 해제
+    bi_delete(&n_minus_1);
+    bi_delete(&n_minus_2);
+    bi_delete(&q);
+    bi_delete(&a);
+    bi_delete(&one);
+    return result_msg;
 }

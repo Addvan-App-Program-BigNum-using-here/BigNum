@@ -1,0 +1,634 @@
+\doxysection{Big\+Num/doxygen\+\_\+test/util.h File Reference}
+\hypertarget{util_8h}{}\label{util_8h}\index{BigNum/doxygen\_test/util.h@{BigNum/doxygen\_test/util.h}}
+{\ttfamily \#include "{}data\+\_\+type.\+h"{}}\newline
+{\ttfamily \#include "{}error\+\_\+msg.\+h"{}}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+Include dependency graph for util.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=324pt]{util_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{util_8h_a7f8b9c01ea29f22562932df39579d0ca}{bi\+\_\+new}} (\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}dst, int word\+\_\+len)
+\begin{DoxyCompactList}\small\item\em New allocate memory for bigint struct. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{util_8h_a731cab4cd7a7b2dadddd1c030618f93a}{bi\+\_\+delete}} (\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}dst)
+\begin{DoxyCompactList}\small\item\em Delete allocated memory for bigint struct. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{util_8h_a54d1ceafde2d317866c812a12fd86d9e}{bi\+\_\+refine}} (\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}src)
+\begin{DoxyCompactList}\small\item\em Refine bigint struct. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{util_8h_a898d307706d9b410db7a6ceb57000505}{bi\+\_\+assign}} (\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}dst, \mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}src)
+\begin{DoxyCompactList}\small\item\em Processing\+\_\+assign bigint struct. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{util_8h_a21bba02ac8afadee74c053b4d0c5a62e}{bi\+\_\+set\+\_\+from\+\_\+array}} (\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}dst, int sign, int word\+\_\+len, \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}} \texorpdfstring{$\ast$}{*}data, int endian)
+\begin{DoxyCompactList}\small\item\em Set bigint struct from array. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{util_8h_a39115ec7b474450f20959f13362f5d5f}{bi\+\_\+set\+\_\+from\+\_\+string}} (\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}dst, char \texorpdfstring{$\ast$}{*}int\+\_\+str, int base)
+\begin{DoxyCompactList}\small\item\em Set bigint struct from string. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{util_8h_a5e045d2d1995e90f35a726d939bed0ef}{String\+\_\+\+Divide}} (char \texorpdfstring{$\ast$}{*}int\+\_\+str, \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}} \texorpdfstring{$\ast$}{*}a, int base)
+\begin{DoxyCompactList}\small\item\em Divide string to word custom to base 10. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{util_8h_a9a6f03edb6617e886b1e0a76f718ec05}{bi\+\_\+get\+\_\+random}} (\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}dst, int word\+\_\+len)
+\begin{DoxyCompactList}\small\item\em New allocate bigint struct and fill it with random values. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{util_8h_ad426986e5b0c9c5f97ebe8e3c3a784d2}{bi\+\_\+print}} (\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}dst, int base)
+\begin{DoxyCompactList}\small\item\em Print bigint struct. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{util_8h_a898d307706d9b410db7a6ceb57000505}\index{util.h@{util.h}!bi\_assign@{bi\_assign}}
+\index{bi\_assign@{bi\_assign}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{bi\_assign()}{bi\_assign()}}
+{\footnotesize\ttfamily \label{util_8h_a898d307706d9b410db7a6ceb57000505} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} bi\+\_\+assign (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}}]{src}{}\end{DoxyParamCaption})}
+
+
+
+Processing\+\_\+assign bigint struct. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & pointer to bigint struct \\
+\hline
+{\em src} & source bigint struct \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8c_source_l00215}{215}} of file \mbox{\hyperlink{util_8c_source}{util.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00216\ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ 0;}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordflow}{if}\ (*dst\ ==\ src)}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a540f6f7074b32f91bf704c9929fd80fe}{BI\_SET\_ASSIGN\_SUCCESS}};\ \textcolor{comment}{//\ 자기\ 자신에게\ 할당하는\ 경우}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a731cab4cd7a7b2dadddd1c030618f93a}{bi\_delete}}(dst);}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keywordflow}{if}\ (result\_msg\ !=\ \mbox{\hyperlink{error__msg_8h_a560636223a5938ff2ec7625b5ade60ae}{BI\_FREE\_SUCCESS}})}
+\DoxyCodeLine{00223\ \ \ \ \ \{}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{error__msg_8c_ae6d938d0bc8b8ef290de03fe663420e8}{print\_log}}(result\_msg);}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00226\ \ \ \ \ \}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a7f8b9c01ea29f22562932df39579d0ca}{bi\_new}}(dst,\ src-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}});}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordflow}{if}\ (result\_msg\ !=\ \mbox{\hyperlink{error__msg_8h_a560636223a5938ff2ec7625b5ade60ae}{BI\_FREE\_SUCCESS}})}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ (*dst)-\/>sign\ =\ src-\/>\mbox{\hyperlink{structbigint_adb20a09996b54a87246890b0bbe4e87e}{sign}};}
+\DoxyCodeLine{00233\ \ \ \ \ memcpy((*dst)-\/>a,\ src-\/>\mbox{\hyperlink{structbigint_aa7bf9ddbc114158df55f1bf99a52a3f4}{a}},\ src-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ *\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}));}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a540f6f7074b32f91bf704c9929fd80fe}{BI\_SET\_ASSIGN\_SUCCESS}};}
+\DoxyCodeLine{00236\ \}}
+
+\end{DoxyCode}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=317pt]{util_8h_a898d307706d9b410db7a6ceb57000505_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{util_8h_a731cab4cd7a7b2dadddd1c030618f93a}\index{util.h@{util.h}!bi\_delete@{bi\_delete}}
+\index{bi\_delete@{bi\_delete}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{bi\_delete()}{bi\_delete()}}
+{\footnotesize\ttfamily \label{util_8h_a731cab4cd7a7b2dadddd1c030618f93a} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} bi\+\_\+delete (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{dst}{}\end{DoxyParamCaption})}
+
+
+
+Delete allocated memory for bigint struct. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & pointer to bigint struct \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8c_source_l00020}{20}} of file \mbox{\hyperlink{util_8c_source}{util.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordflow}{if}(*dst\ ==\ NULL)\{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a560636223a5938ff2ec7625b5ade60ae}{BI\_FREE\_SUCCESS}};}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{if}((*dst)-\/>a\ ==\ NULL)\{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_afa253c07b02219485cb3b45b2a70e554}{MEM\_NOT\_ALLOC}};}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ (*dst)-\/>word\_len\ =\ 0;}
+\DoxyCodeLine{00030\ \ \ \ \ (*dst)-\/>sign\ =\ 0;}
+\DoxyCodeLine{00031\ \ \ \ \ free((*dst)-\/>a);}
+\DoxyCodeLine{00032\ \ \ \ \ free(*dst);}
+\DoxyCodeLine{00033\ \ \ \ \ *dst\ =\ NULL;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a560636223a5938ff2ec7625b5ade60ae}{BI\_FREE\_SUCCESS}};}
+\DoxyCodeLine{00036\ \}}
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8h_a731cab4cd7a7b2dadddd1c030618f93a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{util_8h_a9a6f03edb6617e886b1e0a76f718ec05}\index{util.h@{util.h}!bi\_get\_random@{bi\_get\_random}}
+\index{bi\_get\_random@{bi\_get\_random}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{bi\_get\_random()}{bi\_get\_random()}}
+{\footnotesize\ttfamily \label{util_8h_a9a6f03edb6617e886b1e0a76f718ec05} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} bi\+\_\+get\+\_\+random (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{int}]{word\+\_\+len}{}\end{DoxyParamCaption})}
+
+
+
+New allocate bigint struct and fill it with random values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & pointer to bigint struct \\
+\hline
+{\em word\+\_\+len} & length of bigint struct \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]rand() 함수 DRBG로 교체 필요, array\+\_\+rand, array\+\_\+rand\+\_\+ver2 중 어떤걸 사용할지 선택 필요 \end{DoxyRefDesc}
+
+
+Definition at line \mbox{\hyperlink{random_8c_source_l00003}{3}} of file \mbox{\hyperlink{random_8c_source}{random.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00004\ \ \ \ \ \mbox{\hyperlink{util_8c_a7f8b9c01ea29f22562932df39579d0ca}{bi\_new}}(dst,\ wordlen);}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \ \ \ \ (*dst)-\/>sign\ =\ rand()\ \&\ 1;\ }
+\DoxyCodeLine{00007\ \ \ \ \ \mbox{\hyperlink{random_8c_adf436de365118712d1c37db5523a827f}{array\_rand}}(dst,\ wordlen);}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{util_8c_a54d1ceafde2d317866c812a12fd86d9e}{bi\_refine}}(*dst);}
+\DoxyCodeLine{00010\ \}}
+
+\end{DoxyCode}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=349pt]{util_8h_a9a6f03edb6617e886b1e0a76f718ec05_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{util_8h_a7f8b9c01ea29f22562932df39579d0ca}\index{util.h@{util.h}!bi\_new@{bi\_new}}
+\index{bi\_new@{bi\_new}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{bi\_new()}{bi\_new()}}
+{\footnotesize\ttfamily \label{util_8h_a7f8b9c01ea29f22562932df39579d0ca} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} bi\+\_\+new (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{int}]{word\+\_\+len}{}\end{DoxyParamCaption})}
+
+
+
+New allocate memory for bigint struct. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & pointer to bigint struct \\
+\hline
+{\em word\+\_\+len} & length of bigint struct \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8c_source_l00003}{3}} of file \mbox{\hyperlink{util_8c_source}{util.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00004\ \ \ \ \ \textcolor{keywordflow}{if}(*dst\ !=\ NULL)\{}
+\DoxyCodeLine{00005\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{util_8c_a731cab4cd7a7b2dadddd1c030618f93a}{bi\_delete}}(dst);}
+\DoxyCodeLine{00006\ \ \ \ \ \}}
+\DoxyCodeLine{00007\ \ \ \ \ *dst\ =\ (\mbox{\hyperlink{structbigint}{bigint}}*)calloc(1,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{structbigint}{bigint}}));}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keywordflow}{if}(*dst\ ==\ NULL)\{}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a5a24ec319d7e722c1b056329997cf71c}{BI\_ALLOC\_FAIL}};}
+\DoxyCodeLine{00010\ \ \ \ \ \}}
+\DoxyCodeLine{00011\ \ \ \ \ (*dst)-\/>\mbox{\hyperlink{structbigint_adb20a09996b54a87246890b0bbe4e87e}{sign}}\ =\ 0;}
+\DoxyCodeLine{00012\ \ \ \ \ (*dst)-\/>a\ =\ (\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}*)calloc(word\_len,\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}));}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordflow}{if}((*dst)-\/>a\ ==\ NULL)\{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a5a24ec319d7e722c1b056329997cf71c}{BI\_ALLOC\_FAIL}};}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ \ \ \ \ (*dst)-\/>word\_len\ =\ word\_len;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a99ab44f9a2adfb17e3eee3640e810fdc}{BI\_ALLOC\_SUCCESS}};}
+\DoxyCodeLine{00018\ \}}
+
+\end{DoxyCode}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=218pt]{util_8h_a7f8b9c01ea29f22562932df39579d0ca_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8h_a7f8b9c01ea29f22562932df39579d0ca_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{util_8h_ad426986e5b0c9c5f97ebe8e3c3a784d2}\index{util.h@{util.h}!bi\_print@{bi\_print}}
+\index{bi\_print@{bi\_print}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{bi\_print()}{bi\_print()}}
+{\footnotesize\ttfamily \label{util_8h_ad426986e5b0c9c5f97ebe8e3c3a784d2} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} bi\+\_\+print (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{int}]{base}{}\end{DoxyParamCaption})}
+
+
+
+Print bigint struct. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & pointer to bigint struct \\
+\hline
+{\em base} & base of bigint struct (2, 10, 16) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8c_source_l00238}{238}} of file \mbox{\hyperlink{util_8c_source}{util.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00239\ \{}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keywordflow}{if}\ (dst\ ==\ NULL\ ||\ dst-\/>\mbox{\hyperlink{structbigint_aa7bf9ddbc114158df55f1bf99a52a3f4}{a}}\ ==\ NULL)}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a3cf41a888ccedd6981f10ec5f557765c}{PRINT\_NULL}};}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keywordflow}{if}\ (dst-\/>\mbox{\hyperlink{structbigint_adb20a09996b54a87246890b0bbe4e87e}{sign}}\ ==\ 0)}
+\DoxyCodeLine{00244\ \ \ \ \ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}0\(\backslash\)n"{}});}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00247\ \ \ \ \ \}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keywordflow}{if}\ (dst-\/>\mbox{\hyperlink{structbigint_adb20a09996b54a87246890b0bbe4e87e}{sign}}\ <\ 0)}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}-\/"{}});}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordflow}{if}\ (base\ ==\ 16)}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}0x"{}});}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{comment}{//\ 간단한\ 16진수\ 출력\ (10\ 진수는\ 이후\ 추가)}}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ dst-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ -\/\ 1;\ i\ >=\ 0;\ i-\/-\/)}
+\DoxyCodeLine{00256\ \ \ \ \ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%08x"{}},\ dst-\/>\mbox{\hyperlink{structbigint_aa7bf9ddbc114158df55f1bf99a52a3f4}{a}}[i]);}
+\DoxyCodeLine{00258\ \ \ \ \ \}}
+\DoxyCodeLine{00259\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00262\ \}}
+
+\end{DoxyCode}
+\Hypertarget{util_8h_a54d1ceafde2d317866c812a12fd86d9e}\index{util.h@{util.h}!bi\_refine@{bi\_refine}}
+\index{bi\_refine@{bi\_refine}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{bi\_refine()}{bi\_refine()}}
+{\footnotesize\ttfamily \label{util_8h_a54d1ceafde2d317866c812a12fd86d9e} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} bi\+\_\+refine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}}]{src}{}\end{DoxyParamCaption})}
+
+
+
+Refine bigint struct. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em src} & pointer to bigint struct \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8c_source_l00189}{189}} of file \mbox{\hyperlink{util_8c_source}{util.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00190\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keywordflow}{if}\ (src\ ==\ NULL)}
+\DoxyCodeLine{00192\ \ \ \ \ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_ae7fa78e17144b5d4284c2bdc51e70132}{BI\_SET\_REFIEN\_FAIL}};}
+\DoxyCodeLine{00194\ \ \ \ \ \}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keywordtype}{int}\ new\_wordlen\ =\ src-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}};}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordflow}{while}(new\_wordlen\ >\ 1)\{}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(src-\/>\mbox{\hyperlink{structbigint_aa7bf9ddbc114158df55f1bf99a52a3f4}{a}}[new\_wordlen\ -\/\ 1]\ !=\ 0)\{}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ new\_wordlen-\/-\/;}
+\DoxyCodeLine{00202\ \ \ \ \ \}}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordflow}{if}\ (src-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ !=\ new\_wordlen)}
+\DoxyCodeLine{00204\ \ \ \ \ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ src-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ =\ new\_wordlen;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ src-\/>\mbox{\hyperlink{structbigint_aa7bf9ddbc114158df55f1bf99a52a3f4}{a}}\ =\ (\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}*)realloc(src-\/>\mbox{\hyperlink{structbigint_aa7bf9ddbc114158df55f1bf99a52a3f4}{a}},\ new\_wordlen\ *\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}));}
+\DoxyCodeLine{00207\ \ \ \ \ \}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keywordflow}{if}((src-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ ==\ 1)\ \&\&\ (src-\/>\mbox{\hyperlink{structbigint_aa7bf9ddbc114158df55f1bf99a52a3f4}{a}}[0]\ ==\ 0))\{}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ src-\/>\mbox{\hyperlink{structbigint_adb20a09996b54a87246890b0bbe4e87e}{sign}}\ =\ 0;}
+\DoxyCodeLine{00211\ \ \ \ \ \}}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a22384b6e7265c7bf7c1bef62234e25a3}{BI\_SET\_REFINE\_SUCCESS}};}
+\DoxyCodeLine{00213\ \}}
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8h_a54d1ceafde2d317866c812a12fd86d9e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{util_8h_a21bba02ac8afadee74c053b4d0c5a62e}\index{util.h@{util.h}!bi\_set\_from\_array@{bi\_set\_from\_array}}
+\index{bi\_set\_from\_array@{bi\_set\_from\_array}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{bi\_set\_from\_array()}{bi\_set\_from\_array()}}
+{\footnotesize\ttfamily \label{util_8h_a21bba02ac8afadee74c053b4d0c5a62e} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} bi\+\_\+set\+\_\+from\+\_\+array (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{int}]{sign}{, }\item[{int}]{word\+\_\+len}{, }\item[{\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}} \texorpdfstring{$\ast$}{*}}]{data}{, }\item[{int}]{endian}{}\end{DoxyParamCaption})}
+
+
+
+Set bigint struct from array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & pointer to bigint struct \\
+\hline
+{\em sign} & sign of bigint struct \\
+\hline
+{\em word\+\_\+len} & length of bigint struct \\
+\hline
+{\em a} & array of word \\
+\hline
+{\em endian} & little endian == 0, big endian == 1 \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8c_source_l00038}{38}} of file \mbox{\hyperlink{util_8c_source}{util.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ 0;}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{int}\ endian\_idx\ =\ endian\ ?\ 0\ :\ word\_len\ -\/\ 1;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ endian\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a7f8b9c01ea29f22562932df39579d0ca}{bi\_new}}(dst,\ word\_len);}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ ==\ \mbox{\hyperlink{error__msg_8h_a5a24ec319d7e722c1b056329997cf71c}{BI\_ALLOC\_FAIL}})\{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{error__msg_8c_ae6d938d0bc8b8ef290de03fe663420e8}{print\_log}}(result\_msg);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00047\ \ \ \ \ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{if}(dst\ ==\ NULL)\{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_afa253c07b02219485cb3b45b2a70e554}{MEM\_NOT\_ALLOC}};}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ (*dst)-\/>sign\ =\ sign;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ word\_len;\ i++)\{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(data[endian\_idx]\ >\ 0xFFFFFFFF)\{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}DATA\_OVERFLOW\(\backslash\)n"{}});}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a731cab4cd7a7b2dadddd1c030618f93a}{bi\_delete}}(dst);}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{error__msg_8h_a560636223a5938ff2ec7625b5ade60ae}{BI\_FREE\_SUCCESS}})\{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{error__msg_8c_ae6d938d0bc8b8ef290de03fe663420e8}{print\_log}}(result\_msg);}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_ad691abcc6a8db148274163542a5f6495}{BI\_SET\_ARRAY\_FAIL}};}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ (*dst)-\/>a[i]\ =\ data[endian\_idx];}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ endian\_idx\ +=\ idx;}
+\DoxyCodeLine{00066\ \ \ \ \ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a54d1ceafde2d317866c812a12fd86d9e}{bi\_refine}}(*dst);}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{error__msg_8h_a22384b6e7265c7bf7c1bef62234e25a3}{BI\_SET\_REFINE\_SUCCESS}})\{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{error__msg_8c_ae6d938d0bc8b8ef290de03fe663420e8}{print\_log}}(result\_msg);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a1d4ba38494483dc37dcf5fd58fe77bd0}{BI\_SET\_ARRAY\_SUCCESS}};}
+\DoxyCodeLine{00075\ \}}
+
+\end{DoxyCode}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8h_a21bba02ac8afadee74c053b4d0c5a62e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8h_a21bba02ac8afadee74c053b4d0c5a62e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{util_8h_a39115ec7b474450f20959f13362f5d5f}\index{util.h@{util.h}!bi\_set\_from\_string@{bi\_set\_from\_string}}
+\index{bi\_set\_from\_string@{bi\_set\_from\_string}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{bi\_set\_from\_string()}{bi\_set\_from\_string()}}
+{\footnotesize\ttfamily \label{util_8h_a39115ec7b474450f20959f13362f5d5f} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} bi\+\_\+set\+\_\+from\+\_\+string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{int\+\_\+str}{, }\item[{int}]{base}{}\end{DoxyParamCaption})}
+
+
+
+Set bigint struct from string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & pointer to bigint struct \\
+\hline
+{\em int\+\_\+str} & string of bigint \\
+\hline
+{\em base} & base of string (2, 10, 16) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8c_source_l00077}{77}} of file \mbox{\hyperlink{util_8c_source}{util.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ 0;}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{int}\ sign\ =\ 0,\ word\_idx\ =\ 0;}
+\DoxyCodeLine{00080\ \ \ \ \ \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}\ word\_len\ =\ 0;}
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{data__type_8h_adcff24a4bf9ee8d5311d29bc8019ecd6}{dword}}\ q\ =\ 0;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ sign\ bit\ check}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordflow}{if}(int\_str[0]\ ==\ \textcolor{charliteral}{'-\/'})\{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ sign\ =\ 1;}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ int\_str++;}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ extract\ word\ length}}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{switch}\ (base)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(int\_str[0]\ !=\ \textcolor{charliteral}{'0'}\ ||\ int\_str[1]\ !=\ \textcolor{charliteral}{'b'})\{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}bit\ string\ Input\ Must\ be\ start\ '0b'!!\(\backslash\)nstart:\ \%c\%c\(\backslash\)n"{}},\ int\_str[0],\ int\_str[1]);}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_ad32713f017828081f9609d41f38d3430}{BI\_SET\_STRING\_FAIL}};}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ int\_str\ +=\ 2;}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ word\_len\ =\ (strlen(int\_str)\ +\ 31)\ /\ 32;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 10:}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ word\_len\ =\ (strlen(int\_str)\ +\ 9)\ /\ 10;}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 16:}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(int\_str[0]\ !=\ \textcolor{charliteral}{'0'}\ ||\ int\_str[1]\ !=\ \textcolor{charliteral}{'x'})\{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}hex\ string\ Input\ Must\ be\ start\ '0x'\(\backslash\)nstart:\ \%c\%c\(\backslash\)n"{}},\ int\_str[0],\ int\_str[1]);}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_ad32713f017828081f9609d41f38d3430}{BI\_SET\_STRING\_FAIL}};}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ int\_str\ +=\ 2;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ word\_len\ =\ (strlen(int\_str)\ +\ 7)\ /\ 8;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%d\ base\ is\ not\ supported\(\backslash\)n"{}},\ base);}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_ad32713f017828081f9609d41f38d3430}{BI\_SET\_STRING\_FAIL}};}
+\DoxyCodeLine{00113\ \ \ \ \ \}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ memory\ allocate}}
+\DoxyCodeLine{00116\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a7f8b9c01ea29f22562932df39579d0ca}{bi\_new}}(dst,\ word\_len);}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{error__msg_8h_a99ab44f9a2adfb17e3eee3640e810fdc}{BI\_ALLOC\_SUCCESS}})\{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{error__msg_8c_ae6d938d0bc8b8ef290de03fe663420e8}{print\_log}}(result\_msg);}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00120\ \ \ \ \ \}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{comment}{//\ sign\ bit\ set}}
+\DoxyCodeLine{00122\ \ \ \ \ (*dst)-\/>sign\ =\ sign;}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordflow}{do}\{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a5e045d2d1995e90f35a726d939bed0ef}{String\_Divide}}(int\_str,\ ((*dst)-\/>a)\ +\ (word\_idx++),\ base);}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{error__msg_8h_ae3d0d37fc9abe667eaa3338d2ee3b0f2}{DIVIDE\_STRING\_SUCCESS}})\{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{error__msg_8c_ae6d938d0bc8b8ef290de03fe663420e8}{print\_log}}(result\_msg);}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ q\ =\ \mbox{\hyperlink{data__type_8c_a432d4743a0c1aa43e7fd86f3718d6ef1}{string\_to\_int}}(int\_str,\ base);}
+\DoxyCodeLine{00130\ \ \ \ \ \}\textcolor{keywordflow}{while}(q\ >\ 0xFFFFFFFF);}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordflow}{if}(q\ !=\ 0)}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ (*dst)-\/>a[word\_idx++]\ =\ q;}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a54d1ceafde2d317866c812a12fd86d9e}{bi\_refine}}(*dst);}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{error__msg_8h_a22384b6e7265c7bf7c1bef62234e25a3}{BI\_SET\_REFINE\_SUCCESS}})\{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{error__msg_8c_ae6d938d0bc8b8ef290de03fe663420e8}{print\_log}}(result\_msg);}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00138\ \ \ \ \ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a7f584894332d062f40495295e0573295}{BI\_SET\_STRING\_SUCCESS}};}
+\DoxyCodeLine{00141\ \}}
+
+\end{DoxyCode}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8h_a39115ec7b474450f20959f13362f5d5f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8h_a39115ec7b474450f20959f13362f5d5f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{util_8h_a5e045d2d1995e90f35a726d939bed0ef}\index{util.h@{util.h}!String\_Divide@{String\_Divide}}
+\index{String\_Divide@{String\_Divide}!util.h@{util.h}}
+\doxysubsubsection{\texorpdfstring{String\_Divide()}{String\_Divide()}}
+{\footnotesize\ttfamily \label{util_8h_a5e045d2d1995e90f35a726d939bed0ef} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} String\+\_\+\+Divide (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{int\+\_\+str}{, }\item[{\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}} \texorpdfstring{$\ast$}{*}}]{a}{, }\item[{int}]{base}{}\end{DoxyParamCaption})}
+
+
+
+Divide string to word custom to base 10. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em int\+\_\+str} & string of bigint and return quotient \\
+\hline
+{\em r} & return remainder \\
+\hline
+{\em base} & base of string (2, 10, 16) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{util_8c_source_l00143}{143}} of file \mbox{\hyperlink{util_8c_source}{util.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{int}\ q\_idx\ =\ 0,\ digit\ =\ 0,\ a\_idx\ =\ 0;}
+\DoxyCodeLine{00145\ \ \ \ \ \mbox{\hyperlink{data__type_8h_adcff24a4bf9ee8d5311d29bc8019ecd6}{dword}}\ temp\ =\ 0;}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordtype}{char}*\ q\ =\ NULL;}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ q\ =\ (\textcolor{keywordtype}{char}*)calloc(strlen(int\_str)\ +\ 1,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordflow}{if}(q\ ==\ NULL)\{}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a5a24ec319d7e722c1b056329997cf71c}{BI\_ALLOC\_FAIL}};}
+\DoxyCodeLine{00151\ \ \ \ \ \}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ int\_str[i]\ !=\ \textcolor{charliteral}{'\(\backslash\)0'};\ i++)\ \{}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ digit\ =\ \mbox{\hyperlink{data__type_8c_ac6965f3f9a614b77ad608274d25b1543}{char\_to\_int}}(int\_str[i]);}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(digit\ ==\ -\/1)\{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}Invalid\ character\(\backslash\)n"{}});}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a1ca1d3cf76b21383202a76cfeaf0f4ad}{DIVIDE\_STRING\_FAIL}};}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ temp\ =\ temp\ *\ base\ +\ digit;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(temp\ >\ 0xFFFFFFFF)\{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (base)\ \{}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *(a+(a\_idx++))\ =\ (\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}})(temp\ >>\ 1);}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ temp\ \&\ 0x1;}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 10:}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{data__type_8c_aa28a72ed006d6e9072310c1b73dc7410}{int\_to\_char}}((\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}})(temp\ >>\ \mbox{\hyperlink{data__type_8h_a57592e50f9aa27528ec8e36e23432ee0}{WORD\_BITS}}),\ q,\ q\_idx++);}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ temp\ \%\ 0x100000000;\ \textcolor{comment}{//\ 나머지\ 가져오기}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 16:}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *(a+(a\_idx++))\ =\ (\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}})(temp\ >>\ 4);}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ temp\ \&\ 0xF;}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%d\ base\ is\ not\ supported\(\backslash\)n"{}},\ base);}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_a1ca1d3cf76b21383202a76cfeaf0f4ad}{DIVIDE\_STRING\_FAIL}};}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00180\ \ \ \ \ \}}
+\DoxyCodeLine{00181\ \ \ \ \ memset(int\_str,\ \textcolor{charliteral}{'0'},\ strlen(int\_str));}
+\DoxyCodeLine{00182\ \ \ \ \ strncpy(int\_str,\ q,\ strlen(q));}
+\DoxyCodeLine{00183\ \ \ \ \ int\_str[strlen(q)]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00184\ \ \ \ \ *(a+(a\_idx))\ =\ (\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}})temp;}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{error__msg_8h_ae3d0d37fc9abe667eaa3338d2ee3b0f2}{DIVIDE\_STRING\_SUCCESS}};}
+\DoxyCodeLine{00187\ \}}
+
+\end{DoxyCode}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=255pt]{util_8h_a5e045d2d1995e90f35a726d939bed0ef_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8h_a5e045d2d1995e90f35a726d939bed0ef_icgraph}
+\end{center}
+\end{figure}

@@ -15,6 +15,9 @@
 #define Test_file_squ_karachuba "./test_squ_karachuba.txt"
 #define Test_file_exp "./test_exp.txt"
 #define Test_file_barrett_reduction "./test_barrett_reduction.txt"
+#define Test_file_gcd "./test_gcd.txt"
+#define Test_file_EEA "./test_EEA.txt"
+#define Test_file_MR "./test_miller_rabin.txt"
 
 /**
  * @brief file write

@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['팀_20소개_0',['3. 👩‍👩‍👧‍👧 팀 소개',['../md__big_num_2doxygen__test_2_r_e_a_d_m_e.html#autotoc_md10',1,'']]]
+];

@@ -1,5 +1,10 @@
 import re
 import math
+# from math import pow
+import random
+from random import randint
+import sys
+sys.setrecursionlimit(100000)  # 기본값인 1000보다 큰 값으로 변경
 
 def addition(add_str):
     add_str = add_str.split(' ')
@@ -173,7 +178,6 @@ def test_division(f, p):
         count += 1
         result, q, r = division(subif)
         if result == False:
-            print(subif)
             False_count += 1
             k.write(subif)
             k.write(str(hex(q)))
@@ -355,6 +359,162 @@ def test_barrett(f, p):
             k.write('\n')
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
+def test_gcd(f, p):
+    k = open('./result/result_gcd.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 gcd 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        try:
+            result = int(shiftif_tmp[7], 16)
+        except (ValueError, IndexError) as e:
+            print(f"Error occurred: {e}")
+            print(f"shiftif_tmp: {shiftif_tmp}")
+            print(f"shiftif_tmp length: {len(shiftif_tmp)}")
+        tmp = math.gcd(int(shiftif_tmp[2], 16), int(shiftif_tmp[4], 16))
+        if(result != tmp):
+            False_count += 1
+            k.write(shiftif)
+            k.write(str(hex(tmp)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+
+def EEA(a, b):
+    if b == 0:
+        return a, 1, 0  # gcd(a, 0) = a, x = 1, y = 0
+    else:
+        gcd, x1, y1 = EEA(b, a % b)
+        x = y1
+        y = x1 - (a // b) * y1
+        return gcd, x, y
+
+def test_EEA(f, p):
+    k = open('./result/result_EEA.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 EEA 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        result_gcd = int(shiftif_tmp[7], 16)
+        result_x = int(shiftif_tmp[9], 16)
+        result_y = int(shiftif_tmp[11], 16)
+        temp_gcd, temp_x, temp_y = EEA(int(shiftif_tmp[2],16), int(shiftif_tmp[4],16))
+        if((result_gcd != temp_gcd) or (result_x != temp_x) or (result_y != temp_y)):
+            False_count += 1
+            k.write(shiftif)
+            k.write(str(hex(temp_gcd)))
+            k.write(str(" , "))
+            k.write(str(hex(temp_x)))
+            k.write(str(" , "))
+            k.write(str(hex(temp_y)))
+            k.write('\n')
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+
+def miller_rabin(n, k=10):
+    if n < 2: return False
+    for p in [2,3,5,7,11,13,17,19,23,29]:
+        if n % p == 0: return n == p
+    s, d = 0, n-1
+    while d % 2 == 0:
+        s += 1
+        d //= 2
+    for _ in range(k):
+        x = pow(random.randint(2, n-1), d, n)
+        if x == 1 or x == n-1:
+            continue
+        for _ in range(s-1):
+            x = pow(x, 2, n)
+            if x == n-1:
+                break
+        else:
+            return False
+    return True
+
+def get_l(a):
+    cnt = 0
+    while a % 2 == 0:
+        a = a >> 1
+        cnt += 1
+    return cnt
+
+def is_composite(n, q, l, a):
+    # pow() 함수를 사용하여 모듈러 지수 계산
+    a = pow(a, q, n)
+    # print(f"a^(q) = {a}")
+
+    if a % n == 1:
+        return "NOT Composite"
+
+    for j in range(l):
+        # print(f"a^(2^{j}*q) = {a}")
+        if a % n == n - 1:
+            return "NOT Composite"
+        a = pow(a, 2, n)
+
+    return False
+
+def is_prime_by_miller_rabin(n, k):
+    l = get_l(n-1)
+    q = (n - 1) >> l
+    # print(f"l = {l}, q = {q}")
+
+    while k > 0:
+        # 2와 n-2 사이의 랜덤 수 선택
+        a = randint(2, n-2)
+        # print(f"a = {a}")
+
+        ret = is_composite(n, q, l, a)
+        if ret == "Composite":
+            return False
+        k -= 1
+
+    return True
+
+def test_miller_rabin(f, p):
+    k = open('./result/result_Miller_Rabin_fail.txt', 'w')
+    t = open('./result/result_Miller_Rabin_success.txt', 'w')
+    p.write('------------------------------------------------------------\n')
+    p.write('[빅넘 Miller Rabin 연산]\n')
+    count = 0
+    False_count = 0
+    while True:
+        shiftif = f.readline()
+        if not shiftif:
+            break
+        count += 1
+        shiftif_tmp = shiftif.split(' ')
+        value = int(shiftif_tmp[1], 16)
+        result = shiftif_tmp[0]
+        # mr_result = is_prime_by_miller_rabin(value, 10)
+        mr_result = miller_rabin(value, 10)
+        False_count += write_result(k, t, shiftif, mr_result, result)
+    p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
+
+def write_result(k, t, shiftif, mr_result, result):
+    if mr_result == False and 'Composite' in result:
+        t.write(shiftif)
+        return 0
+    elif mr_result == False and 'Probably_Prime' in result:
+        k.write(shiftif)
+        return 1
+    elif mr_result == True and 'Composite' in result:
+        k.write(shiftif)
+        return 1
+    elif mr_result == True and 'Probably_Prime' in result:
+        t.write(shiftif)
+        return 0
+
 def bi_test(f, p):
     while True:
         line = f.readline()
@@ -408,3 +568,12 @@ if __name__ == '__main__':
 
         f = file_open('./test_barrett_reduction.txt')
         if f != None:   test_barrett(f, p)
+
+        f = file_open('./test_gcd.txt')
+        if f != None:   test_gcd(f, p)
+
+        f = file_open('./test_EEA.txt')
+        if f != None:   test_EEA(f, p)
+
+        f = file_open('./test_miller_rabin.txt')
+        if f != None:   test_miller_rabin(f, p)

@@ -6,14 +6,15 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
-#define WORD_BITS 32    ///< Word bits
+#define WORD_BITS 32   ///< Word bits
+
 #define APPEND 0        ///< File append
 #define CLEAR 1         ///< File clear and write
 #define _POSIX_C_SOURCE 200809L
 #define WORD_BINARY_DIV 0 ///< Word long division
 #define WORD_LONG_DIV 1 ///< Word karatsuba division
-
 #define OUT
 #define IN
 #define seperator "-----------------------------------------"
@@ -22,11 +23,24 @@
 #define GET_LOWER_init "[Get Lower]"
 #define CAT_init "[Cat]"
 
+#if WORD_BITS == 64
+    #define MAX_VALUE (~0ULL)  // 64비트 최대값
+    typedef uint64_t word;
+#elif WORD_BITS == 32
+    #define MAX_VALUE ((1ULL << 32) - 1)  // 32비트 최대값
+    typedef uint32_t word;
+#elif WORD_BITS == 16
+    #define MAX_VALUE ((1ULL << 16) - 1)  // 16비트 최대값
+    typedef uint16_t word;
+#elif WORD_BITS == 8
+    #define MAX_VALUE ((1ULL << 8) - 1)   // 8비트 최대값
+    typedef uint8_t word;
+#else
+    #error "Unsupported WORD_BITS value"
+#endif
+
 typedef uint8_t byte;   ///< byte type
-typedef uint16_t hword; ///< Half word type
 typedef uint32_t msg;   ///< Error message control variation
-typedef uint32_t word;  ///< Word type
-typedef uint64_t dword; ///< Double word type
 
 #ifndef min
 #define min(a, b) ((a) < (b) ? (a) : (b)) ///< min value

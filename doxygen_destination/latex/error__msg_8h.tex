@@ -1,0 +1,555 @@
+\doxysection{Big\+Num/doxygen\+\_\+test/error\+\_\+msg.h File Reference}
+\hypertarget{error__msg_8h}{}\label{error__msg_8h}\index{BigNum/doxygen\_test/error\_msg.h@{BigNum/doxygen\_test/error\_msg.h}}
+
+
+Bigint 연산에 대한 에러 코드 정의 및 에러 메시지 출력 함수 선언  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+Include dependency graph for error\+\_\+msg.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{error__msg_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{error__msg_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{error__msg_8h_aa90cac659d18e8ef6294c7ae337f6b58}{SUCCESS}}~0
+\begin{DoxyCompactList}\small\item\em 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_abb508ea8227673f419e9fe3a86c30d8e}{FAIL}}~1
+\begin{DoxyCompactList}\small\item\em 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a99ab44f9a2adfb17e3eee3640e810fdc}{BI\+\_\+\+ALLOC\+\_\+\+SUCCESS}}~10
+\begin{DoxyCompactList}\small\item\em Bigint 메모리 할당 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a5a24ec319d7e722c1b056329997cf71c}{BI\+\_\+\+ALLOC\+\_\+\+FAIL}}~11
+\begin{DoxyCompactList}\small\item\em Bigint 메모리 할당 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a560636223a5938ff2ec7625b5ade60ae}{BI\+\_\+\+FREE\+\_\+\+SUCCESS}}~12
+\begin{DoxyCompactList}\small\item\em Bigint 메모리 해제 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_abeddb0fef3e1216a1ca1e4b67f3ef0d2}{BI\+\_\+\+FREE\+\_\+\+FAIL}}~13
+\begin{DoxyCompactList}\small\item\em Bigint 메모리 해제 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_afb57d94006749af493b41674809439d7}{BI\+\_\+\+NOT\+\_\+\+USING}}~14
+\begin{DoxyCompactList}\small\item\em 해제 시 NULL 체크를 하는데 이전에 사용 이력이 없는 경우 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_afa253c07b02219485cb3b45b2a70e554}{MEM\+\_\+\+NOT\+\_\+\+ALLOC}}~15
+\begin{DoxyCompactList}\small\item\em Bigint 구조체가 아닌 다른 동적할당에서 할당이 안될 경우 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a1d4ba38494483dc37dcf5fd58fe77bd0}{BI\+\_\+\+SET\+\_\+\+ARRAY\+\_\+\+SUCCESS}}~16
+\begin{DoxyCompactList}\small\item\em Bigint 배열 할당 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_ad691abcc6a8db148274163542a5f6495}{BI\+\_\+\+SET\+\_\+\+ARRAY\+\_\+\+FAIL}}~17
+\begin{DoxyCompactList}\small\item\em Bigint 배열 할당 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a540f6f7074b32f91bf704c9929fd80fe}{BI\+\_\+\+SET\+\_\+\+ASSIGN\+\_\+\+SUCCESS}}~18
+\begin{DoxyCompactList}\small\item\em Bigint 할당 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_aaa37e699a2a42a4ec4d083434da497d0}{BI\+\_\+\+SET\+\_\+\+ASSIGN\+\_\+\+FAIL}}~19
+\begin{DoxyCompactList}\small\item\em Bigint 할당 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a570d2198ddd72484c34a09bc8b7ac3b1}{RANDOM\+\_\+\+SUCCESS}}~20
+\begin{DoxyCompactList}\small\item\em Bigint 랜덤 할당 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a99fd69cf4b075d3078bcd4597e5a60e1}{RANDOM\+\_\+\+FAIL}}~21
+\begin{DoxyCompactList}\small\item\em Bigint 랜덤 할당 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a22384b6e7265c7bf7c1bef62234e25a3}{BI\+\_\+\+SET\+\_\+\+REFINE\+\_\+\+SUCCESS}}~22
+\begin{DoxyCompactList}\small\item\em Bigint 배열 정제 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_ae7fa78e17144b5d4284c2bdc51e70132}{BI\+\_\+\+SET\+\_\+\+REFIEN\+\_\+\+FAIL}}~23
+\begin{DoxyCompactList}\small\item\em Bigint 배열 정제 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_ae3d0d37fc9abe667eaa3338d2ee3b0f2}{DIVIDE\+\_\+\+STRING\+\_\+\+SUCCESS}}~24
+\begin{DoxyCompactList}\small\item\em 문자열을 나누기 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a1ca1d3cf76b21383202a76cfeaf0f4ad}{DIVIDE\+\_\+\+STRING\+\_\+\+FAIL}}~25
+\begin{DoxyCompactList}\small\item\em 문자열 나누기 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a7f584894332d062f40495295e0573295}{BI\+\_\+\+SET\+\_\+\+STRING\+\_\+\+SUCCESS}}~26
+\begin{DoxyCompactList}\small\item\em 문자열을 Bigint로 변환 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_ad32713f017828081f9609d41f38d3430}{BI\+\_\+\+SET\+\_\+\+STRING\+\_\+\+FAIL}}~27
+\begin{DoxyCompactList}\small\item\em 문자열을 Bigint로 변환 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_aacddfbc0ab0fca16fb54f66556086292}{PRINT\+\_\+\+FAIL}}~30
+\begin{DoxyCompactList}\small\item\em Bigint 출력 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a3cf41a888ccedd6981f10ec5f557765c}{PRINT\+\_\+\+NULL}}~31
+\begin{DoxyCompactList}\small\item\em 출력하려는 Bigint 구조체가 NULL인 경우 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a318f3c6bb7c11e65fb1ab5d61879846f}{Test\+\_\+\+FAIL}}~50
+\begin{DoxyCompactList}\small\item\em 테스트 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a9faef0a265e4d94361bf3c3a820484fd}{Test\+\_\+\+SUCCESS}}~51
+\begin{DoxyCompactList}\small\item\em 테스트 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a7a960836831522feafb264359f325b7a}{Test\+\_\+\+BI\+\_\+\+NEW\+\_\+\+DELETE\+\_\+\+SUCCESS}}~52
+\begin{DoxyCompactList}\small\item\em Bigint 생성/삭제 테스트 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a36a0abe3b162ea3834598a3bdc61132c}{Test\+\_\+\+BI\+\_\+\+NEW\+\_\+\+DELETE\+\_\+\+FAIL}}~53
+\begin{DoxyCompactList}\small\item\em Bigint 생성/삭제 테스트 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a61f68943db980c26dd14a8d461715534}{Test\+\_\+\+BI\+\_\+\+SET\+\_\+\+FROM\+\_\+\+SUCCESS}}~54
+\begin{DoxyCompactList}\small\item\em Bigint 설정 테스트 성공 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_ad733dcc6f303b5c5967bf55df4c92ed5}{Test\+\_\+\+BI\+\_\+\+SET\+\_\+\+FROM\+\_\+\+FAIL}}~55
+\begin{DoxyCompactList}\small\item\em Bigint 설정 테스트 실패 \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{error__msg_8h_a84a399262f112e17931da9d52ea3d550}{Test\+\_\+\+MEM\+\_\+\+ALLOC\+\_\+\+FAIL}}~56
+\begin{DoxyCompactList}\small\item\em 테스트 중 메모리 할당 실패 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{error__msg_8h_ae6d938d0bc8b8ef290de03fe663420e8}{print\+\_\+log}} (int error\+\_\+code)
+\begin{DoxyCompactList}\small\item\em 에러 코드에 따른 로그 메시지를 출력하는 함수 \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Bigint 연산에 대한 에러 코드 정의 및 에러 메시지 출력 함수 선언 
+
+
+
+Definition in file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{error__msg_8h_a5a24ec319d7e722c1b056329997cf71c}\index{error\_msg.h@{error\_msg.h}!BI\_ALLOC\_FAIL@{BI\_ALLOC\_FAIL}}
+\index{BI\_ALLOC\_FAIL@{BI\_ALLOC\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_ALLOC\_FAIL}{BI\_ALLOC\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_a5a24ec319d7e722c1b056329997cf71c} 
+\#define BI\+\_\+\+ALLOC\+\_\+\+FAIL~11}
+
+
+
+Bigint 메모리 할당 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00012}{12}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a99ab44f9a2adfb17e3eee3640e810fdc}\index{error\_msg.h@{error\_msg.h}!BI\_ALLOC\_SUCCESS@{BI\_ALLOC\_SUCCESS}}
+\index{BI\_ALLOC\_SUCCESS@{BI\_ALLOC\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_ALLOC\_SUCCESS}{BI\_ALLOC\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a99ab44f9a2adfb17e3eee3640e810fdc} 
+\#define BI\+\_\+\+ALLOC\+\_\+\+SUCCESS~10}
+
+
+
+Bigint 메모리 할당 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00011}{11}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_abeddb0fef3e1216a1ca1e4b67f3ef0d2}\index{error\_msg.h@{error\_msg.h}!BI\_FREE\_FAIL@{BI\_FREE\_FAIL}}
+\index{BI\_FREE\_FAIL@{BI\_FREE\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_FREE\_FAIL}{BI\_FREE\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_abeddb0fef3e1216a1ca1e4b67f3ef0d2} 
+\#define BI\+\_\+\+FREE\+\_\+\+FAIL~13}
+
+
+
+Bigint 메모리 해제 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00014}{14}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a560636223a5938ff2ec7625b5ade60ae}\index{error\_msg.h@{error\_msg.h}!BI\_FREE\_SUCCESS@{BI\_FREE\_SUCCESS}}
+\index{BI\_FREE\_SUCCESS@{BI\_FREE\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_FREE\_SUCCESS}{BI\_FREE\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a560636223a5938ff2ec7625b5ade60ae} 
+\#define BI\+\_\+\+FREE\+\_\+\+SUCCESS~12}
+
+
+
+Bigint 메모리 해제 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00013}{13}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_afb57d94006749af493b41674809439d7}\index{error\_msg.h@{error\_msg.h}!BI\_NOT\_USING@{BI\_NOT\_USING}}
+\index{BI\_NOT\_USING@{BI\_NOT\_USING}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_NOT\_USING}{BI\_NOT\_USING}}
+{\footnotesize\ttfamily \label{error__msg_8h_afb57d94006749af493b41674809439d7} 
+\#define BI\+\_\+\+NOT\+\_\+\+USING~14}
+
+
+
+해제 시 NULL 체크를 하는데 이전에 사용 이력이 없는 경우 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00015}{15}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_ad691abcc6a8db148274163542a5f6495}\index{error\_msg.h@{error\_msg.h}!BI\_SET\_ARRAY\_FAIL@{BI\_SET\_ARRAY\_FAIL}}
+\index{BI\_SET\_ARRAY\_FAIL@{BI\_SET\_ARRAY\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_SET\_ARRAY\_FAIL}{BI\_SET\_ARRAY\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_ad691abcc6a8db148274163542a5f6495} 
+\#define BI\+\_\+\+SET\+\_\+\+ARRAY\+\_\+\+FAIL~17}
+
+
+
+Bigint 배열 할당 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00018}{18}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a1d4ba38494483dc37dcf5fd58fe77bd0}\index{error\_msg.h@{error\_msg.h}!BI\_SET\_ARRAY\_SUCCESS@{BI\_SET\_ARRAY\_SUCCESS}}
+\index{BI\_SET\_ARRAY\_SUCCESS@{BI\_SET\_ARRAY\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_SET\_ARRAY\_SUCCESS}{BI\_SET\_ARRAY\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a1d4ba38494483dc37dcf5fd58fe77bd0} 
+\#define BI\+\_\+\+SET\+\_\+\+ARRAY\+\_\+\+SUCCESS~16}
+
+
+
+Bigint 배열 할당 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00017}{17}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_aaa37e699a2a42a4ec4d083434da497d0}\index{error\_msg.h@{error\_msg.h}!BI\_SET\_ASSIGN\_FAIL@{BI\_SET\_ASSIGN\_FAIL}}
+\index{BI\_SET\_ASSIGN\_FAIL@{BI\_SET\_ASSIGN\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_SET\_ASSIGN\_FAIL}{BI\_SET\_ASSIGN\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_aaa37e699a2a42a4ec4d083434da497d0} 
+\#define BI\+\_\+\+SET\+\_\+\+ASSIGN\+\_\+\+FAIL~19}
+
+
+
+Bigint 할당 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00020}{20}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a540f6f7074b32f91bf704c9929fd80fe}\index{error\_msg.h@{error\_msg.h}!BI\_SET\_ASSIGN\_SUCCESS@{BI\_SET\_ASSIGN\_SUCCESS}}
+\index{BI\_SET\_ASSIGN\_SUCCESS@{BI\_SET\_ASSIGN\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_SET\_ASSIGN\_SUCCESS}{BI\_SET\_ASSIGN\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a540f6f7074b32f91bf704c9929fd80fe} 
+\#define BI\+\_\+\+SET\+\_\+\+ASSIGN\+\_\+\+SUCCESS~18}
+
+
+
+Bigint 할당 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00019}{19}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_ae7fa78e17144b5d4284c2bdc51e70132}\index{error\_msg.h@{error\_msg.h}!BI\_SET\_REFIEN\_FAIL@{BI\_SET\_REFIEN\_FAIL}}
+\index{BI\_SET\_REFIEN\_FAIL@{BI\_SET\_REFIEN\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_SET\_REFIEN\_FAIL}{BI\_SET\_REFIEN\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_ae7fa78e17144b5d4284c2bdc51e70132} 
+\#define BI\+\_\+\+SET\+\_\+\+REFIEN\+\_\+\+FAIL~23}
+
+
+
+Bigint 배열 정제 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00026}{26}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a22384b6e7265c7bf7c1bef62234e25a3}\index{error\_msg.h@{error\_msg.h}!BI\_SET\_REFINE\_SUCCESS@{BI\_SET\_REFINE\_SUCCESS}}
+\index{BI\_SET\_REFINE\_SUCCESS@{BI\_SET\_REFINE\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_SET\_REFINE\_SUCCESS}{BI\_SET\_REFINE\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a22384b6e7265c7bf7c1bef62234e25a3} 
+\#define BI\+\_\+\+SET\+\_\+\+REFINE\+\_\+\+SUCCESS~22}
+
+
+
+Bigint 배열 정제 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00025}{25}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_ad32713f017828081f9609d41f38d3430}\index{error\_msg.h@{error\_msg.h}!BI\_SET\_STRING\_FAIL@{BI\_SET\_STRING\_FAIL}}
+\index{BI\_SET\_STRING\_FAIL@{BI\_SET\_STRING\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_SET\_STRING\_FAIL}{BI\_SET\_STRING\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_ad32713f017828081f9609d41f38d3430} 
+\#define BI\+\_\+\+SET\+\_\+\+STRING\+\_\+\+FAIL~27}
+
+
+
+문자열을 Bigint로 변환 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00030}{30}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a7f584894332d062f40495295e0573295}\index{error\_msg.h@{error\_msg.h}!BI\_SET\_STRING\_SUCCESS@{BI\_SET\_STRING\_SUCCESS}}
+\index{BI\_SET\_STRING\_SUCCESS@{BI\_SET\_STRING\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{BI\_SET\_STRING\_SUCCESS}{BI\_SET\_STRING\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a7f584894332d062f40495295e0573295} 
+\#define BI\+\_\+\+SET\+\_\+\+STRING\+\_\+\+SUCCESS~26}
+
+
+
+문자열을 Bigint로 변환 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00029}{29}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a1ca1d3cf76b21383202a76cfeaf0f4ad}\index{error\_msg.h@{error\_msg.h}!DIVIDE\_STRING\_FAIL@{DIVIDE\_STRING\_FAIL}}
+\index{DIVIDE\_STRING\_FAIL@{DIVIDE\_STRING\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{DIVIDE\_STRING\_FAIL}{DIVIDE\_STRING\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_a1ca1d3cf76b21383202a76cfeaf0f4ad} 
+\#define DIVIDE\+\_\+\+STRING\+\_\+\+FAIL~25}
+
+
+
+문자열 나누기 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00028}{28}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_ae3d0d37fc9abe667eaa3338d2ee3b0f2}\index{error\_msg.h@{error\_msg.h}!DIVIDE\_STRING\_SUCCESS@{DIVIDE\_STRING\_SUCCESS}}
+\index{DIVIDE\_STRING\_SUCCESS@{DIVIDE\_STRING\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{DIVIDE\_STRING\_SUCCESS}{DIVIDE\_STRING\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_ae3d0d37fc9abe667eaa3338d2ee3b0f2} 
+\#define DIVIDE\+\_\+\+STRING\+\_\+\+SUCCESS~24}
+
+
+
+문자열을 나누기 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00027}{27}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_abb508ea8227673f419e9fe3a86c30d8e}\index{error\_msg.h@{error\_msg.h}!FAIL@{FAIL}}
+\index{FAIL@{FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{FAIL}{FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_abb508ea8227673f419e9fe3a86c30d8e} 
+\#define FAIL~1}
+
+
+
+실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00008}{8}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_afa253c07b02219485cb3b45b2a70e554}\index{error\_msg.h@{error\_msg.h}!MEM\_NOT\_ALLOC@{MEM\_NOT\_ALLOC}}
+\index{MEM\_NOT\_ALLOC@{MEM\_NOT\_ALLOC}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{MEM\_NOT\_ALLOC}{MEM\_NOT\_ALLOC}}
+{\footnotesize\ttfamily \label{error__msg_8h_afa253c07b02219485cb3b45b2a70e554} 
+\#define MEM\+\_\+\+NOT\+\_\+\+ALLOC~15}
+
+
+
+Bigint 구조체가 아닌 다른 동적할당에서 할당이 안될 경우 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00016}{16}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_aacddfbc0ab0fca16fb54f66556086292}\index{error\_msg.h@{error\_msg.h}!PRINT\_FAIL@{PRINT\_FAIL}}
+\index{PRINT\_FAIL@{PRINT\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{PRINT\_FAIL}{PRINT\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_aacddfbc0ab0fca16fb54f66556086292} 
+\#define PRINT\+\_\+\+FAIL~30}
+
+
+
+Bigint 출력 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00033}{33}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a3cf41a888ccedd6981f10ec5f557765c}\index{error\_msg.h@{error\_msg.h}!PRINT\_NULL@{PRINT\_NULL}}
+\index{PRINT\_NULL@{PRINT\_NULL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{PRINT\_NULL}{PRINT\_NULL}}
+{\footnotesize\ttfamily \label{error__msg_8h_a3cf41a888ccedd6981f10ec5f557765c} 
+\#define PRINT\+\_\+\+NULL~31}
+
+
+
+출력하려는 Bigint 구조체가 NULL인 경우 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00034}{34}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a99fd69cf4b075d3078bcd4597e5a60e1}\index{error\_msg.h@{error\_msg.h}!RANDOM\_FAIL@{RANDOM\_FAIL}}
+\index{RANDOM\_FAIL@{RANDOM\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{RANDOM\_FAIL}{RANDOM\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_a99fd69cf4b075d3078bcd4597e5a60e1} 
+\#define RANDOM\+\_\+\+FAIL~21}
+
+
+
+Bigint 랜덤 할당 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00024}{24}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a570d2198ddd72484c34a09bc8b7ac3b1}\index{error\_msg.h@{error\_msg.h}!RANDOM\_SUCCESS@{RANDOM\_SUCCESS}}
+\index{RANDOM\_SUCCESS@{RANDOM\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{RANDOM\_SUCCESS}{RANDOM\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a570d2198ddd72484c34a09bc8b7ac3b1} 
+\#define RANDOM\+\_\+\+SUCCESS~20}
+
+
+
+Bigint 랜덤 할당 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00023}{23}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_aa90cac659d18e8ef6294c7ae337f6b58}\index{error\_msg.h@{error\_msg.h}!SUCCESS@{SUCCESS}}
+\index{SUCCESS@{SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{SUCCESS}{SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_aa90cac659d18e8ef6294c7ae337f6b58} 
+\#define SUCCESS~0}
+
+
+
+성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00007}{7}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a36a0abe3b162ea3834598a3bdc61132c}\index{error\_msg.h@{error\_msg.h}!Test\_BI\_NEW\_DELETE\_FAIL@{Test\_BI\_NEW\_DELETE\_FAIL}}
+\index{Test\_BI\_NEW\_DELETE\_FAIL@{Test\_BI\_NEW\_DELETE\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{Test\_BI\_NEW\_DELETE\_FAIL}{Test\_BI\_NEW\_DELETE\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_a36a0abe3b162ea3834598a3bdc61132c} 
+\#define Test\+\_\+\+BI\+\_\+\+NEW\+\_\+\+DELETE\+\_\+\+FAIL~53}
+
+
+
+Bigint 생성/삭제 테스트 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00040}{40}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a7a960836831522feafb264359f325b7a}\index{error\_msg.h@{error\_msg.h}!Test\_BI\_NEW\_DELETE\_SUCCESS@{Test\_BI\_NEW\_DELETE\_SUCCESS}}
+\index{Test\_BI\_NEW\_DELETE\_SUCCESS@{Test\_BI\_NEW\_DELETE\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{Test\_BI\_NEW\_DELETE\_SUCCESS}{Test\_BI\_NEW\_DELETE\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a7a960836831522feafb264359f325b7a} 
+\#define Test\+\_\+\+BI\+\_\+\+NEW\+\_\+\+DELETE\+\_\+\+SUCCESS~52}
+
+
+
+Bigint 생성/삭제 테스트 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00039}{39}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_ad733dcc6f303b5c5967bf55df4c92ed5}\index{error\_msg.h@{error\_msg.h}!Test\_BI\_SET\_FROM\_FAIL@{Test\_BI\_SET\_FROM\_FAIL}}
+\index{Test\_BI\_SET\_FROM\_FAIL@{Test\_BI\_SET\_FROM\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{Test\_BI\_SET\_FROM\_FAIL}{Test\_BI\_SET\_FROM\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_ad733dcc6f303b5c5967bf55df4c92ed5} 
+\#define Test\+\_\+\+BI\+\_\+\+SET\+\_\+\+FROM\+\_\+\+FAIL~55}
+
+
+
+Bigint 설정 테스트 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00042}{42}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a61f68943db980c26dd14a8d461715534}\index{error\_msg.h@{error\_msg.h}!Test\_BI\_SET\_FROM\_SUCCESS@{Test\_BI\_SET\_FROM\_SUCCESS}}
+\index{Test\_BI\_SET\_FROM\_SUCCESS@{Test\_BI\_SET\_FROM\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{Test\_BI\_SET\_FROM\_SUCCESS}{Test\_BI\_SET\_FROM\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a61f68943db980c26dd14a8d461715534} 
+\#define Test\+\_\+\+BI\+\_\+\+SET\+\_\+\+FROM\+\_\+\+SUCCESS~54}
+
+
+
+Bigint 설정 테스트 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00041}{41}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a318f3c6bb7c11e65fb1ab5d61879846f}\index{error\_msg.h@{error\_msg.h}!Test\_FAIL@{Test\_FAIL}}
+\index{Test\_FAIL@{Test\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{Test\_FAIL}{Test\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_a318f3c6bb7c11e65fb1ab5d61879846f} 
+\#define Test\+\_\+\+FAIL~50}
+
+
+
+테스트 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00037}{37}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a84a399262f112e17931da9d52ea3d550}\index{error\_msg.h@{error\_msg.h}!Test\_MEM\_ALLOC\_FAIL@{Test\_MEM\_ALLOC\_FAIL}}
+\index{Test\_MEM\_ALLOC\_FAIL@{Test\_MEM\_ALLOC\_FAIL}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{Test\_MEM\_ALLOC\_FAIL}{Test\_MEM\_ALLOC\_FAIL}}
+{\footnotesize\ttfamily \label{error__msg_8h_a84a399262f112e17931da9d52ea3d550} 
+\#define Test\+\_\+\+MEM\+\_\+\+ALLOC\+\_\+\+FAIL~56}
+
+
+
+테스트 중 메모리 할당 실패 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00043}{43}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+\Hypertarget{error__msg_8h_a9faef0a265e4d94361bf3c3a820484fd}\index{error\_msg.h@{error\_msg.h}!Test\_SUCCESS@{Test\_SUCCESS}}
+\index{Test\_SUCCESS@{Test\_SUCCESS}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{Test\_SUCCESS}{Test\_SUCCESS}}
+{\footnotesize\ttfamily \label{error__msg_8h_a9faef0a265e4d94361bf3c3a820484fd} 
+\#define Test\+\_\+\+SUCCESS~51}
+
+
+
+테스트 성공 
+
+
+
+Definition at line \mbox{\hyperlink{error__msg_8h_source_l00038}{38}} of file \mbox{\hyperlink{error__msg_8h_source}{error\+\_\+msg.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{error__msg_8h_ae6d938d0bc8b8ef290de03fe663420e8}\index{error\_msg.h@{error\_msg.h}!print\_log@{print\_log}}
+\index{print\_log@{print\_log}!error\_msg.h@{error\_msg.h}}
+\doxysubsubsection{\texorpdfstring{print\_log()}{print\_log()}}
+{\footnotesize\ttfamily \label{error__msg_8h_ae6d938d0bc8b8ef290de03fe663420e8} 
+void print\+\_\+log (\begin{DoxyParamCaption}\item[{int}]{error\+\_\+code}{}\end{DoxyParamCaption})}
+
+
+
+에러 코드에 따른 로그 메시지를 출력하는 함수 
+
+
+\begin{DoxyParams}{Parameters}
+{\em error\+\_\+code} & 에러 또는 성공 상태를 나타내는 정수 코드 \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{error__msg_8c_source_l00010}{10}} of file \mbox{\hyperlink{error__msg_8c_source}{error\+\_\+msg.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ error\_index\ =\ error\_code\ /\ 10;}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ error\_number\ =\ error\_code\ \%\ 10;}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordflow}{if}\ (error\_code\ <\ 0\ ||\ error\_index\ >=\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{error\_msg\_list}})\ /\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{error\_msg\_list}}[0])\ ||\ \mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{error\_msg\_list}}[error\_index][error\_number]\ ==\ NULL)}
+\DoxyCodeLine{00016\ \ \ \ \ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}Unknown\ error\ code\ \%d\(\backslash\)n"{}},\ error\_code);}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00020\ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ \mbox{\hyperlink{error__msg_8c_af39fcff1115225b7b175bf4c4b781e47}{error\_msg\_list}}[error\_code\ /\ 10][error\_code\ \%\ 10]);}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ \}}
+
+\end{DoxyCode}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{error__msg_8h_ae6d938d0bc8b8ef290de03fe663420e8_icgraph}
+\end{center}
+\end{figure}

@@ -1,0 +1,11 @@
+var searchData=
+[
+  ['bi_5fassign_0',['bi_assign',['../util_8c.html#a898d307706d9b410db7a6ceb57000505',1,'bi_assign(bigint **dst, bigint *src):&#160;util.c'],['../util_8h.html#a898d307706d9b410db7a6ceb57000505',1,'bi_assign(bigint **dst, bigint *src):&#160;util.c']]],
+  ['bi_5fdelete_1',['bi_delete',['../util_8c.html#a731cab4cd7a7b2dadddd1c030618f93a',1,'bi_delete(bigint **dst):&#160;util.c'],['../util_8h.html#a731cab4cd7a7b2dadddd1c030618f93a',1,'bi_delete(bigint **dst):&#160;util.c']]],
+  ['bi_5fget_5frandom_2',['bi_get_random',['../random_8c.html#ad06b4fcdee651d9a008f5701e546af22',1,'bi_get_random(bigint **dst, int wordlen):&#160;random.c'],['../random_8h.html#a9a6f03edb6617e886b1e0a76f718ec05',1,'bi_get_random(bigint **dst, int word_len):&#160;random.c'],['../util_8h.html#a9a6f03edb6617e886b1e0a76f718ec05',1,'bi_get_random(bigint **dst, int word_len):&#160;random.c']]],
+  ['bi_5fnew_3',['bi_new',['../util_8c.html#a7f8b9c01ea29f22562932df39579d0ca',1,'bi_new(bigint **dst, int word_len):&#160;util.c'],['../util_8h.html#a7f8b9c01ea29f22562932df39579d0ca',1,'bi_new(bigint **dst, int word_len):&#160;util.c']]],
+  ['bi_5fprint_4',['bi_print',['../util_8c.html#ad426986e5b0c9c5f97ebe8e3c3a784d2',1,'bi_print(bigint *dst, int base):&#160;util.c'],['../util_8h.html#ad426986e5b0c9c5f97ebe8e3c3a784d2',1,'bi_print(bigint *dst, int base):&#160;util.c']]],
+  ['bi_5frefine_5',['bi_refine',['../util_8c.html#a54d1ceafde2d317866c812a12fd86d9e',1,'bi_refine(bigint *src):&#160;util.c'],['../util_8h.html#a54d1ceafde2d317866c812a12fd86d9e',1,'bi_refine(bigint *src):&#160;util.c']]],
+  ['bi_5fset_5ffrom_5farray_6',['bi_set_from_array',['../util_8c.html#a21bba02ac8afadee74c053b4d0c5a62e',1,'bi_set_from_array(bigint **dst, int sign, int word_len, word *data, int endian):&#160;util.c'],['../util_8h.html#a21bba02ac8afadee74c053b4d0c5a62e',1,'bi_set_from_array(bigint **dst, int sign, int word_len, word *data, int endian):&#160;util.c']]],
+  ['bi_5fset_5ffrom_5fstring_7',['bi_set_from_string',['../util_8c.html#a39115ec7b474450f20959f13362f5d5f',1,'bi_set_from_string(bigint **dst, char *int_str, int base):&#160;util.c'],['../util_8h.html#a39115ec7b474450f20959f13362f5d5f',1,'bi_set_from_string(bigint **dst, char *int_str, int base):&#160;util.c']]]
+];

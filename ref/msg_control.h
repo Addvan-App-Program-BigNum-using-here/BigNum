@@ -11,6 +11,7 @@
 #define MSG_TYPE_TEST 0x00040000     // 테스트 에러
 #define MSG_TYPE_OPERATE 0x00050000  // 연산 관련된 에러
 #define MSG_TYPE_OTHER 0x00060000    // 그 외 에러
+#define MSG_TYPE_CRYPTO 0x00070000   // 암호 관련 에러
 // 추가 에러 타입...
 
 // 표준 메시지
@@ -64,6 +65,13 @@ enum MemoryMSGCodes
     BI_EXP_R_TO_L_FAIL     = MSG_TYPE_MEMORY | 0x0024, // Bigint 나머지 연산 실패
     DIVCC_SUCCESS = MSG_TYPE_MEMORY | 0x0025, // Bigint 나머지 연산 성공
     DIVCC_FAIL = MSG_TYPE_MEMORY | 0x0026, // Bigint 나머지 연산 실패
+    TWO_WORD_LONG_DIV_SUCCESS = MSG_TYPE_MEMORY | 0x0027, // Bigint 나머지 연산 성공
+    TWO_WORD_LONG_DIV_FAIL = MSG_TYPE_MEMORY | 0x0028, // Bigint 나머지 연산 실패
+    TWO_WORD_LONG_DIV_LENGTH_INVALID = MSG_TYPE_MEMORY | 0x0029, // Bigint 나머지 연산 길이 불일치
+    BI_GCD_SUCCESS   = MSG_TYPE_MEMORY | 0x002A, // Bigint gcd 연산 성공
+    BI_GCD_FAIL     = MSG_TYPE_MEMORY | 0x002B, // Bigint gcd 연산 실패
+    BI_EEA_SUCCESS      = MSG_TYPE_MEMORY | 0x002C, // Bigint E.E.A 연산 성공
+    BI_EEA_FAIL     = MSG_TYPE_MEMORY | 0x002D,  // Bigint E.E.A 연산 실패
     // 추가 메모리 관련 에러 코드...
 };
 
@@ -82,6 +90,8 @@ enum StringMSGCodes
     RAND_INIT_FAIL = MSG_TYPE_STRING | 0x000C,           // 랜덤 초기화 실패
     GEN_RANDOM_BYTES_SUCCESS = MSG_TYPE_STRING | 0x000D, // 랜덤 바이트 생성 성공
     GEN_RANDOM_BYTES_FAIL = MSG_TYPE_STRING | 0x000E,    // 랜덤 바이트 생성 실패
+    MR_SUCCESS = MSG_TYPE_STRING | 0x000F,               // Miller-Rabin 성공
+    MR_FAIL = MSG_TYPE_STRING | 0x0010,                  // Miller-Rabin 실패
     // 추가 문자열 관련 에러 코드...
 };
 
@@ -147,7 +157,11 @@ enum TestMSGCodes
     Test_BI_BARRETT_REDUCTION_SUCCESS = MSG_TYPE_TEST | 0x002B, // Test Bigint Barret Reduction 연산 성공
     Test_BI_BARRETT_REDUCTION_FAIL    = MSG_TYPE_TEST | 0x002C, // Test Bigint Barret Reduction 연산 실패
     COMPARE_DIVISION_SUCCESS = MSG_TYPE_TEST | 0x002D, // Test Bigint 나눗셈 비교 성공
-    COMPARE_DIVISION_FAIL = MSG_TYPE_TEST | 0x002E,    // Test Bigint 나눗셈 비교 실패
+    COMPARE_DIVISION_FAIL = MSG_TYPE_TEST | 0x002E,   // Test Bigint 나눗셈 비교 실패
+    Test_BI_GCD_SUCCESS  = MSG_TYPE_TEST | 0x002F, // Test Bigint GCD operation successful
+    Test_BI_GCD_FAIL  = MSG_TYPE_TEST | 0x0030, // Test Bigint GCD operation failed
+    Test_BI_EEA_SUCCESS = MSG_TYPE_TEST | 0x0031, // TEST Bigint E.E.A gcd operation successful
+    Test_BI_EEA_FAIL= MSG_TYPE_TEST | 0x0032 // TEST Bigint E.E.A gcd operation failed
 
     // 추가 테스트 관련 에러 코드...
 };
@@ -170,6 +184,22 @@ enum OperateMSGCodes
     DIVC_SUCCESS = MSG_TYPE_OPERATE | 0x000D, // 나눗셈 성공
     DIVC_FAIL = MSG_TYPE_OPERATE | 0x000E,    // 나눗셈 실패
     BI_DIV_BY_ZERO = MSG_TYPE_OPERATE | 0x000F,     // 나눗셈 금지
+    Test_MILLER_RABIN_SUCCESS = MSG_TYPE_OPERATE | 0x0010, // Miller Rabin 성공
+    Test_MILLER_RABIN_FAIL = MSG_TYPE_OPERATE | 0x0011,    // Miller Rabin 실패
+};
+
+enum CryptoMSGCodes{
+    RSA_SUCCESS = MSG_TYPE_CRYPTO | 0x0001, // RSA 성공
+    RSA_FAIL = MSG_TYPE_CRYPTO | 0x0002,    // RSA 실패
+    RSA_KEYGEN_SUCCESS = MSG_TYPE_CRYPTO | 0x0003, // RSA 키 생성 성공
+    RSA_KEYGEN_FAIL = MSG_TYPE_CRYPTO | 0x0004,    // RSA 키 생성 실패
+    RSA_ENC_SUCCESS = MSG_TYPE_CRYPTO | 0x0005, // RSA 암호화 성공
+    RSA_ENC_FAIL = MSG_TYPE_CRYPTO | 0x0006,    // RSA 암호화 실패
+    RSA_DEC_SUCCESS = MSG_TYPE_CRYPTO | 0x0007, // RSA 복호화 성공
+    RSA_DEC_FAIL = MSG_TYPE_CRYPTO | 0x0008,    // RSA 복호화 실패
+    RSA_MISSMATCH = MSG_TYPE_CRYPTO | 0x0009,   // RSA 키 불일치
+    RSA_CRT_SUCCESS = MSG_TYPE_CRYPTO | 0x000A, // RSA CRT 성공
+    RSA_CRT_FAIL = MSG_TYPE_CRYPTO | 0x000B,    // RSA CRT 실패
 };
 
 // 에러 처리 함수 프로토타입
