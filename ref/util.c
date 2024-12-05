@@ -791,6 +791,7 @@ msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
     bigint *a = NULL;         // 랜덤값 a
     bigint *one = NULL; // 상수 1 n-1할 때 쓸거임
     bigint *two = NULL; // 제곱2연산을 위한 변수
+    bigint *temp_2 = NULL; // q값 저장
 
     int l = 0; // l 값 저장
 
@@ -826,22 +827,22 @@ msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
     while (k > 0){
         // 과정 3번 : 랜덤한 a 선택 2, n-2 사이의 랜덤한 수
         do{
-            if (bi_get_random(&a, (*n)->word_len) != BI_GET_RANDOM_SUCCESS) goto clean;
+            result_msg = bi_get_random(&a, (*n)->word_len);
+            if (result_msg != BI_GET_RANDOM_SUCCESS) goto clean;
             // a가 2보다 작으면 다시 선택
-            if (bi_compare(&a, &two) < 0)    continue;
+            if (bi_compare(&a, &two) < 0)   continue;
             // a가 n-2보다 크면 다시 선택
             if (bi_compare(&a, &n_minus_2) > 0) continue;
             break;
         } while (1);
-        printf("random a : ");
-        bi_print(&a, 16);
         k--;
-        result_msg = bi_gcd(temp, &a, n);
+
+        result_msg = bi_gcd(&temp_2, &a, n);
         if (result_msg != BI_GCD_SUCCESS)   goto clean;
-        bi_refine(temp);
+        bi_refine(&temp_2);
 
         // 과정 4번 : gcd(a, n) != 1인 경우 => ~(gcd(a, n) == 1) == ~(word_len == 1 && a[0] == 1) == word_len != 1 || a[0] != 1
-        if((*temp)->word_len != 1 || (*temp)->a[0] != 1){
+        if((temp_2)->word_len != 1 || (temp_2)->a[0] != 1){
             result_msg = bi_new(temp, 1);
             if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
             result_msg = MR_SUCCESS;
@@ -853,37 +854,38 @@ msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
         bi_print(&a, 16);
         result_msg = bi_exp_L_TO_R(&a, &a, &q, n);
         if (result_msg != BI_EXP_L_TO_R_SUCCESS)  goto clean;
-        printf("a2 : ");
-        bi_print(&a, 16);
-        printf("q: ");
-        bi_print(&q, 16);
-        printf("n : ");
-        bi_print(n, 16);
 
-        printf("step 9\n");
+//        printf("result exp : ");
+//        bi_print(&a, 16);
+
         // step 9 : a가 1이면 다음 테스트로 , step 10
-        result_msg = bi_div(temp, &a, &a, n, 1);
+        result_msg = bi_div(&temp_2, &a, &a, n, 1);
         if (result_msg != BI_DIV_SUCCESS)    goto clean;
         result_msg = bi_compare(&a, &one);
         if (result_msg == 0)  continue;
         printf("step 12\n");
         // step 12 : j = 0 l-1까지
+
+//        printf("in for\n");
+//        printf("l : %d\n", l);
         for (int j = 0; j <= l - 1; j++){
-            printf("for문 시작\n");
-            result_msg = bi_div(temp, &a, &a, n, 1);
+            result_msg = bi_div(&temp_2, &a, &a, n, 1);
             if (result_msg != BI_DIV_SUCCESS)    goto clean;
 
             result_msg = bi_compare(&a, &n_minus_1);
-            if (result_msg == 0)    break; // >>>
-            printf("after break\n");
+            if (result_msg == 0)    break;
             // step 11 : a <- a^2 mod n
             result_msg = bi_exp_L_TO_R(&a, &a, &two, n); // 여기 나중에 squ로 하자 (modular squaring 구현 필요)
             if (result_msg != BI_EXP_L_TO_R_SUCCESS)   goto clean;
-            printf("a : ");
-            bi_print(&a, 16);
+//            printf("a : ");
+//            bi_print(&a, 16);
         }
         if(result_msg == 0) continue;
-        return COMPOSITE;
+        result_msg = bi_new(temp, 1);
+        if (result_msg != BI_ALLOC_SUCCESS)    goto clean;
+        (*temp)->a[0] = 0;
+        result_msg = MR_SUCCESS;
+        goto clean;
     }
     result_msg = bi_new(temp, 1);
     if (result_msg != BI_ALLOC_SUCCESS)    goto clean;

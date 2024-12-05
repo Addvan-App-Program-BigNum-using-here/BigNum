@@ -120,20 +120,16 @@ int main(){
             return Test_FAIL;
         }
 
-*/
-//        bi_set_from_string(&a, "2108", 16);
-//        bi_set_from_string(&b, "0b", 16);
-//
-//        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-//        // WORD LONG bigint 나눗셈 테스트
-//        DIVISION_METHOD = 1;
-//        result_msg = test_bi_div(&op_total_time[3], &a, &b, str, &DIVISION_METHOD);
-//        if(result_msg != Test_BI_DIV_SUCCESS){
-//            log_msg(Test_BI_DIV_FAIL);
-//            log_msg(result_msg);
-//            return Test_FAIL;
-//        }
-/*
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // WORD LONG bigint 나눗셈 테스트
+        DIVISION_METHOD = 1;
+        result_msg = test_bi_div(&op_total_time[3], &a, &b, str, &DIVISION_METHOD);
+        if(result_msg != Test_BI_DIV_SUCCESS){
+            log_msg(Test_BI_DIV_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
+
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 곱셈 테스트
         result_msg = test_bi_mul(&op_total_time[4], &a, &b, str);
@@ -210,10 +206,10 @@ int main(){
             log_msg(result_msg);
             return Test_FAIL;
         }
-        */
 
+*/
+        printf("%dth test\n", i);
         a->sign = 0;
-
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
         if(result_msg != Test_MILLER_RABIN_SUCCESS){
@@ -221,9 +217,8 @@ int main(){
             log_msg(result_msg);
             return Test_FAIL;
         }
-
     }
-/*
+
     printf("\n============ Testing bi_add ============\n");
     printf("Time taken add : %f seconds\n", op_total_time[0] / test_size);
 
@@ -255,7 +250,7 @@ int main(){
 
     printf("\n============ Testing bi_barrett_reduction ============\n");
     printf("Time taken barret_reduction : %f seconds\n", op_total_time[8] / test_size);
-*/
+
     printf("\n============ Testing bi_gcd ============\n");
     printf("Time taken gcd : %f seconds\n", op_total_time[10] / test_size);
     printf("\n");
@@ -293,6 +288,7 @@ int main(){
 TEST_EXIT:
     if(bi_delete(&a) != BI_FREE_SUCCESS)    return Test_FAIL;
     if(bi_delete(&b) != BI_FREE_SUCCESS)    return Test_FAIL;
+    if(bi_delete(&c) != BI_FREE_SUCCESS)    return Test_FAIL;
 
     log_msg(result_msg);
     return Test_FAIL;
@@ -1371,10 +1367,10 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
     // Left to Right 구현
-    total_time_exp[2] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_L_TO_R, &d, &result_msg, param_types, a, b, c);
+    total_time_exp[2] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_L_TO_R, a, &result_msg, param_types, a, b, c);
     if (result_msg != BI_EXP_L_TO_R_SUCCESS)   goto EXP_EXIT;
 
-    if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;
+    if (bigint_to_hex(str, a) == -1)   goto EXP_EXIT;
     result_msg = Test_file_write(Test_file_exp, str, APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
