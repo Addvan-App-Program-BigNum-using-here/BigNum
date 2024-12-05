@@ -13,6 +13,7 @@
 #include "../operate.h"
 #include "../data_type.h"
 #include "../file_io.h"
+#include "../crypto.h"
 
 #define BITS_SIZE 1024                              // 테스트 비트 크기
 #define test_word_size BITS_SIZE / WORD_BITS               // 0인 경우 테스트 시 사용되는 word 크기는 랜덤
