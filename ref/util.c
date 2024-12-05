@@ -864,7 +864,7 @@ msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
         // step 9 : a가 1이면 다음 테스트로 , step 10
         result_msg = bi_div(temp, &a, &a, n, 1);
         if (result_msg != BI_DIV_SUCCESS)    goto clean;
-        result_msg = bi_compare_abs(&a, &one);
+        result_msg = bi_compare(&a, &one);
         if (result_msg == 0)  continue;
         printf("step 12\n");
         // step 12 : j = 0 l-1까지
@@ -873,7 +873,7 @@ msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
             result_msg = bi_div(temp, &a, &a, n, 1);
             if (result_msg != BI_DIV_SUCCESS)    goto clean;
 
-            result_msg = bi_compare_abs(&a, &n_minus_1);
+            result_msg = bi_compare(&a, &n_minus_1);
             if (result_msg == 0)    break; // >>>
             printf("after break\n");
             // step 11 : a <- a^2 mod n

@@ -53,6 +53,7 @@ msg bi_delete(OUT bigint **dst);
  */
 msg bi_refine(OUT bigint** src);
 
+
 /**
  * @brief Processing_assign bigint struct
  *

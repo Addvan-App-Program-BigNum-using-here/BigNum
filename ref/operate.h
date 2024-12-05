@@ -135,7 +135,7 @@ msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b);
  */
 msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN int k);
 
-/**
+/** 
  * @brief bigint structure division sub operation
  * @param q pointer to quotient of word
  * @param r pointer to remainder of bigint division
@@ -227,7 +227,16 @@ msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b);
  * @param a dividend bigint to be squared
  * @return msg
  */
-msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b)
+msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b);
+
+/**
+ * @brief Plain RSA key generation
+ * @param N pointer to N of bigint
+ * @param e public key of bigint
+ * @
+ * @return msg
+ */
+msg RSA_GenKey(OUT bigint** N, OUT bigint** e, OUT bigint** d, IN int parameter);
 #endif // OPERATE_H
 
 
