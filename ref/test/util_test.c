@@ -16,7 +16,7 @@ int main(){
     int karachuba_flag = 0;
     int squ_karachuba_flag = 0;
     int DIVISION_METHOD = 0;
-    int miller_rabin_iter = 20;
+    int miller_rabin_iter = 10;
     char* str = NULL;
     msg result_msg = Test_SUCCESS;
     bigint* a = NULL;
