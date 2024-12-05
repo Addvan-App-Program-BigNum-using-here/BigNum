@@ -623,7 +623,6 @@ msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN 
 
 //    bi_print(a, 16);
 //    bi_print(b, 16);
-    int init_shift_size = (*a)->word_len - (*b)->word_len + 1;
     bigint* R = NULL;
     bigint* a_p = NULL;
     bigint* b_p = NULL;
@@ -1073,6 +1072,7 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     msg result_msg = BI_EXP_L_TO_R_FAIL;
     byte bit = 0;
     bigint* temp = NULL;
+    bigint* t = NULL;
     int div_option = 1;
 
     // bit 연산 수행할 건데 refine이 되어 있지 않으면 0bit에 대한 쓰레기 연산이 있을 수 있기에 수행
@@ -1080,12 +1080,8 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     if(result_msg != BI_SET_REFINE_SUCCESS)    return result_msg;
 
     // t = 1
-    if(*dst == NULL){
-        if(bi_new(dst, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-    }else if((*dst)->word_len != 1){
-        if(bi_resize(dst, 1) != BI_RESIZE_SUCCESS)    return BI_RESIZE_FAIL;
-    }
-    (*dst)->a[0] = 1;
+    result_msg = bi_new(&t, 1);
+    t->a[0] = 1;
 
     for(int i = (*x)->word_len * WORD_BITS - 1; i >= 0; i--){
         // 상위 비트부터 가져오기
@@ -1093,22 +1089,25 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
 
         // t 제곱 수행 ( t <- t^2 ) 제곱 카라츄바의 경우 아직 최적화가 안되어 있기 때문에 일단 제곱 수행
 //        result_msg = bi_squ_karachuba(dst, dst, (*dst)->word_len / squ_karachuba_ratio); // 카라츄바 사용
-        result_msg = bi_squ(dst, dst); // non 카라츄바
+        result_msg = bi_squ(&t, &t); // non 카라츄바
         if(result_msg != BI_SQU_SUCCESS)    goto EXIT_EXP;
-        bi_refine(dst);
-        result_msg = bi_div(&temp, dst, dst, n, div_option);
+        bi_refine(&t);
+        result_msg = bi_div(&temp, &t, &t, n, div_option);
         if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
-        bi_refine(dst);
+        bi_refine(&t);
        // bit가 1일 경우에만 곱셈 수행 (t <- t * src)
         if(bit){
-            result_msg = bi_mul_karachuba(dst, dst, src, (*src)->word_len / mul_karachuba_ratio);
+            result_msg = bi_mul_karachuba(&t, &t, src, (*src)->word_len / mul_karachuba_ratio);
             if(result_msg != BI_MUL_SUCCESS)    goto EXIT_EXP;
-            bi_refine(dst);
-            result_msg = bi_div(&temp, dst, dst, n, div_option); // 몫은 필요없으니까 일단 temp에 저장
+            bi_refine(&t);
+            result_msg = bi_div(&temp, &t, &t, n, div_option); // 몫은 필요없으니까 일단 temp에 저장
             if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
-            bi_refine(dst);
+            bi_refine(&t);
         }
     }
+    result_msg = bi_assign(dst, &t);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_EXP;
+
     result_msg = BI_EXP_L_TO_R_SUCCESS;
 
 EXIT_EXP:

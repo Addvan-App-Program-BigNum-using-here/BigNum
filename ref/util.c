@@ -850,8 +850,8 @@ msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
         }
 
         // step 8 : a <- a^q mod n
-        result_msg = bi_exp_R_TO_L(&a, &a, &q, n);
-        if (result_msg != BI_EXP_R_TO_L_SUCCESS)  goto clean;
+        result_msg = bi_exp_L_TO_R(&a, &a, &q, n);
+        if (result_msg != BI_EXP_L_TO_R_SUCCESS)  goto clean;
 
 //        printf("result exp : ");
 //        bi_print(&a, 16);
@@ -872,8 +872,8 @@ msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
             result_msg = bi_compare(&a, &n_minus_1);
             if (result_msg == 0)    break;
             // step 11 : a <- a^2 mod n
-            result_msg = bi_exp_R_TO_L(&a, &a, &two, n); // 여기 나중에 squ로 하자 (modular squaring 구현 필요)
-            if (result_msg != BI_EXP_R_TO_L_SUCCESS)   goto clean;
+            result_msg = bi_exp_L_TO_R(&a, &a, &two, n); // 여기 나중에 squ로 하자 (modular squaring 구현 필요)
+            if (result_msg != BI_EXP_L_TO_R_SUCCESS)   goto clean;
 //            printf("a : ");
 //            bi_print(&a, 16);
         }

@@ -45,7 +45,7 @@ int main(){
         return Test_FAIL;
     }
 
-    for(int i = 0; i < test_size; i++){\
+    for(int i = 0; i < test_size; i++){
         // test_word_size가 0보다 작거나 같으면 랜덤으로 test_word_size를 할당
         if(test_word_size <= 0){
             do{
@@ -207,7 +207,8 @@ int main(){
             return Test_FAIL;
         }
 
-
+*/
+        printf("%dth test\n", i);
         a->sign = 0;
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
@@ -216,9 +217,8 @@ int main(){
             log_msg(result_msg);
             return Test_FAIL;
         }
-        */
     }
-/*
+
     printf("\n============ Testing bi_add ============\n");
     printf("Time taken add : %f seconds\n", op_total_time[0] / test_size);
 
@@ -250,7 +250,7 @@ int main(){
 
     printf("\n============ Testing bi_barrett_reduction ============\n");
     printf("Time taken barret_reduction : %f seconds\n", op_total_time[8] / test_size);
-*/
+
     printf("\n============ Testing bi_gcd ============\n");
     printf("Time taken gcd : %f seconds\n", op_total_time[10] / test_size);
     printf("\n");
@@ -1367,10 +1367,10 @@ msg test_bi_exp(OUT double total_time_exp[3], IN bigint** a, IN bigint** b, IN b
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
     // Left to Right 구현
-    total_time_exp[2] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_L_TO_R, &d, &result_msg, param_types, a, b, c);
+    total_time_exp[2] += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_L_TO_R, a, &result_msg, param_types, a, b, c);
     if (result_msg != BI_EXP_L_TO_R_SUCCESS)   goto EXP_EXIT;
 
-    if (bigint_to_hex(str, &d) == -1)   goto EXP_EXIT;
+    if (bigint_to_hex(str, a) == -1)   goto EXP_EXIT;
     result_msg = Test_file_write(Test_file_exp, str, APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto EXP_EXIT;
 
