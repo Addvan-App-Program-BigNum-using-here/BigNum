@@ -539,41 +539,41 @@ def file_open(file_name):
 
 if __name__ == '__main__':
     with open('./main_result.txt', 'w') as p:
-        f = file_open('./test.txt')
+        f = file_open('./test_vec/test.txt')
         if f != None:   bi_test(f, p)
 
-        f = file_open('./test_add.txt')
+        f = file_open('./test_vec/test_add.txt')
         if f != None:   test_addition(f, p)
 
-        f = file_open('./test_sub.txt')
+        f = file_open('./test_vec/test_sub.txt')
         if f != None:   test_subtraction(f, p)
 
-        f = file_open('./test_mul.txt')
+        f = file_open('./test_vec/test_mul.txt')
         if f != None:   test_multiplication(f, p)
 
-        f = file_open('./test_mul_karachuba.txt')
+        f = file_open('./test_vec/test_mul_karachuba.txt')
         if f != None:   test_karachuba_multiplication(f, p)
 
-        f = file_open('./test_div.txt')
+        f = file_open('./test_vec/test_div.txt')
         if f != None:   test_division(f, p)
 
-        f = file_open('./test_squ.txt')
+        f = file_open('./test_vec/test_squ.txt')
         if f != None:   test_squ(f, p)
 
-        f = file_open('./test_squ_karachuba.txt')
+        f = file_open('./test_vec/test_squ_karachuba.txt')
         if f != None:   test_karachuba_squ(f, p)
 
-        f = file_open('./test_exp.txt')
+        f = file_open('./test_vec/test_exp.txt')
         if f != None:   test_exp(f, p)
 
-        f = file_open('./test_barrett_reduction.txt')
+        f = file_open('./test_vec/test_barrett_reduction.txt')
         if f != None:   test_barrett(f, p)
 
-        f = file_open('./test_gcd.txt')
+        f = file_open('./test_vec/test_gcd.txt')
         if f != None:   test_gcd(f, p)
 
-        f = file_open('./test_EEA.txt')
+        f = file_open('./test_vec/test_EEA.txt')
         if f != None:   test_EEA(f, p)
 
-        f = file_open('./test_miller_rabin.txt')
+        f = file_open('./test_vec/test_miller_rabin.txt')
         if f != None:   test_miller_rabin(f, p)

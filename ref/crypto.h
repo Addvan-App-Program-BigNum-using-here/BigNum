@@ -1,12 +1,10 @@
 #ifndef CRYPTO_H
 #define CRYPTO_H
 
-#include "../data_type.h"
-#include "../util.h"
-#include "../msg_control.h"
-#include "../operate.h"
-
-#define BITS_SIZE 512                              // 테스트 비트 크기
+#include "data_type.h"
+#include "util.h"
+#include "msg_control.h"
+#include "operate.h"
 
 msg RSA();
 

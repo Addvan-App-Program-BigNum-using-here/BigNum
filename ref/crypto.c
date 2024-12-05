@@ -1,16 +1,5 @@
 #include "crypto.h"
 
-int main(){
-    msg result_msg = 0;
-    for(int i = 0; i < 10; i++){
-        printf("%dth test\n", i);
-//        result_msg = RSA();
-        result_msg = RSA_CRT();
-        log_msg(result_msg);
-    }
-    return 0;
-}
-
 // BITS_SIZE는 헤더파일에서 수정 -> 나중에 변수로 코드 변경 필요
 msg RSA(){
     msg result_msg = RSA_FAIL;
