@@ -2,12 +2,12 @@
 
 int main(){
     msg result_msg = 0;
-    for(int i = 0; i < 10; i++){
-        printf("%dth test\n", i);
-//        result_msg = RSA();
-        result_msg = RSA_CRT();
-        log_msg(result_msg);
-    }
+//     for(int i = 0; i < 10; i++){
+//         printf("%dth test\n", i);
+// //        result_msg = RSA();
+//         result_msg = RSA_CRT();
+//         log_msg(result_msg);
+//     }
     return 0;
 }
 

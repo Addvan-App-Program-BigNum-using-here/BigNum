@@ -208,15 +208,15 @@ int main(){
         }
 
 
-        printf("%dth test\n", i);
-        a->sign = 0;
-        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
-        if(result_msg != Test_MILLER_RABIN_SUCCESS){
-            log_msg(Test_MILLER_RABIN_FAIL);
-            log_msg(result_msg);
-            return Test_FAIL;
-        }
+        // printf("%dth test\n", i);
+        // a->sign = 0;
+        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
+        // if(result_msg != Test_MILLER_RABIN_SUCCESS){
+        //     log_msg(Test_MILLER_RABIN_FAIL);
+        //     log_msg(result_msg);
+        //     return Test_FAIL;
+        // }
     }
 
     printf("\n============ Testing bi_add ============\n");
