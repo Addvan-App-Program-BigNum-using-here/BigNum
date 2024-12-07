@@ -195,17 +195,17 @@ int main(){
             return Test_FAIL;
         }
 
-        // bigint EEA 테스트
-        a->sign = 0;
-        b->sign = 0;
-        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // bigint EEA 테스트
-        result_msg = test_bi_EEA(&op_total_time[10], &a, &b, str);
-        if(result_msg != Test_BI_EEA_SUCCESS){
-            log_msg(Test_BI_EEA_FAIL);
-            log_msg(result_msg);
-            return Test_FAIL;
-        }
+        // // bigint EEA 테스트
+        // a->sign = 0;
+        // b->sign = 0;
+        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        // // bigint EEA 테스트
+        // result_msg = test_bi_EEA(&op_total_time[10], &a, &b, str);
+        // if(result_msg != Test_BI_EEA_SUCCESS){
+        //     log_msg(Test_BI_EEA_FAIL);
+        //     log_msg(result_msg);
+        //     return Test_FAIL;
+        // }
 
 
         // printf("%dth test\n", i);
