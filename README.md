@@ -113,6 +113,23 @@ make retest
 ```
 
 ### 테스트 시 환경변수 설명
+#### `/ref/test/main_test.c` 파일
+- 해당 파일을 확인하면 아래 4가지 함수가 존재한다.
+- cmp_xxx_test 함수는 고정 입력 값에 대한 각 함수들의 성능 평가를 진행한다.
+- rand_xxx_teset 함수는 랜덤 입력 값에 대한 각 함수들의 성능 평가를 진행한다.
+- 따라서 테스트 하고 싶은 환경에 맞추어 주석 처리를 수행하면 된다.
+- operate 단어가 포함된 함수는 연산에 대한 테스트를 진행한다.
+- crypto 단어가 포함된 함수는 암호화에 대한 테스트를 진행한다.
+```
+// 고정 입력 값에 대한 성능 평가
+if(cmp_operate_test() != Test_SUCCESS)    return 0;
+if(cmp_crypto_test() != Test_SUCCESS)    return 0;
+
+// 랜덤 입력 값에 대한 성능 평가
+if(rand_operate_test() != Test_SUCCESS)    return 0;
+if(rand_crypto_test() != Test_SUCCESS)    return 0;
+```
+
 #### `/ref/test/main_test.h` 파일
 - `test_word_size` : 테스트 word 길이 (0으로 설정 시 테스트 word 길이는 랜덤)
 - `test_word_size_limit` : word 사이즈가 랜덤으로 할당 시 최대 크기
