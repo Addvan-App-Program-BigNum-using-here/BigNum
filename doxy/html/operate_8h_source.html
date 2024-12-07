@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.12.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>My Project: C:/Kookmin/BigNum/ref/operate.h 소스 파일</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">My Project<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 다음에 의해 생성됨 :  Doxygen 1.12.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','검색',true);
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('operate_8h_source.html',''); initResizable(true); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">로딩중...</div>
+<div class="SRStatus" id="Searching">검색중...</div>
+<div class="SRStatus" id="NoMatches">일치하는것 없음</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">operate.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="operate_8h.html">이 파일의 문서화 페이지로 가기</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef OPERATE_H</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define OPERATE_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="data__type_8h.html">data_type.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="msg__control_8h.html">msg_control.h</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="util_8h.html">util.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="random_8h.html">random.h</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="operate_8h.html#a626bc8ec68d573e6819fd15bc2e0063c">    9</a></span><span class="preprocessor">#define mul_karachuba_ratio 4   </span><span class="comment">// 카라츄바 곱셈 시 분할 기준</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="operate_8h.html#a97196b579f6747da327623e5b3396484">   10</a></span><span class="preprocessor">#define squ_karachuba_ratio 4   </span><span class="comment">// 카라츄바 제곱 시 분할 기준</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="operate_8h.html#a4e3b689e9483994cfcd85954cba23338">   11</a></span><span class="preprocessor">#define MAX_RECURSION_DEPTH 32  </span><span class="comment">// 재귀 깊이</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="operate_8h.html#aa2ac54564b3514084afd2c5dafe9d232">   12</a></span><span class="preprocessor">#define POOL_SIZE 8             </span><span class="comment">// 카라츄바에 필요한 임시 변수 개수 (a_0, b_0, a_1, b_1, a_0b_0, a_1b_1, a_1_a_0, b_1_b_0)</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// WORD_BITS에 따라 마스크와 시프트 연산을 처리하는 매크로 정의</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#if WORD_BITS == 64</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">    #define WORD_MASK ((1ULL &lt;&lt; 32) - 1)    </span><span class="comment">// 16비트 마스크</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">    #define WORD_SHIFT 32                   </span><span class="comment">// 상위 16비트 시프트</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#elif WORD_BITS == 32</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="operate_8h.html#abcb67eb1473b6632cf4c8a8a653f35be">   19</a></span><span class="preprocessor">    #define WORD_MASK ((1U &lt;&lt; 16) - 1)      </span><span class="comment">// 16비트 마스크</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="operate_8h.html#a8638401212b7802f2b5ffe8a0af78cd9">   20</a></span><span class="preprocessor">    #define WORD_SHIFT 16                   </span><span class="comment">// 상위 16비트 시프트</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#elif WORD_BITS == 16</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">    #define WORD_MASK ((1U &lt;&lt; 8) - 1)       </span><span class="comment">// 8비트 마스크</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">    #define WORD_SHIFT 8                    </span><span class="comment">// 상위 8비트 시프트</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#elif WORD_BITS == 8</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">    #define WORD_MASK ((1U &lt;&lt; 4) - 1)       </span><span class="comment">// 4비트 마스크</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">    #define WORD_SHIFT 4                    </span><span class="comment">// 상위 4비트 시프트</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">    #error &quot;Unsupported WORD_BITS value&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">// 16비트 단위로 값을 추출하는 매크로</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="operate_8h.html#a9d20b33a35badea3b627ab4b334b5ae0">   32</a></span><span class="preprocessor">#define GET_LOWER_PART(word) ((word) &amp; WORD_MASK)</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="operate_8h.html#a499b14c8f9fa802d52fc0137ab00cc66">   33</a></span><span class="preprocessor">#define GET_UPPER_PART(word) ((word) &gt;&gt; WORD_SHIFT)</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">// 메모리 풀 구조체</span></div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structkaratsuba__mem__pool.html">   36</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structkaratsuba__mem__pool.html#a49a1bca962d8d8d80b2dda10d3de2ae6">   37</a></span>    <a class="code hl_struct" href="structbigint.html">bigint</a>* pool[<a class="code hl_define" href="operate_8h.html#a4e3b689e9483994cfcd85954cba23338">MAX_RECURSION_DEPTH</a>][<a class="code hl_define" href="operate_8h.html#aa2ac54564b3514084afd2c5dafe9d232">POOL_SIZE</a>];</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="structkaratsuba__mem__pool.html#ad6574764befa86c543bb09616657c892">   38</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structkaratsuba__mem__pool.html#ad6574764befa86c543bb09616657c892">current_depth</a>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="structkaratsuba__mem__pool.html#a7f1c5ef477df8a9727d68de9d97ad6e8">   39</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structkaratsuba__mem__pool.html#a7f1c5ef477df8a9727d68de9d97ad6e8">max_word_size</a>;  <span class="comment">// 최대 워드 크기 저장</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="structkaratsuba__mem__pool.html#a74a527ad437829bcadcd98be97921986">   40</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structkaratsuba__mem__pool.html#a74a527ad437829bcadcd98be97921986">initialized</a>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>} <a class="code hl_struct" href="structkaratsuba__mem__pool.html">karatsuba_mem_pool</a>;</div>
+</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">// 전역 메모리 풀 선언</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="operate_8h.html#a0f41bb7b2c7abe7f50307f63fb18ff0d">   44</a></span><a class="code hl_function" href="operate_8h.html#a0f41bb7b2c7abe7f50307f63fb18ff0d">__attribute__</a>((used)) <span class="keyword">static</span> <a class="code hl_struct" href="structkaratsuba__mem__pool.html">karatsuba_mem_pool</a> g_pool = {0};</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a65d802178277a65b141b30601cddcdec">bi_add</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **b);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#ad9088f12782b1e737d0f747122ec7306">bi_sub</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **b);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#aa440f4e448e954bdf55a2b7f77983669">bi_mul</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **b);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a4cebd00fdd5c3ea66eea39ea2621eb3e">bi_mul_word</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_typedef" href="data__type_8h.html#a19036394f9c80a08fc846c96f668711c">word</a> a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_typedef" href="data__type_8h.html#a19036394f9c80a08fc846c96f668711c">word</a> b);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a8016ee509cabeef9058ddd74ed060dc8">bi_mul_karachuba</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span> karachuba_flag);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="operate_8h.html#a00b780ca3bf901298bc0ffe46249a4d0">   98</a></span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a00b780ca3bf901298bc0ffe46249a4d0">init_karachuba_pool</a>(<span class="keywordtype">int</span> max_word_size);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#ad2799995ff39166aafbd1b20ff27a5a2">clear_karachuba_pool</a>();</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a882a30d3cc753cb91b6e4d7a3789389c">bi_div</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **q, <a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **r, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a> **b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span> option);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a05e3c6dd1e527486e728622f8b3bdd5c">divc</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** q, <a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** r, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a6b6c9d923887ebe4f6256c269b97cb50">divc_gener</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** q, <a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** r, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span> k);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a3ab432806f8db49625bffd04169df98b">divcc</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_typedef" href="data__type_8h.html#a19036394f9c80a08fc846c96f668711c">word</a>* q, <a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** r, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#ac1c4b61dd79ea8a9a91e9192d576fbbf">two_word_long_div</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_typedef" href="data__type_8h.html#a19036394f9c80a08fc846c96f668711c">word</a>* q, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_typedef" href="data__type_8h.html#a19036394f9c80a08fc846c96f668711c">word</a> b);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#abaadbbf43304e4bd57c2637f9ec80b82">bi_squ</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a03608ef0fd6b972e2875b04c96886aa3">bi_squ_karachuba</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span> karachuba_flag);</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a975a496d6f0044be159ffcc3b5d6bbd2">bi_exp_MS</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** src, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** x, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** n);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a1498846f720bd30e0b1219582ae4307b">bi_exp_R_TO_L</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** src, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** x, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** n);</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a5913dcaf66a5fcb78eaa2711b4c93535">bi_exp_L_TO_R</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** src, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** x, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** n);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a61f0c572859997f3ce8f0422a31e661b">barret_reduction</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** n, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** n_barret);</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#af1981006fc69596b2c64d4319fdc3b4d">init_barret_N</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** barret_t, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** barret_n, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span> barret_word_len);</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a6180a4ed6a63b851c480e1f86e1e36c0">bi_gcd</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** dst, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b);</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="operate_8h.html#a3de396be85cbab33de41e2b6d0571422">bi_EEA</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** gcd, <a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** x, <a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** y, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b);</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="preprocessor">#endif </span><span class="comment">// OPERATE_H</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>;</div>
+<div class="ttc" id="adata__type_8h_html"><div class="ttname"><a href="data__type_8h.html">data_type.h</a></div></div>
+<div class="ttc" id="adata__type_8h_html_a19036394f9c80a08fc846c96f668711c"><div class="ttname"><a href="data__type_8h.html#a19036394f9c80a08fc846c96f668711c">word</a></div><div class="ttdeci">uint32_t word</div><div class="ttdef"><b>Definition</b> <a href="data__type_8h_source.html#l00031">data_type.h:31</a></div></div>
+<div class="ttc" id="adata__type_8h_html_ac2bbd6d630a06a980d9a92ddb9a49928"><div class="ttname"><a href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a></div><div class="ttdeci">#define IN</div><div class="ttdef"><b>Definition</b> <a href="data__type_8h_source.html#l00019">data_type.h:19</a></div></div>
+<div class="ttc" id="adata__type_8h_html_aec78e7a9e90a406a56f859ee456e8eae"><div class="ttname"><a href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a></div><div class="ttdeci">#define OUT</div><div class="ttdef"><b>Definition</b> <a href="data__type_8h_source.html#l00018">data_type.h:18</a></div></div>
+<div class="ttc" id="adata__type_8h_html_af3db70afcfb515a4def0777a954be00d"><div class="ttname"><a href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a></div><div class="ttdeci">uint32_t msg</div><div class="ttdoc">Error message control variation</div><div class="ttdef"><b>Definition</b> <a href="data__type_8h_source.html#l00043">data_type.h:43</a></div></div>
+<div class="ttc" id="amsg__control_8h_html"><div class="ttname"><a href="msg__control_8h.html">msg_control.h</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a00b780ca3bf901298bc0ffe46249a4d0"><div class="ttname"><a href="operate_8h.html#a00b780ca3bf901298bc0ffe46249a4d0">init_karachuba_pool</a></div><div class="ttdeci">msg init_karachuba_pool(int max_word_size)</div><div class="ttdoc">initialize karachuba memory pool using to karachuba multiplication</div></div>
+<div class="ttc" id="aoperate_8h_html_a03608ef0fd6b972e2875b04c96886aa3"><div class="ttname"><a href="operate_8h.html#a03608ef0fd6b972e2875b04c96886aa3">bi_squ_karachuba</a></div><div class="ttdeci">msg bi_squ_karachuba(OUT bigint **dst, IN bigint **a, IN int karachuba_flag)</div><div class="ttdoc">bigint structure squaring operation by using Karachuba algorithm</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00853">operate.c:853</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a05e3c6dd1e527486e728622f8b3bdd5c"><div class="ttname"><a href="operate_8h.html#a05e3c6dd1e527486e728622f8b3bdd5c">divc</a></div><div class="ttdeci">msg divc(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b)</div><div class="ttdoc">bigint structure division operation using binary division</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00591">operate.c:591</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a0f41bb7b2c7abe7f50307f63fb18ff0d"><div class="ttname"><a href="operate_8h.html#a0f41bb7b2c7abe7f50307f63fb18ff0d">__attribute__</a></div><div class="ttdeci">__attribute__((used)) static karatsuba_mem_pool g_pool</div></div>
+<div class="ttc" id="aoperate_8h_html_a1498846f720bd30e0b1219582ae4307b"><div class="ttname"><a href="operate_8h.html#a1498846f720bd30e0b1219582ae4307b">bi_exp_R_TO_L</a></div><div class="ttdeci">msg bi_exp_R_TO_L(OUT bigint **dst, IN bigint **src, IN bigint **x, IN bigint **n)</div><div class="ttdoc">bigint structure squaring operation version to Right to Left</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l01001">operate.c:1001</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a3ab432806f8db49625bffd04169df98b"><div class="ttname"><a href="operate_8h.html#a3ab432806f8db49625bffd04169df98b">divcc</a></div><div class="ttdeci">msg divcc(OUT word *q, OUT bigint **r, IN bigint **a, IN bigint **b)</div><div class="ttdoc">bigint structure division sub operation</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00689">operate.c:689</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a3de396be85cbab33de41e2b6d0571422"><div class="ttname"><a href="operate_8h.html#a3de396be85cbab33de41e2b6d0571422">bi_EEA</a></div><div class="ttdeci">msg bi_EEA(OUT bigint **gcd, OUT bigint **x, OUT bigint **y, IN bigint **a, IN bigint **b)</div><div class="ttdoc">bigint structure squaring operation by using Extended Euclidean Algorithm</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l01245">operate.c:1245</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a4cebd00fdd5c3ea66eea39ea2621eb3e"><div class="ttname"><a href="operate_8h.html#a4cebd00fdd5c3ea66eea39ea2621eb3e">bi_mul_word</a></div><div class="ttdeci">msg bi_mul_word(OUT bigint **dst, IN word a, IN word b)</div><div class="ttdoc">word mul operation</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00154">operate.c:154</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a4e3b689e9483994cfcd85954cba23338"><div class="ttname"><a href="operate_8h.html#a4e3b689e9483994cfcd85954cba23338">MAX_RECURSION_DEPTH</a></div><div class="ttdeci">#define MAX_RECURSION_DEPTH</div><div class="ttdef"><b>Definition</b> <a href="#l00011">operate.h:11</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a5913dcaf66a5fcb78eaa2711b4c93535"><div class="ttname"><a href="operate_8h.html#a5913dcaf66a5fcb78eaa2711b4c93535">bi_exp_L_TO_R</a></div><div class="ttdeci">msg bi_exp_L_TO_R(OUT bigint **dst, IN bigint **src, IN bigint **x, IN bigint **n)</div><div class="ttdoc">bigint structure squaring operation version to Left to Right</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l01060">operate.c:1060</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a6180a4ed6a63b851c480e1f86e1e36c0"><div class="ttname"><a href="operate_8h.html#a6180a4ed6a63b851c480e1f86e1e36c0">bi_gcd</a></div><div class="ttdeci">msg bi_gcd(OUT bigint **dst, IN bigint **a, IN bigint **b)</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l01191">operate.c:1191</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a61f0c572859997f3ce8f0422a31e661b"><div class="ttname"><a href="operate_8h.html#a61f0c572859997f3ce8f0422a31e661b">barret_reduction</a></div><div class="ttdeci">msg barret_reduction(OUT IN bigint **dst, IN bigint **a, IN bigint **n, IN bigint **n_barret)</div><div class="ttdoc">bigint structure barret reduction</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l01117">operate.c:1117</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a65d802178277a65b141b30601cddcdec"><div class="ttname"><a href="operate_8h.html#a65d802178277a65b141b30601cddcdec">bi_add</a></div><div class="ttdeci">msg bi_add(OUT bigint **dst, IN bigint **a, IN bigint **b)</div><div class="ttdoc">bigint structure add operation</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00012">operate.c:12</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a6b6c9d923887ebe4f6256c269b97cb50"><div class="ttname"><a href="operate_8h.html#a6b6c9d923887ebe4f6256c269b97cb50">divc_gener</a></div><div class="ttdeci">msg divc_gener(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int k)</div><div class="ttdoc">bigint structure division operation using word division</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00620">operate.c:620</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a8016ee509cabeef9058ddd74ed060dc8"><div class="ttname"><a href="operate_8h.html#a8016ee509cabeef9058ddd74ed060dc8">bi_mul_karachuba</a></div><div class="ttdeci">msg bi_mul_karachuba(OUT bigint **dst, IN bigint **a, IN bigint **b, IN int karachuba_flag)</div><div class="ttdoc">bigint structure mul operation using Karachuba algorithm</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00264">operate.c:264</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a882a30d3cc753cb91b6e4d7a3789389c"><div class="ttname"><a href="operate_8h.html#a882a30d3cc753cb91b6e4d7a3789389c">bi_div</a></div><div class="ttdeci">msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int option)</div><div class="ttdoc">bigint structure division operation</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00446">operate.c:446</a></div></div>
+<div class="ttc" id="aoperate_8h_html_a975a496d6f0044be159ffcc3b5d6bbd2"><div class="ttname"><a href="operate_8h.html#a975a496d6f0044be159ffcc3b5d6bbd2">bi_exp_MS</a></div><div class="ttdeci">msg bi_exp_MS(OUT bigint **dst, IN bigint **src, IN bigint **x, IN bigint **n)</div><div class="ttdoc">bigint structure squaring operation version to Multiplication and Squaring</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00927">operate.c:927</a></div></div>
+<div class="ttc" id="aoperate_8h_html_aa2ac54564b3514084afd2c5dafe9d232"><div class="ttname"><a href="operate_8h.html#aa2ac54564b3514084afd2c5dafe9d232">POOL_SIZE</a></div><div class="ttdeci">#define POOL_SIZE</div><div class="ttdef"><b>Definition</b> <a href="#l00012">operate.h:12</a></div></div>
+<div class="ttc" id="aoperate_8h_html_aa440f4e448e954bdf55a2b7f77983669"><div class="ttname"><a href="operate_8h.html#aa440f4e448e954bdf55a2b7f77983669">bi_mul</a></div><div class="ttdeci">msg bi_mul(OUT bigint **dst, IN bigint **a, IN bigint **b)</div><div class="ttdoc">bigint structure mul operation</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00177">operate.c:177</a></div></div>
+<div class="ttc" id="aoperate_8h_html_abaadbbf43304e4bd57c2637f9ec80b82"><div class="ttname"><a href="operate_8h.html#abaadbbf43304e4bd57c2637f9ec80b82">bi_squ</a></div><div class="ttdeci">msg bi_squ(OUT bigint **dst, IN bigint **a)</div><div class="ttdoc">bigint structure squaring operation</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00781">operate.c:781</a></div></div>
+<div class="ttc" id="aoperate_8h_html_ac1c4b61dd79ea8a9a91e9192d576fbbf"><div class="ttname"><a href="operate_8h.html#ac1c4b61dd79ea8a9a91e9192d576fbbf">two_word_long_div</a></div><div class="ttdeci">msg two_word_long_div(OUT word *q, IN bigint **a, IN word b)</div><div class="ttdoc">two word long division operation</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00749">operate.c:749</a></div></div>
+<div class="ttc" id="aoperate_8h_html_ad2799995ff39166aafbd1b20ff27a5a2"><div class="ttname"><a href="operate_8h.html#ad2799995ff39166aafbd1b20ff27a5a2">clear_karachuba_pool</a></div><div class="ttdeci">msg clear_karachuba_pool()</div><div class="ttdoc">clear karachuba memory pool</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00421">operate.c:421</a></div></div>
+<div class="ttc" id="aoperate_8h_html_ad9088f12782b1e737d0f747122ec7306"><div class="ttname"><a href="operate_8h.html#ad9088f12782b1e737d0f747122ec7306">bi_sub</a></div><div class="ttdeci">msg bi_sub(OUT bigint **dst, IN bigint **a, IN bigint **b)</div><div class="ttdoc">bigint structure sub operation</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l00085">operate.c:85</a></div></div>
+<div class="ttc" id="aoperate_8h_html_af1981006fc69596b2c64d4319fdc3b4d"><div class="ttname"><a href="operate_8h.html#af1981006fc69596b2c64d4319fdc3b4d">init_barret_N</a></div><div class="ttdeci">msg init_barret_N(OUT bigint **barret_t, IN bigint **barret_n, IN int barret_word_len)</div><div class="ttdoc">Initialize barret reduction</div><div class="ttdef"><b>Definition</b> <a href="operate_8c_source.html#l01164">operate.c:1164</a></div></div>
+<div class="ttc" id="arandom_8h_html"><div class="ttname"><a href="random_8h.html">random.h</a></div></div>
+<div class="ttc" id="astructbigint_html"><div class="ttname"><a href="structbigint.html">bigint</a></div><div class="ttdoc">big num information struct</div><div class="ttdef"><b>Definition</b> <a href="data__type_8h_source.html#l00065">data_type.h:65</a></div></div>
+<div class="ttc" id="astructkaratsuba__mem__pool_html"><div class="ttname"><a href="structkaratsuba__mem__pool.html">karatsuba_mem_pool</a></div><div class="ttdef"><b>Definition</b> <a href="#l00036">operate.h:36</a></div></div>
+<div class="ttc" id="astructkaratsuba__mem__pool_html_a74a527ad437829bcadcd98be97921986"><div class="ttname"><a href="structkaratsuba__mem__pool.html#a74a527ad437829bcadcd98be97921986">karatsuba_mem_pool::initialized</a></div><div class="ttdeci">bool initialized</div><div class="ttdef"><b>Definition</b> <a href="#l00040">operate.h:40</a></div></div>
+<div class="ttc" id="astructkaratsuba__mem__pool_html_a7f1c5ef477df8a9727d68de9d97ad6e8"><div class="ttname"><a href="structkaratsuba__mem__pool.html#a7f1c5ef477df8a9727d68de9d97ad6e8">karatsuba_mem_pool::max_word_size</a></div><div class="ttdeci">int max_word_size</div><div class="ttdef"><b>Definition</b> <a href="#l00039">operate.h:39</a></div></div>
+<div class="ttc" id="astructkaratsuba__mem__pool_html_ad6574764befa86c543bb09616657c892"><div class="ttname"><a href="structkaratsuba__mem__pool.html#ad6574764befa86c543bb09616657c892">karatsuba_mem_pool::current_depth</a></div><div class="ttdeci">int current_depth</div><div class="ttdef"><b>Definition</b> <a href="#l00038">operate.h:38</a></div></div>
+<div class="ttc" id="autil_8h_html"><div class="ttname"><a href="util_8h.html">util.h</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_c773687d3ec38c771b6bf4860abcb0ae.html">ref</a></li><li class="navelem"><a class="el" href="operate_8h.html">operate.h</a></li>
+    <li class="footer">다음에 의해 생성됨 :  <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+  </ul>
+</div>
+</body>
+</html>
