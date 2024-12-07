@@ -219,15 +219,6 @@ msg barret_reduction(OUT IN bigint** dst, IN bigint** a, IN bigint** n, IN bigin
  */
 msg init_barret_N(OUT bigint** barret_t, IN bigint** barret_n, IN int barret_word_len);
 
-msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b);
-
-/**
- * @brief bigint structure squaring operation by using Extended Euclidean Algorithm
- * @param dst pointer to square of bigint
- * @param a dividend bigint to be squared
- * @return msg
- */
-msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b)
 #endif // OPERATE_H
 
 

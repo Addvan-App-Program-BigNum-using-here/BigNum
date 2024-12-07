@@ -107,6 +107,8 @@ enum IOMSGCodes
     FILE_WRITE_SUCCESS = MSG_TYPE_IO | 0x0008,    // 파일 쓰기 성공
     FILE_WRITE_FAIL = MSG_TYPE_IO | 0x0009,       // 파일 쓰기 실패
     BI_GET_RANDOM_LENGTH_NOT_MATCH = MSG_TYPE_IO | 0x000A, // Bigint 랜덤 할당 길이 불일치
+    CLEAR_Test_file_SUCCESS = MSG_TYPE_IO | 0x000B, // Test 파일 초기화 성공
+    CLEAR_Test_file_FAIL = MSG_TYPE_IO | 0x000C,  // Test 파일 초기화 실패
     // 추가 입출력 관련 에러 코드...
 };
 
@@ -161,7 +163,9 @@ enum TestMSGCodes
     Test_BI_GCD_SUCCESS  = MSG_TYPE_TEST | 0x002F, // Test Bigint GCD operation successful
     Test_BI_GCD_FAIL  = MSG_TYPE_TEST | 0x0030, // Test Bigint GCD operation failed
     Test_BI_EEA_SUCCESS = MSG_TYPE_TEST | 0x0031, // TEST Bigint E.E.A gcd operation successful
-    Test_BI_EEA_FAIL= MSG_TYPE_TEST | 0x0032 // TEST Bigint E.E.A gcd operation failed
+    Test_BI_EEA_FAIL= MSG_TYPE_TEST | 0x0032, // TEST Bigint E.E.A gcd operation failed
+    new_bigint_test_vector_SUCCESS = MSG_TYPE_TEST | 0x0033, // Test Bigint test vector 성공
+    new_bigint_test_vector_FAIL = MSG_TYPE_TEST | 0x0034, // Test Bigint test vector 실패
 
     // 추가 테스트 관련 에러 코드...
 };
@@ -186,6 +190,8 @@ enum OperateMSGCodes
     BI_DIV_BY_ZERO = MSG_TYPE_OPERATE | 0x000F,     // 나눗셈 금지
     Test_MILLER_RABIN_SUCCESS = MSG_TYPE_OPERATE | 0x0010, // Miller Rabin 성공
     Test_MILLER_RABIN_FAIL = MSG_TYPE_OPERATE | 0x0011,    // Miller Rabin 실패
+    OPERATE_TEST_SUCCESS = MSG_TYPE_OPERATE | 0x0012, // 연산 테스트 성공
+    OPERATE_TEST_FAIL = MSG_TYPE_OPERATE | 0x0013,    // 연산 테스트 실패
 };
 
 enum CryptoMSGCodes{
@@ -200,6 +206,12 @@ enum CryptoMSGCodes{
     RSA_MISSMATCH = MSG_TYPE_CRYPTO | 0x0009,   // RSA 키 불일치
     RSA_CRT_SUCCESS = MSG_TYPE_CRYPTO | 0x000A, // RSA CRT 성공
     RSA_CRT_FAIL = MSG_TYPE_CRYPTO | 0x000B,    // RSA CRT 실패
+    TEST_RSA_CRT_SUCCESS = MSG_TYPE_CRYPTO | 0x000C, // RSA CRT 테스트 성공
+    TEST_RSA_CRT_FAIL = MSG_TYPE_CRYPTO | 0x000D,    // RSA CRT 테스트 실패
+    TEST_RSA_SUCCESS = MSG_TYPE_CRYPTO | 0x000E, // RSA 테스트 성공
+    TEST_RSA_FAIL = MSG_TYPE_CRYPTO | 0x000F,    // RSA 테스트 실패
+    CRYPTO_TEST_SUCCESS = MSG_TYPE_CRYPTO | 0x0010, // 암호 테스트 성공
+    CRYPTO_TEST_FAIL = MSG_TYPE_CRYPTO | 0x0011,    // 암호 테스트 실패
 };
 
 // 에러 처리 함수 프로토타입
