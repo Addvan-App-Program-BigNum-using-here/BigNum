@@ -10,19 +10,6 @@
 
 #define WORD_BITS 8   ///< Word bits
 
-#define APPEND 0        ///< File append
-#define CLEAR 1         ///< File clear and write
-#define _POSIX_C_SOURCE 200809L
-#define WORD_BINARY_DIV 0 ///< Word long division
-#define WORD_LONG_DIV 1 ///< Word karatsuba division
-#define OUT
-#define IN
-#define seperator "-----------------------------------------"
-#define FROM_init "[BI SET FROM]"
-#define SHIFT_init "[Shift]"
-#define GET_LOWER_init "[Get Lower]"
-#define CAT_init "[Cat]"
-
 #if WORD_BITS == 64
     #define MAX_VALUE (~0ULL)  // 64비트 최대값
     typedef uint64_t word;
@@ -38,6 +25,20 @@
 #else
     #error "Unsupported WORD_BITS value"
 #endif
+
+#define APPEND 0        ///< File append
+#define CLEAR 1         ///< File clear and write
+#define _POSIX_C_SOURCE 200809L
+#define WORD_BINARY_DIV 0 ///< Word long division
+#define WORD_LONG_DIV 1 ///< Word karatsuba division
+#define OUT
+#define IN
+#define seperator "-----------------------------------------"
+#define FROM_init "[BI SET FROM]"
+#define SHIFT_init "[Shift]"
+#define GET_LOWER_init "[Get Lower]"
+#define CAT_init "[Cat]"
+
 
 typedef uint8_t byte;   ///< byte type
 typedef uint32_t msg;   ///< Error message control variation

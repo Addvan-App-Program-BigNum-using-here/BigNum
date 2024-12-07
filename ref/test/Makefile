@@ -5,15 +5,15 @@ RANLIB = ranlib
 # Directories
 LIB_DIR = ../lib
 # Library source files
-LIB_SOURCES = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ../file_io.c
+LIB_SOURCES = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ../file_io.c ../crypto.c
 LIB_OBJECTS = $(LIB_SOURCES:../%.c=$(LIB_DIR)/%.o)
 # Test files
 TEST_SOURCE = util_test.c
-CRYPTO_SOURCE = crypto.c
+CRYPTO_SOURCE = ../crypto.c
 TEST_OBJECT = $(TEST_SOURCE:.c=.o)
 
 TEST_PROGRAM = util_test$(EXE_EXT)
-CRYPTO_PROGRAM = crypto$(EXE_EXT)
+CRYPTO_PROGRAM = ../crypto$(EXE_EXT)
 
 TEST_SRC = $(LIB_SOURCES) ./$(TEST_SOURCE)
 CRYPTO_SRC = $(LIB_SOURCES) ./$(CRYPTO_SOURCE)
@@ -33,7 +33,7 @@ ifeq ($(OS),Windows_NT)
     CP = copy
     MKDIR = mkdir
     TOUCH = type nul >
-    CFLAGS = -Wall -Wextra -std=c99 -I..
+    CFLAGS = -Wall -O3  -Wextra -std=c99 -I..
     TEST_RUN_CMD = set "PATH=$(LIB_DIR);$(PATH)" && .\$(TEST_PROGRAM)
 else
     UNAME_S := $(shell uname -s)
@@ -47,7 +47,7 @@ else
         CP = cp
         MKDIR = mkdir -p
         TOUCH = touch
-        CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -I..
+        CFLAGS = -Wall -O3 -Wextra -std=c99 -fsanitize=address -I..
         LDFLAGS = -g -fsanitize=address -Wl,-rpath,'$$ORIGIN/../lib'
         TEST_RUN_CMD = LD_LIBRARY_PATH=../lib ./$(TEST_PROGRAM)
     else ifeq ($(UNAME_S),Darwin)
@@ -62,7 +62,7 @@ else
         TOUCH = touch
         UNAME_M := $(shell uname -m)
         ifeq ($(UNAME_M),x86_64)
-            CFLAGS = -Wall -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
+            CFLAGS = -Wall -O3 -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
             LDFLAGS = -g -fsanitize=address -arch x86_64 -Wl,-rpath,@executable_path/../lib
         else ifeq ($(UNAME_M),arm64)
             CFLAGS = -O3 -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..

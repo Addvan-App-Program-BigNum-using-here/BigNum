@@ -25,6 +25,14 @@ int main(){
     bigint* barret_N = NULL;
     bigint* barret_T = NULL;
 
+    for(int i = 0; i < 10; i++){
+        printf("%dth test\n", i);
+//        result_msg = RSA();
+        result_msg = RSA_CRT();
+        log_msg(result_msg);
+    }
+    return 0;
+/*
 //    test_bi_new_delete();       // bigint 할당 및 해제 테스트
 //    test_bi_random();           // 랜덤 bigint 생성 테스트
 //    test_bi_set_from();         // string으로부터 bigint 생성 테스트
@@ -93,13 +101,13 @@ int main(){
             goto TEST_EXIT;
         }
 
-        // bigint 덧셈 테스트
-        result_msg = test_bi_add(&op_total_time[0], &a, &b, str);
-        if(result_msg != Test_BI_ADD_SUCCESS){
-            log_msg(Test_BI_ADD_FAIL);
-            log_msg(result_msg);
-            return Test_FAIL;
-        }
+//        // bigint 덧셈 테스트
+//        result_msg = test_bi_add(&op_total_time[0], &a, &b, str);
+//        if(result_msg != Test_BI_ADD_SUCCESS){
+//            log_msg(Test_BI_ADD_FAIL);
+//            log_msg(result_msg);
+//            return Test_FAIL;
+//        }
 
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
         // bigint 뺄셈 테스트
@@ -208,40 +216,74 @@ int main(){
         // }
 
 
-        // printf("%dth test\n", i);
-        // a->sign = 0;
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
-        // if(result_msg != Test_MILLER_RABIN_SUCCESS){
-        //     log_msg(Test_MILLER_RABIN_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
+        printf("%dth test\n", i);
+        a->sign = 0;
+        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+        result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
+        if(result_msg != Test_MILLER_RABIN_SUCCESS){
+            log_msg(Test_MILLER_RABIN_FAIL);
+            log_msg(result_msg);
+            return Test_FAIL;
+        }
+
     }
 
-    printf("\n============ Testing bi_add ============\n");
-    printf("Time taken add : %f seconds\n", op_total_time[0] / test_size);
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+//    printf("\n============ Testing bi_add ============\n");
+//    printf("Time taken add : %f seconds\n", op_total_time[0] / test_size);
 
+    printf("\n--------------- WORD INFO ---------------");
+    printf("\nBigint bit size : %d", BITS_SIZE);
+    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    printf("\nitersize : %d", test_size);
     printf("\n============ Testing bi_sub ============\n");
     printf("Time taken sub : %f seconds\n", op_total_time[1] / test_size);
 
+    printf("\n--------------- WORD INFO ---------------");
+    printf("\nBigint bit size : %d", BITS_SIZE);
+    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    printf("\nitersize : %d", test_size);
     printf("\n============ Testing bi_div (Binary Long Division) ============\n");
     printf("Time taken div(Binary) : %f seconds\n", op_total_time[2] / test_size);
 
+    printf("\n--------------- WORD INFO ---------------");
+    printf("\nBigint bit size : %d", BITS_SIZE);
+    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    printf("\nitersize : %d", test_size);
     printf("\n============ Testing bi_div (WORD Long Division) ============\n");
     printf("Time taken div(Long) : %f seconds\n", op_total_time[3] / test_size);
 
+    printf("\n--------------- WORD INFO ---------------");
+    printf("\nBigint bit size : %d", BITS_SIZE);
+    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    printf("\nitersize : %d", test_size);
     printf("\n============ Testing bi_mul ============\n");
     printf("Time taken mul : %f seconds\n", op_total_time[4] / test_size);
 
+    printf("\n--------------- WORD INFO ---------------");
+    printf("\nBigint bit size : %d", BITS_SIZE);
+    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    printf("\nitersize : %d", test_size);
     printf("\n============ Testing bi_mul_karachuba ============\n");
     printf("Time taken mul_karachuba : %f seconds\n", op_total_time[5] / test_size);
 
+    printf("\n--------------- WORD INFO ---------------");
+    printf("\nBigint bit size : %d", BITS_SIZE);
+    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    printf("\nitersize : %d", test_size);
     printf("\n============ Testing bi_squ ============\n");
     printf("Time taken squ : %f seconds\n", op_total_time[6] / test_size);
 
+    printf("\n--------------- WORD INFO ---------------");
+    printf("\nBigint bit size : %d", BITS_SIZE);
+    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    printf("\nitersize : %d", test_size);
     printf("\n============ Testing bi_squ_karachuba ============\n");
     printf("Time taken squ_karachuba : %f seconds\n", op_total_time[7] / test_size);
+
 
     printf("\n============ Testing bi_exp ============\n");
     printf("Time taken exp (MS) : %f seconds\n", op_exp_time[0] / test_size);
@@ -292,6 +334,7 @@ TEST_EXIT:
 
     log_msg(result_msg);
     return Test_FAIL;
+    */
 }
 
 msg test_bi_new_delete(){
