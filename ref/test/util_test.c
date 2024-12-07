@@ -92,7 +92,7 @@ int main(){
             result_msg = MEM_NOT_ALLOC;
             goto TEST_EXIT;
         }
-/*
+
         // bigint 덧셈 테스트
         result_msg = test_bi_add(&op_total_time[0], &a, &b, str);
         if(result_msg != Test_BI_ADD_SUCCESS){
@@ -177,7 +177,7 @@ int main(){
 
         if(test_word_size == barret_word_size){ // 사전 연산 값이 고정되어 있기에 test_word_size가 기존 사이즈와 같을 때만 수행
             memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-            // bigint Barrett Reduction 테스트
+            //bigint Barrett Reduction 테스트
             result_msg = test_bi_barrett_reduction(&op_total_time[8], &a, &barret_N, &barret_T, str);
             if(result_msg != Test_BI_BARRETT_REDUCTION_SUCCESS){
                 log_msg(Test_BI_BARRETT_REDUCTION_FAIL);
@@ -207,7 +207,7 @@ int main(){
             return Test_FAIL;
         }
 
-*/
+
         printf("%dth test\n", i);
         a->sign = 0;
         memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
