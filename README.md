@@ -30,6 +30,7 @@
 ## python Install
 - 본 BigNum 프로젝트의 연산 검증은 python를 활용하기에 사전에 설치되어야 한다.
 ### MAC OS
+
 ```
 # Homebrew 설치 (아직 설치하지 않았다면)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -95,8 +96,14 @@ sudo apt install make
 
 ## BigNum Build
 ```
+# 사전 git clone
 git clone https://github.com/Addvan-App-Program-BigNum-using-here/BigNum.git
-cd ./ref/test
+
+# 테스트 환경 세팅 쉘 코드 실행 권한 부여
+chmod +x ./test_init.sh
+
+# 테스트 환경 세팅 쉘 코드 실행
+./test_init.sh
 
 # 라이브러리 생성
 make all
@@ -106,14 +113,14 @@ make retest
 ```
 
 ### 테스트 시 환경변수 설명
-#### `/ref/test/util_test.h` 파일
+#### `/ref/test/main_test.h` 파일
 - `test_word_size` : 테스트 word 길이 (0으로 설정 시 테스트 word 길이는 랜덤)
 - `test_word_size_limit` : word 사이즈가 랜덤으로 할당 시 최대 크기
 - `test_size` : 테스트 반복 횟수
 
 #### `/ref/operate.h` 파일
-- `karachuba_flag` : 카라츄바를 사용하는 최대 깊이
-- `squ_karachuba_flag` : 카라츄바 제곱을 사용하는 최대 깊이
+- `mul_karachuba_ratio` : 카라츄바를 사용하는 최대 비율
+- `squ_karachuba_ratio` : 카라츄바 제곱을 사용하는 최대 비율
 
 # 5. 기타
 
