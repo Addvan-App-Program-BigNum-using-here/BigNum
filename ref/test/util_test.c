@@ -25,13 +25,33 @@ int main(){
     bigint* barret_N = NULL;
     bigint* barret_T = NULL;
 
-//     for(int i = 0; i < 10; i++){
-//         printf("%dth test\n", i);
-// //        result_msg = RSA();
-//         result_msg = RSA_CRT();
-//         log_msg(result_msg);
-//     }
-//     return 0;
+    // 테스트 빅인트 파일 초기화
+//    Test_file_write_non_enter(Test_bigint, "", CLEAR);
+    Test_file_write_non_enter(Test_file_add, "", CLEAR);
+    Test_file_write_non_enter(Test_file_sub, "", CLEAR);
+    Test_file_write_non_enter(Test_file_mul, "", CLEAR);
+    Test_file_write_non_enter(Test_file_mul_karachuba, "", CLEAR);
+    Test_file_write_non_enter(Test_file_div, "", CLEAR);
+    Test_file_write_non_enter(Test_file_squ_karachuba, "", CLEAR);
+    Test_file_write_non_enter(Test_file_exp, "", CLEAR);
+    Test_file_write_non_enter(Test_file_barrett_reduction, "", CLEAR);
+    Test_file_write_non_enter(Test_file_gcd, "", CLEAR);
+    Test_file_write_non_enter(Test_file_EEA, "", CLEAR);
+    Test_file_write_non_enter(Test_file_MR, "", CLEAR);
+    Test_file_write_non_enter(Test_file_squ, "", CLEAR);
+
+//    clock_t start = 0;
+//    clock_t end = 0;
+//    for(int i = 0; i < 1; i++){
+//        start = clock();
+////        result_msg = RSA();
+//        result_msg = RSA_CRT();
+//        end = clock();
+//        log_msg(result_msg);
+//    }
+//    printf("time : %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+//    return 0;
+
 
 //    test_bi_new_delete();       // bigint 할당 및 해제 테스트
 //    test_bi_random();           // 랜덤 bigint 생성 테스트
@@ -101,205 +121,283 @@ int main(){
             goto TEST_EXIT;
         }
 
-//        // bigint 덧셈 테스트
-//        result_msg = test_bi_add(&op_total_time[0], &a, &b, str);
-//        if(result_msg != Test_BI_ADD_SUCCESS){
-//            log_msg(Test_BI_ADD_FAIL);
-//            log_msg(result_msg);
-//            return Test_FAIL;
+//        // bigint 생성
+//        bigint_to_hex(str, &a);
+//        Test_file_write_non_enter(Test_bigint, str, APPEND);
+//        Test_file_write_non_enter(Test_bigint, "\n", APPEND);
+//
+//
+//        bigint_to_hex(str, &b);
+//        Test_file_write_non_enter(Test_bigint, str, APPEND);
+//        Test_file_write_non_enter(Test_bigint, "\n", APPEND);
+//
+//
+//        bigint_to_hex(str, &c);
+//        Test_file_write_non_enter(Test_bigint, str, APPEND);
+//        Test_file_write_non_enter(Test_bigint, "\n", APPEND);
+/*
+       // bigint 덧셈 테스트
+//       result_msg = test_bi_add(&op_total_time[0], &nums[0], &nums[1], str);
+       result_msg = test_bi_add(&op_total_time[0], &a, &b, str);
+       if(result_msg != Test_BI_ADD_SUCCESS){
+           log_msg(Test_BI_ADD_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // bigint 뺄셈 테스트
+//       result_msg = test_bi_sub(&op_total_time[1], &nums[0], &nums[1], str);
+       result_msg = test_bi_sub(&op_total_time[1], &a, &b, str);
+       if(result_msg != Test_BI_SUB_SUCCESS){
+           log_msg(Test_BI_SUB_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // BINARY LONG bigint 나눗셈 테스트
+       DIVISION_METHOD = 0;
+//       result_msg = test_bi_div(&op_total_time[2], &nums[0], &nums[1], str, &DIVISION_METHOD);
+       result_msg = test_bi_div(&op_total_time[2], &a, &b, str, &DIVISION_METHOD);
+       if(result_msg != Test_BI_DIV_SUCCESS){
+           log_msg(Test_BI_DIV_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // WORD LONG bigint 나눗셈 테스트
+       DIVISION_METHOD = 1;
+//       result_msg = test_bi_div(&op_total_time[3], &nums[0], &nums[1], str, &DIVISION_METHOD);
+       result_msg = test_bi_div(&op_total_time[3], &a, &b, str, &DIVISION_METHOD);
+       if(result_msg != Test_BI_DIV_SUCCESS){
+           log_msg(Test_BI_DIV_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // bigint 곱셈 테스트
+//       result_msg = test_bi_mul(&op_total_time[4], &nums[0], &nums[1], str);
+       result_msg = test_bi_mul(&op_total_time[4], &a, &b, str);
+       if(result_msg != Test_BI_MUL_SUCCESS){
+           log_msg(Test_BI_MUL_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // bigint 카라츄바 곱셈 테스트
+       karachuba_flag = test_max_word_size / mul_karachuba_ratio;
+//       result_msg = test_bi_mul_karachuba(&op_total_time[5], &nums[0], &nums[1], str, &karachuba_flag);
+       result_msg = test_bi_mul_karachuba(&op_total_time[5], &a, &b, str, &karachuba_flag);
+       if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS){
+           log_msg(Test_BI_MUL_KARACHUBA_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // bigint 제곱 테스트
+//       result_msg = test_bi_squ(&op_total_time[6], &nums[0], str);
+       result_msg = test_bi_squ(&op_total_time[6], &a, str);
+       if(result_msg != Test_BI_SQU_SUCCESS){
+           log_msg(Test_BI_SQU_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+
+       squ_karachuba_flag = test_max_word_size / squ_karachuba_ratio;
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // bigint 카라츄바 제곱 테스트
+//       result_msg = test_bi_squ_karachuba(&op_total_time[7], &nums[0], str, &squ_karachuba_flag);
+       result_msg = test_bi_squ_karachuba(&op_total_time[7], &a, str, &squ_karachuba_flag);
+       if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
+           log_msg(Test_BI_SQU_KARACHUBA_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // bigint 지수승 테스트
+//       result_msg = test_bi_exp(op_exp_time, &nums[0], &nums[1], &nums[2], str);
+       result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
+       if(result_msg != Test_BI_EXP_SUCCESS){
+           return Test_FAIL;
+       }
+*/
+       if(test_word_size == barret_word_size){ // 사전 연산 값이 고정되어 있기에 test_word_size가 기존 사이즈와 같을 때만 수행
+           memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+           // bigint Barrett Reduction 테스트
+//           result_msg = test_bi_barrett_reduction(&op_total_time[8], &nums[0], &barret_N, &barret_T, str);
+           result_msg = test_bi_barrett_reduction(&op_total_time[8], &a, &barret_N, &barret_T, str);
+           if(result_msg != Test_BI_BARRETT_REDUCTION_SUCCESS){
+               log_msg(Test_BI_BARRETT_REDUCTION_FAIL);
+               log_msg(result_msg);
+               return Test_FAIL;
+           }
+       }
+/*
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // bigint gcd 테스트
+//       result_msg = test_bi_gcd(&op_total_time[9], &nums[0], &nums[1], str);
+       result_msg = test_bi_gcd(&op_total_time[9], &a, &b, str);
+       if(result_msg != Test_BI_GCD_SUCCESS){
+           log_msg(Test_BI_GCD_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+
+       // bigint EEA 테스트
+//       nums[0]->sign = 0;
+//       nums[1]->sign = 0;
+       a->sign = 0;
+       b->sign = 0;
+       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+       // bigint EEA 테스트
+//       result_msg = test_bi_EEA(&op_total_time[10], &nums[0], &nums[1], str);
+       result_msg = test_bi_EEA(&op_total_time[10], &a, &b, str);
+       if(result_msg != Test_BI_EEA_SUCCESS){
+           log_msg(Test_BI_EEA_FAIL);
+           log_msg(result_msg);
+           return Test_FAIL;
+       }
+*/
+////       nums[0]->sign = 0;
+//       a->sign = 0;
+//       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+////       result_msg = test_miller_rabin(&op_total_time[11], &nums[0], &miller_rabin_iter, str);
+//       result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
+//       if(result_msg != Test_MILLER_RABIN_SUCCESS){
+//           log_msg(Test_MILLER_RABIN_FAIL);
+//           log_msg(result_msg);
+//           return Test_FAIL;
+//       }
+   }
+
+//    str = (char *)calloc((test_max_word_size * 8) * 4 + 100, sizeof(char)); // '0x' * 3 + 부호 * 3 + " + " + " = " => 6 + 3 + 3 + 3 = 15
+
+//    fp = fopen("./test_vec/test_bigint.txt", "r");
+//    bigint *nums[3];
+//    int count = 0;
+//    int flag = 1;
+//
+//    while (fgets(str, test_word_size * WORD_BITS, fp) != NULL) {
+//        str[strcspn(str, "\n")] = '\0';
+//        int is_negative = (str[0] == '-');
+//        char *hex_str = is_negative ? str + 3 : str + 2;
+//
+//        bi_set_from_string(&nums[count], hex_str, 16);
+//        if(is_negative) nums[count]->sign = 1;
+//
+//        count++;
+//
+//        // 3개 읽으면 처리 시작
+//        if (count == 3) {
+//            printf("%dth test\n", flag);
+////            if(flag == 50) break;
+//
+//            // 카운터 초기화
+//            count = 0;
+//            flag++;
 //        }
+//    }
 
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // bigint 뺄셈 테스트
-        // result_msg = test_bi_sub(&op_total_time[1], &a, &b, str);
-        // if(result_msg != Test_BI_SUB_SUCCESS){
-        //     log_msg(Test_BI_SUB_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
+//    fclose(fp);
 
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // BINARY LONG bigint 나눗셈 테스트
-        // DIVISION_METHOD = 0;
-        // result_msg = test_bi_div(&op_total_time[2], &a, &b, str, &DIVISION_METHOD);
-        // if(result_msg != Test_BI_DIV_SUCCESS){
-        //     log_msg(Test_BI_DIV_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
-
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // WORD LONG bigint 나눗셈 테스트
-        // DIVISION_METHOD = 1;
-        // result_msg = test_bi_div(&op_total_time[3], &a, &b, str, &DIVISION_METHOD);
-        // if(result_msg != Test_BI_DIV_SUCCESS){
-        //     log_msg(Test_BI_DIV_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
-
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // bigint 곱셈 테스트
-        // result_msg = test_bi_mul(&op_total_time[4], &a, &b, str);
-        // if(result_msg != Test_BI_MUL_SUCCESS){
-        //     log_msg(Test_BI_MUL_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
-
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // bigint 카라츄바 곱셈 테스트
-        // karachuba_flag = test_max_word_size / mul_karachuba_ratio;
-        // result_msg = test_bi_mul_karachuba(&op_total_time[5], &a, &b, str, &karachuba_flag);
-        // if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS){
-        //     log_msg(Test_BI_MUL_KARACHUBA_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
-
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // bigint 제곱 테스트
-        // result_msg = test_bi_squ(&op_total_time[6], &a, str);
-        // if(result_msg != Test_BI_SQU_SUCCESS){
-        //     log_msg(Test_BI_SQU_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
-
-        // squ_karachuba_flag = test_max_word_size / squ_karachuba_ratio;
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // bigint 카라츄바 제곱 테스트
-        // result_msg = test_bi_squ_karachuba(&op_total_time[7], &a, str, &squ_karachuba_flag);
-        // if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
-        //     log_msg(Test_BI_SQU_KARACHUBA_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
-
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // bigint 지수승 테스트
-        // result_msg = test_bi_exp(op_exp_time, &a, &b, &c, str);
-        // if(result_msg != Test_BI_EXP_SUCCESS){
-        //     return Test_FAIL;
-        // }
-
-        if(test_word_size == barret_word_size){ // 사전 연산 값이 고정되어 있기에 test_word_size가 기존 사이즈와 같을 때만 수행
-            printf("start\n");
-            memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-            //bigint Barrett Reduction 테스트
-            result_msg = test_bi_barrett_reduction(&op_total_time[8], &a, &barret_N, &barret_T, str);
-            printf("middle\n");
-         
-            if(result_msg != Test_BI_BARRETT_REDUCTION_SUCCESS){
-                log_msg(Test_BI_BARRETT_REDUCTION_FAIL);
-                log_msg(result_msg);
-                return Test_FAIL;
-            }
-        }
-
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // bigint gcd 테스트
-        // result_msg = test_bi_gcd(&op_total_time[9], &a, &b, str);
-        // if(result_msg != Test_BI_GCD_SUCCESS){
-        //     log_msg(Test_BI_GCD_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
-
-        // // bigint EEA 테스트
-        // a->sign = 0;
-        // b->sign = 0;
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // // bigint EEA 테스트
-        // result_msg = test_bi_EEA(&op_total_time[10], &a, &b, str);
-        // if(result_msg != Test_BI_EEA_SUCCESS){
-        //     log_msg(Test_BI_EEA_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
-
-
-        // printf("%dth test\n", i);
-        // a->sign = 0;
-        // memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-        // result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
-        // if(result_msg != Test_MILLER_RABIN_SUCCESS){
-        //     log_msg(Test_MILLER_RABIN_FAIL);
-        //     log_msg(result_msg);
-        //     return Test_FAIL;
-        // }
-
-    }
+/*
+    printf("\n--------------- WORD INFO ---------------");
+    printf("\nBigint bit size : %d", BITS_SIZE);
+    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    printf("\nitersize : %d", test_size);
+    printf("\n============ Testing bi_add ============\n");
+    printf("Time taken add : %f seconds\n", op_total_time[0] / test_size);
 
 //    printf("\n--------------- WORD INFO ---------------");
 //    printf("\nBigint bit size : %d", BITS_SIZE);
 //    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
 //    printf("\nitersize : %d", test_size);
-//    printf("\n============ Testing bi_add ============\n");
-//    printf("Time taken add : %f seconds\n", op_total_time[0] / test_size);
+    printf("\n============ Testing bi_sub ============\n");
+    printf("Time taken sub : %f seconds\n", op_total_time[1] / test_size);
 
-    // printf("\n--------------- WORD INFO ---------------");
-    // printf("\nBigint bit size : %d", BITS_SIZE);
-    // printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-    // printf("\nitersize : %d", test_size);
-    // printf("\n============ Testing bi_sub ============\n");
-    // printf("Time taken sub : %f seconds\n", op_total_time[1] / test_size);
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+    printf("\n============ Testing bi_div (Binary Long Division) ============\n");
+    printf("Time taken div(Binary) : %f seconds\n", op_total_time[2] / test_size);
 
-    // printf("\n--------------- WORD INFO ---------------");
-    // printf("\nBigint bit size : %d", BITS_SIZE);
-    // printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-    // printf("\nitersize : %d", test_size);
-    // printf("\n============ Testing bi_div (Binary Long Division) ============\n");
-    // printf("Time taken div(Binary) : %f seconds\n", op_total_time[2] / test_size);
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+    printf("\n============ Testing bi_div (WORD Long Division) ============\n");
+    printf("Time taken div(Long) : %f seconds\n", op_total_time[3] / test_size);
 
-    // printf("\n--------------- WORD INFO ---------------");
-    // printf("\nBigint bit size : %d", BITS_SIZE);
-    // printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-    // printf("\nitersize : %d", test_size);
-    // printf("\n============ Testing bi_div (WORD Long Division) ============\n");
-    // printf("Time taken div(Long) : %f seconds\n", op_total_time[3] / test_size);
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+    printf("\n============ Testing bi_mul ============\n");
+    printf("Time taken mul : %f seconds\n", op_total_time[4] / test_size);
 
-    // printf("\n--------------- WORD INFO ---------------");
-    // printf("\nBigint bit size : %d", BITS_SIZE);
-    // printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-    // printf("\nitersize : %d", test_size);
-    // printf("\n============ Testing bi_mul ============\n");
-    // printf("Time taken mul : %f seconds\n", op_total_time[4] / test_size);
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+    printf("\n============ Testing bi_mul_karachuba ============\n");
+    printf("Time taken mul_karachuba : %f seconds\n", op_total_time[5] / test_size);
 
-    // printf("\n--------------- WORD INFO ---------------");
-    // printf("\nBigint bit size : %d", BITS_SIZE);
-    // printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-    // printf("\nitersize : %d", test_size);
-    // printf("\n============ Testing bi_mul_karachuba ============\n");
-    // printf("Time taken mul_karachuba : %f seconds\n", op_total_time[5] / test_size);
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+    printf("\n============ Testing bi_squ ============\n");
+    printf("Time taken squ : %f seconds\n", op_total_time[6] / test_size);
 
-    // printf("\n--------------- WORD INFO ---------------");
-    // printf("\nBigint bit size : %d", BITS_SIZE);
-    // printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-    // printf("\nitersize : %d", test_size);
-    // printf("\n============ Testing bi_squ ============\n");
-    // printf("Time taken squ : %f seconds\n", op_total_time[6] / test_size);
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+    printf("\n============ Testing bi_squ_karachuba ============\n");
+    printf("Time taken squ_karachuba : %f seconds\n", op_total_time[7] / test_size);
 
-    // printf("\n--------------- WORD INFO ---------------");
-    // printf("\nBigint bit size : %d", BITS_SIZE);
-    // printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-    // printf("\nitersize : %d", test_size);
-    // printf("\n============ Testing bi_squ_karachuba ============\n");
-    // printf("Time taken squ_karachuba : %f seconds\n", op_total_time[7] / test_size);
-
-
-    // printf("\n============ Testing bi_exp ============\n");
-    // printf("Time taken exp (MS) : %f seconds\n", op_exp_time[0] / test_size);
-    // printf("Time taken exp (R TO L) : %f seconds\n", op_exp_time[1] / test_size);
-    // printf("Time taken exp (L TO R) : %f seconds\n", op_exp_time[2] / test_size);
-
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+    printf("\n============ Testing bi_exp ============\n");
+    printf("Time taken exp (MS) : %f seconds\n", op_exp_time[0] / test_size);
+    printf("Time taken exp (R TO L) : %f seconds\n", op_exp_time[1] / test_size);
+    printf("Time taken exp (L TO R) : %f seconds\n", op_exp_time[2] / test_size);
+*/
+    printf("\n--------------- WORD INFO ---------------");
+    printf("\nBigint bit size : %d", BITS_SIZE);
+    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    printf("\nitersize : %d", test_size);
     printf("\n============ Testing bi_barrett_reduction ============\n");
     printf("Time taken barret_reduction : %f seconds\n", op_total_time[8] / test_size);
 
-    // printf("\n============ Testing bi_gcd ============\n");
-    // printf("Time taken gcd : %f seconds\n", op_total_time[10] / test_size);
-    // printf("\n");
+//
+////    printf("\n--------------- WORD INFO ---------------");
+////    printf("\nBigint bit size : %d", BITS_SIZE);
+////    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+////    printf("\nitersize : %d", test_size);
+//    printf("\n============ Testing bi_gcd ============\n");
+//    printf("Time taken gcd : %f seconds\n", op_total_time[9] / test_size);
+//
+////    printf("\n--------------- WORD INFO ---------------");
+////    printf("\nBigint bit size : %d", BITS_SIZE);
+////    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+////    printf("\nitersize : %d", test_size);
+//    printf("\n============ Testing bi_EEA ============\n");
+//    printf("Time taken EEA : %f seconds\n", op_total_time[10] / test_size);
+//    printf("\n");
 
+//    printf("\n============ Testing Miller Rabin ============\n");
+//    printf("Time taken Miller Rabin : %f seconds\n", op_total_time[11] / test_size);
+//    printf("\n");
 //    if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 //    if(compare_squaring(16, 120, 16) != COMPARE_SQUARING_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 //    if(compare_division(16, 120, 16) != COMPARE_DIVISION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
@@ -337,7 +435,6 @@ TEST_EXIT:
 
     log_msg(result_msg);
     return Test_FAIL;
-
 }
 
 msg test_bi_new_delete(){

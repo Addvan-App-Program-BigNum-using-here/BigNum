@@ -18,10 +18,11 @@ CRYPTO_PROGRAM = ../crypto$(EXE_EXT)
 TEST_SRC = $(LIB_SOURCES) ./$(TEST_SOURCE)
 CRYPTO_SRC = $(LIB_SOURCES) ./$(CRYPTO_SOURCE)
 # Library names
-SHARED_LIB = $(LIB_DIR)/$(SHARED_PREFIX)bignum.$(SHARED_EXT)
-STATIC_LIB = $(LIB_DIR)/libbignum.a
+SHARED_LIB = $(LIB_DIR)/$(SHARED_PREFIX)HEPHAISTOS.$(SHARED_EXT)
+STATIC_LIB = $(LIB_DIR)/HEPHAISTOS.a
 # Result directory
 RESULT_DIR = ./result
+TEST_VEC = ./test_vec
 # Detect operating system
 ifeq ($(OS),Windows_NT)
     # Windows settings
@@ -93,7 +94,7 @@ static: $(LIB_OBJECTS)
 	$(RANLIB) $(STATIC_LIB)
 # Build test program
 test: $(TEST_OBJECT) shared
-	$(CC) -o $(TEST_PROGRAM) $(TEST_OBJECT) -L$(LIB_DIR) -lbignum $(LDFLAGS)
+	$(CC) -o $(TEST_PROGRAM) $(TEST_OBJECT) -L$(LIB_DIR) -lHEPHAISTOS $(LDFLAGS)
 # Run test program
 run: test
 	$(TEST_RUN_CMD)
@@ -106,13 +107,13 @@ else
 	./$(TEST_PROGRAM)
 endif
 	python3 ../../sage_test/test.py
-	cat ./main_result.txt
+	#cat ./main_result.txt
 # Rebuild and run
 rerun: clean run
 
 # Create crypto program
 crypto: $(CRYPTO_SOURCE) shared
-	$(CC) -o $(CRYPTO_PROGRAM) $(CRYPTO_SOURCE) -L$(LIB_DIR) -lbignum $(LDFLAGS)
+	$(CC) -o $(CRYPTO_PROGRAM) $(CRYPTO_SOURCE) -L$(LIB_DIR) -lHEPHAISTOS $(LDFLAGS)
 
 # Run crypto program
 run_crypto: crypto
@@ -135,6 +136,7 @@ else
 	$(RM) $(LIB_OBJECTS)
 	$(RM) $(TEST_OBJECT)
 	$(RM) $(TEST_PROGRAM)
+#	$(RM) $(TEST_VEC)/*.txt
 	$(RM) *.txt
 	$(RM) $(RESULT_DIR)/*.txt
 	$(RM) $(SHARED_LIB)
