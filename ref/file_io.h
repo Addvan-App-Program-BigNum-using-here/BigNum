@@ -19,6 +19,8 @@
 #define Test_file_EEA "./test_vec/test_EEA.txt"
 #define Test_file_MR "./test_vec/test_miller_rabin.txt"
 #define Test_bigint "./test_vec/test_bigint.txt"
+#define Test_file_RSA "./test_vec/test_RSA.txt"
+#define Test_file_RSA_CRT "./test_vec/test_RSA_CRT.txt"
 
 /**
  * @brief file write

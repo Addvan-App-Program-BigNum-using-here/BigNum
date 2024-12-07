@@ -9,10 +9,16 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-//#include <sys/time.h>
-// 윈도우일 때는 time.h 인 것으로 판단
-#include <time.h>
 #include <stdarg.h>
+
+#ifdef _WIN32
+    #include <time.h>
+#elif defined(__APPLE__) || defined(__linux__)
+    #include <sys/time.h>
+    #include <time.h>
+#else
+    #include <time.h>
+#endif
 
 #define CHECK_FUNCTION_RUN_ONE_TIME(func, dst, result_msg, param_types, ...) \
     check_function_run_one_time(func, dst, result_msg, param_types, \
@@ -221,4 +227,5 @@ msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b);
  * @return msg
  */
 msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b);
+
 #endif // UTIL_H

@@ -30,6 +30,7 @@
 ## python Install
 - 본 BigNum 프로젝트의 연산 검증은 python를 활용하기에 사전에 설치되어야 한다.
 ### MAC OS
+
 ```
 # Homebrew 설치 (아직 설치하지 않았다면)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
