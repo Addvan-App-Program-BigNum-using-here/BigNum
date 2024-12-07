@@ -848,10 +848,6 @@ msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
             result_msg = MR_SUCCESS;
             goto clean;
         }
-        printf("step 8\n");
-        // step 8 : a <- a^q mod n
-        printf("a1 : ");
-        bi_print(&a, 16);
         result_msg = bi_exp_L_TO_R(&a, &a, &q, n);
         if (result_msg != BI_EXP_L_TO_R_SUCCESS)  goto clean;
 
@@ -863,7 +859,6 @@ msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k){
         if (result_msg != BI_DIV_SUCCESS)    goto clean;
         result_msg = bi_compare(&a, &one);
         if (result_msg == 0)  continue;
-        printf("step 12\n");
         // step 12 : j = 0 l-1까지
 
 //        printf("in for\n");
