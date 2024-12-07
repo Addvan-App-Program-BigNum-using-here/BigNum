@@ -18,6 +18,7 @@
 #define Test_file_gcd "./test_vec/test_gcd.txt"
 #define Test_file_EEA "./test_vec/test_EEA.txt"
 #define Test_file_MR "./test_vec/test_miller_rabin.txt"
+#define Test_bigint "./test_vec/test_bigint.txt"
 
 /**
  * @brief file write
