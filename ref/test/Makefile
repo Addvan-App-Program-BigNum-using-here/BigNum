@@ -7,16 +7,13 @@ LIB_DIR = ../lib
 # Library source files
 LIB_SOURCES = ../util.c ../msg_control.c ../random.c ../data_type.c ../operate.c ../file_io.c ../crypto.c
 LIB_OBJECTS = $(LIB_SOURCES:../%.c=$(LIB_DIR)/%.o)
+
 # Test files
-TEST_SOURCE = util_test.c
-CRYPTO_SOURCE = ../crypto.c
+TEST_SOURCE = test_main.c util_test.c random_test.c operate_test.c crypto_test.c func_cmp_test.c
 TEST_OBJECT = $(TEST_SOURCE:.c=.o)
 
-TEST_PROGRAM = util_test$(EXE_EXT)
-CRYPTO_PROGRAM = ../crypto$(EXE_EXT)
-
+TEST_PROGRAM = test_main$(EXE_EXT)
 TEST_SRC = $(LIB_SOURCES) ./$(TEST_SOURCE)
-CRYPTO_SRC = $(LIB_SOURCES) ./$(CRYPTO_SOURCE)
 # Library names
 SHARED_LIB = $(LIB_DIR)/$(SHARED_PREFIX)HEPHAISTOS.$(SHARED_EXT)
 STATIC_LIB = $(LIB_DIR)/HEPHAISTOS.a
@@ -101,26 +98,20 @@ run: test
 # Rebuild and test with memory leak check
 retest: clean $(TEST_SRC)
 	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_SRC) -o $(TEST_PROGRAM) $(LDFLAGS)
-ifeq ($(UNAME_S),Darwin)
-	leaks --atExit -- ./$(TEST_PROGRAM)
-else
+ifeq ($(OS),Windows_NT)
 	./$(TEST_PROGRAM)
-endif
+	python ../../sage_test/test.py
+	cat ./main_result.txt
+else ifeq ($(UNAME_S),Darwin)
+	leaks --atExit -- ./$(TEST_PROGRAM)
 	python3 ../../sage_test/test.py
 	cat ./main_result.txt
+else
+	./$(TEST_PROGRAM)
+	python3 ../../sage_test/test.py
+endif
 # Rebuild and run
 rerun: clean run
-
-# Create crypto program
-crypto: $(CRYPTO_SOURCE) shared
-	$(CC) -o $(CRYPTO_PROGRAM) $(CRYPTO_SOURCE) -L$(LIB_DIR) -lHEPHAISTOS $(LDFLAGS)
-
-# Run crypto program
-run_crypto: crypto
-	./$(CRYPTO_PROGRAM)
-
-# Rebuild and run crypto
-rerun_crypto: clean run_crypto
 
 clean:
 	@echo "Cleaning up..."
@@ -136,16 +127,8 @@ else
 	$(RM) $(LIB_OBJECTS)
 	$(RM) $(TEST_OBJECT)
 	$(RM) $(TEST_PROGRAM)
-#	$(RM) $(TEST_VEC)/*.txt
 	$(RM) *.txt
 	$(RM) $(RESULT_DIR)/*.txt
 	$(RM) $(SHARED_LIB)
 	$(RM) $(STATIC_LIB)
 endif
-# Debug target
-debug:
-	@echo "Operating System: $(OS)"
-	@echo "SHARED_LIB: $(SHARED_LIB)"
-	@echo "TEST_PROGRAM: $(TEST_PROGRAM)"
-	@echo "LIB_OBJECTS: $(LIB_OBJECTS)"
-	@echo "Current directory: $(shell pwd)"

@@ -173,6 +173,18 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case RSA_MISSMATCH : return "RSA key mismatch";
         case RSA_CRT_SUCCESS : return "RSA CRT successful";
         case RSA_CRT_FAIL : return "RSA CRT failed";
+        case CLEAR_Test_file_SUCCESS : return "Test file clear successful";
+        case CLEAR_Test_file_FAIL : return "Test file clear failed";
+        case new_bigint_test_vector_SUCCESS : return "Test Bigint test vector successful";
+        case new_bigint_test_vector_FAIL : return "Test Bigint test vector failed";
+        case OPERATE_TEST_SUCCESS : return "Operation test successful";
+        case OPERATE_TEST_FAIL : return "Operation test failed";
+        case TEST_RSA_CRT_SUCCESS : return "Test RSA CRT successful";
+        case TEST_RSA_CRT_FAIL : return "Test RSA CRT failed";
+        case TEST_RSA_SUCCESS : return "Test RSA successful";
+        case TEST_RSA_FAIL : return "Test RSA failed";
+        case CRYPTO_TEST_SUCCESS : return "Crypto test successful";
+        case CRYPTO_TEST_FAIL : return "Crypto test failed";
         default: return "Unknown error code";
     }
 }
