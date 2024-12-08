@@ -107,7 +107,7 @@ else
 	./$(TEST_PROGRAM)
 endif
 	python3 ../../sage_test/test.py
-	#cat ./main_result.txt
+	cat ./main_result.txt
 # Rebuild and run
 rerun: clean run
 

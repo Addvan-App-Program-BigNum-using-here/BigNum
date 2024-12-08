@@ -135,7 +135,13 @@ int main(){
 //        bigint_to_hex(str, &c);
 //        Test_file_write_non_enter(Test_bigint, str, APPEND);
 //        Test_file_write_non_enter(Test_bigint, "\n", APPEND);
-/*
+
+
+
+
+
+
+    
        // bigint 덧셈 테스트
 //       result_msg = test_bi_add(&op_total_time[0], &nums[0], &nums[1], str);
        result_msg = test_bi_add(&op_total_time[0], &a, &b, str);
@@ -226,11 +232,10 @@ int main(){
        if(result_msg != Test_BI_EXP_SUCCESS){
            return Test_FAIL;
        }
-*/
+
        if(test_word_size == barret_word_size){ // 사전 연산 값이 고정되어 있기에 test_word_size가 기존 사이즈와 같을 때만 수행
            memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
            // bigint Barrett Reduction 테스트
-//           result_msg = test_bi_barrett_reduction(&op_total_time[8], &nums[0], &barret_N, &barret_T, str);
            result_msg = test_bi_barrett_reduction(&op_total_time[8], &a, &barret_N, &barret_T, str);
            if(result_msg != Test_BI_BARRETT_REDUCTION_SUCCESS){
                log_msg(Test_BI_BARRETT_REDUCTION_FAIL);
@@ -238,7 +243,7 @@ int main(){
                return Test_FAIL;
            }
        }
-/*
+
        memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
        // bigint gcd 테스트
 //       result_msg = test_bi_gcd(&op_total_time[9], &nums[0], &nums[1], str);
@@ -263,17 +268,17 @@ int main(){
            log_msg(result_msg);
            return Test_FAIL;
        }
-*/
-////       nums[0]->sign = 0;
-//       a->sign = 0;
-//       memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
-////       result_msg = test_miller_rabin(&op_total_time[11], &nums[0], &miller_rabin_iter, str);
-//       result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
-//       if(result_msg != Test_MILLER_RABIN_SUCCESS){
-//           log_msg(Test_MILLER_RABIN_FAIL);
-//           log_msg(result_msg);
-//           return Test_FAIL;
-//       }
+
+//       nums[0]->sign = 0;
+      a->sign = 0;
+      memset(str, 0, (test_max_word_size * 8) * 4 + 100); // str 초기화
+      //result_msg = test_miller_rabin(&op_total_time[11], &nums[0], &miller_rabin_iter, str);
+      result_msg = test_miller_rabin(&op_total_time[11], &a, &miller_rabin_iter, str);
+      if(result_msg != Test_MILLER_RABIN_SUCCESS){
+          log_msg(Test_MILLER_RABIN_FAIL);
+          log_msg(result_msg);
+          return Test_FAIL;
+     }
    }
 
 //    str = (char *)calloc((test_max_word_size * 8) * 4 + 100, sizeof(char)); // '0x' * 3 + 부호 * 3 + " + " + " = " => 6 + 3 + 3 + 3 = 15
@@ -306,11 +311,12 @@ int main(){
 
 //    fclose(fp);
 
-/*
-    printf("\n--------------- WORD INFO ---------------");
-    printf("\nBigint bit size : %d", BITS_SIZE);
-    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-    printf("\nitersize : %d", test_size);
+
+    // printf("\n--------------- WORD INFO ---------------");
+    // printf("\nBigint bit size : %d", BITS_SIZE);
+    // printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    // printf("\nitersize : %d", test_size);
+    
     printf("\n============ Testing bi_add ============\n");
     printf("Time taken add : %f seconds\n", op_total_time[0] / test_size);
 
@@ -371,33 +377,34 @@ int main(){
     printf("Time taken exp (MS) : %f seconds\n", op_exp_time[0] / test_size);
     printf("Time taken exp (R TO L) : %f seconds\n", op_exp_time[1] / test_size);
     printf("Time taken exp (L TO R) : %f seconds\n", op_exp_time[2] / test_size);
-*/
-    printf("\n--------------- WORD INFO ---------------");
-    printf("\nBigint bit size : %d", BITS_SIZE);
-    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-    printf("\nitersize : %d", test_size);
+
+    // printf("\n--------------- WORD INFO ---------------");
+    // printf("\nBigint bit size : %d", BITS_SIZE);
+    // printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+    // printf("\nitersize : %d", test_size);
     printf("\n============ Testing bi_barrett_reduction ============\n");
     printf("Time taken barret_reduction : %f seconds\n", op_total_time[8] / test_size);
 
 //
-////    printf("\n--------------- WORD INFO ---------------");
-////    printf("\nBigint bit size : %d", BITS_SIZE);
-////    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-////    printf("\nitersize : %d", test_size);
-//    printf("\n============ Testing bi_gcd ============\n");
-//    printf("Time taken gcd : %f seconds\n", op_total_time[9] / test_size);
-//
-////    printf("\n--------------- WORD INFO ---------------");
-////    printf("\nBigint bit size : %d", BITS_SIZE);
-////    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
-////    printf("\nitersize : %d", test_size);
-//    printf("\n============ Testing bi_EEA ============\n");
-//    printf("Time taken EEA : %f seconds\n", op_total_time[10] / test_size);
-//    printf("\n");
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+   printf("\n============ Testing bi_gcd ============\n");
+   printf("Time taken gcd : %f seconds\n", op_total_time[9] / test_size);
 
-//    printf("\n============ Testing Miller Rabin ============\n");
-//    printf("Time taken Miller Rabin : %f seconds\n", op_total_time[11] / test_size);
-//    printf("\n");
+//    printf("\n--------------- WORD INFO ---------------");
+//    printf("\nBigint bit size : %d", BITS_SIZE);
+//    printf("\nWord Bit Size : %d, Word size : %d", WORD_BITS, test_word_size);
+//    printf("\nitersize : %d", test_size);
+   printf("\n============ Testing bi_EEA ============\n");
+   printf("Time taken EEA : %f seconds\n", op_total_time[10] / test_size);
+   printf("\n");
+
+   printf("\n============ Testing Miller Rabin ============\n");
+   printf("Time taken Miller Rabin : %f seconds\n", op_total_time[11] / test_size);
+   printf("\n");
+
 //    if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 //    if(compare_squaring(16, 120, 16) != COMPARE_SQUARING_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 //    if(compare_division(16, 120, 16) != COMPARE_DIVISION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
@@ -412,6 +419,7 @@ int main(){
     log_msg(Test_SUCCESS);
 
     // Sage test
+    //printf("WORD_BITS : %d\n", WORD_BITS);  // 테스트 진행시 연산 처리 비트 단위 출력
     fp = popen("python3 ../../sage_test/test.py >/dev/null 2>&1", "r");
     if (fp == NULL){
         printf("Failed to run command\n");

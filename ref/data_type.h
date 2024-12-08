@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-#define WORD_BITS 64   ///< Word bits
+#define WORD_BITS 64 ///< Word bits
 
 #if WORD_BITS == 64
     #define MAX_VALUE (~0ULL)  // 64비트 최대값
