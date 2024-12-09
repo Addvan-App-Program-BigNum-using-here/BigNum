@@ -14,6 +14,9 @@ int main(){
 //    if(rand_operate_test() != Test_SUCCESS)    return 0;
 //    if(rand_crypto_test() != Test_SUCCESS)    return 0;
 
+    // 곱셈, 나눗셈, 제곱 연산에 대한 성능 평가
+//    if(func_compare() != Test_SUCCESS)    return 0;
+
     // Sage test
     fp = popen("python3 ../../sage_test/test.py >/dev/null 2>&1", "r");
     if (fp == NULL){

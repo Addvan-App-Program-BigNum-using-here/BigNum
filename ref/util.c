@@ -894,14 +894,17 @@ clean:
     return result_msg;
 }
 
-
 msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b){
     // a,b의 부호와 상관없이 gcd 값은 항상 gcd(|a|, |b|)와 같아서 부호 신경 x
     bigint* t1 = NULL;
     bigint* t2 = NULL;
     bigint* temp = NULL;
     msg result_msg = BI_GCD_FAIL;
-    int div_option = 1;
+    int a_sign = (*a)->sign;
+    int b_sign = (*b)->sign;
+
+    if((*a)->sign) (*a)->sign = 0;
+    if((*b)->sign) (*b)->sign = 0;
 
     // a = 0이면 gcd(a,b) = b
     if(bi_is_zero(a) == BI_IS_ZERO){
@@ -945,17 +948,17 @@ EXIT_GCD:
     if(bi_delete(&t1) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     if(bi_delete(&t2) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
     if(bi_delete(&temp) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    if(*a != *dst)   (*a)->sign = a_sign;
+    if(*b != *dst)   (*b)->sign = b_sign;
+
     return result_msg;
 }
 
-
+// EEA는 a,b가 양수일 때만 가능, 음수일 때는 추가 구현 필요
 msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b){
     // a,b 부호 확인 필요
     // x,y 유일하게 하려면 어떻게 할지 생각해봐야됨 gcd(a,b) = ax + by
     msg result_msg = BI_EEA_FAIL;
-
-    (*a)->sign = 0;
-    (*b)->sign = 0;
 
     // a와 b 둘 다 0이면 gcd(a,b) = 0
     if((bi_is_zero(a) == BI_IS_ZERO) && (bi_is_zero(b) == BI_IS_ZERO)){
@@ -979,6 +982,7 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
         (*y)->a[0] = 1;
         return BI_EEA_SUCCESS;
     }
+
     // b = 0이면 gcd(a,b) = a
     // x = 1, y = 0 (ax + by = a)
     else if(bi_is_zero(b) == BI_IS_ZERO){
@@ -993,7 +997,11 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     }
 
     // a < b면 a > b가 되도록 함수 다시 호출, 어차피 a, b 양수
-    if(bi_compare(a,b) == -1) bi_EEA(gcd, x, y, b, a);
+    if (bi_compare(a,b) == -1) {
+        result_msg = bi_EEA(gcd, y, x, b, a);  // x, y 순서 변경
+        if(result_msg != BI_EEA_SUCCESS) return result_msg;
+        return BI_EEA_SUCCESS;
+    }
 
     //t0 == gcd, u0 == x, v0 == y
     bigint* t1 = NULL;
@@ -1004,7 +1012,6 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     bigint* q = NULL;
     bigint* r = NULL;
     bigint* temp = NULL;
-    int div_option = 1; // WORD LONG DIV 사용
 
     // (t0, t1) <- (a, b)
     result_msg = bi_assign(gcd, a);
@@ -1031,38 +1038,49 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
         //(q, r) <- div(t0, t1)
         result_msg = bi_div(&q, &r, gcd, &t1, div_option);
         if(result_msg != BI_DIV_SUCCESS) return result_msg;
+
         //(t0, t1) <- (t1, r)
         result_msg = bi_assign(gcd, &t1);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
-        bi_refine(gcd);
+        result_msg = bi_refine(gcd);
+        if(result_msg != BI_SET_REFINE_SUCCESS) return result_msg;
+
         result_msg = bi_assign(&t1, &r);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+
         //(u2, v2) <- (u0 - q * u1, v0 - q*v1)
         result_msg = bi_mul_karachuba(&temp, &q, &u1, q->word_len / mul_karachuba_ratio); // q * v1 / temp는 r로 재사용 가능
         if(result_msg != BI_MUL_SUCCESS) return result_msg;
-        bi_refine(&temp);
+        result_msg = bi_refine(&temp);
+        if(result_msg != BI_SET_REFINE_SUCCESS) return result_msg;
         result_msg = bi_sub(&u2, x, &temp); // u0 - q * u1
         if(result_msg != BI_SUB_SUCCESS) return result_msg;
 
         result_msg = bi_mul_karachuba(&temp, &q, &v1, q->word_len / mul_karachuba_ratio); // q * v1 / temp는 q, r로 재사용 가능
         if(result_msg != BI_MUL_SUCCESS) return result_msg;
-        bi_refine(&temp);
+        result_msg = bi_refine(&temp);
+        if(result_msg != BI_SET_REFINE_SUCCESS) return result_msg;
+
         result_msg = bi_sub(&v2, y, &temp); // v0 - q * v1
         if(result_msg != BI_SUB_SUCCESS) return result_msg;
+
         //(u0, v0) <- (u1, v1)
         result_msg = bi_assign(x, &u1);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
         result_msg = bi_assign(y, &v1);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+
         //(u1, v1) <- (u2, v2)
         result_msg = bi_assign(&u1, &u2);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
         result_msg = bi_assign(&v1, &v2);
         if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+
         // u2, v2 초기화 -> 최적화 가능
         for(int i = 0; i < u2-> word_len; i++) u2 -> a[i] = 0;
         for(int i = 0; i < v2-> word_len; i++) v2 -> a[i] = 0;
     }
+
     result_msg = BI_EEA_SUCCESS;
     // 일단 x,y(u0, v0)가 음수가 돼도 상관없도록 구현함(음수를 허용할지 항상 양수만 나오게 할지는 선택사항)
     return result_msg;

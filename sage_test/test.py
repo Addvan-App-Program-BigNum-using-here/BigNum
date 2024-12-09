@@ -4,6 +4,7 @@ import math
 import random
 from random import randint
 import sys
+
 sys.setrecursionlimit(100000)  # 기본값인 1000보다 큰 값으로 변경
 
 def addition(add_str):
@@ -401,12 +402,12 @@ def test_gcd(f, p):
 
 def EEA(a, b):
     if b == 0:
-        return a, 1, 0  # gcd(a, 0) = a, x = 1, y = 0
+        return abs(a), 1, 0  # abs() 추가
     else:
         gcd, x1, y1 = EEA(b, a % b)
         x = y1
         y = x1 - (a // b) * y1
-        return gcd, x, y
+        return abs(gcd), x, y  # abs() 추가
 
 def test_EEA(f, p):
     k = open('./result/result_EEA.txt', 'w')

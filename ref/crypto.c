@@ -77,8 +77,6 @@ EXIT_RSA:
     return result_msg;
 }
 
-
-
 msg RSA_KeyGEN(OUT bigint** n, OUT bigint** e, OUT bigint** d){
     msg result_msg = RSA_KEYGEN_FAIL;
 
@@ -132,9 +130,10 @@ msg RSA_KeyGEN(OUT bigint** n, OUT bigint** e, OUT bigint** d){
     // d 생성
     result_msg = bi_EEA(&gcd, &temp, d, &phi_n, e);
     if(result_msg != BI_EEA_SUCCESS)    goto EXIT_RSA_KEYGEN;
+
     if((*d)->sign){
-        result_msg = bi_add(d, d, &phi_n);
-        if(result_msg != BI_ADD_SUCCESS)    goto EXIT_RSA_KEYGEN;
+        result_msg = bi_div(&temp, d, d, &phi_n, div_option);
+        if(result_msg != BI_DIV_SUCCESS)    goto EXIT_RSA_KEYGEN;
     }
 
     result_msg = RSA_KEYGEN_SUCCESS;
@@ -153,6 +152,7 @@ EXIT_RSA_KEYGEN:
 }
 
 msg RSA_ENC(OUT bigint** c, IN bigint** m, IN bigint** e, IN bigint** N){
+    if(bi_compare(m, N) >= 0)    return TOO_LONG_MESSAGE;
     msg result_msg = RSA_ENC_FAIL;
 
     // m^e mod N 계산
@@ -164,11 +164,11 @@ msg RSA_ENC(OUT bigint** c, IN bigint** m, IN bigint** e, IN bigint** N){
 }
 
 msg RSA_DEC(OUT bigint** m, IN bigint** c, IN bigint** d, IN bigint** N){
-    if(bi_compare(c, N) >= 0)    return RSA_DEC_FAIL;
+    if(bi_compare(c, N) >= 0)    return TOO_LONG_MESSAGE;
     msg result_msg = RSA_DEC_FAIL;
 
-    result_msg = bi_exp_L_TO_R(m, c, d, N);
-    if(result_msg != BI_EXP_L_TO_R_SUCCESS)    return result_msg;
+    result_msg = bi_exp_MS(m, c, d, N);
+    if(result_msg != BI_EXP_MS_SUCCESS)    return result_msg;
 
     result_msg = RSA_DEC_SUCCESS;
     return result_msg;
@@ -270,12 +270,12 @@ msg RSA_CRT_DEC(OUT bigint** m, IN bigint** n, IN bigint** c, IN bigint** p, IN 
     bigint* mul_temp = NULL;
 
     // m_p = c^d_p mod p
-    result_msg = bi_exp_L_TO_R(&m_p, c, d_p, p);
-    if(result_msg != BI_EXP_L_TO_R_SUCCESS)    return result_msg;
+    result_msg = bi_exp_MS(&m_p, c, d_p, p);
+    if(result_msg != BI_EXP_MS_SUCCESS)    return result_msg;
 
     // m_q = c^d_q mod q
-    result_msg = bi_exp_L_TO_R(&m_q, c, d_q, q);
-    if(result_msg != BI_EXP_L_TO_R_SUCCESS)    return result_msg;
+    result_msg = bi_exp_MS(&m_q, c, d_q, q);
+    if(result_msg != BI_EXP_MS_SUCCESS)    return result_msg;
 
     // temp = m_p - m_q
     result_msg = bi_sub(&temp, &m_p, &m_q);
