@@ -1,37 +1,33 @@
 #include "test_main.h"
 
-int main(){
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
     FILE *fp = NULL;
-
-    // 테스트 파일 초기화
-    CLEAR_Test_file();
-
-    // 고정 입력 값에 대한 성능 평가
-    //if(cmp_operate_test() != Test_SUCCESS)    return 0;
-    if(cmp_crypto_test() != Test_SUCCESS)    return 0;
-
-    // 랜덤 입력 값에 대한 성능 평가
-//    if(rand_operate_test() != Test_SUCCESS)    return 0;
-//    if(rand_crypto_test() != Test_SUCCESS)    return 0;
-
-    // Sage test
-    fp = popen("python3 ../../sage_test/test.py >/dev/null 2>&1", "r");
-    if (fp == NULL){
-        printf("Failed to run command\n");
+    // Python 스크립트 실행
+    fp = _popen("python ../../sage_test/test.py", "r"); // 출력 리다이렉션 제거
+    if (fp == NULL) {
+        printf("Failed to run command. Check Python path and script location.\n");
         return 0;
     }
-
-    // Close the command stream
-    int status = pclose(fp);
-    if (status == -1){
-        perror("pclose failed");
-        return 0;
+    // 출력 읽기 및 디버깅
+    char buffer[128];
+    printf("Python script output:\n");
+    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+        printf("%s", buffer);
     }
-    else
-        printf("python script exited with status %d\n", status);
-
+    // 명령 스트림 닫기
+    int status = _pclose(fp);
+    if (status == -1) {
+        perror("_pclose failed");
+        return 0;
+    } else {
+        printf("Python script exited with status %d\n", status);
+    }
     return 0;
 }
+
+
 
 msg CLEAR_Test_file(){
     if(Test_file_write_non_enter(Test_file_gcd, "", CLEAR) != FILE_WRITE_SUCCESS)   return CLEAR_Test_file_FAIL;

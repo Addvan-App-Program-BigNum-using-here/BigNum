@@ -28,11 +28,11 @@ ifeq ($(OS),Windows_NT)
     SHARED_PREFIX =
     EXE_EXT = .exe
     RM = del /Q /F
-    CP = cp
+    CP = cp 
     MKDIR = mkdir
     TOUCH = type nul >
     CFLAGS = -Wall -O3  -Wextra -std=c99 -I..
-    TEST_RUN_CMD = set "PATH=$(LIB_DIR);$(PATH)" && .\$(TEST_PROGRAM)
+    TEST_RUN_CMD = set "PATH=$(LIB_DIR);$(PATH)" && ./$(TEST_PROGRAM)
 else
     UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Linux)
@@ -77,7 +77,7 @@ $(LIB_DIR):
 $(LIB_DIR)/%.o: ../%.c ../%.h | $(LIB_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 # Test object files
-$(TEST_OBJECT): $(TEST_SOURCE)
+$(TEST_OBJECT): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 # Create shared library
 shared: $(LIB_OBJECTS)

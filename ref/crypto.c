@@ -157,7 +157,6 @@ msg RSA_ENC(OUT bigint** c, IN bigint** m, IN bigint** e, IN bigint** N){
 
     // m^e mod N 계산
     result_msg = bi_exp_L_TO_R(c, m, e, N);
-    log_msg(result_msg);
     if(result_msg != BI_EXP_L_TO_R_SUCCESS)    return result_msg;
 
     result_msg = RSA_ENC_SUCCESS;
@@ -168,8 +167,7 @@ msg RSA_DEC(OUT bigint** m, IN bigint** c, IN bigint** d, IN bigint** N){
     if(bi_compare(c, N) >= 0)    return RSA_DEC_FAIL;
     msg result_msg = RSA_DEC_FAIL;
 
-    result_msg = bi_exp_MS(m, c, d, N);
-    log_msg(result_msg);
+    result_msg = bi_exp_L_TO_R(m, c, d, N);
     if(result_msg != BI_EXP_L_TO_R_SUCCESS)    return result_msg;
 
     result_msg = RSA_DEC_SUCCESS;
@@ -234,11 +232,11 @@ msg RSA_CRT_KeyGEN(OUT bigint** n, OUT bigint** p, OUT bigint** q, OUT bigint** 
     }
 
     // d_p생성
-    result_msg = bi_div(&temp, d_p, &d, &p_minus_1, 0);
+    result_msg = bi_div(&temp, d_p, &d, &p_minus_1, 1);
     if(result_msg != BI_DIV_SUCCESS)    goto EXIT_RSA_KEYGEN;
 
     // d_q 생성
-    result_msg = bi_div(&temp, d_q, &d, &q_minus_1, 0);
+    result_msg = bi_div(&temp, d_q, &d, &q_minus_1, 1);
     if(result_msg != BI_DIV_SUCCESS)    goto EXIT_RSA_KEYGEN;
 
     // q_inv 생성
@@ -287,20 +285,20 @@ msg RSA_CRT_DEC(OUT bigint** m, IN bigint** n, IN bigint** c, IN bigint** p, IN 
     int max_len = max(temp->word_len, (*q_inv)->word_len);
     result_msg = bi_mul_karachuba(&mul_temp, q_inv, &temp, max_len / mul_karachuba_ratio);
     if(result_msg != BI_MUL_SUCCESS)    return result_msg;
-    result_msg = bi_div(&temp, &mul_temp, &mul_temp, n, 0);
+    result_msg = bi_div(&temp, &mul_temp, &mul_temp, n, 1);
     if(result_msg != BI_DIV_SUCCESS)    return result_msg;
 
     // m = q * temp mod N
     max_len = max((*q)->word_len, mul_temp->word_len);
     result_msg = bi_mul_karachuba(m, q, &mul_temp, max_len / mul_karachuba_ratio);
     if(result_msg != BI_MUL_SUCCESS)    return result_msg;
-    result_msg = bi_div(&temp, m, m, n, 0);
+    result_msg = bi_div(&temp, m, m, n, 1);
     if(result_msg != BI_DIV_SUCCESS)    return result_msg;
 
     // m = m_q + m mod N
     result_msg = bi_add(m, m, &m_q);
     if(result_msg != BI_ADD_SUCCESS)    return result_msg;
-    result_msg = bi_div(&temp, m, m, n, 0);
+    result_msg = bi_div(&temp, m, m, n, 1);
     if(result_msg != BI_DIV_SUCCESS)    return result_msg;
 
     result_msg = RSA_DEC_SUCCESS;

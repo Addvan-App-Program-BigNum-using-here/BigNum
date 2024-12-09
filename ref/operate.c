@@ -940,7 +940,7 @@ msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
     bigint* temp = NULL;
     msg result_msg = BI_EXP_MS_FAIL;
     byte bit = 0;
-    int div_option = 0;
+    int div_option = 1;
 
     // timeattack을 방지하고자 배열로 선언
     t = (bigint**)calloc(2, sizeof(bigint*));
@@ -1015,7 +1015,7 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     bigint* temp = NULL;
     msg result_msg = BI_EXP_R_TO_L_FAIL;
     byte bit = 0;
-    int div_option = 0;
+    int div_option = 1;
 
     // t0 = 1
     result_msg = bi_new(&t0, 1);
@@ -1073,7 +1073,7 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     byte bit = 0;
     bigint* temp = NULL;
     bigint* t = NULL;
-    int div_option = 0;
+    int div_option = 1;
 
     // bit 연산 수행할 건데 refine이 되어 있지 않으면 0bit에 대한 쓰레기 연산이 있을 수 있기에 수행
     result_msg = bi_refine(x);
@@ -1165,7 +1165,7 @@ msg init_barret_N(OUT bigint** barret_t, IN bigint** barret_n, IN int barret_wor
     msg result_msg = INIT_BARRET_N_FAIL;
     bigint* temp = NULL;
     bigint* one = NULL;
-    int div_option = 0;
+    int div_option = 1;
 
     // W^(2k) 생성
     result_msg = bi_new(&one, (2 * barret_word_len + 2) + 1);

@@ -16,11 +16,11 @@ msg cmp_crypto_test(){
     if(str == NULL)    return MEM_NOT_ALLOC;
 
     // 빅넘 테스트 벡터 생성
-    // result_msg = new_bigint_test_vector();
-    // if(result_msg != new_bigint_test_vector_SUCCESS){
-    //     log_msg(new_bigint_test_vector_FAIL);
-    //     goto CMP_EXIT;
-    // }
+    result_msg = new_bigint_test_vector();
+    if(result_msg != new_bigint_test_vector_SUCCESS){
+        log_msg(new_bigint_test_vector_FAIL);
+        goto CMP_EXIT;
+    }
 
     fp = fopen(Test_bigint, "r");
 
@@ -135,7 +135,7 @@ msg crypto_test(IN bigint** a, IN bigint** b){
         goto CRYPTO_EXIT;
     }
 
-    // RSA CRT 테스트 
+    // RSA CRT 테스트
     (*a)->sign = 0;
     bi_resize(a, test_word_size - 1); // M은 N보다 1 작은 수
     result_msg = test_RSA_CRT(&crypto_total_time[4], a, str);
@@ -154,10 +154,8 @@ msg test_RSA(OUT double* total_time_RSA, IN bigint** a, IN char* str){
     msg result_msg = TEST_RSA_FAIL;
     bigint *m2 = NULL;
     ParamType param_types[1] = {TYPE_BIGINT_PTR}; // m
-    printf("start\n");
+
     *total_time_RSA += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())RSA, &m2, &result_msg, param_types, a);
-    printf("end\n");
-    log_msg(result_msg);
     if(result_msg == RSA_MISSMATCH || result_msg == RSA_FAIL){
         result_msg = Test_file_write_non_enter(Test_file_RSA, "RSA_FAIL ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto RSA_EXIT;
@@ -165,7 +163,6 @@ msg test_RSA(OUT double* total_time_RSA, IN bigint** a, IN char* str){
         result_msg = Test_file_write_non_enter(Test_file_RSA, "RSA_SUCCESS ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto RSA_EXIT;
     }
-
 
     if (bigint_to_hex(str, a) == -1)   goto RSA_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_RSA, str, APPEND);
