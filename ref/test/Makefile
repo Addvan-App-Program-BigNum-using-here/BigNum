@@ -28,7 +28,7 @@ ifeq ($(OS),Windows_NT)
     SHARED_PREFIX =
     EXE_EXT = .exe
     RM = del /Q /F
-    CP = copy
+    CP = cp
     MKDIR = mkdir
     TOUCH = type nul >
     CFLAGS = -Wall -O3  -Wextra -std=c99 -I..
