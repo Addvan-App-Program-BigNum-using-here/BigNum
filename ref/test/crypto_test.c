@@ -69,6 +69,7 @@ msg rand_crypto_test(){
     }
 
     for(int i = 0; i < test_size; i++){
+        printf("%dth test\n", i);
         // 랜덤 bigint 생성
         if(get_random_bigint(3, &a, &b, &c) != BI_GET_RANDOM_SUCCESS)    return Test_FAIL;
 
@@ -96,6 +97,8 @@ msg crypto_test(IN bigint** a, IN bigint** b){
     char* str = NULL;
     msg result_msg = CRYPTO_TEST_FAIL;
     int miller_rabin_iter = 10;
+    int a_sign = (*a)->sign;
+    int b_sign = (*b)->sign;
 
     str = (char *)calloc((test_word_size * 8) * 4 + 100, sizeof(char));
     if(str == NULL)    return MEM_NOT_ALLOC;
@@ -107,15 +110,18 @@ msg crypto_test(IN bigint** a, IN bigint** b){
         goto CRYPTO_EXIT;
     }
 
-    // bigint EEA 테스트
     (*a)->sign = 0;
     (*b)->sign = 0;
+    // bigint EEA 테스트
     memset(str, 0, (test_word_size * 8) * 4 + 100);
     result_msg = test_bi_EEA(&crypto_total_time[1], a, b, str);
     if(result_msg != Test_BI_EEA_SUCCESS){
         log_msg(Test_BI_EEA_FAIL);
         goto CRYPTO_EXIT;
     }
+    (*a)->sign = a_sign;
+    (*b)->sign = b_sign;
+
 
     // bigint Miller Rabin 테스트
     (*a)->sign = 0;
@@ -128,7 +134,10 @@ msg crypto_test(IN bigint** a, IN bigint** b){
 
     // RSA 테스트
     (*a)->sign = 0;
-    bi_resize(a, test_word_size - 1); // M은 N보다 1 작은 수
+    if((*a)->word_len > test_word_size){
+        result_msg = bi_resize(a, test_word_size - 1); // M은 N보다 1 작은 수
+        if(result_msg != BI_RESIZE_SUCCESS)     goto CRYPTO_EXIT;
+    }
     result_msg = test_RSA(&crypto_total_time[3], a, str);
     if(result_msg != TEST_RSA_SUCCESS){
         log_msg(TEST_RSA_FAIL);
@@ -162,7 +171,7 @@ msg test_RSA(OUT double* total_time_RSA, IN bigint** a, IN char* str){
     }else if(result_msg == RSA_SUCCESS){
         result_msg = Test_file_write_non_enter(Test_file_RSA, "RSA_SUCCESS ", APPEND);
         if (result_msg != FILE_WRITE_SUCCESS)   goto RSA_EXIT;
-    }
+    }else   goto RSA_EXIT;
 
     if (bigint_to_hex(str, a) == -1)   goto RSA_EXIT;
     result_msg = Test_file_write_non_enter(Test_file_RSA, str, APPEND);
@@ -352,8 +361,8 @@ void crypto_print_result(){
     printf("Time taken Miller Rabin : %f seconds\n", crypto_total_time[2] / test_size);
 
     printf("\n============ Testing RSA ============\n");
-    printf("Time taken Miller Rabin : %f seconds\n", crypto_total_time[3] / test_size);
+    printf("Time taken RSA : %f seconds\n", crypto_total_time[3] / test_size);
 
     printf("\n============ Testing RSA CRT ============\n");
-    printf("Time taken Miller Rabin : %f seconds\n\n", crypto_total_time[4] / test_size);
+    printf("Time taken RSA CRT : %f seconds\n\n", crypto_total_time[4] / test_size);
 }
