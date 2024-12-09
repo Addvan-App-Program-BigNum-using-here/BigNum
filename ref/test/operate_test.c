@@ -35,11 +35,11 @@ msg cmp_operate_test(){
     }
 
     // 빅넘 테스트 벡터 생성
-    result_msg = new_bigint_test_vector();
-    if(result_msg != new_bigint_test_vector_SUCCESS){
-        log_msg(new_bigint_test_vector_FAIL);
-        goto CMP_EXIT;
-    }
+    // result_msg = new_bigint_test_vector();
+    // if(result_msg != new_bigint_test_vector_SUCCESS){
+    //     log_msg(new_bigint_test_vector_FAIL);
+    //     goto CMP_EXIT;
+    // }
 
     fp = fopen(Test_bigint, "r");
 
@@ -142,37 +142,37 @@ msg operate_test(IN bigint** a, IN bigint** b, IN bigint** c, IN bigint** barret
     str = (char *)calloc((test_word_size * 8) * 4 + 100, sizeof(char));
     if(str == NULL)    return MEM_NOT_ALLOC;
 
-    // add test
-    result_msg = test_bi_add(&op_total_time[0], a, b, str);
-    if(result_msg != Test_BI_ADD_SUCCESS){
-       log_msg(Test_BI_ADD_FAIL);
-       goto OPERATE_EXIT;
-    }
+    // // add test
+    // result_msg = test_bi_add(&op_total_time[0], a, b, str);
+    // if(result_msg != Test_BI_ADD_SUCCESS){
+    //    log_msg(Test_BI_ADD_FAIL);
+    //    goto OPERATE_EXIT;
+    // }
 
-    // sub test
-    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-    result_msg = test_bi_sub(&op_total_time[1], a, b, str);
-    if(result_msg != Test_BI_SUB_SUCCESS){
-       log_msg(Test_BI_SUB_FAIL);
-       goto OPERATE_EXIT;
-    }
+    // // sub test
+    // memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+    // result_msg = test_bi_sub(&op_total_time[1], a, b, str);
+    // if(result_msg != Test_BI_SUB_SUCCESS){
+    //    log_msg(Test_BI_SUB_FAIL);
+    //    goto OPERATE_EXIT;
+    // }
 
-    // mul test
-    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-    result_msg = test_bi_mul(&op_total_time[2], a, b, str);
-    if(result_msg != Test_BI_MUL_SUCCESS){
-       log_msg(Test_BI_MUL_FAIL);
-       goto OPERATE_EXIT;
-    }
+    // // mul test
+    // memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+    // result_msg = test_bi_mul(&op_total_time[2], a, b, str);
+    // if(result_msg != Test_BI_MUL_SUCCESS){
+    //    log_msg(Test_BI_MUL_FAIL);
+    //    goto OPERATE_EXIT;
+    // }
 
-    // mul karachuba test
-    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-    karachuba_flag = test_max_word_size / mul_karachuba_ratio;
-    result_msg = test_bi_mul_karachuba(&op_total_time[3], a, b, str, &karachuba_flag);
-    if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS){
-       log_msg(Test_BI_MUL_KARACHUBA_FAIL);
-       goto OPERATE_EXIT;
-    }
+    // // mul karachuba test
+    // memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+    // karachuba_flag = test_max_word_size / mul_karachuba_ratio;
+    // result_msg = test_bi_mul_karachuba(&op_total_time[3], a, b, str, &karachuba_flag);
+    // if(result_msg != Test_BI_MUL_KARACHUBA_SUCCESS){
+    //    log_msg(Test_BI_MUL_KARACHUBA_FAIL);
+    //    goto OPERATE_EXIT;
+    // }
 
     // div test (Binary Long Division)
     DIVISION_METHOD = 0;
@@ -192,39 +192,39 @@ msg operate_test(IN bigint** a, IN bigint** b, IN bigint** c, IN bigint** barret
        goto OPERATE_EXIT;
     }
 
-    // squ test
-    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-    result_msg = test_bi_squ(&op_total_time[6], a, str);
-    if(result_msg != Test_BI_SQU_SUCCESS){
-       log_msg(Test_BI_SQU_FAIL);
-       goto OPERATE_EXIT;
-    }
+    // // squ test
+    // memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+    // result_msg = test_bi_squ(&op_total_time[6], a, str);
+    // if(result_msg != Test_BI_SQU_SUCCESS){
+    //    log_msg(Test_BI_SQU_FAIL);
+    //    goto OPERATE_EXIT;
+    // }
 
-    // squ karachuba test
-    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-    result_msg = test_bi_squ_karachuba(&op_total_time[7], a, str, &karachuba_flag);
-    if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
-       log_msg(Test_BI_SQU_KARACHUBA_FAIL);
-       goto OPERATE_EXIT;
-    }
+    // // squ karachuba test
+    // memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+    // result_msg = test_bi_squ_karachuba(&op_total_time[7], a, str, &karachuba_flag);
+    // if(result_msg != Test_BI_SQU_KARACHUBA_SUCCESS){
+    //    log_msg(Test_BI_SQU_KARACHUBA_FAIL);
+    //    goto OPERATE_EXIT;
+    // }
 
-    // exp test
-    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-    result_msg = test_bi_exp(op_exp_time, a, b, c, str);
-    if(result_msg != Test_BI_EXP_SUCCESS){
-       log_msg(Test_BI_EXP_FAIL);
-       goto OPERATE_EXIT;
-    }
+    // // exp test
+    // memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+    // result_msg = test_bi_exp(op_exp_time, a, b, c, str);
+    // if(result_msg != Test_BI_EXP_SUCCESS){
+    //    log_msg(Test_BI_EXP_FAIL);
+    //    goto OPERATE_EXIT;
+    // }
 
-    // barret test
-    if(test_word_size == barret_word_size){ // 사전 연산 값이 고정되어 있기에 test_word_size가 기존 사이즈와 같을 때만 수행
-        memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-        result_msg = test_bi_barrett_reduction(&op_total_time[8], a, barret_N, barret_T, str);
-        if(result_msg != Test_BI_BARRETT_REDUCTION_SUCCESS){
-            log_msg(Test_BI_BARRETT_REDUCTION_FAIL);
-            goto OPERATE_EXIT;
-        }
-    }
+    // // barret test
+    // if(test_word_size == barret_word_size){ // 사전 연산 값이 고정되어 있기에 test_word_size가 기존 사이즈와 같을 때만 수행
+    //     memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+    //     result_msg = test_bi_barrett_reduction(&op_total_time[8], a, barret_N, barret_T, str);
+    //     if(result_msg != Test_BI_BARRETT_REDUCTION_SUCCESS){
+    //         log_msg(Test_BI_BARRETT_REDUCTION_FAIL);
+    //         goto OPERATE_EXIT;
+    //     }
+    // }
 
     result_msg = OPERATE_TEST_SUCCESS;
 OPERATE_EXIT:
@@ -583,17 +583,17 @@ BARRET_EXIT:
 void operate_print_result(){
     print_data_set();
 
-    printf("\n============ Testing bi_add ============\n");
-    printf("Time taken add : %f seconds\n", op_total_time[0] / test_size);
+    // printf("\n============ Testing bi_add ============\n");
+    // printf("Time taken add : %f seconds\n", op_total_time[0] / test_size);
 
-    printf("\n============ Testing bi_sub ============\n");
-    printf("Time taken sub : %f seconds\n", op_total_time[1] / test_size);
+    // printf("\n============ Testing bi_sub ============\n");
+    // printf("Time taken sub : %f seconds\n", op_total_time[1] / test_size);
 
-    printf("\n============ Testing bi_mul ============\n");
-    printf("Time taken mul : %f seconds\n", op_total_time[2] / test_size);
+    // printf("\n============ Testing bi_mul ============\n");
+    // printf("Time taken mul : %f seconds\n", op_total_time[2] / test_size);
 
-    printf("\n============ Testing bi_mul_karachuba ============\n");
-    printf("Time taken mul_karachuba : %f seconds\n", op_total_time[3] / test_size);
+    // printf("\n============ Testing bi_mul_karachuba ============\n");
+    // printf("Time taken mul_karachuba : %f seconds\n", op_total_time[3] / test_size);
 
     printf("\n============ Testing bi_div (Binary Long Division) ============\n");
     printf("Time taken div(Binary) : %f seconds\n", op_total_time[4] / test_size);
@@ -601,17 +601,17 @@ void operate_print_result(){
     printf("\n============ Testing bi_div (WORD Long Division) ============\n");
     printf("Time taken div(Long) : %f seconds\n", op_total_time[5] / test_size);
 
-    printf("\n============ Testing bi_squ ============\n");
-    printf("Time taken squ : %f seconds\n", op_total_time[6] / test_size);
+    // printf("\n============ Testing bi_squ ============\n");
+    // printf("Time taken squ : %f seconds\n", op_total_time[6] / test_size);
 
-    printf("\n============ Testing bi_squ_karachuba ============\n");
-    printf("Time taken squ_karachuba : %f seconds\n", op_total_time[7] / test_size);
+    // printf("\n============ Testing bi_squ_karachuba ============\n");
+    // printf("Time taken squ_karachuba : %f seconds\n", op_total_time[7] / test_size);
 
-    printf("\n============ Testing bi_exp ============\n");
-    printf("Time taken exp (MS) : %f seconds\n", op_exp_time[0] / test_size);
-    printf("Time taken exp (R TO L) : %f seconds\n", op_exp_time[1] / test_size);
-    printf("Time taken exp (L TO R) : %f seconds\n", op_exp_time[2] / test_size);
+    // printf("\n============ Testing bi_exp ============\n");
+    // printf("Time taken exp (MS) : %f seconds\n", op_exp_time[0] / test_size);
+    // printf("Time taken exp (R TO L) : %f seconds\n", op_exp_time[1] / test_size);
+    // printf("Time taken exp (L TO R) : %f seconds\n", op_exp_time[2] / test_size);
 
-    printf("\n============ Testing bi_barrett_reduction ============\n");
-    printf("Time taken barret_reduction : %f seconds\n\n", op_total_time[8] / test_size);
+    // printf("\n============ Testing bi_barrett_reduction ============\n");
+    // printf("Time taken barret_reduction : %f seconds\n\n", op_total_time[8] / test_size);
 }

@@ -899,7 +899,7 @@ msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b){
     bigint* t2 = NULL;
     bigint* temp = NULL;
     msg result_msg = BI_GCD_FAIL;
-    int div_option = 1;
+    int div_option = 0;
 
     // a = 0이면 gcd(a,b) = b
     if(bi_is_zero(a) == BI_IS_ZERO){
@@ -1002,7 +1002,7 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
     bigint* q = NULL;
     bigint* r = NULL;
     bigint* temp = NULL;
-    int div_option = 1; // WORD LONG DIV 사용
+    int div_option = 0; // WORD LONG DIV 사용
 
     // (t0, t1) <- (a, b)
     result_msg = bi_assign(gcd, a);
