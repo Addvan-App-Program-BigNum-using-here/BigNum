@@ -674,6 +674,7 @@ double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, Pa
     clock_t start = 0;
     clock_t end = 0;
 
+
     // 가변 인자들을 params 배열에 저장
     for (int i = 0; i < param_count; i++) {
         params[i] = va_arg(args, void*);

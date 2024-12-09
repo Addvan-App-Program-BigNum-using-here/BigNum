@@ -655,7 +655,7 @@ msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN 
 
     result_msg = bi_new(&R, (*a)->word_len);
     if(result_msg != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-  
+
     for(int i = (*a)->word_len - 1; i >= 0; i--){
         result_msg = bi_shift_left(&R, &R, WORD_BITS);
         if(result_msg != BI_SHIFT_SUCCESS)    return DIVC_FAIL;
