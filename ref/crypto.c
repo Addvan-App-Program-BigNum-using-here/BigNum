@@ -167,13 +167,6 @@ EXIT_RSA_KEYGEN:
 }
 
 msg RSA_ENC(OUT bigint** c, IN bigint** m, IN bigint** e, IN bigint** N){
-    printf("RSA_ENC\n");
-    printf("m: ");
-    bi_print(m, 16);
-    printf("e: ");
-    bi_print(e, 16);
-    printf("N: ");
-    bi_print(N, 16);
     if(bi_compare(m, N) >= 0)    return TOO_LONG_MESSAGE;
     msg result_msg = RSA_ENC_FAIL;
 

@@ -124,7 +124,7 @@ msg get_random_string(OUT char** str, IN int str_len, IN int base){
     const char hex_chars[] = "0123456789abcdef";
     const char *chars;
     int chars_len;
-  
+
     switch(base) {
         case 2:
             chars = binary_chars;

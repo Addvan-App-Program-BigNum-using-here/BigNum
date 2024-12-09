@@ -1,14 +1,12 @@
 #include "test_main.h"
 
 int main(){
-    FILE *fp = NULL;
-
     // 테스트 파일 초기화
     CLEAR_Test_file();
 
     // 고정 입력 값에 대한 성능 평가
-    if(cmp_operate_test() != Test_SUCCESS)    return 0;
-//    if(cmp_crypto_test() != Test_SUCCESS)    return 0;
+//    if(cmp_operate_test() != Test_SUCCESS)    return 0;
+    if(cmp_crypto_test() != Test_SUCCESS)    return 0;
 
     // 랜덤 입력 값에 대한 성능 평가
 //    if(rand_operate_test() != Test_SUCCESS)    return 0;
@@ -16,23 +14,6 @@ int main(){
 
     // 곱셈, 나눗셈, 제곱 연산에 대한 성능 평가
 //    if(func_compare() != Test_SUCCESS)    return 0;
-
-//    // Sage test
-//    fp = popen("python3 ../../sage_test/test.py >/dev/null 2>&1", "r");
-//    if (fp == NULL){
-//        printf("Failed to run command\n");
-//        return 0;
-//    }
-//
-//    // Close the command stream
-//    int status = pclose(fp);
-//    if (status == -1){
-//        perror("pclose failed");
-//        return 0;
-//    }
-//    else
-//        printf("python script exited with status %d\n", status);
-
     return 0;
 }
 

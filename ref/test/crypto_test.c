@@ -15,16 +15,16 @@ msg cmp_crypto_test(){
     str = (char *)calloc((test_word_size * 8) * 4 + 100, sizeof(char));
     if(str == NULL)    return MEM_NOT_ALLOC;
 
-//    // 빅넘 테스트 벡터 생성
-//    result_msg = new_bigint_test_vector();
-//    if(result_msg != new_bigint_test_vector_SUCCESS){
-//        log_msg(new_bigint_test_vector_FAIL);
-//        goto CMP_EXIT;
-//    }
+    // 빅넘 테스트 벡터 생성
+    result_msg = new_bigint_test_vector();
+    if(result_msg != new_bigint_test_vector_SUCCESS){
+        log_msg(new_bigint_test_vector_FAIL);
+        goto CMP_EXIT;
+    }
 
     fp = fopen(Test_bigint, "r");
 
-    while (fgets(str, test_word_size * WORD_BITS, fp) != NULL) {
+    while (fgets(str, (test_word_size * 8) * 4 + 100, fp) != NULL) {
         str[strcspn(str, "\n")] = '\0';
         int is_negative = (str[0] == '-');
         char *hex_str = is_negative ? str + 3 : str + 2;
@@ -103,41 +103,42 @@ msg crypto_test(IN bigint** a, IN bigint** b){
     str = (char *)calloc((test_word_size * 8) * 4 + 100, sizeof(char));
     if(str == NULL)    return MEM_NOT_ALLOC;
 
-//    // bigint gcd 테스트
-//    result_msg = test_bi_gcd(&crypto_total_time[0], a, b, str);
-//    if(result_msg != Test_BI_GCD_SUCCESS){
-//        log_msg(Test_BI_GCD_FAIL);
-//        goto CRYPTO_EXIT;
-//    }
-//
-//    (*a)->sign = 0;
-//    (*b)->sign = 0;
-//    // bigint EEA 테스트
-//    memset(str, 0, (test_word_size * 8) * 4 + 100);
-//    result_msg = test_bi_EEA(&crypto_total_time[1], a, b, str);
-//    if(result_msg != Test_BI_EEA_SUCCESS){
-//        log_msg(Test_BI_EEA_FAIL);
-//        goto CRYPTO_EXIT;
-//    }
-//    (*a)->sign = a_sign;
-//    (*b)->sign = b_sign;
-//
-//
-//    // bigint Miller Rabin 테스트
-//    (*a)->sign = 0;
-//    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
-//    result_msg = test_miller_rabin(&crypto_total_time[2], a, &miller_rabin_iter, str);
-//    if(result_msg != Test_MILLER_RABIN_SUCCESS){
-//        log_msg(Test_MILLER_RABIN_FAIL);
-//        goto CRYPTO_EXIT;
-//    }
+    // bigint gcd 테스트
+    result_msg = test_bi_gcd(&crypto_total_time[0], a, b, str);
+    if(result_msg != Test_BI_GCD_SUCCESS){
+        log_msg(Test_BI_GCD_FAIL);
+        goto CRYPTO_EXIT;
+    }
+
+    (*a)->sign = 0;
+    (*b)->sign = 0;
+    // bigint EEA 테스트
+    memset(str, 0, (test_word_size * 8) * 4 + 100);
+    result_msg = test_bi_EEA(&crypto_total_time[1], a, b, str);
+    if(result_msg != Test_BI_EEA_SUCCESS){
+        log_msg(Test_BI_EEA_FAIL);
+        goto CRYPTO_EXIT;
+    }
+    (*a)->sign = a_sign;
+    (*b)->sign = b_sign;
+
+
+    // bigint Miller Rabin 테스트
+    (*a)->sign = 0;
+    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
+    result_msg = test_miller_rabin(&crypto_total_time[2], a, &miller_rabin_iter, str);
+    if(result_msg != Test_MILLER_RABIN_SUCCESS){
+        log_msg(Test_MILLER_RABIN_FAIL);
+        goto CRYPTO_EXIT;
+    }
 
     // RSA 테스트
     (*a)->sign = 0;
-    if((*a)->word_len > test_word_size){
-        result_msg = bi_resize(a, test_word_size - 1); // M은 N보다 1 작은 수
+    if((*a)->word_len > 2* test_word_size - 1){
+        result_msg = bi_resize(a, 2 * test_word_size - 1); // M은 N보다 1 작은 수
         if(result_msg != BI_RESIZE_SUCCESS)     goto CRYPTO_EXIT;
     }
+
     memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
     result_msg = test_RSA(&crypto_total_time[3], a, str);
     if(result_msg != TEST_RSA_SUCCESS){
@@ -147,7 +148,11 @@ msg crypto_test(IN bigint** a, IN bigint** b){
 
     // RSA CRT 테스트
     (*a)->sign = 0;
-    bi_resize(a, test_word_size - 1); // M은 N보다 1 작은 수
+    if((*a)->word_len > 2* test_word_size - 1){
+        result_msg = bi_resize(a, 2 * test_word_size - 1); // M은 N보다 1 작은 수
+        if(result_msg != BI_RESIZE_SUCCESS)     goto CRYPTO_EXIT;
+    }
+
     memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
     result_msg = test_RSA_CRT(&crypto_total_time[4], a, str);
     if(result_msg != TEST_RSA_CRT_SUCCESS){
