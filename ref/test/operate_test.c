@@ -43,7 +43,7 @@ msg cmp_operate_test(){
 
     fp = fopen(Test_bigint, "r");
 
-    while (fgets(str, test_word_size * WORD_BITS, fp) != NULL) {
+    while (fgets(str, (test_word_size * 8) * 4 + 100, fp) != NULL) {
         str[strcspn(str, "\n")] = '\0';
         int is_negative = (str[0] == '-');
         char *hex_str = is_negative ? str + 3 : str + 2;
@@ -73,11 +73,13 @@ msg cmp_operate_test(){
 
     result_msg = Test_SUCCESS;
 CMP_EXIT:
-    fclose(fp);
-    free(str);
+    if(fp != NULL)  fclose(fp);
+    if(str != NULL) free(str);
     bi_delete(&big_nums[0]);
     bi_delete(&big_nums[1]);
     bi_delete(&big_nums[2]);
+    bi_delete(&barret_N);
+    bi_delete(&barret_T);
     return result_msg;
 }
 
@@ -129,6 +131,8 @@ EXIT:
     bi_delete(&a);
     bi_delete(&b);
     bi_delete(&c);
+    bi_delete(&barret_N);
+    bi_delete(&barret_T);
     return result_msg;
 }
 

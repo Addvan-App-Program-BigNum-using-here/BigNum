@@ -24,7 +24,7 @@ msg cmp_crypto_test(){
 
     fp = fopen(Test_bigint, "r");
 
-    while (fgets(str, test_word_size * WORD_BITS, fp) != NULL) {
+    while (fgets(str, (test_word_size * 8) * 4 + 100, fp) != NULL) {
         str[strcspn(str, "\n")] = '\0';
         int is_negative = (str[0] == '-');
         char *hex_str = is_negative ? str + 3 : str + 2;
@@ -134,10 +134,12 @@ msg crypto_test(IN bigint** a, IN bigint** b){
 
     // RSA 테스트
     (*a)->sign = 0;
-    if((*a)->word_len > test_word_size){
-        result_msg = bi_resize(a, test_word_size - 1); // M은 N보다 1 작은 수
+    if((*a)->word_len > 2* test_word_size - 1){
+        result_msg = bi_resize(a, 2 * test_word_size - 1); // M은 N보다 1 작은 수
         if(result_msg != BI_RESIZE_SUCCESS)     goto CRYPTO_EXIT;
     }
+
+    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
     result_msg = test_RSA(&crypto_total_time[3], a, str);
     if(result_msg != TEST_RSA_SUCCESS){
         log_msg(TEST_RSA_FAIL);
@@ -146,7 +148,12 @@ msg crypto_test(IN bigint** a, IN bigint** b){
 
     // RSA CRT 테스트
     (*a)->sign = 0;
-    bi_resize(a, test_word_size - 1); // M은 N보다 1 작은 수
+    if((*a)->word_len > 2* test_word_size - 1){
+        result_msg = bi_resize(a, 2 * test_word_size - 1); // M은 N보다 1 작은 수
+        if(result_msg != BI_RESIZE_SUCCESS)     goto CRYPTO_EXIT;
+    }
+
+    memset(str, 0, (test_word_size * 8) * 4 + 100); // str 초기화
     result_msg = test_RSA_CRT(&crypto_total_time[4], a, str);
     if(result_msg != TEST_RSA_CRT_SUCCESS){
         log_msg(TEST_RSA_CRT_FAIL);
@@ -351,14 +358,14 @@ EXIT_MR:
 void crypto_print_result(){
     print_data_set();
 
-    printf("\n============ Testing bi_gcd ============\n");
-    printf("Time taken gcd : %f seconds\n", crypto_total_time[0] / test_size);
-
-    printf("\n============ Testing bi_EEA ============\n");
-    printf("Time taken EEA : %f seconds\n", crypto_total_time[1] / test_size);
-
-    printf("\n============ Testing Miller Rabin ============\n");
-    printf("Time taken Miller Rabin : %f seconds\n", crypto_total_time[2] / test_size);
+//    printf("\n============ Testing bi_gcd ============\n");
+//    printf("Time taken gcd : %f seconds\n", crypto_total_time[0] / test_size);
+//
+//    printf("\n============ Testing bi_EEA ============\n");
+//    printf("Time taken EEA : %f seconds\n", crypto_total_time[1] / test_size);
+//
+//    printf("\n============ Testing Miller Rabin ============\n");
+//    printf("Time taken Miller Rabin : %f seconds\n", crypto_total_time[2] / test_size);
 
     printf("\n============ Testing RSA ============\n");
     printf("Time taken RSA : %f seconds\n", crypto_total_time[3] / test_size);
