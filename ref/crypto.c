@@ -1,61 +1,41 @@
 #include "crypto.h"
 
 // BITS_SIZE는 헤더파일에서 수정 -> 나중에 변수로 코드 변경 필요
-msg RSA(){
+msg RSA(OUT bigint** m2, IN bigint** m){
     msg result_msg = RSA_FAIL;
 
     bigint* N = NULL;
     bigint* e = NULL;
     bigint* d = NULL;
     bigint* c = NULL;
-    bigint* m = NULL;
-    bigint* m2 = NULL;
 
     // key 생성
     result_msg = RSA_KeyGEN(&N, &e, &d);
     if(result_msg != RSA_KEYGEN_SUCCESS)   goto EXIT_RSA;
 
-    // 랜덤으로 메시지 생성 (사실 사용자가 임의로 넣는 메시지 입력 값에 대한 예외처리 해야 함) -> 수도 코드 2, 3번 코드
-    // M < N 조건 만족해야 함 -> 임의로 설정
-    result_msg = bi_get_random(&m, N->word_len - 1);
-    if(result_msg != BI_GET_RANDOM_SUCCESS)    goto EXIT_RSA;
-    m->sign = 0; // 메시지는 양수이기 때문에
-
     // 암호화
-    result_msg = RSA_ENC(&c, &m, &e, &N);
+    result_msg = RSA_ENC(&c, m, &e, &N);
     if(result_msg != RSA_ENC_SUCCESS)    goto EXIT_RSA;
 
     // 복호화
-    result_msg = RSA_DEC(&m2, &c, &d, &N);
+    result_msg = RSA_DEC(m2, &c, &d, &N);
     if(result_msg != RSA_DEC_SUCCESS)    goto EXIT_RSA;
 
-    if(bi_compare(&m, &m2) != 0){
-        printf("M : ");
-        bi_print(&m, 16);
-        printf("M2 : ");
-        bi_print(&m2, 16);
+    if(bi_compare(m, m2) != 0){
         result_msg = RSA_MISSMATCH;
         goto EXIT_RSA;
     }
 
-    printf("M : ");
-    bi_print(&m, 16);
-    printf("M2 : ");
-    bi_print(&m2, 16);
-
     result_msg = RSA_SUCCESS;
-
 EXIT_RSA:
     bi_delete(&N);
     bi_delete(&e);
     bi_delete(&d);
     bi_delete(&c);
-    bi_delete(&m);
-    bi_delete(&m2);
     return result_msg;
 }
 
-msg RSA_CRT(){
+msg RSA_CRT(OUT bigint** m2, IN bigint** m){
     msg result_msg = RSA_CRT_FAIL;
 
     bigint* N = NULL;
@@ -66,43 +46,25 @@ msg RSA_CRT(){
     bigint* d_q = NULL;
     bigint* q_inv = NULL;
     bigint* c = NULL;
-    bigint* m = NULL;
-    bigint* m2 = NULL;
 
     // key 생성
     result_msg = RSA_CRT_KeyGEN(&N, &p, &q, &e, &d_p, &d_q, &q_inv);
     if(result_msg != RSA_KEYGEN_SUCCESS)   goto EXIT_RSA;
 
-    // 랜덤으로 메시지 생성 (사실 사용자가 임의로 넣는 메시지 입력 값에 대한 예외처리 해야 함) -> 수도 코드 2, 3번 코드
-    // M < N 조건 만족해야 함 -> 임의로 설정
-    result_msg = bi_get_random(&m, N->word_len - 1);
-    if(result_msg != BI_GET_RANDOM_SUCCESS)    goto EXIT_RSA;
-    m->sign = 0; // 메시지는 양수이기 때문에
-
     // 암호화
-    result_msg = RSA_ENC(&c, &m, &e, &N);
+    result_msg = RSA_ENC(&c, m, &e, &N);
     if(result_msg != RSA_ENC_SUCCESS)    goto EXIT_RSA;
 
     // 복호화
-    result_msg = RSA_CRT_DEC(&m2, &N, &c, &p, &q, &d_p, &d_q, &q_inv);
+    result_msg = RSA_CRT_DEC(m2, &N, &c, &p, &q, &d_p, &d_q, &q_inv);
     if(result_msg != RSA_DEC_SUCCESS)    goto EXIT_RSA;
 
-    if(bi_compare(&m, &m2) != 0){
-        printf("M : ");
-        bi_print(&m, 16);
-        printf("M2 : ");
-        bi_print(&m2, 16);
+    if(bi_compare(m, m2) != 0){
         result_msg = RSA_MISSMATCH;
         goto EXIT_RSA;
     }
 
-    printf("M : ");
-    bi_print(&m, 16);
-    printf("M2 : ");
-    bi_print(&m2, 16);
-
     result_msg = RSA_SUCCESS;
-
 EXIT_RSA:
     bi_delete(&N);
     bi_delete(&p);
@@ -112,8 +74,6 @@ EXIT_RSA:
     bi_delete(&d_q);
     bi_delete(&q_inv);
     bi_delete(&c);
-    bi_delete(&m);
-    bi_delete(&m2);
     return result_msg;
 }
 
