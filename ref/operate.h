@@ -28,6 +28,10 @@
     #error "Unsupported WORD_BITS value"
 #endif
 
+#define WORD_BINARY_DIV 0 ///< Word long division
+#define WORD_LONG_DIV 1 ///< Word karatsuba division
+#define div_option WORD_LONG_DIV ///< Division option
+
 // 16비트 단위로 값을 추출하는 매크로
 #define GET_LOWER_PART(word) ((word) & WORD_MASK)
 #define GET_UPPER_PART(word) ((word) >> WORD_SHIFT)
@@ -208,7 +212,7 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
  * @param n pointer to modular of bigint
  * @return msg
  */
-msg barret_reduction(OUT IN bigint** dst, IN bigint** a, IN bigint** n, IN bigint** n_barret);
+msg barret_reduction(OUT bigint** dst, IN bigint** a, IN bigint** n, IN bigint** n_barret);
 
 /**
  * @brief Initialize barret reduction

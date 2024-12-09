@@ -4,6 +4,7 @@
 #include "../data_type.h"
 #include "../msg_control.h"
 #include "../util.h"
+#include "../operate.h"
 #include "test_main.h"
 
 /**
@@ -17,5 +18,8 @@
 msg compare_multiplicaiton(int start_size, int end_size, int step_size);
 msg compare_squaring(int start_size, int end_size, int step_size);
 msg compare_division(int start_size, int end_size, int step_size);
+msg compare_exponention(int start_size, int end_size, int step_size);
+
+msg func_compare();
 
 #endif // FUNC_CMP_TEST_H
