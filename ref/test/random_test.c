@@ -13,7 +13,7 @@ msg get_random_bigint(int count, ...){
     // 각 bigint에 할당할 사이즈 결정
     for (int i = 0; i < count; i++) {
         bigints[i] = va_arg(args, bigint**);
-        if (test_word_size <= 0) {
+        if (random_test_word_size) {
             do {
                 if (randombytes(temp, 1) != GEN_RANDOM_BYTES_SUCCESS) {
                     result = GEN_RANDOM_BYTES_FAIL;

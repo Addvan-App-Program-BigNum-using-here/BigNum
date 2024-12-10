@@ -166,6 +166,9 @@ enum TestMSGCodes
     Test_BI_EEA_FAIL= MSG_TYPE_TEST | 0x0032, // TEST Bigint E.E.A gcd operation failed
     new_bigint_test_vector_SUCCESS = MSG_TYPE_TEST | 0x0033, // Test Bigint test vector 성공
     new_bigint_test_vector_FAIL = MSG_TYPE_TEST | 0x0034, // Test Bigint test vector 실패
+    COMPARE_EXPONENTION_SUCCESS = MSG_TYPE_TEST | 0x0035, // Test Bigint 지수 연산 비교 성공
+    COMPARE_EXPONENTION_FAIL = MSG_TYPE_TEST | 0x0036, // Test Bigint 지수 연산 비교 실패
+    COMPARE_SQUARING_FAIL = MSG_TYPE_TEST | 0x0037, // Test Bigint 제곱 비교 실패
 
     // 추가 테스트 관련 에러 코드...
 };
@@ -212,6 +215,7 @@ enum CryptoMSGCodes{
     TEST_RSA_FAIL = MSG_TYPE_CRYPTO | 0x000F,    // RSA 테스트 실패
     CRYPTO_TEST_SUCCESS = MSG_TYPE_CRYPTO | 0x0010, // 암호 테스트 성공
     CRYPTO_TEST_FAIL = MSG_TYPE_CRYPTO | 0x0011,    // 암호 테스트 실패
+    TOO_LONG_MESSAGE = MSG_TYPE_CRYPTO | 0x0012,    // 메시지 길이 초과
 };
 
 // 에러 처리 함수 프로토타입

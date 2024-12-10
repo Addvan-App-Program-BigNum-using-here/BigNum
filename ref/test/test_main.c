@@ -1,29 +1,19 @@
 #include "test_main.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-int main() {
-    FILE *fp = NULL;
-    // Python 스크립트 실행
-    fp = _popen("python ../../sage_test/test.py", "r"); // 출력 리다이렉션 제거
-    if (fp == NULL) {
-        printf("Failed to run command. Check Python path and script location.\n");
-        return 0;
-    }
-    // 출력 읽기 및 디버깅
-    char buffer[128];
-    printf("Python script output:\n");
-    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-        printf("%s", buffer);
-    }
-    // 명령 스트림 닫기
-    int status = _pclose(fp);
-    if (status == -1) {
-        perror("_pclose failed");
-        return 0;
-    } else {
-        printf("Python script exited with status %d\n", status);
-    }
+int main(){
+    // 테스트 파일 초기화
+    CLEAR_Test_file();
+
+    // 고정 입력 값에 대한 성능 평가
+//    if(cmp_operate_test() != Test_SUCCESS)    return 0;
+    if(cmp_crypto_test() != Test_SUCCESS)    return 0;
+
+    // 랜덤 입력 값에 대한 성능 평가
+//    if(rand_operate_test() != Test_SUCCESS)    return 0;
+//    if(rand_crypto_test() != Test_SUCCESS)    return 0;
+
+    // 곱셈, 나눗셈, 제곱 연산에 대한 성능 평가
+//    if(func_compare() != Test_SUCCESS)    return 0;
     return 0;
 }
 

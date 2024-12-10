@@ -126,8 +126,8 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case Test_BI_SQU_FAIL: return "Test Bigint square operation failed";
         case BI_SQU_SUCCESS: return "Bigint square operation successful";
         case BI_SQU_FAIL: return "Bigint square operation failed";
-        case BI_EXP_MS_SUCCESS: return "Bigint modulo operation successful";
-        case BI_EXP_MS_FAIL: return "Bigint modulo operation failed";
+        case BI_EXP_MS_SUCCESS: return "Bigint Multiply and Square exponention successful";
+        case BI_EXP_MS_FAIL: return "Bigint Multiply and Square exponention failed";
         case Test_BI_EXP_SUCCESS: return "Test Bigint exponention successful";
         case Test_BI_EXP_FAIL: return "Test Bigint exponention failed";
         case BI_EXP_R_TO_L_SUCCESS: return "Bigint exponention right to left successful";
@@ -135,6 +135,7 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case Test_BI_SQU_KARACHUBA_SUCCESS : return "Test Bigint Karachuba square successful";
         case Test_BI_SQU_KARACHUBA_FAIL : return "Test Bigint Karachuba square failed";
         case COMPARE_SQUARING_SUCCESS : return "Compare squaring successful";
+        case COMPARE_SQUARING_FAIL  : return "Compare squaring failed";
         case BI_EXP_L_TO_R_SUCCESS : return "Bigint exp left shift successful";
         case BI_EXP_L_TO_R_FAIL : return "Bigint exp left shift failed";
         case BI_BARRET_REDUCTION_SUCCESS : return "Bigint barret reduction successful";
@@ -170,7 +171,7 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case RSA_ENC_FAIL : return "RSA encryption failed";
         case RSA_DEC_SUCCESS : return "RSA decryption successful";
         case RSA_DEC_FAIL : return "RSA decryption failed";
-        case RSA_MISSMATCH : return "RSA key mismatch";
+        case RSA_MISSMATCH : return "RSA Message mismatch";
         case RSA_CRT_SUCCESS : return "RSA CRT successful";
         case RSA_CRT_FAIL : return "RSA CRT failed";
         case CLEAR_Test_file_SUCCESS : return "Test file clear successful";
@@ -185,6 +186,9 @@ const char* get_msg_message(const IN uint32_t msg_code) {
         case TEST_RSA_FAIL : return "Test RSA failed";
         case CRYPTO_TEST_SUCCESS : return "Crypto test successful";
         case CRYPTO_TEST_FAIL : return "Crypto test failed";
+        case COMPARE_EXPONENTION_SUCCESS : return "Compare exponention successful";
+        case COMPARE_EXPONENTION_FAIL : return "Compare exponention failed";
+        case TOO_LONG_MESSAGE : return "Message too long";
         default: return "Unknown error code";
     }
 }

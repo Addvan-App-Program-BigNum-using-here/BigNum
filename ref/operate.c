@@ -472,8 +472,10 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int 
         // a가 양수인 경우
         (*b)->sign = 0; // b는 양수로
         (*a)->sign = 1; // a는 음수로
-        result_msg = bi_div(q, r, a, b, option);
+        result_msg = bi_div(q, &temp_r, a, b, option);
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;
+        result_msg = bi_assign(r, &temp_r);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_DIV_REFINE;
         if(*a != *r && *a != *q)    (*a)->sign = 0;
         if(*b != *r && *b != *q)    (*b)->sign = 1;
         result_msg = BI_DIV_SUCCESS;
@@ -490,8 +492,19 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int 
         if(result_msg != BI_DIV_SUCCESS)    return result_msg;
         if(*a != temp_r && *a != *q)    (*a)->sign = 1;
 
-        // q와 r 처리
-        if(bi_sub(r, b, &temp_r) != BI_SUB_SUCCESS)    return BI_SUB_FAIL; // r = b - r 수행. 여기서 나눗셈 연산 과정에서 b가 변하면 안된다!
+        result_msg = bi_assign(r, &temp_r);
+        if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_DIV_REFINE;
+
+        // q와 r 처리 -> 여기 코드 최적화 하자
+        result_msg = bi_is_zero(&temp_r);
+        if(result_msg == BI_IS_ZERO){
+            result_msg = bi_sub(q, q, &one);
+            if(result_msg != BI_SUB_SUCCESS)    goto EXIT_DIV_REFINE;
+        }else if(result_msg == BI_NOT_ZERO){
+            result_msg = bi_sub(r, b, r);
+            if(result_msg != BI_SUB_SUCCESS)    goto EXIT_DIV_REFINE;
+        }else
+            goto EXIT_DIV_REFINE;
 
         (*q)->sign = 0; // -q
         if(bi_add(q, q, &one) != BI_ADD_SUCCESS)    return BI_ADD_FAIL; // q = -q - 1 수행 // 일단 여기서 문제 발생
@@ -539,10 +552,12 @@ msg bi_div(OUT bigint **q, OUT bigint **r, IN bigint **a, IN bigint **b, IN int 
 
     if(bi_new(&temp_q, max_q_size) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
 
+
     // r의 여부 상관 없이 무조건 할당하는 것이 더 효율적일 듯. a, b랑 같을 때만 할 수 는 있는데 코드가 너무 더러워짐
     result_msg = bi_new(&temp_r, (*b)->word_len + 1);
     if(result_msg != BI_ALLOC_SUCCESS)    goto EXIT_DIV;
 
+    // 조건문으로 dividion 버전을 구분했는데 함수를 따로 정의하는 것이 필요, 성능 이슈 때문
     // WORD LONG DIVISION
     if(option == WORD_LONG_DIV){
         // general division k value 찾기
@@ -589,21 +604,32 @@ EXIT_DIV_REFINE:
  *              - bigint** b: bigint struct
  **************************************************/
 msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b){
+    msg result_msg = DIVC_FAIL;
+    bigint* temp_r = NULL;
+
+    if(bi_new(&temp_r, 1) != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
+
     if(*a == NULL || *b == NULL)    return MEM_NOT_ALLOC;
     for(int i = (*a)->word_len - 1; i >= 0; i--){
         for(int j = WORD_BITS - 1; j >= 0; j--){ // bit 단위의 곱셈을 수행하기에
-            // R <- R << 1 | (a[i] >> j & 1) -> 이 버전은 bit division 버전이다.
-            bi_shift_left(r, r, 1); // r <- r << 1
-            (*r)->a[0] |= (((*a)->a[i] >> j) & 1); // r <- r | (a[i] >> j & 1)
+            result_msg = bi_shift_left(&temp_r, &temp_r, 1);
+            if(result_msg != BI_SHIFT_SUCCESS)    goto EXIT_DIVC; // r <- r << 1
+            temp_r->a[0] |= (((*a)->a[i] >> j) & 1); // r <- r | (a[i] >> j & 1)
             // if R >= b then R <- R - b, Q[i] <- 1
-            if(bi_compare_abs(r, b) >= 0){ // 여기서 r이 재활용 되지 않은 경우는 상관 없는데 재활용 하는 경우 쓰레기 값이 있는지 확인해볼 필요가 있다. 내부에서 refine 해주기는 한다.
-                if(bi_sub(r, r, b) != BI_SUB_SUCCESS)    return DIVC_FAIL;
-                (*r)->a[(*r)->word_len - 1] = 0;
-                (*q)->a[i] |= 1 << j;
+            if(bi_compare_abs(&temp_r, b) >= 0){ // 여기서 r이 재활용 되지 않은 경우는 상관 없는데 재활용 하는 경우 쓰레기 값이 있는지 확인해볼 필요가 있다. 내부에서 refine 해주기는 한다.
+                result_msg = bi_sub(&temp_r, &temp_r, b);
+                if(result_msg != BI_SUB_SUCCESS)    goto EXIT_DIVC;
+                (*q)->a[i] |= 1ULL << j;
             }
         }
     }
-    return DIVC_SUCCESS;
+    result_msg = bi_assign(r, &temp_r);
+    if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_DIVC;
+
+    result_msg = DIVC_SUCCESS;
+EXIT_DIVC:
+    if(bi_delete(&temp_r) != BI_FREE_SUCCESS)    return BI_FREE_FAIL;
+    return result_msg;
 }
 
 /*************************************************
@@ -621,8 +647,6 @@ msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN 
     if(*a == NULL || *b == NULL)    return MEM_NOT_ALLOC;
     msg result_msg = DIVC_FAIL;
 
-//    bi_print(a, 16);
-//    bi_print(b, 16);
     bigint* R = NULL;
     bigint* a_p = NULL;
     bigint* b_p = NULL;
@@ -631,17 +655,12 @@ msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN 
 
     result_msg = bi_new(&R, (*a)->word_len);
     if(result_msg != BI_ALLOC_SUCCESS)    return BI_ALLOC_FAIL;
-  
+
     for(int i = (*a)->word_len - 1; i >= 0; i--){
         result_msg = bi_shift_left(&R, &R, WORD_BITS);
         if(result_msg != BI_SHIFT_SUCCESS)    return DIVC_FAIL;
         R->a[0] = (*a)->a[i];
         q_p = 0;
-
-//        printf("R : ");
-//        bi_print(&R, 16);
-//        printf("b : ");
-//        bi_print(b, 16);
 
         if(bi_compare_abs(&R, b) >= 0){ // 여기가 psuedo code에서 DIVC
             result_msg = bi_shift_left(&a_p, &R, k); // a_p = a << k
@@ -658,10 +677,7 @@ msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN 
             result_msg = bi_shift_right(&R, &r_p, k); // r_p = r_p >> k
             if(result_msg != BI_SHIFT_SUCCESS)    goto EXIT_DIVC_GENER;
         }
-//        printf("q_p: 0x%x\n", q_p);
         (*q)->a[i] = q_p;
-//        printf("R : ");
-//        bi_print(&R, 16);
     }
     result_msg = bi_assign(r, &R);
     if(result_msg != BI_SET_ASSIGN_SUCCESS)    goto EXIT_DIVC_GENER;
@@ -700,7 +716,6 @@ msg divcc(OUT word* q, OUT bigint** r, IN bigint** a, IN bigint** b){
         *q = (word)((*a)->a[m - 1] / (*b)->a[m - 1]); // q = a[n] / b[n]
     if(n == m + 1){
         if((*a)->a[m] == (*b)->a[m - 1])
-//            (*q) = (word)((1ULL << WORD_BITS) - 1);
             (*q) = ~(word)0;
         else{
             result_msg = bi_new(&temp_a, 2);
@@ -940,7 +955,6 @@ msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
     bigint* temp = NULL;
     msg result_msg = BI_EXP_MS_FAIL;
     byte bit = 0;
-    int div_option = 1;
 
     // timeattack을 방지하고자 배열로 선언
     t = (bigint**)calloc(2, sizeof(bigint*));
@@ -966,6 +980,7 @@ msg bi_exp_MS(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** n){
         if(result_msg != BI_MUL_SUCCESS)    goto EXIT_EXP;
         result_msg = bi_refine(&t[1-bit]);
         if(result_msg != BI_SET_REFINE_SUCCESS)    goto EXIT_EXP;
+
         result_msg = bi_div(&temp, &t[1-bit], &t[1-bit], n, div_option);
         if(result_msg != BI_DIV_SUCCESS)    goto EXIT_EXP;
 
@@ -1015,7 +1030,6 @@ msg bi_exp_R_TO_L(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     bigint* temp = NULL;
     msg result_msg = BI_EXP_R_TO_L_FAIL;
     byte bit = 0;
-    int div_option = 1;
 
     // t0 = 1
     result_msg = bi_new(&t0, 1);
@@ -1073,7 +1087,6 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
     byte bit = 0;
     bigint* temp = NULL;
     bigint* t = NULL;
-    int div_option = 1;
 
     // bit 연산 수행할 건데 refine이 되어 있지 않으면 0bit에 대한 쓰레기 연산이 있을 수 있기에 수행
     result_msg = bi_refine(x);
@@ -1114,7 +1127,7 @@ EXIT_EXP:
     return result_msg;
 }
 
-msg barret_reduction(OUT IN bigint** dst, IN bigint** a, IN bigint** n, IN bigint** n_barret){
+msg barret_reduction(OUT bigint** dst, IN bigint** a, IN bigint** n, IN bigint** n_barret){
     if(*a == NULL || *n == NULL)    return MEM_NOT_ALLOC;
 
     msg result_msg = BI_BARRET_REDUCTION_FAIL;
@@ -1165,7 +1178,6 @@ msg init_barret_N(OUT bigint** barret_t, IN bigint** barret_n, IN int barret_wor
     msg result_msg = INIT_BARRET_N_FAIL;
     bigint* temp = NULL;
     bigint* one = NULL;
-    int div_option = 1;
 
     // W^(2k) 생성
     result_msg = bi_new(&one, (2 * barret_word_len + 2) + 1);
