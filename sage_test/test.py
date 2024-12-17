@@ -7,6 +7,10 @@ import sys
 
 sys.setrecursionlimit(100000)  # 기본값인 1000보다 큰 값으로 변경
 
+test_dir = './test/test_vec/'
+result_dir = './test/result/'
+
+
 def addition(add_str):
     add_str = add_str.split(' ')
     result = int(add_str[4], 16)
@@ -16,7 +20,7 @@ def addition(add_str):
     return True, tmp
 
 def test_addition(f, p):
-    k = open('./result/result_addition.txt', 'w')
+    k = open(f'{result_dir}result_addition.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -44,7 +48,7 @@ def subtraction(sub_str):
     return True, tmp
 
 def test_subtraction(f, p):
-    k = open('./result/result_subtraction.txt', 'w')
+    k = open(f'{result_dir}result_subtraction.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -72,7 +76,7 @@ def multiplicaiton(sub_str):
     return True, tmp
 
 def test_multiplication(f, p):
-    k = open('./result/result_multiplication.txt', 'w')
+    k = open(f'{result_dir}result_multiplication.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -120,7 +124,7 @@ def test_bi_set_from_loop(f, p, k, base):
         p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def test_bi_set_from(f, p):
-    k = open('./result/result_set_from.txt', 'w')
+    k = open(f'{result_dir}result_set_from.txt', 'w')
     p.write('------------------------------------------------------------\n')
     p.write('[문자열을 빅넘으로 변환하기]\n')
     while True:
@@ -135,7 +139,7 @@ def test_bi_set_from(f, p):
             break
 
 def test_karachuba_multiplication(f, p):
-    k = open('./result/result_multiplication_karachuba.txt', 'w')
+    k = open(f'{result_dir}result_multiplication_karachuba.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -172,7 +176,7 @@ def division(sub_str):
     return True, q, r
 
 def test_division(f, p):
-    k = open('./result/result_division.txt', 'w')
+    k = open(f'{result_dir}result_division.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -194,7 +198,7 @@ def test_division(f, p):
         p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def test_shift(f, p):
-    k = open('./result/result_shift.txt', 'w')
+    k = open(f'{result_dir}result_shift.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -219,7 +223,7 @@ def test_shift(f, p):
         p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def test_get_lower(f, p):
-    k = open('./result/result_get_lower.txt', 'w')
+    k = open(f'{result_dir}result_get_lower.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -252,7 +256,7 @@ def test_get_lower(f, p):
         p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def test_cat(f, p):
-    k = open('./result/result_cat.txt', 'w')
+    k = open(f'{result_dir}result_cat.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -274,7 +278,7 @@ def test_cat(f, p):
         p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def test_squ(f, p):
-    k = open('./result/result_seq.txt', 'w')
+    k = open(f'{result_dir}result_seq.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -297,7 +301,7 @@ def test_squ(f, p):
 
 
 def test_karachuba_squ(f, p):
-    k = open('./result/result_seq_karachuba.txt', 'w')
+    k = open(f'{result_dir}result_seq_karachuba.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -319,7 +323,7 @@ def test_karachuba_squ(f, p):
         p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def test_exp(f, p):
-    k = open('./result/result_exp.txt', 'w')
+    k = open(f'{result_dir}result_exp.txt', 'w')
     count = 0
     False_count_MS = 0
     False_count_R_TO_L = 0
@@ -352,7 +356,7 @@ def test_exp(f, p):
         p.write(f"[Left to Right]\n실행 횟수 : {count} / 성공 횟수 : {count - False_count_L_TO_R} / 실패 횟수 : {False_count_L_TO_R}\n")
 
 def test_barrett(f, p):
-    k = open('./result/result_barrett_reduction.txt', 'w')
+    k = open(f'{result_dir}result_barrett_reduction.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -374,7 +378,7 @@ def test_barrett(f, p):
         p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def test_gcd(f, p):
-    k = open('./result/result_gcd.txt', 'w')
+    k = open(f'{result_dir}result_gcd.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -410,7 +414,7 @@ def EEA(a, b):
         return abs(gcd), x, y  # abs() 추가
 
 def test_EEA(f, p):
-    k = open('./result/result_EEA.txt', 'w')
+    k = open(f'{result_dir}result_EEA.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -498,8 +502,8 @@ def is_prime_by_miller_rabin(n, k):
     return True
 
 def test_miller_rabin(f, p):
-    k = open('./result/result_Miller_Rabin_fail.txt', 'w')
-    t = open('./result/result_Miller_Rabin_success.txt', 'w')
+    k = open(f'{result_dir}result_Miller_Rabin_fail.txt', 'w')
+    t = open(f'{result_dir}result_Miller_Rabin_success.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -533,7 +537,7 @@ def write_result(k, t, shiftif, mr_result, result):
         return 0
 
 def test_RSA(f, p):
-    k = open('./result/result_RSA.txt', 'w')
+    k = open(f'{result_dir}result_RSA.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -553,7 +557,7 @@ def test_RSA(f, p):
         p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - False_count} / 실패 횟수 : {False_count}\n")
 
 def test_RSA_CRT(f, p):
-    k = open('./result/result_RSA_CRT.txt', 'w')
+    k = open(f'{result_dir}result_RSA_CRT.txt', 'w')
     count = 0
     False_count = 0
     while True:
@@ -595,48 +599,48 @@ def file_open(file_name):
         return None
 
 if __name__ == '__main__':
-    with open('./main_result.txt', 'w') as p:
-        f = file_open('./test_vec/test.txt')
+    with open('./result.txt', 'w') as p:
+        f = file_open(f'{test_dir}test.txt')
         if f != None:   bi_test(f, p)
 
-        f = file_open('./test_vec/test_add.txt')
+        f = file_open(f'{test_dir}test_add.txt')
         if f != None:   test_addition(f, p)
 
-        f = file_open('./test_vec/test_sub.txt')
+        f = file_open(f'{test_dir}test_sub.txt')
         if f != None:   test_subtraction(f, p)
 
-        f = file_open('./test_vec/test_mul.txt')
+        f = file_open(f'{test_dir}test_mul.txt')
         if f != None:   test_multiplication(f, p)
 
-        f = file_open('./test_vec/test_mul_karachuba.txt')
+        f = file_open(f'{test_dir}test_mul_karachuba.txt')
         if f != None:   test_karachuba_multiplication(f, p)
 
-        f = file_open('./test_vec/test_div.txt')
+        f = file_open(f'{test_dir}test_div.txt')
         if f != None:   test_division(f, p)
 
-        f = file_open('./test_vec/test_squ.txt')
+        f = file_open(f'{test_dir}test_squ.txt')
         if f != None:   test_squ(f, p)
 
-        f = file_open('./test_vec/test_squ_karachuba.txt')
+        f = file_open(f'{test_dir}test_squ_karachuba.txt')
         if f != None:   test_karachuba_squ(f, p)
 
-        f = file_open('./test_vec/test_exp.txt')
+        f = file_open(f'{test_dir}test_exp.txt')
         if f != None:   test_exp(f, p)
 
-        f = file_open('./test_vec/test_barrett_reduction.txt')
+        f = file_open(f'{test_dir}test_barrett_reduction.txt')
         if f != None:   test_barrett(f, p)
 
-        f = file_open('./test_vec/test_gcd.txt')
+        f = file_open(f'{test_dir}test_gcd.txt')
         if f != None:   test_gcd(f, p)
 
-        f = file_open('./test_vec/test_EEA.txt')
+        f = file_open(f'{test_dir}test_EEA.txt')
         if f != None:   test_EEA(f, p)
 
-        f = file_open('./test_vec/test_miller_rabin.txt')
+        f = file_open(f'{test_dir}test_miller_rabin.txt')
         if f != None:   test_miller_rabin(f, p)
 
-        f = file_open('./test_vec/test_RSA.txt')
+        f = file_open(f'{test_dir}test_RSA.txt')
         if f != None: test_RSA(f, p)
 
-        f = file_open('./test_vec/test_RSA_CRT.txt')
+        f = file_open(f'{test_dir}test_RSA_CRT.txt')
         if f != None: test_RSA_CRT(f, p)

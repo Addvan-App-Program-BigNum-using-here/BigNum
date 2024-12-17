@@ -1,9 +1,9 @@
 #ifndef CRYPTO_TEST_H
 #define CRYPTO_TEST_H
 
-#include "../data_type.h"
-#include "../msg_control.h"
-#include "../util.h"
+#include "data_type.h"
+#include "msg_control.h"
+#include "util.h"
 #include "util_test.h"
 #include "test_main.h"
 

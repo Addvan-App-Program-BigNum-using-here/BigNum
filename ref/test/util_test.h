@@ -4,16 +4,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <sys/time.h>
-// 윈도우일 때는 time.h 인 것으로 판단
+
+#ifdef _WIN32
 #include <time.h>
-#include "../util.h"
-#include "../msg_control.h"
-#include "../random.h"
-#include "../operate.h"
-#include "../data_type.h"
-#include "../file_io.h"
-#include "../crypto.h"
+#else
+#include <sys/time.h>
+#endif
+
+#include "util.h"
+#include "msg_control.h"
+#include "random.h"
+#include "operate.h"
+#include "data_type.h"
+#include "file_io.h"
+#include "crypto.h"
 #include "random_test.h"
 
 /**

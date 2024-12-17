@@ -303,7 +303,7 @@ def test_exp(f, p):
     p.write(f"실행 횟수 : {count} / 성공 횟수 : {count - false_count} / 실패 횟수 : {false_count}\n")
 
 def bi_test(f):
-    with open('./main_result.txt', 'w') as p:
+    with open('./result.txt', 'w') as p:
         p.write('[Test result]\n')
         while True:
             line = f.readline()

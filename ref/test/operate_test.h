@@ -1,12 +1,12 @@
 #ifndef OPERATE_TEST_H
 #define OPERATE_TEST_H
 
-#include "../util.h"
-#include "../msg_control.h"
-#include "../random.h"
-#include "../operate.h"
-#include "../data_type.h"
-#include "../file_io.h"
+#include "util.h"
+#include "msg_control.h"
+#include "random.h"
+#include "operate.h"
+#include "data_type.h"
+#include "file_io.h"
 #include "random_test.h"
 #include "util_test.h"
 #include "test_main.h"
