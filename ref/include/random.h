@@ -28,6 +28,15 @@
 msg bi_get_random(OUT bigint **dst, IN int word_len);
 
 /**
+ * @brief New allocate bigints struct and fill it with random values
+ *
+ * @param count bigint count
+ * @param ... bigint** dst
+ * @return message  SUCCESS or FAIL
+ */
+msg get_random_bigint(int random_word_size, int word_size, int word_size_limit, int count, ...);
+
+/**
  * @brief Fill word array with random values
  *
  * @param dst pointer to word array

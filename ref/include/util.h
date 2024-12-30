@@ -204,28 +204,4 @@ double check_function_run_one_time(void* func, bigint** dst, msg* result_msg, Pa
  */
 int get_power_decomposition(word n, int* powers);
 
-/**
- * @brief bigint structure Miller-Rabin primality test
- * @param dst pointer to square of bigint
- * @param a dividend bigint to be squared
- * @return msg
- */
-msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k);
-
-/**
- * @brief bigint structure gcd operation
- * @param dst pointer to square of bigint
- * @param a dividend bigint to be squared
- * @return msg
- */
-msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b);
-
-/**
- * @brief bigint structure Extended Euclidean Algorithm
- * @param dst pointer to square of bigint
- * @param a dividend bigint to be squared
- * @return msg
- */
-msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b);
-
 #endif // UTIL_H

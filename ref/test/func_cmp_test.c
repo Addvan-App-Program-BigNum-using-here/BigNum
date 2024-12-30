@@ -1,6 +1,14 @@
-#include "func_cmp_test.h"
+#include "test_util.h"
 
-msg func_compare(){
+msg compare_multiplicaiton(int start_size, int end_size, int step_size);
+msg compare_squaring(int start_size, int end_size, int step_size);
+msg compare_division(int start_size, int end_size, int step_size);
+msg compare_exponention(int start_size, int end_size, int step_size);
+
+
+int main(){
+    CLEAR_Test_file();
+
 //    if(compare_multiplicaiton(16, 120, 16) != COMPARE_MULTIPLICATION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 //    if(compare_squaring(16, 120, 16) != COMPARE_SQUARING_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트
 //    if(compare_division(16, 120, 16) != COMPARE_DIVISION_SUCCESS)   return Test_FAIL;   // bigint 곱셈 성능 비교 테스트

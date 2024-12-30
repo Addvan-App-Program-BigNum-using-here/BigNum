@@ -1,7 +1,36 @@
-#include "operate_test.h"
+#include "test_util.h"
 
 double op_total_time[9] = {0, };
 double op_exp_time[3] = {0, };
+
+msg cmp_operate_test();
+msg rand_operate_test();
+void operate_print_result();
+msg operate_test(IN bigint** a, IN bigint** b, IN bigint** c, IN bigint** barret_N, IN bigint** barret_T);
+msg test_bi_add(OUT double* total_time_add, IN bigint** a, IN bigint** b, IN char* str);
+msg test_bi_sub(OUT double* total_time_sub, IN bigint** a, IN bigint** b, IN char* str);
+msg test_bi_mul(OUT double* total_time_mul, IN bigint** a, IN bigint** b, IN char* str);
+msg test_bi_mul_karachuba(OUT double* total_time_mul_karachuba, IN bigint** a, IN bigint** b, IN char* str, IN int* karachuba_flag);
+msg test_bi_div(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str, IN int* option);
+msg test_bi_squ(OUT double* total_time_squ, IN bigint** a, IN char* str);
+msg test_bi_squ_karachuba(OUT double* total_time_squ_karachuba, IN bigint** a, IN char* str, IN int* karachuba_flag);
+msg test_bi_exp(OUT double* total_time_exp, IN bigint** a, IN bigint** b, IN bigint** c, IN char* str);
+msg test_bi_barrett_reduction(OUT double* total_time_barrett_reduction, IN bigint** a, IN bigint** barret_N, IN bigint** barret_T, IN char* str);
+
+
+
+int main(){
+    CLEAR_Test_file();
+
+    if(TEST_MODE == 0){
+        if(cmp_operate_test() != Test_SUCCESS)    return 0;
+    }
+    else{
+        if(rand_operate_test() != Test_SUCCESS)    return 0;
+    }
+
+    return 0;
+}
 
 msg cmp_operate_test(){
     msg result_msg = Test_FAIL;
@@ -111,7 +140,7 @@ msg rand_operate_test(){
 
     for(int i = 0; i < test_size; i++){
         // 랜덤 bigint 생성
-        if(get_random_bigint(3, &a, &b, &c) != BI_GET_RANDOM_SUCCESS)    return Test_FAIL;
+        if(get_random_bigint(SIZE_MODE, test_word_size, test_word_size_limit, 3, &a, &b, &c) != BI_GET_RANDOM_SUCCESS)    return Test_FAIL;
 
         // bigint 연산 테스트
         result_msg = operate_test(&a, &b, &c, &barret_N, &barret_T);

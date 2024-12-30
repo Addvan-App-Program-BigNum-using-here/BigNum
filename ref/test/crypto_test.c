@@ -1,7 +1,27 @@
-#include "crypto_test.h"
+#include "test_util.h"
 
 clock_t c_start, c_end;
 double crypto_total_time[5] = {0, };
+
+msg cmp_crypto_test();
+msg rand_crypto_test();
+msg crypto_test(IN bigint** a, IN bigint** b);
+msg test_bi_gcd(OUT double* total_time, IN bigint** a, IN bigint** b, IN char* str);
+msg test_bi_EEA(OUT double* total_time, IN bigint** a, IN bigint** b, IN char* str);
+msg test_miller_rabin(OUT double* total_time, IN bigint** a, IN int* iter, IN char* str);
+msg test_RSA(OUT double* total_time_RSA, IN bigint** a, IN char* str);
+msg test_RSA_CRT(OUT double* total_time_RSA_CRT, IN bigint** a, IN char* str);
+void crypto_print_result();
+
+int main(){
+    CLEAR_Test_file();
+
+    if(TEST_MODE == 0){
+        if(cmp_crypto_test() != Test_SUCCESS)    return 0;
+    }else{
+        if(rand_crypto_test() != Test_SUCCESS)    return 0;
+    }
+}
 
 msg cmp_crypto_test(){
     msg result_msg = Test_FAIL;
@@ -71,7 +91,7 @@ msg rand_crypto_test(){
     for(int i = 0; i < test_size; i++){
         printf("%dth test\n", i);
         // 랜덤 bigint 생성
-        if(get_random_bigint(3, &a, &b, &c) != BI_GET_RANDOM_SUCCESS)    return Test_FAIL;
+        if(get_random_bigint(SIZE_MODE, test_word_size, test_word_size_limit, 3, &a, &b, &c) != BI_GET_RANDOM_SUCCESS)    return Test_FAIL;
 
         // bigint 연산 테스트
         result_msg = crypto_test(&a, &b);
@@ -228,7 +248,7 @@ RSA_CRT_EXIT:
     return result_msg;
 }
 
-msg test_bi_gcd(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN char* str){
+msg test_bi_gcd(OUT double* total_time_gcd, IN bigint** a, IN bigint** b, IN char* str){
     bigint *d = NULL;
     msg result_msg = Test_BI_GCD_FAIL;
     ParamType param_types[2] = {TYPE_BIGINT_PTR,TYPE_BIGINT_PTR};
@@ -256,7 +276,7 @@ msg test_bi_gcd(OUT double* total_time_div, IN bigint** a, IN bigint** b, IN cha
     result_msg = Test_file_write_non_enter(Test_file_gcd, "= ", APPEND);
     if (result_msg != FILE_WRITE_SUCCESS)   goto GCD_EXIT;
 
-    *total_time_div += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_gcd, &d, &result_msg, param_types, a, b);
+    *total_time_gcd += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_gcd, &d, &result_msg, param_types, a, b);
     if (result_msg != BI_GCD_SUCCESS)   goto GCD_EXIT;
 
     if (bigint_to_hex(str, &d) == -1)   goto GCD_EXIT;
@@ -358,14 +378,14 @@ EXIT_MR:
 void crypto_print_result(){
     print_data_set();
 
-//    printf("\n============ Testing bi_gcd ============\n");
-//    printf("Time taken gcd : %f seconds\n", crypto_total_time[0] / test_size);
-//
-//    printf("\n============ Testing bi_EEA ============\n");
-//    printf("Time taken EEA : %f seconds\n", crypto_total_time[1] / test_size);
-//
-//    printf("\n============ Testing Miller Rabin ============\n");
-//    printf("Time taken Miller Rabin : %f seconds\n", crypto_total_time[2] / test_size);
+    printf("\n============ Testing bi_gcd ============\n");
+    printf("Time taken gcd : %f seconds\n", crypto_total_time[0] / test_size);
+
+    printf("\n============ Testing bi_EEA ============\n");
+    printf("Time taken EEA : %f seconds\n", crypto_total_time[1] / test_size);
+
+    printf("\n============ Testing Miller Rabin ============\n");
+    printf("Time taken Miller Rabin : %f seconds\n", crypto_total_time[2] / test_size);
 
     printf("\n============ Testing RSA ============\n");
     printf("Time taken RSA : %f seconds\n", crypto_total_time[3] / test_size);

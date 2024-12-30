@@ -12,6 +12,7 @@ ifeq ($(OS),Windows_NT)
 	LIB_DIR = .\lib\
 	SRC_DIR = .\src\
 	INC_DIR = .\include\
+	BENCH_DIR = .\benchmark\
 	SHARED_EXT = dll
 	SHARED_FLAGS = -shared
 	SHARED_PREFIX =
@@ -19,6 +20,7 @@ ifeq ($(OS),Windows_NT)
 	RM = del /Q /F
 	CP = copy
 	MKDIR = mkdir
+	READ = type
 else
 	TEST_VEC = ./test_vec/
 	PYTHON_DIR = ../sage_test/
@@ -27,11 +29,13 @@ else
 	LIB_DIR = ./lib/
 	SRC_DIR = ./src/
 	INC_DIR = ./include/
-	SHARED_PREFIX = lib
+	BENCH_DIR = ./benchmark/
+	SHARED_PREFIX = lib_
 	EXE_EXT =
 	RM = rm -f
 	CP = cp
 	MKDIR = mkdir -p
+	READ = cat
 
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
@@ -45,15 +49,17 @@ endif
 
 # Source files
 SOURCES = $(SRC_DIR)util.c $(SRC_DIR)msg_control.c $(SRC_DIR)random.c $(SRC_DIR)data_type.c $(SRC_DIR)operate.c $(SRC_DIR)file_io.c $(SRC_DIR)crypto.c
-
-# Header files
-HEADERS = $(INC_DIR)util.h $(INC_DIR)msg_control.h $(INC_DIR)random.h $(INC_DIR)data_type.h $(INC_DIR)operate.h $(INC_DIR)file_io.h $(INC_DIR)crypto.h
+SOURCES_BENCH = $(SOURCES) $(BENCH_DIR)bench_util.c
+SOURCES_TEST = $(SOURCES) $(TEST_DIR)test_util.c
 
 # Test files
-TEST_SOURCE = $(TEST_DIR)test_main.c $(TEST_DIR)util_test.c $(TEST_DIR)random_test.c $(TEST_DIR)operate_test.c $(TEST_DIR)crypto_test.c $(TEST_DIR)func_cmp_test.c
-TEST_OBJECT = $(TEST_SOURCE:.c=.o)
-TEST_PROGRAM = $(TEST_DIR)test_main$(EXE_EXT)
-TEST_SRC = $(SOURCES) ./$(TEST_SOURCE)
+TEST_PROGRAM = $(TEST_DIR)fix_crypto_test$(EXE_EXT) $(TEST_DIR)rand_crypto_test$(EXE_EXT) \
+ 			   $(TEST_DIR)fix_operate_test$(EXE_EXT) $(TEST_DIR)rand_operate_test$(EXE_EXT) \
+ 			   $(TEST_DIR)util_test$(EXE_EXT) $(TEST_DIR)func_cmp_test$(EXE_EXT)
+
+# Bench files
+BENCH_PROGRAM = $(BENCH_DIR)bignum_benchmark$(EXE_EXT) $(BENCH_DIR)crypto_util_benchmark$(EXE_EXT)
+
 
 # Library Set
 SHARED_LIB = $(LIB_DIR)$(SHARED_PREFIX)HEPHAISTOS.$(SHARED_EXT)
@@ -62,12 +68,16 @@ LIB_OBJECTS = $(SOURCES:$(SRC_DIR)%.c=$(LIB_DIR)%.o)
 
 # Compiler flags
 INCLUDES = -I$(INC_DIR)
+INCLUDES_BENCH = $(INCLUDES) -I$(BENCH_DIR)
+INCLUDES_TEST = $(INCLUDES) -I$(TEST_DIR)
+
 CFLAGS = -Wall -O3 -Wextra -std=c99
-LDFLAGS = -fsanitize=address
+LDFLAGS =
 
 # Detect operating system
 ifeq ($(OS),Windows_NT)
-    TEST_RUN_CMD = set "PATH=$(LIB_DIR);$(PATH)" && .\$(TEST_PROGRAM)
+    RUN_CMD = set "PATH=$(LIB_DIR);$(PATH)" && $(TEST_PROGRAM)
+    TEST_RUN_CMD = $(TEST_PROGRAM)
     CFLAGS += -std=c99
     LDFLAGS =
 else
@@ -75,18 +85,23 @@ else
     ifeq ($(UNAME_S),Linux)
         CFLAGS += -std=gnu99 -fsanitize=address
         LDFLAGS += -Wl,-rpath,'$$ORIGIN/../lib'
-        TEST_RUN_CMD = LD_LIBRARY_PATH=../lib ./$(TEST_PROGRAM)
+        RUN_CMD = LD_LIBRARY_PATH=../lib $(TEST_PROGRAM)
+        TEST_RUN_CMD = $(TEST_PROGRAM)
     else ifeq ($(UNAME_S),Darwin)
     	UNAME_M := $(shell uname -m)
-        CFLAGS += -fsanitize=address -arch $(UNAME_M)
+        CFLAGS += -arch $(UNAME_M)
         LDFLAGS +=  -arch $(UNAME_M) -Wl,-rpath,@executable_path/../lib
-        TEST_RUN_CMD = DYLD_LIBRARY_PATH=../lib ./$(TEST_PROGRAM)
+        RUN_CMD = DYLD_LIBRARY_PATH=../lib $(TEST_PROGRAM)
+        TEST_RUN_CMD = leaks --atExit -- $(TEST_PROGRAM)
     endif
 endif
+
+# -------------------------------------------------- env setting -------------------------------------------------------
 
 .PHONY: all clean shared run test
 all: clean $(LIB_DIR) shared run
 
+# -------------------------------------------------- library make and run ----------------------------------------------
 lib: clean $(LIB_DIR) shared
 
 lib_run: lib run
@@ -107,43 +122,54 @@ ifeq ($(OS),Windows_NT)
 	$(CP) $(SHARED_LIB) .\\
 endif
 
-# Test object files
-$(TEST_OBJECT): %.o: %.c %.h
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
 # Create static library
 static: $(LIB_OBJECTS)
 	$(AR) rcs $(STATIC_LIB) $(LIB_OBJECTS)
 	$(RANLIB) $(STATIC_LIB)
 
 # Run test program
-run: $(TEST_OBJECT)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(TEST_PROGRAM) $(TEST_OBJECT) -L$(LIB_DIR) -lHEPHAISTOS $(LDFLAGS)
-	$(TEST_RUN_CMD)
+run:
+	$(CC) $(CFLAGS) -DTEST_MODE=0 -DSIZE_MODE=0 $(INCLUDES) -o $(TEST_PROGRAM) $(TEST_OBJECT) -L$(LIB_DIR) -lHEPHAISTOS $(LDFLAGS)
+	$(RUN_CMD)
+
+# -------------------------------------------------- test make and run ----------------------------------------------
+# When test start then clean and make library and run python test code
+test_build: clean lib
 
 
-test: clean
-	$(CC) $(CFLAGS) $(INCLUDES) $(TEST_SRC) -o $(TEST_PROGRAM) $(LDFLAGS)
-ifeq ($(OS),Windows_NT)
-	./$(TEST_PROGRAM)
-	python3 $(PYTHON_DIR)test.py
-	type ./result.txt
-else ifeq ($(UNAME_S),Darwin)
-	leaks --atExit -- ./$(TEST_PROGRAM)
-	python3 $(PYTHON_DIR)test.py
-	cat ./result.txt
-else
-	./$(TEST_PROGRAM)
-	python3 $(PYTHON_DIR)test.py
-	cat ./result.txt
-endif
+#	# create fix input crypto test
+#	$(CC) $(CFLAGS) -DTEST_MODE=0 -DSIZE_MODE=0 $(INCLUDES_TEST) $(SOURCES_TEST) $(TEST_DIR)crypto_test.c -o $(TEST_DIR)fix_crypto_test
+#	# create fix input operate test
+#	$(CC) $(CFLAGS) -DTEST_MODE=0 -DSIZE_MODE=0 $(INCLUDES_TEST) $(SOURCES_TEST) $(TEST_DIR)operate_test.c -o $(TEST_DIR)fix_operate_test
+#
+#	# create random input crypto test
+#	$(CC) $(CFLAGS) -DTEST_MODE=1 -DSIZE_MODE=1 $(INCLUDES_TEST) $(SOURCES_TEST) $(TEST_DIR)crypto_test.c -o $(TEST_DIR)rand_crypto_test
+#	# create random input operate test
+#	$(CC) $(CFLAGS) -DTEST_MODE=1 -DSIZE_MODE=1 $(INCLUDES_TEST) $(SOURCES_TEST) $(TEST_DIR)operate_test.c -o $(TEST_DIR)rand_operate_test
+#
+#	# create fix input util test
+#	$(CC) $(CFLAGS) $(INCLUDES_TEST) $(SOURCES_TEST) $(TEST_DIR)util_test.c -o $(TEST_DIR)util_test
+#	# create fix input func_cmp test
+#	$(CC) $(CFLAGS) $(INCLUDES_TEST) $(SOURCES_TEST) $(TEST_DIR)func_cmp_test.c -o $(TEST_DIR)func_cmp_test
 
+#	$(TEST_RUN_CMD)
+#	python3 $(PYTHON_DIR)test.py
+#	$(READ) ./result.txt
+
+# -------------------------------------------------- benchmark make and run ----------------------------------------------
+
+bench : clean
+	$(CC) $(CFLAGS) $(INCLUDES_BENCH) $(SOURCES_BENCH) $(BENCH_DIR)bignum_benchmark.c -o ./bignum_benchmark
+	$(CC) $(CFLAGS) $(INCLUDES_BENCH) $(SOURCES_BENCH) $(BENCH_DIR)crypto_util_benchmark.c -o ./crypto_util_benchmark
+
+# -------------------------------------------------- clean up ----------------------------------------------------------
 clean:
 	@echo "Cleaning up..."
 	$(RM) $(LIB_OBJECTS)
-	$(RM) $(TEST_OBJECT)
 	$(RM) $(TEST_PROGRAM)
 	$(RM) *.txt
 	$(RM) $(RESULT_DIR)*.txt
 	$(RM) $(SHARED_LIB)
 	$(RM) $(STATIC_LIB)
+	$(RM) $(TEST_PROGRAM)
+	$(RM) $(BENCH_PROGRAM)

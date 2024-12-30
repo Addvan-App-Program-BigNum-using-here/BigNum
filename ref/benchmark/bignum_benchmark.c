@@ -1,4 +1,4 @@
-#define TEST_LOOP 1000
+#include "bench_util.h"
 
 double time_add = 0;
 double time_sub = 0;
@@ -14,7 +14,7 @@ double time_exp_LTR = 0;
 double time_barret_reduction = 0;
 
 
-int bignum_benchmark(){
+int main(){
     bigint *a = NULL;
     bigint *b = NULL;
     bigint *c = NULL;
@@ -28,52 +28,71 @@ int bignum_benchmark(){
     ParamType param_types_3[3] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_BIGINT_PTR};
     ParamType param_types_4[4] = {TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_BIGINT_PTR, TYPE_INT_PTR};
     int karachuba_flag = 0;
+    int div_mode = 0;
 
     // barret N 생성
     if(test_word_size == barret_word_size)  init_barret_N(&barret_T, &barret_N, barret_word_size);
 
+    // karachuba pool 초기화
+    init_karachuba_pool(test_word_size);
+
     for(int i = 0; i < TEST_LOOP; i++){
+        printProgressBar((i + 1) * 100 / TEST_LOOP, 100);
         // create test vector
-        get_random_bigint(3, &a, &b, &c);
+        get_random_bigint(RANDOM_TEST_WORD_SIZE, test_word_size, test_word_size_limit, 3, &a, &b, &c);
 
         // addition bench
-        time_add += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_add, &d, &result_msg, param_types_2, a, b);
+        time_add += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_add, &d, &result_msg, param_types_2, &a, &b);
 
         // subtraction bench
-        time_sub += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_sub, &d, &result_msg, param_types_2, a, b);
+        time_sub += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_sub, &d, &result_msg, param_types_2, &a, &b);
 
         // multiplication bench
-        time_mul += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_mul, &d, &result_msg, param_types_2, a, b);
+        time_mul += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_mul, &d, &result_msg, param_types_2, &a, &b);
 
         // karachuba multiplication bench
         param_types_3[2] = TYPE_INT_PTR;
-        karachuba_flag = test_max_word_size / mul_karachuba_ratio;
-        time_mul_karachuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_mul_karachuba, &d, &result_msg, param_types_3, a, b, &test_word_size);
+        karachuba_flag = test_word_size / mul_karachuba_ratio;
+        time_mul_karachuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_mul_karachuba, &d, &result_msg, param_types_3, &a, &b, &karachuba_flag);
         param_types_3[2] = TYPE_BIGINT_PTR;
 
         // Binary division bench
-        time_div_bin += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_div, &d, &result_msg, param_types_4, r, a, b, 0);
+        time_div_bin += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_div, &d, &result_msg, param_types_4, &r, &a, &b, &div_mode);
 
         // Word division bench
-        time_div_word += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_div, &d, &result_msg, param_types_4, r, a, b, 1);
+        div_mode = 1;
+        time_div_word += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_div, &d, &result_msg, param_types_4, &r, &a, &b, &div_mode);
 
         // squaring bench
-        time_squ += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ, &d, &result_msg, param_types_1, a);
+        time_squ += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ, &d, &result_msg, param_types_1, &a);
 
         // karachuba squaring bench
         param_types_2[1] = TYPE_INT_PTR;
-        karachuba_flag = test_max_word_size / squ_karachuba_ratio;
-        time_squ_karachuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ_karachuba, &d, &result_msg, param_types_2, a, &karachuba_flag);
+        karachuba_flag = test_word_size / squ_karachuba_ratio;
+        time_squ_karachuba += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_squ_karachuba, &d, &result_msg, param_types_2, &a, &karachuba_flag);
         param_types_2[1] = TYPE_BIGINT_PTR;
 
         // Modular exponentiation bench
-        time_exp_MS += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_MS, &d, &result_msg, param_types_3, a, b, c);
-        time_exp_LTR += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_LTR, &d, &result_msg, param_types_3, a, b, c);
-        time_exp_RTL += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_RTL, &d, &result_msg, param_types_3, a, b, c);
+        time_exp_MS += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_MS, &d, &result_msg, param_types_3, &a, &b, &c);
+        time_exp_LTR += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_R_TO_L, &d, &result_msg, param_types_3, &a, &b, &c);
+        time_exp_RTL += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())bi_exp_L_TO_R, &d, &result_msg, param_types_3, &a, &b, &c);
 
         // barret reduction bench
-        time_barret_reduction += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())barret_reduction, &d, &result_msg, param_types_3, a, b, c);
+        time_barret_reduction += CHECK_FUNCTION_RUN_ONE_TIME((msg (*)())barret_reduction, &d, &result_msg, param_types_3, &a, &barret_N, &barret_T);
     }
+
+    // karachuba pool 해제
+    clear_karachuba_pool();
+
+    // free bigint
+    bi_delete(&a);
+    bi_delete(&b);
+    bi_delete(&c);
+    bi_delete(&d);
+    bi_delete(&r);
+    bi_delete(&barret_N);
+    bi_delete(&barret_T);
+
 
     print_data_set();
 

@@ -55,4 +55,27 @@ msg RSA_CRT_KeyGEN(OUT bigint**n, OUT bigint** p, OUT bigint** q, OUT bigint** e
  */
 msg RSA_CRT_DEC(OUT bigint** m, IN bigint** n, IN bigint** c, IN bigint** p, IN bigint** q, IN bigint** d_p, IN bigint** d_q, IN bigint** q_inv);
 
+/**
+ * @brief bigint structure Miller-Rabin primality test
+ * @param dst pointer to square of bigint
+ * @param a dividend bigint to be squared
+ * @return msg
+ */
+msg miller_rabin_primality(OUT bigint** temp, IN bigint **n, IN int k);
+
+/**
+ * @brief bigint structure gcd operation
+ * @param dst pointer to square of bigint
+ * @param a dividend bigint to be squared
+ * @return msg
+ */
+msg bi_gcd(OUT bigint** dst, IN bigint** a, IN bigint** b);
+
+/**
+ * @brief bigint structure Extended Euclidean Algorithm
+ * @param dst pointer to square of bigint
+ * @param a dividend bigint to be squared
+ * @return msg
+ */
+msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN bigint** b);
 #endif
