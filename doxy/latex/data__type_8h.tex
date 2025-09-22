@@ -1,0 +1,532 @@
+\doxysection{C\+:/\+Kookmin/\+Big\+Num/ref/data\+\_\+type.h 파일 참조}
+\hypertarget{data__type_8h}{}\label{data__type_8h}\index{C:/Kookmin/BigNum/ref/data\_type.h@{C:/Kookmin/BigNum/ref/data\_type.h}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$inttypes.\+h$>$}\newline
+data\+\_\+type.\+h에 대한 include 의존 그래프
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data__type_8h__incl}
+\end{center}
+\end{figure}
+이 그래프는 이 파일을 직/간접적으로 include 하는 파일들을 보여줍니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data__type_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{클래스}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structbigint}{bigint}}
+\begin{DoxyCompactList}\small\item\em big num information struct \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{매크로}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{data__type_8h_a57592e50f9aa27528ec8e36e23432ee0}{WORD\+\_\+\+BITS}}~32
+\begin{DoxyCompactList}\small\item\em Word bits \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{data__type_8h_a5a2a76e18bbd8b8cd9026f1cee18f197}{APPEND}}~0
+\begin{DoxyCompactList}\small\item\em File append \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{data__type_8h_a611cc9b5f655508482f3d7a9751c182a}{CLEAR}}~1
+\begin{DoxyCompactList}\small\item\em File clear and write \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{data__type_8h_a3024ccd4a9af5109d24e6c57565d74a1}{\+\_\+\+POSIX\+\_\+\+C\+\_\+\+SOURCE}}~200809L
+\item 
+\#define \mbox{\hyperlink{data__type_8h_a9a7ddc73926da069c1afe89920c6daf4}{WORD\+\_\+\+BINARY\+\_\+\+DIV}}~0
+\begin{DoxyCompactList}\small\item\em Word long division \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{data__type_8h_a2bfc715efa15fc69a91f92f10d9ecaa5}{WORD\+\_\+\+LONG\+\_\+\+DIV}}~1
+\begin{DoxyCompactList}\small\item\em Word karatsuba division \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}
+\item 
+\#define \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}
+\item 
+\#define \mbox{\hyperlink{data__type_8h_a40a569a5654fdb166bde9a91e32bcd08}{seperator}}~"{}-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/"{}
+\item 
+\#define \mbox{\hyperlink{data__type_8h_a99b32512c0caac21bfec3c27e8302d1e}{FROM\+\_\+init}}~"{}\mbox{[}BI SET FROM\mbox{]}"{}
+\item 
+\#define \mbox{\hyperlink{data__type_8h_a525e16c8180bd99cd97203fd16461e6f}{SHIFT\+\_\+init}}~"{}\mbox{[}Shift\mbox{]}"{}
+\item 
+\#define \mbox{\hyperlink{data__type_8h_a9d876fc3b1b63ef48ad1b5b059572531}{GET\+\_\+\+LOWER\+\_\+init}}~"{}\mbox{[}Get Lower\mbox{]}"{}
+\item 
+\#define \mbox{\hyperlink{data__type_8h_a9ea567c30062b9bcf35e2fab3978f713}{CAT\+\_\+init}}~"{}\mbox{[}Cat\mbox{]}"{}
+\item 
+\#define \mbox{\hyperlink{data__type_8h_a4ce3e2af80a76d816ab7f8567ec4a65a}{MAX\+\_\+\+VALUE}}~((1ULL $<$$<$ 32) -\/ 1)
+\item 
+\#define \mbox{\hyperlink{data__type_8h_ac6afabdc09a49a433ee19d8a9486056d}{min}}(a,  b)
+\begin{DoxyCompactList}\small\item\em min value \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{data__type_8h_affe776513b24d84b39af8ab0930fef7f}{max}}(a,  b)
+\begin{DoxyCompactList}\small\item\em max value \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{타입정의}
+\begin{DoxyCompactItemize}
+\item 
+typedef uint32\+\_\+t \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}
+\item 
+typedef uint8\+\_\+t \mbox{\hyperlink{data__type_8h_ab8ef12fab634c171394422d0ee8baf94}{byte}}
+\begin{DoxyCompactList}\small\item\em byte type \end{DoxyCompactList}\item 
+typedef uint32\+\_\+t \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}
+\begin{DoxyCompactList}\small\item\em Error message control variation \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{함수}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{data__type_8h_af70115d38d00c595167cdf2d58ac13f3}{char\+\_\+to\+\_\+int}} (\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} char str)
+\begin{DoxyCompactList}\small\item\em Transfer char to integer \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{data__type_8h_a6a92b53ade93eff33af34a4d87449194}{bigint\+\_\+to\+\_\+hex}} (\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}} char \texorpdfstring{$\ast$}{*}str, \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} \mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}src)
+\begin{DoxyCompactList}\small\item\em Convert bigint to hex string \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}} \mbox{\hyperlink{data__type_8h_acb263f4488e27ffa9c4b1b6ac3de21a9}{byte\+\_\+to\+\_\+uint}} (\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} \mbox{\hyperlink{data__type_8h_ab8ef12fab634c171394422d0ee8baf94}{byte}} \texorpdfstring{$\ast$}{*}input, const \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int byte\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Convert \doxylink{data__type_8h_ab8ef12fab634c171394422d0ee8baf94}{byte(array)} to integer \end{DoxyCompactList}\item 
+char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{data__type_8h_ac534a9b8ecb28c7668dc8ee2c379e33b}{int\+\_\+to\+\_\+string}} (\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int num)
+\begin{DoxyCompactList}\small\item\em Convert integer to string \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{매크로 문서화}
+\Hypertarget{data__type_8h_a3024ccd4a9af5109d24e6c57565d74a1}\index{data\_type.h@{data\_type.h}!\_POSIX\_C\_SOURCE@{\_POSIX\_C\_SOURCE}}
+\index{\_POSIX\_C\_SOURCE@{\_POSIX\_C\_SOURCE}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{\_POSIX\_C\_SOURCE}{\_POSIX\_C\_SOURCE}}
+{\footnotesize\ttfamily \label{data__type_8h_a3024ccd4a9af5109d24e6c57565d74a1} 
+\#define \+\_\+\+POSIX\+\_\+\+C\+\_\+\+SOURCE~200809L}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00015}{15}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a5a2a76e18bbd8b8cd9026f1cee18f197}\index{data\_type.h@{data\_type.h}!APPEND@{APPEND}}
+\index{APPEND@{APPEND}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{APPEND}{APPEND}}
+{\footnotesize\ttfamily \label{data__type_8h_a5a2a76e18bbd8b8cd9026f1cee18f197} 
+\#define APPEND~0}
+
+
+
+File append 
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00013}{13}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a9ea567c30062b9bcf35e2fab3978f713}\index{data\_type.h@{data\_type.h}!CAT\_init@{CAT\_init}}
+\index{CAT\_init@{CAT\_init}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{CAT\_init}{CAT\_init}}
+{\footnotesize\ttfamily \label{data__type_8h_a9ea567c30062b9bcf35e2fab3978f713} 
+\#define CAT\+\_\+init~"{}\mbox{[}Cat\mbox{]}"{}}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00024}{24}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a611cc9b5f655508482f3d7a9751c182a}\index{data\_type.h@{data\_type.h}!CLEAR@{CLEAR}}
+\index{CLEAR@{CLEAR}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{CLEAR}{CLEAR}}
+{\footnotesize\ttfamily \label{data__type_8h_a611cc9b5f655508482f3d7a9751c182a} 
+\#define CLEAR~1}
+
+
+
+File clear and write 
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00014}{14}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a99b32512c0caac21bfec3c27e8302d1e}\index{data\_type.h@{data\_type.h}!FROM\_init@{FROM\_init}}
+\index{FROM\_init@{FROM\_init}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{FROM\_init}{FROM\_init}}
+{\footnotesize\ttfamily \label{data__type_8h_a99b32512c0caac21bfec3c27e8302d1e} 
+\#define FROM\+\_\+init~"{}\mbox{[}BI SET FROM\mbox{]}"{}}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00021}{21}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a9d876fc3b1b63ef48ad1b5b059572531}\index{data\_type.h@{data\_type.h}!GET\_LOWER\_init@{GET\_LOWER\_init}}
+\index{GET\_LOWER\_init@{GET\_LOWER\_init}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{GET\_LOWER\_init}{GET\_LOWER\_init}}
+{\footnotesize\ttfamily \label{data__type_8h_a9d876fc3b1b63ef48ad1b5b059572531} 
+\#define GET\+\_\+\+LOWER\+\_\+init~"{}\mbox{[}Get Lower\mbox{]}"{}}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00023}{23}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}\index{data\_type.h@{data\_type.h}!IN@{IN}}
+\index{IN@{IN}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{IN}{IN}}
+{\footnotesize\ttfamily \label{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928} 
+\#define IN}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00019}{19}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_affe776513b24d84b39af8ab0930fef7f}\index{data\_type.h@{data\_type.h}!max@{max}}
+\index{max@{max}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{max}{max}}
+{\footnotesize\ttfamily \label{data__type_8h_affe776513b24d84b39af8ab0930fef7f} 
+\#define max(\begin{DoxyParamCaption}\item[{}]{a}{, }\item[{}]{b}{}\end{DoxyParamCaption})}
+
+{\bfseries 값\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{((a)\ >\ (b)\ ?\ (a)\ :\ (b))}
+
+\end{DoxyCode}
+
+
+max value 
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00050}{50}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a4ce3e2af80a76d816ab7f8567ec4a65a}\index{data\_type.h@{data\_type.h}!MAX\_VALUE@{MAX\_VALUE}}
+\index{MAX\_VALUE@{MAX\_VALUE}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_VALUE}{MAX\_VALUE}}
+{\footnotesize\ttfamily \label{data__type_8h_a4ce3e2af80a76d816ab7f8567ec4a65a} 
+\#define MAX\+\_\+\+VALUE~((1ULL $<$$<$ 32) -\/ 1)}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00030}{30}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_ac6afabdc09a49a433ee19d8a9486056d}\index{data\_type.h@{data\_type.h}!min@{min}}
+\index{min@{min}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{min}{min}}
+{\footnotesize\ttfamily \label{data__type_8h_ac6afabdc09a49a433ee19d8a9486056d} 
+\#define min(\begin{DoxyParamCaption}\item[{}]{a}{, }\item[{}]{b}{}\end{DoxyParamCaption})}
+
+{\bfseries 값\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{((a)\ <\ (b)\ ?\ (a)\ :\ (b))}
+
+\end{DoxyCode}
+
+
+min value 
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00046}{46}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}\index{data\_type.h@{data\_type.h}!OUT@{OUT}}
+\index{OUT@{OUT}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{OUT}{OUT}}
+{\footnotesize\ttfamily \label{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae} 
+\#define OUT}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00018}{18}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a40a569a5654fdb166bde9a91e32bcd08}\index{data\_type.h@{data\_type.h}!seperator@{seperator}}
+\index{seperator@{seperator}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{seperator}{seperator}}
+{\footnotesize\ttfamily \label{data__type_8h_a40a569a5654fdb166bde9a91e32bcd08} 
+\#define seperator~"{}-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/"{}}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00020}{20}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a525e16c8180bd99cd97203fd16461e6f}\index{data\_type.h@{data\_type.h}!SHIFT\_init@{SHIFT\_init}}
+\index{SHIFT\_init@{SHIFT\_init}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{SHIFT\_init}{SHIFT\_init}}
+{\footnotesize\ttfamily \label{data__type_8h_a525e16c8180bd99cd97203fd16461e6f} 
+\#define SHIFT\+\_\+init~"{}\mbox{[}Shift\mbox{]}"{}}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00022}{22}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a9a7ddc73926da069c1afe89920c6daf4}\index{data\_type.h@{data\_type.h}!WORD\_BINARY\_DIV@{WORD\_BINARY\_DIV}}
+\index{WORD\_BINARY\_DIV@{WORD\_BINARY\_DIV}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{WORD\_BINARY\_DIV}{WORD\_BINARY\_DIV}}
+{\footnotesize\ttfamily \label{data__type_8h_a9a7ddc73926da069c1afe89920c6daf4} 
+\#define WORD\+\_\+\+BINARY\+\_\+\+DIV~0}
+
+
+
+Word long division 
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00016}{16}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a57592e50f9aa27528ec8e36e23432ee0}\index{data\_type.h@{data\_type.h}!WORD\_BITS@{WORD\_BITS}}
+\index{WORD\_BITS@{WORD\_BITS}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{WORD\_BITS}{WORD\_BITS}}
+{\footnotesize\ttfamily \label{data__type_8h_a57592e50f9aa27528ec8e36e23432ee0} 
+\#define WORD\+\_\+\+BITS~32}
+
+
+
+Word bits 
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00011}{11}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a2bfc715efa15fc69a91f92f10d9ecaa5}\index{data\_type.h@{data\_type.h}!WORD\_LONG\_DIV@{WORD\_LONG\_DIV}}
+\index{WORD\_LONG\_DIV@{WORD\_LONG\_DIV}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{WORD\_LONG\_DIV}{WORD\_LONG\_DIV}}
+{\footnotesize\ttfamily \label{data__type_8h_a2bfc715efa15fc69a91f92f10d9ecaa5} 
+\#define WORD\+\_\+\+LONG\+\_\+\+DIV~1}
+
+
+
+Word karatsuba division 
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00017}{17}} 번째 라인에서 정의되었습니다.
+
+
+
+\doxysubsection{타입정의 문서화}
+\Hypertarget{data__type_8h_ab8ef12fab634c171394422d0ee8baf94}\index{data\_type.h@{data\_type.h}!byte@{byte}}
+\index{byte@{byte}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{byte}{byte}}
+{\footnotesize\ttfamily \label{data__type_8h_ab8ef12fab634c171394422d0ee8baf94} 
+typedef uint8\+\_\+t \mbox{\hyperlink{data__type_8h_ab8ef12fab634c171394422d0ee8baf94}{byte}}}
+
+
+
+byte type 
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00042}{42}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_af3db70afcfb515a4def0777a954be00d}\index{data\_type.h@{data\_type.h}!msg@{msg}}
+\index{msg@{msg}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{msg}{msg}}
+{\footnotesize\ttfamily \label{data__type_8h_af3db70afcfb515a4def0777a954be00d} 
+typedef uint32\+\_\+t \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}}
+
+
+
+Error message control variation 
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00043}{43}} 번째 라인에서 정의되었습니다.
+
+\Hypertarget{data__type_8h_a19036394f9c80a08fc846c96f668711c}\index{data\_type.h@{data\_type.h}!word@{word}}
+\index{word@{word}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{word}{word}}
+{\footnotesize\ttfamily \label{data__type_8h_a19036394f9c80a08fc846c96f668711c} 
+typedef uint32\+\_\+t \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}}
+
+
+
+\mbox{\hyperlink{data__type_8h_source}{data\+\_\+type.\+h}} 파일의 \mbox{\hyperlink{data__type_8h_source_l00031}{31}} 번째 라인에서 정의되었습니다.
+
+
+
+\doxysubsection{함수 문서화}
+\Hypertarget{data__type_8h_a6a92b53ade93eff33af34a4d87449194}\index{data\_type.h@{data\_type.h}!bigint\_to\_hex@{bigint\_to\_hex}}
+\index{bigint\_to\_hex@{bigint\_to\_hex}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{bigint\_to\_hex()}{bigint\_to\_hex()}}
+{\footnotesize\ttfamily \label{data__type_8h_a6a92b53ade93eff33af34a4d87449194} 
+int bigint\+\_\+to\+\_\+hex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}} char \texorpdfstring{$\ast$}{*}}]{str}{, }\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} \mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{src}{}\end{DoxyParamCaption})}
+
+
+
+Convert bigint to hex string 
+
+
+\begin{DoxyParams}{매개변수}
+{\em src} & bigint structure \\
+\hline
+{\em str} & return string value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{반환값}
+result of integer, FAIL == -\/1 
+\end{DoxyReturn}
+
+
+\mbox{\hyperlink{data__type_8c_source}{data\+\_\+type.\+c}} 파일의 \mbox{\hyperlink{data__type_8c_source_l00031}{31}} 번째 라인에서 정의되었습니다.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordflow}{if}\ (*src\ ==\ NULL)\ \textcolor{keywordflow}{return}\ -\/1;\ \textcolor{comment}{//\ NULL\ 체크}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ 0;}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{int}\ buffer\_size\ =\ 0;}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ format\ =\ NULL;\ \textcolor{comment}{//\ 포맷\ 문자열\ 초기화}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ WORD\_BITS에\ 따른\ 형식과\ 버퍼\ 크기\ 설정}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{data__type_8h_a57592e50f9aa27528ec8e36e23432ee0}{WORD\_BITS}})\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 64:}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{"{}\%016"{}}\ PRIx64;}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ buffer\_size\ =\ 17;}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 32:}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{"{}\%08"{}}\ PRIx32;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ buffer\_size\ =\ 9;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 16:}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{"{}\%04"{}}\ PRIx16;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ buffer\_size\ =\ 5;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 8:}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{"{}\%02"{}}\ PRIx8;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ buffer\_size\ =\ 3;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/2;\ \textcolor{comment}{//\ Unsupported\ WORD\_BITS}}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ 부호\ 처리}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{if}\ ((*src)-\/>sign\ ==\ 1)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ str[idx++]\ =\ \textcolor{charliteral}{'-\/'};}
+\DoxyCodeLine{00063\ \ \ \ \ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ 16진수\ 접두사\ 추가}}
+\DoxyCodeLine{00066\ \ \ \ \ str[idx++]\ =\ \textcolor{charliteral}{'0'};}
+\DoxyCodeLine{00067\ \ \ \ \ str[idx++]\ =\ \textcolor{charliteral}{'x'};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ 각\ 워드\ 값을\ 출력}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ (*src)-\/>word\_len\ -\/\ 1;\ i\ >=\ 0;\ i-\/-\/)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ idx\ +=\ snprintf(\&str[idx],\ buffer\_size,\ format,\ (*src)-\/>a[i]);}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ 문자열\ 종료\ 처리}}
+\DoxyCodeLine{00075\ \ \ \ \ str[idx]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{return}\ idx;\ \textcolor{comment}{//\ 최종\ 문자열\ 길이\ 반환}}
+\DoxyCodeLine{00078\ \}}
+
+\end{DoxyCode}
+이 함수를 호출하는 함수들에 대한 그래프입니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data__type_8h_a6a92b53ade93eff33af34a4d87449194_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{data__type_8h_acb263f4488e27ffa9c4b1b6ac3de21a9}\index{data\_type.h@{data\_type.h}!byte\_to\_uint@{byte\_to\_uint}}
+\index{byte\_to\_uint@{byte\_to\_uint}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{byte\_to\_uint()}{byte\_to\_uint()}}
+{\footnotesize\ttfamily \label{data__type_8h_acb263f4488e27ffa9c4b1b6ac3de21a9} 
+\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}} byte\+\_\+to\+\_\+uint (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} \mbox{\hyperlink{data__type_8h_ab8ef12fab634c171394422d0ee8baf94}{byte}} \texorpdfstring{$\ast$}{*}}]{input}{, }\item[{const \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int}]{byte\+\_\+len}{}\end{DoxyParamCaption})}
+
+
+
+Convert \doxylink{data__type_8h_ab8ef12fab634c171394422d0ee8baf94}{byte(array)} to integer 
+
+
+\begin{DoxyParams}{매개변수}
+{\em input} & byte array \\
+\hline
+{\em byte\+\_\+len} & length of byte array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{반환값}
+word of integer 
+\end{DoxyReturn}
+
+
+\mbox{\hyperlink{data__type_8c_source}{data\+\_\+type.\+c}} 파일의 \mbox{\hyperlink{data__type_8c_source_l00089}{89}} 번째 라인에서 정의되었습니다.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{//\ 입력된\ byte\ 크기가\ 4보다\ 클\ 경우}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordflow}{if}(byte\_len\ >\ 4)\ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00092\ \ \ \ \ \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}\ result\ =\ 0;}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ byte\_len;\ i++)\{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(result\ >\ (\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}})\mbox{\hyperlink{data__type_8h_a4ce3e2af80a76d816ab7f8567ec4a65a}{MAX\_VALUE}})\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ result\ =\ result\ *\ 256\ +\ input[i];}
+\DoxyCodeLine{00096\ \ \ \ \ \}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00098\ \}}
+
+\end{DoxyCode}
+\Hypertarget{data__type_8h_af70115d38d00c595167cdf2d58ac13f3}\index{data\_type.h@{data\_type.h}!char\_to\_int@{char\_to\_int}}
+\index{char\_to\_int@{char\_to\_int}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{char\_to\_int()}{char\_to\_int()}}
+{\footnotesize\ttfamily \label{data__type_8h_af70115d38d00c595167cdf2d58ac13f3} 
+int char\+\_\+to\+\_\+int (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} char}]{str}{}\end{DoxyParamCaption})}
+
+
+
+Transfer char to integer 
+
+
+\begin{DoxyParams}{매개변수}
+{\em str} & string \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{반환값}
+integer 
+\end{DoxyReturn}
+
+
+\mbox{\hyperlink{data__type_8c_source}{data\+\_\+type.\+c}} 파일의 \mbox{\hyperlink{data__type_8c_source_l00011}{11}} 번째 라인에서 정의되었습니다.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordflow}{if}\ (str\ >=\ \textcolor{charliteral}{'0'}\ \&\&\ str\ <=\ \textcolor{charliteral}{'9'})}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ -\/\ \textcolor{charliteral}{'0'};}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (str\ >=\ \textcolor{charliteral}{'A'}\ \&\&\ str\ <=\ \textcolor{charliteral}{'F'})}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ -\/\ \textcolor{charliteral}{'A'}\ +\ 10;}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (str\ >=\ \textcolor{charliteral}{'a'}\ \&\&\ str\ <=\ \textcolor{charliteral}{'f'})}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ -\/\ \textcolor{charliteral}{'a'}\ +\ 10;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00020\ \}}
+
+\end{DoxyCode}
+이 함수를 호출하는 함수들에 대한 그래프입니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data__type_8h_af70115d38d00c595167cdf2d58ac13f3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{data__type_8h_ac534a9b8ecb28c7668dc8ee2c379e33b}\index{data\_type.h@{data\_type.h}!int\_to\_string@{int\_to\_string}}
+\index{int\_to\_string@{int\_to\_string}!data\_type.h@{data\_type.h}}
+\doxysubsubsection{\texorpdfstring{int\_to\_string()}{int\_to\_string()}}
+{\footnotesize\ttfamily \label{data__type_8h_ac534a9b8ecb28c7668dc8ee2c379e33b} 
+char \texorpdfstring{$\ast$}{*} int\+\_\+to\+\_\+string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int}]{num}{}\end{DoxyParamCaption})}
+
+
+
+Convert integer to string 
+
+
+\begin{DoxyParams}{매개변수}
+{\em str} & char array \\
+\hline
+{\em num} & integer \\
+\hline
+\end{DoxyParams}
+
+
+\mbox{\hyperlink{data__type_8c_source}{data\+\_\+type.\+c}} 파일의 \mbox{\hyperlink{data__type_8c_source_l00108}{108}} 번째 라인에서 정의되었습니다.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{char}*\ str\ =\ (\textcolor{keywordtype}{char}*)calloc(12,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{00110\ \ \ \ \ snprintf(str,\ 12,\ \textcolor{stringliteral}{"{}\%d"{}},\ num);}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordflow}{return}\ str;}
+\DoxyCodeLine{00112\ \}}
+
+\end{DoxyCode}
+이 함수를 호출하는 함수들에 대한 그래프입니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=278pt]{data__type_8h_ac534a9b8ecb28c7668dc8ee2c379e33b_icgraph}
+\end{center}
+\end{figure}

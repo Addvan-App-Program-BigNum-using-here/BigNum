@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.12.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>My Project: C:/Kookmin/BigNum/ref/test/util_test.h 소스 파일</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">My Project<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 다음에 의해 생성됨 :  Doxygen 1.12.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','검색',true);
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('util__test_8h_source.html',''); initResizable(true); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">로딩중...</div>
+<div class="SRStatus" id="Searching">검색중...</div>
+<div class="SRStatus" id="NoMatches">일치하는것 없음</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">util_test.h</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="util__test_8h.html">이 파일의 문서화 페이지로 가기</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef UTIL_TEST_H</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define UTIL_TEST_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">//#include &lt;sys/time.h&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">// 윈도우일 때는 time.h 인 것으로 판단</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;time.h&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="util_8h.html">../util.h</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="msg__control_8h.html">../msg_control.h</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="random_8h.html">../random.h</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="operate_8h.html">../operate.h</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="data__type_8h.html">../data_type.h</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="file__io_8h.html">../file_io.h</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="util__test_8h.html#a4aa18bf42d1579a0b9fefffdb07426e8">   17</a></span><span class="preprocessor">#define BITS_SIZE 1024                              </span><span class="comment">// 테스트 비트 크기</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="util__test_8h.html#aa45ae0211cc38e07e46ef6ae29782500">   18</a></span><span class="preprocessor">#define test_word_size BITS_SIZE / WORD_BITS               </span><span class="comment">// 0인 경우 테스트 시 사용되는 word 크기는 랜덤</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="util__test_8h.html#af36e3f74160cd01ac76033d9ed3faab8">   19</a></span><span class="preprocessor">#define test_word_size_limit BITS_SIZE / WORD_BITS          </span><span class="comment">// 랜덤 word 크기 사용 시 제한 범위</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="util__test_8h.html#a50afde1d203c3aa5308ddb6acdffce75">   20</a></span><span class="preprocessor">#define test_size  1000                                   </span><span class="comment">// 테스트 횟수</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="util__test_8h.html#aa37be66a590664e8eb96ca111676819c">   21</a></span><span class="preprocessor">#define barret_word_size test_word_size                </span><span class="comment">// barret N 크기</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a88e3f9264263cfb8b5c791349b8331c5">test_bi_new_delete</a>();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#aed5c82eb530c1fc985aa6f18667c4e88">test_bi_set_from</a>();</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#ae135d3496c0bb3f1207d7fb4edd09fee">test_bi_set_from_base</a>(<a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span>* base);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#ac58f6e7d0a8a3e5008c0bce6fc57a413">test_bi_random</a>();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a67bce099616d0f76cc0e99ee28e99f11">test_bi_add</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_add, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#ac19dab92ada54a39e28df5f64d79c958">test_bi_sub</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_sub, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a7d6919c391df08640842f8acf65f56c3">test_bi_mul</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_mul, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a3a2d234a7c75c63663fcdd1390f14bd7">test_bi_mul_karachuba</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_mul_karachuba, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span>* karachuba_flag);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#ad43a4312291175219d7400aedae7b185">compare_multiplicaiton</a>(<span class="keywordtype">int</span> start_size, <span class="keywordtype">int</span> end_size, <span class="keywordtype">int</span> step_size);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a8678219e98fd670ce5cbbe201792eb4a">compare_squaring</a>(<span class="keywordtype">int</span> start_size, <span class="keywordtype">int</span> end_size, <span class="keywordtype">int</span> step_size);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a79c95d962776aa62c6c498c8debb3014">compare_division</a>(<span class="keywordtype">int</span> start_size, <span class="keywordtype">int</span> end_size, <span class="keywordtype">int</span> step_size);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a0e325bfb3caa73272cdceed16701291f">test_bi_div</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_div, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span>* option);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a867eb64e675d8696acd30e39ecc981c0">test_bi_shift</a>();</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a362ebf56ba1e9cc3805b146108fc1725">test_bi_get_lower</a>();</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a17411e047f90ba2f3a62a55559758996">test_bi_cat</a>();</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a452092571c309f9335ae319d3650cc24">test_bi_squ</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_squ, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a776051f7f3efea5ade55d65300fd85ba">test_bi_squ_karachuba</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_squ_karachuba, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span>* squ_karachuba_flag);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#acf07366897280812ad0c39c27e659b23">test_bi_exp</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span> total_time_exp[3], <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** c, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str);</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a86168b07cdd0ba5892cda51fa44266f9">test_bi_barrett_reduction</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_barret_reduction, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** barret_N, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** barret_T, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str);</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a00d9ff3eed3831b23a22b760d6e596eb">test_bi_gcd</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_div, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str);</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a011e3f8251011041d508a24691ae73c8">test_bi_EEA</a>(<a class="code hl_define" href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a> <span class="keywordtype">double</span>* total_time_div, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** b, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">char</span>* str);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><a class="code hl_typedef" href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a> <a class="code hl_function" href="util__test_8h.html#a855ca0f8abe2733bb405265d69262a8f">test_miller_rabin</a>(<span class="keywordtype">double</span>* total_time_MR , <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <a class="code hl_struct" href="structbigint.html">bigint</a>** a, <a class="code hl_define" href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a> <span class="keywordtype">int</span>* iteration, <span class="keywordtype">char</span>* str);</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="preprocessor">#endif </span><span class="comment">// UTIL_TEST_H</span></div>
+<div class="ttc" id="adata__type_8h_html"><div class="ttname"><a href="data__type_8h.html">data_type.h</a></div></div>
+<div class="ttc" id="adata__type_8h_html_ac2bbd6d630a06a980d9a92ddb9a49928"><div class="ttname"><a href="data__type_8h.html#ac2bbd6d630a06a980d9a92ddb9a49928">IN</a></div><div class="ttdeci">#define IN</div><div class="ttdef"><b>Definition</b> <a href="data__type_8h_source.html#l00019">data_type.h:19</a></div></div>
+<div class="ttc" id="adata__type_8h_html_aec78e7a9e90a406a56f859ee456e8eae"><div class="ttname"><a href="data__type_8h.html#aec78e7a9e90a406a56f859ee456e8eae">OUT</a></div><div class="ttdeci">#define OUT</div><div class="ttdef"><b>Definition</b> <a href="data__type_8h_source.html#l00018">data_type.h:18</a></div></div>
+<div class="ttc" id="adata__type_8h_html_af3db70afcfb515a4def0777a954be00d"><div class="ttname"><a href="data__type_8h.html#af3db70afcfb515a4def0777a954be00d">msg</a></div><div class="ttdeci">uint32_t msg</div><div class="ttdoc">Error message control variation</div><div class="ttdef"><b>Definition</b> <a href="data__type_8h_source.html#l00043">data_type.h:43</a></div></div>
+<div class="ttc" id="afile__io_8h_html"><div class="ttname"><a href="file__io_8h.html">file_io.h</a></div></div>
+<div class="ttc" id="amsg__control_8h_html"><div class="ttname"><a href="msg__control_8h.html">msg_control.h</a></div></div>
+<div class="ttc" id="aoperate_8h_html"><div class="ttname"><a href="operate_8h.html">operate.h</a></div></div>
+<div class="ttc" id="arandom_8h_html"><div class="ttname"><a href="random_8h.html">random.h</a></div></div>
+<div class="ttc" id="astructbigint_html"><div class="ttname"><a href="structbigint.html">bigint</a></div><div class="ttdoc">big num information struct</div><div class="ttdef"><b>Definition</b> <a href="data__type_8h_source.html#l00065">data_type.h:65</a></div></div>
+<div class="ttc" id="autil_8h_html"><div class="ttname"><a href="util_8h.html">util.h</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a00d9ff3eed3831b23a22b760d6e596eb"><div class="ttname"><a href="util__test_8h.html#a00d9ff3eed3831b23a22b760d6e596eb">test_bi_gcd</a></div><div class="ttdeci">msg test_bi_gcd(OUT double *total_time_div, IN bigint **a, IN bigint **b, IN char *str)</div><div class="ttdoc">Test bigint structure GCD operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01419">util_test.c:1419</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a011e3f8251011041d508a24691ae73c8"><div class="ttname"><a href="util__test_8h.html#a011e3f8251011041d508a24691ae73c8">test_bi_EEA</a></div><div class="ttdeci">msg test_bi_EEA(OUT double *total_time_div, IN bigint **a, IN bigint **b, IN char *str)</div><div class="ttdoc">Test bigint structure Extended Eucliean Algorithm operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01461">util_test.c:1461</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a0e325bfb3caa73272cdceed16701291f"><div class="ttname"><a href="util__test_8h.html#a0e325bfb3caa73272cdceed16701291f">test_bi_div</a></div><div class="ttdeci">msg test_bi_div(OUT double *total_time_div, IN bigint **a, IN bigint **b, IN char *str, IN int *option)</div><div class="ttdoc">Test bigint structure Division operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01205">util_test.c:1205</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a17411e047f90ba2f3a62a55559758996"><div class="ttname"><a href="util__test_8h.html#a17411e047f90ba2f3a62a55559758996">test_bi_cat</a></div><div class="ttdeci">msg test_bi_cat()</div><div class="ttdoc">Test bigint structure concatenate operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00545">util_test.c:545</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a362ebf56ba1e9cc3805b146108fc1725"><div class="ttname"><a href="util__test_8h.html#a362ebf56ba1e9cc3805b146108fc1725">test_bi_get_lower</a></div><div class="ttdeci">msg test_bi_get_lower()</div><div class="ttdoc">Test bigint structure get Lower word operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00455">util_test.c:455</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a3a2d234a7c75c63663fcdd1390f14bd7"><div class="ttname"><a href="util__test_8h.html#a3a2d234a7c75c63663fcdd1390f14bd7">test_bi_mul_karachuba</a></div><div class="ttdeci">msg test_bi_mul_karachuba(OUT double *total_time_mul_karachuba, IN bigint **a, IN bigint **b, IN char *str, IN int *karachuba_flag)</div><div class="ttdoc">Test bigint structure Mul operation using Karachuba algorithm</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00951">util_test.c:951</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a452092571c309f9335ae319d3650cc24"><div class="ttname"><a href="util__test_8h.html#a452092571c309f9335ae319d3650cc24">test_bi_squ</a></div><div class="ttdeci">msg test_bi_squ(OUT double *total_time_squ, IN bigint **a, IN char *str)</div><div class="ttdoc">Test bigint structure Squaring operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01252">util_test.c:1252</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a67bce099616d0f76cc0e99ee28e99f11"><div class="ttname"><a href="util__test_8h.html#a67bce099616d0f76cc0e99ee28e99f11">test_bi_add</a></div><div class="ttdeci">msg test_bi_add(OUT double *total_time_add, IN bigint **a, IN bigint **b, IN char *str)</div><div class="ttdoc">Test bigint structure Add operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00851">util_test.c:851</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a776051f7f3efea5ade55d65300fd85ba"><div class="ttname"><a href="util__test_8h.html#a776051f7f3efea5ade55d65300fd85ba">test_bi_squ_karachuba</a></div><div class="ttdeci">msg test_bi_squ_karachuba(OUT double *total_time_squ_karachuba, IN bigint **a, IN char *str, IN int *squ_karachuba_flag)</div><div class="ttdoc">Test bigint structure Squaring operation by using Karachuba algorithm</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01284">util_test.c:1284</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a79c95d962776aa62c6c498c8debb3014"><div class="ttname"><a href="util__test_8h.html#a79c95d962776aa62c6c498c8debb3014">compare_division</a></div><div class="ttdeci">msg compare_division(int start_size, int end_size, int step_size)</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01126">util_test.c:1126</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a7d6919c391df08640842f8acf65f56c3"><div class="ttname"><a href="util__test_8h.html#a7d6919c391df08640842f8acf65f56c3">test_bi_mul</a></div><div class="ttdeci">msg test_bi_mul(OUT double *total_time_mul, IN bigint **a, IN bigint **b, IN char *str)</div><div class="ttdoc">Test bigint structure Mul operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00917">util_test.c:917</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a855ca0f8abe2733bb405265d69262a8f"><div class="ttname"><a href="util__test_8h.html#a855ca0f8abe2733bb405265d69262a8f">test_miller_rabin</a></div><div class="ttdeci">msg test_miller_rabin(double *total_time_MR, IN bigint **a, IN int *iteration, char *str)</div><div class="ttdoc">Test bigint structure Miller Rabin operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01521">util_test.c:1521</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a86168b07cdd0ba5892cda51fa44266f9"><div class="ttname"><a href="util__test_8h.html#a86168b07cdd0ba5892cda51fa44266f9">test_bi_barrett_reduction</a></div><div class="ttdeci">msg test_bi_barrett_reduction(OUT double *total_time_barret_reduction, IN bigint **a, IN bigint **barret_N, IN bigint **barret_T, IN char *str)</div><div class="ttdoc">Test bigint structure Barret Reduction operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01384">util_test.c:1384</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a8678219e98fd670ce5cbbe201792eb4a"><div class="ttname"><a href="util__test_8h.html#a8678219e98fd670ce5cbbe201792eb4a">compare_squaring</a></div><div class="ttdeci">msg compare_squaring(int start_size, int end_size, int step_size)</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01060">util_test.c:1060</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a867eb64e675d8696acd30e39ecc981c0"><div class="ttname"><a href="util__test_8h.html#a867eb64e675d8696acd30e39ecc981c0">test_bi_shift</a></div><div class="ttdeci">msg test_bi_shift()</div><div class="ttdoc">Test bigint structure Shift operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00342">util_test.c:342</a></div></div>
+<div class="ttc" id="autil__test_8h_html_a88e3f9264263cfb8b5c791349b8331c5"><div class="ttname"><a href="util__test_8h.html#a88e3f9264263cfb8b5c791349b8331c5">test_bi_new_delete</a></div><div class="ttdeci">msg test_bi_new_delete()</div><div class="ttdoc">Test bigint structure allocation and deallocation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00297">util_test.c:297</a></div></div>
+<div class="ttc" id="autil__test_8h_html_ac19dab92ada54a39e28df5f64d79c958"><div class="ttname"><a href="util__test_8h.html#ac19dab92ada54a39e28df5f64d79c958">test_bi_sub</a></div><div class="ttdeci">msg test_bi_sub(OUT double *total_time_sub, IN bigint **a, IN bigint **b, IN char *str)</div><div class="ttdoc">Test bigint structure Sub operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00884">util_test.c:884</a></div></div>
+<div class="ttc" id="autil__test_8h_html_ac58f6e7d0a8a3e5008c0bce6fc57a413"><div class="ttname"><a href="util__test_8h.html#ac58f6e7d0a8a3e5008c0bce6fc57a413">test_bi_random</a></div><div class="ttdeci">msg test_bi_random()</div><div class="ttdoc">Test bigint structure set random</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00810">util_test.c:810</a></div></div>
+<div class="ttc" id="autil__test_8h_html_acf07366897280812ad0c39c27e659b23"><div class="ttname"><a href="util__test_8h.html#acf07366897280812ad0c39c27e659b23">test_bi_exp</a></div><div class="ttdeci">msg test_bi_exp(OUT double total_time_exp[3], IN bigint **a, IN bigint **b, IN bigint **c, IN char *str)</div><div class="ttdoc">Test bigint structure Exponentional operation</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l01316">util_test.c:1316</a></div></div>
+<div class="ttc" id="autil__test_8h_html_ad43a4312291175219d7400aedae7b185"><div class="ttname"><a href="util__test_8h.html#ad43a4312291175219d7400aedae7b185">compare_multiplicaiton</a></div><div class="ttdeci">msg compare_multiplicaiton(int start_size, int end_size, int step_size)</div><div class="ttdoc">Test classic and Karachuba algorithm same value</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00984">util_test.c:984</a></div></div>
+<div class="ttc" id="autil__test_8h_html_ae135d3496c0bb3f1207d7fb4edd09fee"><div class="ttname"><a href="util__test_8h.html#ae135d3496c0bb3f1207d7fb4edd09fee">test_bi_set_from_base</a></div><div class="ttdeci">msg test_bi_set_from_base(IN int *base)</div><div class="ttdoc">Test bigint structure set content from array and string in each base</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00754">util_test.c:754</a></div></div>
+<div class="ttc" id="autil__test_8h_html_aed5c82eb530c1fc985aa6f18667c4e88"><div class="ttname"><a href="util__test_8h.html#aed5c82eb530c1fc985aa6f18667c4e88">test_bi_set_from</a></div><div class="ttdeci">msg test_bi_set_from()</div><div class="ttdoc">Test bigint structure set content from array and string</div><div class="ttdef"><b>Definition</b> <a href="util__test_8c_source.html#l00651">util_test.c:651</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_c773687d3ec38c771b6bf4860abcb0ae.html">ref</a></li><li class="navelem"><a class="el" href="dir_1627a1e5d374d6bff5c081d3b8645d3b.html">test</a></li><li class="navelem"><a class="el" href="util__test_8h.html">util_test.h</a></li>
+    <li class="footer">다음에 의해 생성됨 :  <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+  </ul>
+</div>
+</body>
+</html>

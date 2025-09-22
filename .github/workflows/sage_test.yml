@@ -12,15 +12,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
       - name: Cache SageMath
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /usr/local/sage
           key: ${{ runner.os }}-sagemath-${{ hashFiles('**/requirements.txt') }}

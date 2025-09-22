@@ -26,11 +26,11 @@ ifeq ($(OS),Windows_NT)
     SHARED_PREFIX =
     EXE_EXT = .exe
     RM = del /Q /F
-    CP = copy
+    CP = cp 
     MKDIR = mkdir
     TOUCH = type nul >
     CFLAGS = -Wall -O3  -Wextra -std=c99 -I..
-    TEST_RUN_CMD = set "PATH=$(LIB_DIR);$(PATH)" && .\$(TEST_PROGRAM)
+    TEST_RUN_CMD = set "PATH=$(LIB_DIR);$(PATH)" && ./$(TEST_PROGRAM)
 else
     UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Linux)

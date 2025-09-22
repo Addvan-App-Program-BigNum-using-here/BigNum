@@ -1,0 +1,363 @@
+\doxysection{crypto.\+c}
+\hypertarget{crypto_8c_source}{}\label{crypto_8c_source}\index{C:/Kookmin/BigNum/ref/test/crypto.c@{C:/Kookmin/BigNum/ref/test/crypto.c}}
+\mbox{\hyperlink{crypto_8c}{이 파일의 문서화 페이지로 가기}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{crypto_8h}{crypto.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00003}\mbox{\hyperlink{crypto_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{00003}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{crypto_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}}()\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00004}00004\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00005}00005\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 10;\ i++)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00006}00006\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%dth\ test\(\backslash\)n"{}},\ i);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00007}00007\ \textcolor{comment}{//\ \ \ \ \ \ \ \ result\_msg\ =\ RSA();}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00008}00008\ \ \ \ \ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{crypto_8c_ab562b3e0303dc88f58ca276bbef0d1f6}{RSA\_CRT}}();}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00009}00009\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{msg__control_8c_ae6940477c22bac3f362f1d443f0c52ce}{log\_msg}}(result\_msg);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00010}00010\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00011}00011\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00012}00012\ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00014}00014\ \textcolor{comment}{//\ BITS\_SIZE는\ 헤더파일에서\ 수정\ -\/>\ 나중에\ 변수로\ 코드\ 변경\ 필요}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00015}\mbox{\hyperlink{crypto_8c_a8bc543c778e0d5ad9e631581a463b5dc}{00015}}\ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ \mbox{\hyperlink{crypto_8c_a8bc543c778e0d5ad9e631581a463b5dc}{RSA}}()\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00016}00016\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea390354535432d86570f0d4032bb62a24}{RSA\_FAIL}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00018}00018\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ N\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00019}00019\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ e\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00020}00020\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ d\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00021}00021\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ c\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00022}00022\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ m\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00023}00023\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ m2\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00025}00025\ \ \ \ \ \textcolor{comment}{//\ key\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00026}00026\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{crypto_8c_addc8b62e8109ce1975185328561da249}{RSA\_KeyGEN}}(\&N,\ \&e,\ \&d);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00027}00027\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea03d59742b04d02ce47940beb9c487235}{RSA\_KEYGEN\_SUCCESS}})\ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00029}00029\ \ \ \ \ \textcolor{comment}{//\ 랜덤으로\ 메시지\ 생성\ (사실\ 사용자가\ 임의로\ 넣는\ 메시지\ 입력\ 값에\ 대한\ 예외처리\ 해야\ 함)\ -\/>\ 수도\ 코드\ 2,\ 3번\ 코드}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00030}00030\ \ \ \ \ \textcolor{comment}{//\ M\ <\ N\ 조건\ 만족해야\ 함\ -\/>\ 임의로\ 설정}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00031}00031\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{random_8c_af66b974293f40df41679c5907fcd4a13}{bi\_get\_random}}(\&m,\ N-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a7ccf1c1c33eca9460b9aa8b207d18862a4fd9cd910f2305d0cd8fa6992a29e452}{BI\_GET\_RANDOM\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00033}00033\ \ \ \ \ m-\/>\mbox{\hyperlink{structbigint_a31115409e89dee9221cbe121bfda89b0}{sign}}\ =\ 0;\ \textcolor{comment}{//\ 메시지는\ 양수이기\ 때문에}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00035}00035\ \ \ \ \ \textcolor{comment}{//\ 암호화}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00036}00036\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{crypto_8c_abd9179882e6e854d36699d73d2d0a88e}{RSA\_ENC}}(\&c,\ \&m,\ \&e,\ \&N);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea6cd7cb4ee1f3249ef064957dfb43b740}{RSA\_ENC\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00039}00039\ \ \ \ \ \textcolor{comment}{//\ 복호화}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00040}00040\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{crypto_8c_a27d6f914e03dd1a113fb6c3d4c2608a5}{RSA\_DEC}}(\&m2,\ \&c,\ \&d,\ \&N);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aeaad6c8b841caeb65b522569d1152fc7e6}{RSA\_DEC\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{util_8c_a5e738796590a836f2cf66860509f1476}{bi\_compare}}(\&m,\ \&m2)\ !=\ 0)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00044}00044\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}M\ :\ "{}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00045}00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{util_8c_a2785911d77f3a98044d1db56704422a8}{bi\_print}}(\&m,\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00046}00046\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}M2\ :\ "{}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00047}00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{util_8c_a2785911d77f3a98044d1db56704422a8}{bi\_print}}(\&m2,\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00048}00048\ \ \ \ \ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea9c1cb712ef36418c050e8290f474526b}{RSA\_MISSMATCH}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00050}00050\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00052}00052\ \ \ \ \ printf(\textcolor{stringliteral}{"{}M\ :\ "{}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00053}00053\ \ \ \ \ \mbox{\hyperlink{util_8c_a2785911d77f3a98044d1db56704422a8}{bi\_print}}(\&m,\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00054}00054\ \ \ \ \ printf(\textcolor{stringliteral}{"{}M2\ :\ "{}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00055}00055\ \ \ \ \ \mbox{\hyperlink{util_8c_a2785911d77f3a98044d1db56704422a8}{bi\_print}}(\&m2,\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00057}00057\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea26428f8f85766742229ffcc8d715d05b}{RSA\_SUCCESS}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00059}00059\ EXIT\_RSA:}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00060}00060\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&N);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00061}00061\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&e);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00062}00062\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&d);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00063}00063\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&c);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00064}00064\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&m);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00065}00065\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&m2);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00066}00066\ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00067}00067\ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00069}\mbox{\hyperlink{crypto_8c_ab562b3e0303dc88f58ca276bbef0d1f6}{00069}}\ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ \mbox{\hyperlink{crypto_8c_ab562b3e0303dc88f58ca276bbef0d1f6}{RSA\_CRT}}()\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00070}00070\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea4c3eff95e991d0a785142696e95a004b}{RSA\_CRT\_FAIL}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00072}00072\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ N\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00073}00073\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ p\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00074}00074\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ q\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00075}00075\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ e\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00076}00076\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ d\_p\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00077}00077\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ d\_q\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00078}00078\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ q\_inv\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00079}00079\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ c\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00080}00080\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ m\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00081}00081\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ m2\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00083}00083\ \ \ \ \ \textcolor{comment}{//\ key\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00084}00084\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{crypto_8c_a95613d095c8511607852947efaae4bb3}{RSA\_CRT\_KeyGEN}}(\&N,\ \&p,\ \&q,\ \&e,\ \&d\_p,\ \&d\_q,\ \&q\_inv);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea03d59742b04d02ce47940beb9c487235}{RSA\_KEYGEN\_SUCCESS}})\ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00087}00087\ \ \ \ \ \textcolor{comment}{//\ 랜덤으로\ 메시지\ 생성\ (사실\ 사용자가\ 임의로\ 넣는\ 메시지\ 입력\ 값에\ 대한\ 예외처리\ 해야\ 함)\ -\/>\ 수도\ 코드\ 2,\ 3번\ 코드}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00088}00088\ \ \ \ \ \textcolor{comment}{//\ M\ <\ N\ 조건\ 만족해야\ 함\ -\/>\ 임의로\ 설정}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00089}00089\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{random_8c_af66b974293f40df41679c5907fcd4a13}{bi\_get\_random}}(\&m,\ N-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a7ccf1c1c33eca9460b9aa8b207d18862a4fd9cd910f2305d0cd8fa6992a29e452}{BI\_GET\_RANDOM\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00091}00091\ \ \ \ \ m-\/>\mbox{\hyperlink{structbigint_a31115409e89dee9221cbe121bfda89b0}{sign}}\ =\ 0;\ \textcolor{comment}{//\ 메시지는\ 양수이기\ 때문에}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00093}00093\ \ \ \ \ \textcolor{comment}{//\ 암호화}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00094}00094\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{crypto_8c_abd9179882e6e854d36699d73d2d0a88e}{RSA\_ENC}}(\&c,\ \&m,\ \&e,\ \&N);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00095}00095\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea6cd7cb4ee1f3249ef064957dfb43b740}{RSA\_ENC\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00097}00097\ \ \ \ \ \textcolor{comment}{//\ 복호화}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00098}00098\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{crypto_8c_ad7659368a14eeba8e0ff85e4baa11fa0}{RSA\_CRT\_DEC}}(\&m2,\ \&N,\ \&c,\ \&p,\ \&q,\ \&d\_p,\ \&d\_q,\ \&q\_inv);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00099}00099\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aeaad6c8b841caeb65b522569d1152fc7e6}{RSA\_DEC\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00101}00101\ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{util_8c_a5e738796590a836f2cf66860509f1476}{bi\_compare}}(\&m,\ \&m2)\ !=\ 0)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00102}00102\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}M\ :\ "{}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00103}00103\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{util_8c_a2785911d77f3a98044d1db56704422a8}{bi\_print}}(\&m,\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00104}00104\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}M2\ :\ "{}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00105}00105\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{util_8c_a2785911d77f3a98044d1db56704422a8}{bi\_print}}(\&m2,\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00106}00106\ \ \ \ \ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea9c1cb712ef36418c050e8290f474526b}{RSA\_MISSMATCH}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00108}00108\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00110}00110\ \ \ \ \ printf(\textcolor{stringliteral}{"{}M\ :\ "{}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00111}00111\ \ \ \ \ \mbox{\hyperlink{util_8c_a2785911d77f3a98044d1db56704422a8}{bi\_print}}(\&m,\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00112}00112\ \ \ \ \ printf(\textcolor{stringliteral}{"{}M2\ :\ "{}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00113}00113\ \ \ \ \ \mbox{\hyperlink{util_8c_a2785911d77f3a98044d1db56704422a8}{bi\_print}}(\&m2,\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00115}00115\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea26428f8f85766742229ffcc8d715d05b}{RSA\_SUCCESS}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00117}00117\ EXIT\_RSA:}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00118}00118\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&N);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00119}00119\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&p);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00120}00120\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&q);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00121}00121\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&e);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00122}00122\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&d\_p);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00123}00123\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&d\_q);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00124}00124\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&q\_inv);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00125}00125\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&c);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00126}00126\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&m);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00127}00127\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&m2);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00128}00128\ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00129}00129\ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00133}\mbox{\hyperlink{crypto_8c_addc8b62e8109ce1975185328561da249}{00133}}\ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ \mbox{\hyperlink{crypto_8c_addc8b62e8109ce1975185328561da249}{RSA\_KeyGEN}}(\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ n,\ \mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ e,\ \mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ d)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00134}00134\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea77a5de6590180feabe5e6f13eae0e869}{RSA\_KEYGEN\_FAIL}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00136}00136\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ p\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00137}00137\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ q\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00138}00138\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ phi\_n\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00139}00139\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ one\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00140}00140\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ p\_minus\_1\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00141}00141\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ q\_minus\_1\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00142}00142\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ temp\ =\ NULL;\ \textcolor{comment}{//\ 이거\ gcd\ 받는\ 건데\ 나중에\ 위에서\ 안쓰는\ 변수로\ 대체\ 가능}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00143}00143\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ gcd\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00146}00146\ \ \ \ \ \textcolor{comment}{//\ 1\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00147}00147\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a891efea91ee2744c040ea2e20118044c}{bi\_new}}(\&one,\ 1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00148}00148\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a081d5966da9b9797b9400597b64ba5e4}{BI\_ALLOC\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00149}00149\ \ \ \ \ one-\/>\mbox{\hyperlink{structbigint_aa7bf9ddbc114158df55f1bf99a52a3f4}{a}}[0]\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00151}00151\ \ \ \ \ \textcolor{comment}{//\ p,\ q\ 값\ 설정}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00152}00152\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a679997849b52e3dda9725bfee6a738e9}{bi\_set\_from\_string}}(\&p,\ \textcolor{stringliteral}{"{}837850864afe0c2123f5a751ce9599d62a235bf914d8403f25c2e199f40c48dbbc34f1ac0331b0065688d8841017fe3607fa836378a9b749f30e88c3139ad17447b18fa90d5704ae449dff10110f476ea5bf2ea41b6c4c257484c954b5148c496295a628398b8e658b4a3f306ab6749014ba20ec63963336468afae9ec5f6cfd"{}},\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a9cb70368194d8f3759c3f35180b017b5}{BI\_SET\_STRING\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00154}00154\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a679997849b52e3dda9725bfee6a738e9}{bi\_set\_from\_string}}(\&q,\ \textcolor{stringliteral}{"{}956d6496569cf52c5a40d3b3bfdfee0182d50b85f064b7a65a0071ddc8a936c632ea5f15bbd88f0e27aedb47b3ff2ace5b499769fbd7a7b582fd4c250d112b5a6773727060542ba8b728dd8a3a96d75a3d9482aceb8f070408de2a2019801af7c7e36900264bbdb9d5eae55d3fc1583e2b701e91c2af95e839826579191e932b"{}},\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00155}00155\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a9cb70368194d8f3759c3f35180b017b5}{BI\_SET\_STRING\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00157}00157\ \ \ \ \ \textcolor{comment}{//\ p-\/1,\ q-\/1\ 계산}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00158}00158\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_ad9088f12782b1e737d0f747122ec7306}{bi\_sub}}(\&p\_minus\_1,\ \&p,\ \&one);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00159}00159\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a44b4bfd7e5aa52892939931c57d0e852}{BI\_SUB\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00160}00160\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_ad9088f12782b1e737d0f747122ec7306}{bi\_sub}}(\&q\_minus\_1,\ \&q,\ \&one);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00161}00161\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a44b4bfd7e5aa52892939931c57d0e852}{BI\_SUB\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00163}00163\ \ \ \ \ \textcolor{comment}{//\ phi\_n\ 계산}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00164}00164\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a8016ee509cabeef9058ddd74ed060dc8}{bi\_mul\_karachuba}}(\&phi\_n,\ \&p\_minus\_1,\ \&q\_minus\_1,\ p\_minus\_1-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ /\ \mbox{\hyperlink{operate_8h_a626bc8ec68d573e6819fd15bc2e0063c}{mul\_karachuba\_ratio}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191af0dfdbcfebdf42f972708644090f3f82}{BI\_MUL\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00167}00167\ \ \ \ \ \textcolor{comment}{//\ n\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00168}00168\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a8016ee509cabeef9058ddd74ed060dc8}{bi\_mul\_karachuba}}(n,\ \&p,\ \&q,\ p-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ /\ \mbox{\hyperlink{operate_8h_a626bc8ec68d573e6819fd15bc2e0063c}{mul\_karachuba\_ratio}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00169}00169\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191af0dfdbcfebdf42f972708644090f3f82}{BI\_MUL\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00171}00171\ \ \ \ \ \textcolor{comment}{//\ e\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00172}00172\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a679997849b52e3dda9725bfee6a738e9}{bi\_set\_from\_string}}(e,\ \textcolor{stringliteral}{"{}10001"{}},\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00173}00173\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a9cb70368194d8f3759c3f35180b017b5}{BI\_SET\_STRING\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00175}00175\ \ \ \ \ \textcolor{comment}{//\ 생성된\ e가\ gcd(phi\_n,\ e)\ =\ 1을\ 만족해야\ 함.\ 현재\ e는\ 10001로\ 소수이므로\ 만족,\ 나중에\ 임의의\ p,\ q에\ 대해도\ 만족하도록\ 수정}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00176}00176\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a6180a4ed6a63b851c480e1f86e1e36c0}{bi\_gcd}}(\&gcd,\ e,\ \&phi\_n);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00177}00177\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191aa24652bb26c8b00c5e49716016685c03}{BI\_GCD\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00178}00178\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00179}00179\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a5e738796590a836f2cf66860509f1476}{bi\_compare}}(\&gcd,\ \&one);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00180}00180\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ 0)\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00181}00181\ \ \ \ \ \textcolor{comment}{//\ 여기에\ 나중에\ 만족\ 안할\ 경우\ 로직\ 구현,\ 현재는\ 만족하는\ 경우만\ 구현}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00183}00183\ \ \ \ \ \textcolor{comment}{//\ d\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00184}00184\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a3de396be85cbab33de41e2b6d0571422}{bi\_EEA}}(\&gcd,\ \&temp,\ d,\ \&phi\_n,\ e);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00185}00185\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a4d237444cf85a04278577d2ec899e990}{BI\_EEA\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00186}00186\ \ \ \ \ \textcolor{keywordflow}{if}((*d)-\/>sign)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00187}00187\ \ \ \ \ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a65d802178277a65b141b30601cddcdec}{bi\_add}}(d,\ d,\ \&phi\_n);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2aeecf0735a3c9390495a08ee84f27890a}{BI\_ADD\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00189}00189\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00191}00191\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea03d59742b04d02ce47940beb9c487235}{RSA\_KEYGEN\_SUCCESS}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00193}00193\ EXIT\_RSA\_KEYGEN:}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00194}00194\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&p);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00195}00195\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&q);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00196}00196\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&phi\_n);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00197}00197\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&one);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00198}00198\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&p\_minus\_1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00199}00199\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&q\_minus\_1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00200}00200\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&temp);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00201}00201\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&gcd);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00203}00203\ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00204}00204\ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00206}\mbox{\hyperlink{crypto_8c_abd9179882e6e854d36699d73d2d0a88e}{00206}}\ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ \mbox{\hyperlink{crypto_8c_abd9179882e6e854d36699d73d2d0a88e}{RSA\_ENC}}(\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ c,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ m,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ e,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ N)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00207}00207\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea22446ad2f5e72d055353d78f18fa74b4}{RSA\_ENC\_FAIL}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00209}00209\ \ \ \ \ \textcolor{comment}{//\ m\string^e\ mod\ N\ 계산}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00210}00210\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a5913dcaf66a5fcb78eaa2711b4c93535}{bi\_exp\_L\_TO\_R}}(c,\ m,\ e,\ N);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00211}00211\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aff4d195f5d670e1ecdaa5b1f709bebcca810536fa1481dfaa192971c671cb873e}{BI\_EXP\_L\_TO\_R\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00213}00213\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea6cd7cb4ee1f3249ef064957dfb43b740}{RSA\_ENC\_SUCCESS}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00214}00214\ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00215}00215\ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00217}\mbox{\hyperlink{crypto_8c_a27d6f914e03dd1a113fb6c3d4c2608a5}{00217}}\ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ \mbox{\hyperlink{crypto_8c_a27d6f914e03dd1a113fb6c3d4c2608a5}{RSA\_DEC}}(\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ m,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ c,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ d,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ N)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00218}00218\ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{util_8c_a5e738796590a836f2cf66860509f1476}{bi\_compare}}(c,\ N)\ >=\ 0)\ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aeab977595cd244895033dfe5dd1aab8623}{RSA\_DEC\_FAIL}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00219}00219\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aeab977595cd244895033dfe5dd1aab8623}{RSA\_DEC\_FAIL}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00221}00221\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a5913dcaf66a5fcb78eaa2711b4c93535}{bi\_exp\_L\_TO\_R}}(m,\ c,\ d,\ N);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00222}00222\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aff4d195f5d670e1ecdaa5b1f709bebcca810536fa1481dfaa192971c671cb873e}{BI\_EXP\_L\_TO\_R\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00224}00224\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aeaad6c8b841caeb65b522569d1152fc7e6}{RSA\_DEC\_SUCCESS}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00226}00226\ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00228}\mbox{\hyperlink{crypto_8c_a95613d095c8511607852947efaae4bb3}{00228}}\ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ \mbox{\hyperlink{crypto_8c_a95613d095c8511607852947efaae4bb3}{RSA\_CRT\_KeyGEN}}(\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ n,\ \mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ p,\ \mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ q,\ \mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ e,\ \mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ d\_p,\ \mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ d\_q,\ \mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ q\_inv)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00229}00229\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea77a5de6590180feabe5e6f13eae0e869}{RSA\_KEYGEN\_FAIL}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00231}00231\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ d\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00232}00232\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ phi\_n\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00233}00233\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ one\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00234}00234\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ p\_minus\_1\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00235}00235\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ q\_minus\_1\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00236}00236\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ temp\ =\ NULL;\ \textcolor{comment}{//\ 이거\ gcd\ 받는\ 건데\ 나중에\ 위에서\ 안쓰는\ 변수로\ 대체\ 가능}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00237}00237\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ gcd\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00240}00240\ \ \ \ \ \textcolor{comment}{//\ 1\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00241}00241\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a891efea91ee2744c040ea2e20118044c}{bi\_new}}(\&one,\ 1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00242}00242\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a081d5966da9b9797b9400597b64ba5e4}{BI\_ALLOC\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00243}00243\ \ \ \ \ one-\/>\mbox{\hyperlink{structbigint_aa7bf9ddbc114158df55f1bf99a52a3f4}{a}}[0]\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00245}00245\ \ \ \ \ \textcolor{comment}{//\ p,\ q\ 값\ 설정}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00246}00246\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a679997849b52e3dda9725bfee6a738e9}{bi\_set\_from\_string}}(p,\ \textcolor{stringliteral}{"{}837850864afe0c2123f5a751ce9599d62a235bf914d8403f25c2e199f40c48dbbc34f1ac0331b0065688d8841017fe3607fa836378a9b749f30e88c3139ad17447b18fa90d5704ae449dff10110f476ea5bf2ea41b6c4c257484c954b5148c496295a628398b8e658b4a3f306ab6749014ba20ec63963336468afae9ec5f6cfd"{}},\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a9cb70368194d8f3759c3f35180b017b5}{BI\_SET\_STRING\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00248}00248\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a679997849b52e3dda9725bfee6a738e9}{bi\_set\_from\_string}}(q,\ \textcolor{stringliteral}{"{}956d6496569cf52c5a40d3b3bfdfee0182d50b85f064b7a65a0071ddc8a936c632ea5f15bbd88f0e27aedb47b3ff2ace5b499769fbd7a7b582fd4c250d112b5a6773727060542ba8b728dd8a3a96d75a3d9482aceb8f070408de2a2019801af7c7e36900264bbdb9d5eae55d3fc1583e2b701e91c2af95e839826579191e932b"{}},\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00249}00249\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a9cb70368194d8f3759c3f35180b017b5}{BI\_SET\_STRING\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00251}00251\ \ \ \ \ \textcolor{comment}{//\ p-\/1,\ q-\/1\ 계산}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00252}00252\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_ad9088f12782b1e737d0f747122ec7306}{bi\_sub}}(\&p\_minus\_1,\ p,\ \&one);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a44b4bfd7e5aa52892939931c57d0e852}{BI\_SUB\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00254}00254\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_ad9088f12782b1e737d0f747122ec7306}{bi\_sub}}(\&q\_minus\_1,\ q,\ \&one);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00255}00255\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a44b4bfd7e5aa52892939931c57d0e852}{BI\_SUB\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00257}00257\ \ \ \ \ \textcolor{comment}{//\ phi\_n\ 계산}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00258}00258\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a8016ee509cabeef9058ddd74ed060dc8}{bi\_mul\_karachuba}}(\&phi\_n,\ \&p\_minus\_1,\ \&q\_minus\_1,\ p\_minus\_1-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}}\ /\ \mbox{\hyperlink{operate_8h_a626bc8ec68d573e6819fd15bc2e0063c}{mul\_karachuba\_ratio}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00259}00259\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191af0dfdbcfebdf42f972708644090f3f82}{BI\_MUL\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00261}00261\ \ \ \ \ \textcolor{comment}{//\ n\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00262}00262\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a8016ee509cabeef9058ddd74ed060dc8}{bi\_mul\_karachuba}}(n,\ p,\ q,\ (*p)-\/>word\_len\ /\ \mbox{\hyperlink{operate_8h_a626bc8ec68d573e6819fd15bc2e0063c}{mul\_karachuba\_ratio}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00263}00263\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191af0dfdbcfebdf42f972708644090f3f82}{BI\_MUL\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00265}00265\ \ \ \ \ \textcolor{comment}{//\ e\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00266}00266\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a679997849b52e3dda9725bfee6a738e9}{bi\_set\_from\_string}}(e,\ \textcolor{stringliteral}{"{}10001"{}},\ 16);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00267}00267\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a9cb70368194d8f3759c3f35180b017b5}{BI\_SET\_STRING\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00268}00268\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00269}00269\ \ \ \ \ \textcolor{comment}{//\ 생성된\ e가\ gcd(phi\_n,\ e)\ =\ 1을\ 만족해야\ 함.\ 현재\ e는\ 10001로\ 소수이므로\ 만족,\ 나중에\ 임의의\ p,\ q에\ 대해도\ 만족하도록\ 수정}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00270}00270\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a6180a4ed6a63b851c480e1f86e1e36c0}{bi\_gcd}}(\&gcd,\ e,\ \&phi\_n);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00271}00271\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191aa24652bb26c8b00c5e49716016685c03}{BI\_GCD\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00273}00273\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{util_8c_a5e738796590a836f2cf66860509f1476}{bi\_compare}}(\&gcd,\ \&one);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00274}00274\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ 0)\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00275}00275\ \ \ \ \ \textcolor{comment}{//\ 여기에\ 나중에\ 만족\ 안할\ 경우\ 로직\ 구현,\ 현재는\ 만족하는\ 경우만\ 구현}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00277}00277\ \ \ \ \ \textcolor{comment}{//\ d\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00278}00278\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a3de396be85cbab33de41e2b6d0571422}{bi\_EEA}}(\&gcd,\ \&temp,\ \&d,\ \&phi\_n,\ e);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00279}00279\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a4d237444cf85a04278577d2ec899e990}{BI\_EEA\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00280}00280\ \ \ \ \ \textcolor{keywordflow}{if}(d-\/>\mbox{\hyperlink{structbigint_a31115409e89dee9221cbe121bfda89b0}{sign}})\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00281}00281\ \ \ \ \ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a65d802178277a65b141b30601cddcdec}{bi\_add}}(\&d,\ \&d,\ \&phi\_n);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00282}00282\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2aeecf0735a3c9390495a08ee84f27890a}{BI\_ADD\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00283}00283\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00285}00285\ \ \ \ \ \textcolor{comment}{//\ d\_p생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00286}00286\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a882a30d3cc753cb91b6e4d7a3789389c}{bi\_div}}(\&temp,\ d\_p,\ \&d,\ \&p\_minus\_1,\ 1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00287}00287\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a24319aea2082d94a6819dad47f3f3108}{BI\_DIV\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00288}00288\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00289}00289\ \ \ \ \ \textcolor{comment}{//\ d\_q\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00290}00290\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a882a30d3cc753cb91b6e4d7a3789389c}{bi\_div}}(\&temp,\ d\_q,\ \&d,\ \&q\_minus\_1,\ 1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00291}00291\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a24319aea2082d94a6819dad47f3f3108}{BI\_DIV\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00293}00293\ \ \ \ \ \textcolor{comment}{//\ q\_inv\ 생성}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00294}00294\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a3de396be85cbab33de41e2b6d0571422}{bi\_EEA}}(\&gcd,\ \&temp,\ q\_inv,\ p,\ q);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00295}00295\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a4d237444cf85a04278577d2ec899e990}{BI\_EEA\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00296}00296\ \ \ \ \ \textcolor{keywordflow}{if}((*q\_inv)-\/>sign)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00297}00297\ \ \ \ \ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a65d802178277a65b141b30601cddcdec}{bi\_add}}(q\_inv,\ q\_inv,\ p);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00298}00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2aeecf0735a3c9390495a08ee84f27890a}{BI\_ADD\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{goto}\ EXIT\_RSA\_KEYGEN;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00299}00299\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00301}00301\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aea03d59742b04d02ce47940beb9c487235}{RSA\_KEYGEN\_SUCCESS}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00302}00302\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00303}00303\ EXIT\_RSA\_KEYGEN:}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00304}00304\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&phi\_n);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00305}00305\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&one);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00306}00306\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&p\_minus\_1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00307}00307\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&q\_minus\_1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00308}00308\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&temp);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00309}00309\ \ \ \ \ \mbox{\hyperlink{util_8c_a84d3065789f8df11fe043e0323853ee1}{bi\_delete}}(\&gcd);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00311}00311\ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00312}00312\ \}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00314}\mbox{\hyperlink{crypto_8c_ad7659368a14eeba8e0ff85e4baa11fa0}{00314}}\ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ \mbox{\hyperlink{crypto_8c_ad7659368a14eeba8e0ff85e4baa11fa0}{RSA\_CRT\_DEC}}(\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ m,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ n,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ c,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ p,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ q,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ d\_p,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ d\_q,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ q\_inv)\{}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00315}00315\ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{util_8c_a5e738796590a836f2cf66860509f1476}{bi\_compare}}(c,\ n)\ >=\ 0)\ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aeab977595cd244895033dfe5dd1aab8623}{RSA\_DEC\_FAIL}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00316}00316\ \ \ \ \ \mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}}\ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aeab977595cd244895033dfe5dd1aab8623}{RSA\_DEC\_FAIL}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00318}00318\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ m\_p\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00319}00319\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ m\_q\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00320}00320\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ temp\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00321}00321\ \ \ \ \ \mbox{\hyperlink{structbigint}{bigint}}*\ mul\_temp\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00323}00323\ \ \ \ \ \textcolor{comment}{//\ m\_p\ =\ c\string^d\_p\ mod\ p}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00324}00324\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a5913dcaf66a5fcb78eaa2711b4c93535}{bi\_exp\_L\_TO\_R}}(\&m\_p,\ c,\ d\_p,\ p);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00325}00325\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aff4d195f5d670e1ecdaa5b1f709bebcca810536fa1481dfaa192971c671cb873e}{BI\_EXP\_L\_TO\_R\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00327}00327\ \ \ \ \ \textcolor{comment}{//\ m\_q\ =\ c\string^d\_q\ mod\ q}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00328}00328\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a5913dcaf66a5fcb78eaa2711b4c93535}{bi\_exp\_L\_TO\_R}}(\&m\_q,\ c,\ d\_q,\ q);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aff4d195f5d670e1ecdaa5b1f709bebcca810536fa1481dfaa192971c671cb873e}{BI\_EXP\_L\_TO\_R\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00330}00330\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00331}00331\ \ \ \ \ \textcolor{comment}{//\ temp\ =\ m\_p\ -\/\ m\_q}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00332}00332\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_ad9088f12782b1e737d0f747122ec7306}{bi\_sub}}(\&temp,\ \&m\_p,\ \&m\_q);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00333}00333\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a44b4bfd7e5aa52892939931c57d0e852}{BI\_SUB\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00335}00335\ \ \ \ \ \textcolor{comment}{//\ m\ =\ q\_inv\ *\ temp\ mod\ N}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00336}00336\ \ \ \ \ \textcolor{keywordtype}{int}\ max\_len\ =\ \mbox{\hyperlink{data__type_8h_affe776513b24d84b39af8ab0930fef7f}{max}}(temp-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}},\ (*q\_inv)-\/>word\_len);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00337}00337\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a8016ee509cabeef9058ddd74ed060dc8}{bi\_mul\_karachuba}}(\&mul\_temp,\ q\_inv,\ \&temp,\ max\_len\ /\ \mbox{\hyperlink{operate_8h_a626bc8ec68d573e6819fd15bc2e0063c}{mul\_karachuba\_ratio}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00338}00338\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191af0dfdbcfebdf42f972708644090f3f82}{BI\_MUL\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00339}00339\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a882a30d3cc753cb91b6e4d7a3789389c}{bi\_div}}(\&temp,\ \&mul\_temp,\ \&mul\_temp,\ n,\ 1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00340}00340\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a24319aea2082d94a6819dad47f3f3108}{BI\_DIV\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00341}00341\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00342}00342\ \ \ \ \ \textcolor{comment}{//\ m\ =\ q\ *\ temp\ mod\ N}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00343}00343\ \ \ \ \ max\_len\ =\ \mbox{\hyperlink{data__type_8h_affe776513b24d84b39af8ab0930fef7f}{max}}((*q)-\/>word\_len,\ mul\_temp-\/>\mbox{\hyperlink{structbigint_abeebdbc9b8b058f76b1b6df41a0c6a1b}{word\_len}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00344}00344\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a8016ee509cabeef9058ddd74ed060dc8}{bi\_mul\_karachuba}}(m,\ q,\ \&mul\_temp,\ max\_len\ /\ \mbox{\hyperlink{operate_8h_a626bc8ec68d573e6819fd15bc2e0063c}{mul\_karachuba\_ratio}});}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00345}00345\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191af0dfdbcfebdf42f972708644090f3f82}{BI\_MUL\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00346}00346\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a882a30d3cc753cb91b6e4d7a3789389c}{bi\_div}}(\&temp,\ m,\ m,\ n,\ 1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00347}00347\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a24319aea2082d94a6819dad47f3f3108}{BI\_DIV\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00349}00349\ \ \ \ \ \textcolor{comment}{//\ m\ =\ m\_q\ +\ m\ mod\ N}}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00350}00350\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a65d802178277a65b141b30601cddcdec}{bi\_add}}(m,\ m,\ \&m\_q);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00351}00351\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2aeecf0735a3c9390495a08ee84f27890a}{BI\_ADD\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00352}00352\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{operate_8c_a882a30d3cc753cb91b6e4d7a3789389c}{bi\_div}}(\&temp,\ m,\ m,\ n,\ 1);}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00353}00353\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_ab2fc33efdfcadbd4a9049721a4743ff2a24319aea2082d94a6819dad47f3f3108}{BI\_DIV\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00355}00355\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{msg__control_8h_a833ef239c6143331a24154b2cb8510aeaad6c8b841caeb65b522569d1152fc7e6}{RSA\_DEC\_SUCCESS}};}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00356}00356\ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{\Hypertarget{crypto_8c_source_l00357}00357\ \}}
+
+\end{DoxyCode}

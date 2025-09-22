@@ -139,12 +139,13 @@ msg divc(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b);
  */
 msg divc_gener(OUT bigint** q, OUT bigint** r, IN bigint** a, IN bigint** b, IN int k);
 
-/**
+/** 
  * @brief bigint structure division sub operation
  * @param q pointer to quotient of word
  * @param r pointer to remainder of bigint division
  * @param a dividend bigint operand
  * @param b divisor bigint operand
+ * @param k pre-operated number using for shift
  * @return msg
  */
 msg divcc(OUT word* q, OUT bigint** r, IN bigint** a, IN bigint** b);
@@ -171,6 +172,7 @@ msg bi_squ(OUT bigint** dst, IN bigint** a);
  * @brief bigint structure squaring operation by using Karachuba algorithm
  * @param dst pointer to square of bigint
  * @param a dividend bigint to be squared
+ * @param karachuba_flag flag using in base case
  * @return msg
  */
 msg bi_squ_karachuba(OUT bigint** dst, IN bigint** a, IN int karachuba_flag);
@@ -210,6 +212,7 @@ msg bi_exp_L_TO_R(OUT bigint** dst, IN bigint** src, IN bigint** x, IN bigint** 
  * @param dst pointer to reduction of bigint result
  * @param a pointer to reduced of bigint
  * @param n pointer to modular of bigint
+ * @param n_barret pre-opreated number
  * @return msg
  */
 msg barret_reduction(OUT bigint** dst, IN bigint** a, IN bigint** n, IN bigint** n_barret);

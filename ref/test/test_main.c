@@ -17,6 +17,8 @@ int main(){
     return 0;
 }
 
+
+
 msg CLEAR_Test_file(){
     if(Test_file_write_non_enter(Test_file_gcd, "", CLEAR) != FILE_WRITE_SUCCESS)   return CLEAR_Test_file_FAIL;
     if(Test_file_write_non_enter(Test_file_RSA, "", CLEAR) != FILE_WRITE_SUCCESS)   return CLEAR_Test_file_FAIL;

@@ -1,0 +1,305 @@
+\doxysection{C\+:/\+Kookmin/\+Big\+Num/ref/random.h 파일 참조}
+\hypertarget{random_8h}{}\label{random_8h}\index{C:/Kookmin/BigNum/ref/random.h@{C:/Kookmin/BigNum/ref/random.h}}
+{\ttfamily \#include "{}msg\+\_\+control.\+h"{}}\newline
+{\ttfamily \#include "{}util.\+h"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+random.\+h에 대한 include 의존 그래프
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{random_8h__incl}
+\end{center}
+\end{figure}
+이 그래프는 이 파일을 직/간접적으로 include 하는 파일들을 보여줍니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{random_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{함수}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{random_8h_a2bea3b2652d1c3e85cd5632d8d6a3152}{bi\+\_\+get\+\_\+random}} (\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}} \mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}dst, \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int word\+\_\+len)
+\begin{DoxyCompactList}\small\item\em New allocate bigint struct and fill it with random values \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{random_8h_acec17eb12332fda920165a8c9b0fdd7a}{array\+\_\+random}} (\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}} \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}} \texorpdfstring{$\ast$}{*}dst, \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int word\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Fill word array with random values \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{random_8h_aae2cf6816eb65a86c7f8546c565dfb61}{get\+\_\+random\+\_\+string}} (\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}} char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}str, \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int str\+\_\+len, \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int base)
+\begin{DoxyCompactList}\small\item\em Make bigint String \end{DoxyCompactList}\item 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} \mbox{\hyperlink{random_8h_a83c312ce79d69673adc2c895cad8aa6a}{randombytes}} (\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} \mbox{\hyperlink{data__type_8h_ab8ef12fab634c171394422d0ee8baf94}{byte}} \texorpdfstring{$\ast$}{*}dst, \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int byte\+\_\+len)
+\begin{DoxyCompactList}\small\item\em get random byte array \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{함수 문서화}
+\Hypertarget{random_8h_acec17eb12332fda920165a8c9b0fdd7a}\index{random.h@{random.h}!array\_random@{array\_random}}
+\index{array\_random@{array\_random}!random.h@{random.h}}
+\doxysubsubsection{\texorpdfstring{array\_random()}{array\_random()}}
+{\footnotesize\ttfamily \label{random_8h_acec17eb12332fda920165a8c9b0fdd7a} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} array\+\_\+random (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}} \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}} \texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int}]{word\+\_\+len}{}\end{DoxyParamCaption})}
+
+
+
+Fill word array with random values 
+
+
+\begin{DoxyParams}{매개변수}
+{\em dst} & pointer to word array \\
+\hline
+{\em word\+\_\+len} & length of bigint struct \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{반환값}
+message SUCCESS or FAIL 
+\end{DoxyReturn}
+\Hypertarget{random_8h_a2bea3b2652d1c3e85cd5632d8d6a3152}\index{random.h@{random.h}!bi\_get\_random@{bi\_get\_random}}
+\index{bi\_get\_random@{bi\_get\_random}!random.h@{random.h}}
+\doxysubsubsection{\texorpdfstring{bi\_get\_random()}{bi\_get\_random()}}
+{\footnotesize\ttfamily \label{random_8h_a2bea3b2652d1c3e85cd5632d8d6a3152} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} bi\+\_\+get\+\_\+random (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}} \mbox{\hyperlink{structbigint}{bigint}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int}]{word\+\_\+len}{}\end{DoxyParamCaption})}
+
+
+
+New allocate bigint struct and fill it with random values 
+
+
+\begin{DoxyParams}{매개변수}
+{\em dst} & pointer to bigint struct \\
+\hline
+{\em word\+\_\+len} & length of bigint struct \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{반환값}
+message SUCCESS or FAIL 
+\end{DoxyReturn}
+
+
+\mbox{\hyperlink{random_8c_source}{random.\+c}} 파일의 \mbox{\hyperlink{random_8c_source_l00012}{12}} 번째 라인에서 정의되었습니다.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordflow}{if}\ (word\_len\ <=\ 0)\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a52b9d6a8c02aece9d3ab2330342a66f9ab8b8eca7289b86447b3e67f1d89c6cc3}{BI\_INVALID\_LENGTH}};}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordflow}{if}\ (*dst\ ==\ NULL)\{}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{util_8c_a891efea91ee2744c040ea2e20118044c}{bi\_new}}(dst,\ word\_len)\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a081d5966da9b9797b9400597b64ba5e4}{BI\_ALLOC\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191ad4021089b6541a9d70d974d02d2494b4}{BI\_ALLOC\_FAIL}};}
+\DoxyCodeLine{00016\ \ \ \ \ \}\textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}((*dst\ !=\ NULL\ \&\&\ (*dst)-\/>word\_len\ !=\ word\_len))\{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{util_8c_a3bf5cc313f55b5b9bc89a4521977a370}{bi\_resize}}(dst,\ word\_len)\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a28fc6eeeadf80c06556bf6d4011cfce9}{BI\_RESIZE\_SUCCESS}})\ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a8cf438969179667320cce37478efb34a}{BI\_RESIZE\_FAIL}};}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{int}\ result\_msg\ =\ 0;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{comment}{//\ 부호\ 랜덤\ 설정}}
+\DoxyCodeLine{00022\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{random_8c_a83c312ce79d69673adc2c895cad8aa6a}{randombytes}}(\&(*dst)-\/>sign,\ 1);}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{if}(result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a210e0ddc1703ce4b8ccb05d83ae4a435}{GEN\_RANDOM\_BYTES\_SUCCESS}})\ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00024\ \ \ \ \ (*dst)-\/>sign\ =\ (*dst)-\/>sign\ \&\ 1;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ result\_msg\ =\ \mbox{\hyperlink{random_8c_ab4e4df25fa02a577019ac90e40ba4e15}{array\_random}}((*dst)-\/>a,\ word\_len);}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{if}\ (result\_msg\ !=\ \mbox{\hyperlink{msg__control_8h_a7ccf1c1c33eca9460b9aa8b207d18862a59e1deff7bb4f43983d1cf30a7d28b1a}{GEN\_RANDOM\_SUCCESS}})}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result\_msg;}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{util_8c_a3fc5071291fca3bdae24bc89ede451c4}{bi\_refine}}(dst)\ !=\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191af780e13214673d0b7862be75bbe2cd6d}{BI\_SET\_REFINE\_SUCCESS}})\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a0a4c4aba990be9cc36aa9e29d0497c8f}{BI\_SET\_REFINE\_FAIL}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a7ccf1c1c33eca9460b9aa8b207d18862a4fd9cd910f2305d0cd8fa6992a29e452}{BI\_GET\_RANDOM\_SUCCESS}};}
+\DoxyCodeLine{00033\ \}}
+
+\end{DoxyCode}
+이 함수 내부에서 호출하는 함수들에 대한 그래프입니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{random_8h_a2bea3b2652d1c3e85cd5632d8d6a3152_cgraph}
+\end{center}
+\end{figure}
+이 함수를 호출하는 함수들에 대한 그래프입니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{random_8h_a2bea3b2652d1c3e85cd5632d8d6a3152_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{random_8h_aae2cf6816eb65a86c7f8546c565dfb61}\index{random.h@{random.h}!get\_random\_string@{get\_random\_string}}
+\index{get\_random\_string@{get\_random\_string}!random.h@{random.h}}
+\doxysubsubsection{\texorpdfstring{get\_random\_string()}{get\_random\_string()}}
+{\footnotesize\ttfamily \label{random_8h_aae2cf6816eb65a86c7f8546c565dfb61} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} get\+\_\+random\+\_\+string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}} char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{str}{, }\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int}]{str\+\_\+len}{, }\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int}]{base}{}\end{DoxyParamCaption})}
+
+
+
+Make bigint String 
+
+
+\begin{DoxyParams}{매개변수}
+{\em g} & pointer to char array \\
+\hline
+{\em str\+\_\+len} & length of char array \\
+\hline
+{\em base} & base of random string \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{반환값}
+message SUCCESS or FAIL 
+\end{DoxyReturn}
+
+
+\mbox{\hyperlink{random_8c_source}{random.\+c}} 파일의 \mbox{\hyperlink{random_8c_source_l00117}{117}} 번째 라인에서 정의되었습니다.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{if}(str\_len\ <=\ 0)\ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191a3bd4eb8605de76f426c4e4920047285c}{RAND\_LENGTH\_INVALID}};}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{byte}\ temp;}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{comment}{//\ 각\ 진수별\ 사용할\ 문자\ 배열}}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ binary\_chars[]\ =\ \textcolor{stringliteral}{"{}01"{}};}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ decimal\_chars[]\ =\ \textcolor{stringliteral}{"{}0123456789"{}};}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ hex\_chars[]\ =\ \textcolor{stringliteral}{"{}0123456789abcdef"{}};}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *chars;}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{int}\ chars\_len;}
+\DoxyCodeLine{00127\ \ \ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordflow}{switch}(base)\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ chars\ =\ binary\_chars;}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ chars\_len\ =\ \textcolor{keyword}{sizeof}(binary\_chars)\ -\/\ 1;}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ str\_len\ *=\ 32;}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 10:}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ chars\ =\ decimal\_chars;}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ chars\_len\ =\ \textcolor{keyword}{sizeof}(decimal\_chars)\ -\/\ 1;}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ str\_len\ *=\ 9;\ \textcolor{comment}{//\ 10자리로\ 하면\ overflow\ 날\ 수도\ 있어서\ (최대\ :\ 4294967296)}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 16:}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ chars\ =\ hex\_chars;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ chars\_len\ =\ \textcolor{keyword}{sizeof}(hex\_chars)\ -\/\ 1;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ str\_len\ *=\ 8;}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(str\ !=\ NULL)\ \ \ \ (*str)[0]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56ac03530229aac410677a1d90e4931eefc}{RAND\_STRING\_INVALID}};}
+\DoxyCodeLine{00147\ \ \ \ \ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordflow}{if}(*str\ ==\ NULL)\{}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ *str\ =\ (\textcolor{keywordtype}{char}*)calloc(str\_len\ +\ 1,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(*str\ ==\ NULL)\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191abfa1f01f777de42429c0bacd1a6f0927}{MEM\_NOT\_ALLOC}};}
+\DoxyCodeLine{00152\ \ \ \ \ \}\textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((\textcolor{keywordtype}{int})strlen(*str)\ <\ str\_len\ +\ 1)\{\ \textcolor{comment}{//\ 여기\ 뭔가\ 에러\ 날\ 수\ 있음..\ 확인\ 다시\ 필요}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ *str\ =\ (\textcolor{keywordtype}{char}*)realloc(*str,\ (str\_len\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(*str\ ==\ NULL)\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_a917feac5ea604059ef0e40ffd2524191abfa1f01f777de42429c0bacd1a6f0927}{MEM\_NOT\_ALLOC}};}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordtype}{int}\ str\_idx\ =\ str\_len;}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordflow}{while}(str\_idx\ >\ 0)\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{random_8c_a83c312ce79d69673adc2c895cad8aa6a}{randombytes}}(\&temp,\ 1)\ !=\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a210e0ddc1703ce4b8ccb05d83ae4a435}{GEN\_RANDOM\_BYTES\_SUCCESS}})\ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56adbda4c81cb26d241f1c7b3b670b6f67f}{GEN\_RANDOM\_BYTES\_FAIL}};}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ random\_index\ =\ (int)temp\ \%\ chars\_len;}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(strncmp(\&chars[random\_index],\ \textcolor{stringliteral}{"{}0"{}},\ 1)\ ==\ 0\ \&\&\ str\_idx\ ==\ str\_len)\ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ (*str)[str\_idx\ -\/\ 1]\ =\ chars[random\_index];}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ str\_idx-\/-\/;}
+\DoxyCodeLine{00167\ \ \ \ \ \}}
+\DoxyCodeLine{00168\ \ \ \ \ (*str)[str\_len]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a7847826480c1daa900fae590938165c4}{RAND\_STRING\_SUCCESS}};}
+\DoxyCodeLine{00171\ \}}
+
+\end{DoxyCode}
+이 함수 내부에서 호출하는 함수들에 대한 그래프입니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=285pt]{random_8h_aae2cf6816eb65a86c7f8546c565dfb61_cgraph}
+\end{center}
+\end{figure}
+이 함수를 호출하는 함수들에 대한 그래프입니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{random_8h_aae2cf6816eb65a86c7f8546c565dfb61_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{random_8h_a83c312ce79d69673adc2c895cad8aa6a}\index{random.h@{random.h}!randombytes@{randombytes}}
+\index{randombytes@{randombytes}!random.h@{random.h}}
+\doxysubsubsection{\texorpdfstring{randombytes()}{randombytes()}}
+{\footnotesize\ttfamily \label{random_8h_a83c312ce79d69673adc2c895cad8aa6a} 
+\mbox{\hyperlink{data__type_8h_af3db70afcfb515a4def0777a954be00d}{msg}} randombytes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} \mbox{\hyperlink{data__type_8h_ab8ef12fab634c171394422d0ee8baf94}{byte}} \texorpdfstring{$\ast$}{*}}]{dst}{, }\item[{\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}} int}]{byte\+\_\+len}{}\end{DoxyParamCaption})}
+
+
+
+get random byte array 
+
+
+\begin{DoxyParams}{매개변수}
+{\em dst} & byte array of random values \\
+\hline
+{\em byte\+\_\+len} & length of byte array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{반환값}
+message SUCCESS or FAIL 
+\end{DoxyReturn}
+
+
+\mbox{\hyperlink{random_8c_source}{random.\+c}} 파일의 \mbox{\hyperlink{random_8c_source_l00064}{64}} 번째 라인에서 정의되었습니다.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#ifdef\ \_WIN32 }}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//\ Windows\ 버전}}
+\DoxyCodeLine{00067\ \ \ \ \ HCRYPTPROV\ hProvider\ =\ 0;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordflow}{if}\ (!CryptAcquireContext(\&hProvider,\ NULL,\ NULL,\ PROV\_RSA\_FULL,\ CRYPT\_VERIFYCONTEXT))\{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56adbda4c81cb26d241f1c7b3b670b6f67f}{GEN\_RANDOM\_BYTES\_FAIL}};}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordflow}{if}\ (!CryptGenRandom(hProvider,\ byte\_len,\ dst))\{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ CryptReleaseContext(hProvider,\ 0);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56adbda4c81cb26d241f1c7b3b670b6f67f}{GEN\_RANDOM\_BYTES\_FAIL}};}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ CryptReleaseContext(hProvider,\ 0);}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a210e0ddc1703ce4b8ccb05d83ae4a435}{GEN\_RANDOM\_BYTES\_SUCCESS}};}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#else }}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ Unix\ 버전\ (기존\ 코드)}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ fd\ =\ -\/1;}
+\DoxyCodeLine{00082\ \ \ \ \ ssize\_t\ ret;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordflow}{while}\ (fd\ ==\ -\/1)\{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ fd\ =\ open(\textcolor{stringliteral}{"{}/dev/urandom"{}},\ O\_RDONLY);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fd\ ==\ -\/1\ \&\&\ errno\ ==\ EINTR)}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (fd\ ==\ -\/1)}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56adbda4c81cb26d241f1c7b3b670b6f67f}{GEN\_RANDOM\_BYTES\_FAIL}};}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{while}\ (byte\_len\ >\ 0)\{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ ret\ =\ read(fd,\ dst,\ byte\_len);}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \}\textcolor{keywordflow}{while}(dst[byte\_len\ -\/\ 1]\ ==\ 0);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ ==\ -\/1\ \&\&\ errno\ ==\ EINTR)}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (ret\ ==\ -\/1)}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56adbda4c81cb26d241f1c7b3b670b6f67f}{GEN\_RANDOM\_BYTES\_FAIL}};}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ dst\ +=\ ret;}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ byte\_len\ -\/=\ ret;}
+\DoxyCodeLine{00102\ \ \ \ \ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{msg__control_8h_aa892a408f7804ed648d1206651135b56a210e0ddc1703ce4b8ccb05d83ae4a435}{GEN\_RANDOM\_BYTES\_SUCCESS}};}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#endif }}
+\DoxyCodeLine{00106\ \}}
+
+\end{DoxyCode}
+이 함수를 호출하는 함수들에 대한 그래프입니다.\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{random_8h_a83c312ce79d69673adc2c895cad8aa6a_icgraph}
+\end{center}
+\end{figure}

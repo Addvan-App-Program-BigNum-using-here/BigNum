@@ -1,0 +1,118 @@
+\doxysection{data\+\_\+type.\+c}
+\hypertarget{data__type_8c_source}{}\label{data__type_8c_source}\index{C:/Kookmin/BigNum/ref/data\_type.c@{C:/Kookmin/BigNum/ref/data\_type.c}}
+\mbox{\hyperlink{data__type_8c}{이 파일의 문서화 페이지로 가기}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{data__type_8h}{data\_type.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00003}00003\ \textcolor{comment}{/*************************************************}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00004}00004\ \textcolor{comment}{*\ Name:\ \ \ \ \ \ \ \ char\_to\_int}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00005}00005\ \textcolor{comment}{*}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00006}00006\ \textcolor{comment}{*\ Description:\ Transfer\ char\ to\ integer}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00007}00007\ \textcolor{comment}{*}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00008}00008\ \textcolor{comment}{*\ Arguments:\ \ \ -\/\ char\ str\ :\ string}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00009}00009\ \textcolor{comment}{*\ Return:\ \ \ \ \ \ -\/\ int\ :\ integer}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00010}00010\ \textcolor{comment}{**************************************************/}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00011}\mbox{\hyperlink{data__type_8c_af70115d38d00c595167cdf2d58ac13f3}{00011}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{data__type_8c_af70115d38d00c595167cdf2d58ac13f3}{char\_to\_int}}(\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \textcolor{keywordtype}{char}\ str)\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00012}00012\ \ \ \ \ \textcolor{keywordflow}{if}\ (str\ >=\ \textcolor{charliteral}{'0'}\ \&\&\ str\ <=\ \textcolor{charliteral}{'9'})}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00013}00013\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ -\/\ \textcolor{charliteral}{'0'};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00014}00014\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (str\ >=\ \textcolor{charliteral}{'A'}\ \&\&\ str\ <=\ \textcolor{charliteral}{'F'})}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00015}00015\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ -\/\ \textcolor{charliteral}{'A'}\ +\ 10;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00016}00016\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (str\ >=\ \textcolor{charliteral}{'a'}\ \&\&\ str\ <=\ \textcolor{charliteral}{'f'})}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00017}00017\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ str\ -\/\ \textcolor{charliteral}{'a'}\ +\ 10;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00018}00018\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00019}00019\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00020}00020\ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00022}00022\ \textcolor{comment}{/*************************************************}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00023}00023\ \textcolor{comment}{*\ Name:\ \ \ \ \ \ \ \ bigint\_to\_hex}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00024}00024\ \textcolor{comment}{*}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00025}00025\ \textcolor{comment}{*\ Description:\ Transfer\ bigint\ to\ hex\ string}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00026}00026\ \textcolor{comment}{*}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00027}00027\ \textcolor{comment}{*\ Arguments:\ \ \ -\/\ bigint**\ src:\ bigint\ structure}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00028}00028\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ char*\ str:\ store\ string}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00029}00029\ \textcolor{comment}{*\ Return:\ \ \ \ \ \ -\/\ int\ :\ result\ of\ integer,\ FAIL\ ==\ -\/1}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00030}00030\ \textcolor{comment}{**************************************************/}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00031}\mbox{\hyperlink{data__type_8c_a6a92b53ade93eff33af34a4d87449194}{00031}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{data__type_8c_a6a92b53ade93eff33af34a4d87449194}{bigint\_to\_hex}}(\mbox{\hyperlink{data__type_8h_aec78e7a9e90a406a56f859ee456e8eae}{OUT}}\ \textcolor{keywordtype}{char}*\ str,\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \mbox{\hyperlink{structbigint}{bigint}}**\ src)\ \{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{if}\ (*src\ ==\ NULL)\ \textcolor{keywordflow}{return}\ -\/1;\ \textcolor{comment}{//\ NULL\ 체크}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00034}00034\ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00035}00035\ \ \ \ \ \textcolor{keywordtype}{int}\ buffer\_size\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00036}00036\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ format\ =\ NULL;\ \textcolor{comment}{//\ 포맷\ 문자열\ 초기화}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00038}00038\ \ \ \ \ \textcolor{comment}{//\ WORD\_BITS에\ 따른\ 형식과\ 버퍼\ 크기\ 설정}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00039}00039\ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{data__type_8h_a57592e50f9aa27528ec8e36e23432ee0}{WORD\_BITS}})\ \{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 64:}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{"{}\%016"{}}\ PRIx64;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ buffer\_size\ =\ 17;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 32:}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{"{}\%08"{}}\ PRIx32;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ buffer\_size\ =\ 9;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 16:}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{"{}\%04"{}}\ PRIx16;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ buffer\_size\ =\ 5;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 8:}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ format\ =\ \textcolor{stringliteral}{"{}\%02"{}}\ PRIx8;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ buffer\_size\ =\ 3;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/2;\ \textcolor{comment}{//\ Unsupported\ WORD\_BITS}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00058}00058\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00060}00060\ \ \ \ \ \textcolor{comment}{//\ 부호\ 처리}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00061}00061\ \ \ \ \ \textcolor{keywordflow}{if}\ ((*src)-\/>sign\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00062}00062\ \ \ \ \ \ \ \ \ str[idx++]\ =\ \textcolor{charliteral}{'-\/'};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00063}00063\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00065}00065\ \ \ \ \ \textcolor{comment}{//\ 16진수\ 접두사\ 추가}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00066}00066\ \ \ \ \ str[idx++]\ =\ \textcolor{charliteral}{'0'};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00067}00067\ \ \ \ \ str[idx++]\ =\ \textcolor{charliteral}{'x'};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00069}00069\ \ \ \ \ \textcolor{comment}{//\ 각\ 워드\ 값을\ 출력}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ (*src)-\/>word\_len\ -\/\ 1;\ i\ >=\ 0;\ i-\/-\/)\ \{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00071}00071\ \ \ \ \ \ \ \ \ idx\ +=\ snprintf(\&str[idx],\ buffer\_size,\ format,\ (*src)-\/>a[i]);}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00072}00072\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00074}00074\ \ \ \ \ \textcolor{comment}{//\ 문자열\ 종료\ 처리}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00075}00075\ \ \ \ \ str[idx]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{return}\ idx;\ \textcolor{comment}{//\ 최종\ 문자열\ 길이\ 반환}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00078}00078\ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00080}00080\ \textcolor{comment}{/*************************************************}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00081}00081\ \textcolor{comment}{*\ Name:\ \ \ \ \ \ \ \ byte\_to\_uint}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00082}00082\ \textcolor{comment}{*}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00083}00083\ \textcolor{comment}{*\ Description:\ Transfer\ byte\ to\ unsinged\ integer}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00084}00084\ \textcolor{comment}{*}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00085}00085\ \textcolor{comment}{*\ Arguments:\ \ \ -\/\ byte*\ input:\ bytes\ array}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00086}00086\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ int\ byte\_len:\ length\ of\ bytes\ array}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00087}00087\ \textcolor{comment}{*\ Return:\ \ \ \ \ \ -\/\ word\ :\ integer.\ FAIL\ ==\ 0}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00088}00088\ \textcolor{comment}{**************************************************/}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00089}\mbox{\hyperlink{data__type_8c_acb263f4488e27ffa9c4b1b6ac3de21a9}{00089}}\ \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}\ \mbox{\hyperlink{data__type_8c_acb263f4488e27ffa9c4b1b6ac3de21a9}{byte\_to\_uint}}(\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \textcolor{keywordtype}{byte}*\ input,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \textcolor{keywordtype}{int}\ byte\_len)\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00090}00090\ \ \ \ \ \textcolor{comment}{//\ 입력된\ byte\ 크기가\ 4보다\ 클\ 경우}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{if}(byte\_len\ >\ 4)\ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00092}00092\ \ \ \ \ \mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}}\ result\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00093}00093\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ byte\_len;\ i++)\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(result\ >\ (\mbox{\hyperlink{data__type_8h_a19036394f9c80a08fc846c96f668711c}{word}})\mbox{\hyperlink{data__type_8h_a4ce3e2af80a76d816ab7f8567ec4a65a}{MAX\_VALUE}})\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00095}00095\ \ \ \ \ \ \ \ \ result\ =\ result\ *\ 256\ +\ input[i];}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00096}00096\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00098}00098\ \}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00100}00100\ \textcolor{comment}{/*************************************************}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00101}00101\ \textcolor{comment}{*\ Name:\ \ \ \ \ \ \ \ int\_to\_string}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00102}00102\ \textcolor{comment}{*}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00103}00103\ \textcolor{comment}{*\ Description:\ Transfer\ integer\ to\ string}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00104}00104\ \textcolor{comment}{*}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00105}00105\ \textcolor{comment}{*\ Arguments:\ \ \ -\/\ char*\ str:\ char\ array}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00106}00106\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ int\ num:\ integer}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00107}00107\ \textcolor{comment}{**************************************************/}}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00108}\mbox{\hyperlink{data__type_8c_ac534a9b8ecb28c7668dc8ee2c379e33b}{00108}}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{data__type_8c_ac534a9b8ecb28c7668dc8ee2c379e33b}{int\_to\_string}}(\mbox{\hyperlink{data__type_8h_ac2bbd6d630a06a980d9a92ddb9a49928}{IN}}\ \textcolor{keywordtype}{int}\ num)\{}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00109}00109\ \ \ \ \ \textcolor{keywordtype}{char}*\ str\ =\ (\textcolor{keywordtype}{char}*)calloc(12,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00110}00110\ \ \ \ \ snprintf(str,\ 12,\ \textcolor{stringliteral}{"{}\%d"{}},\ num);}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00111}00111\ \ \ \ \ \textcolor{keywordflow}{return}\ str;}
+\DoxyCodeLine{\Hypertarget{data__type_8c_source_l00112}00112\ \}}
+
+\end{DoxyCode}
