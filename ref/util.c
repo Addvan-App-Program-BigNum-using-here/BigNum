@@ -262,6 +262,8 @@ int bi_compare(IN bigint** a, IN bigint** b){
 
     bigint* temp_a = NULL;
     bigint* temp_b = NULL;
+    int ret = 0;
+
     // 원본 값을 복사해서 복사본으로 수행
     if(bi_assign(&temp_a, a) != BI_SET_ASSIGN_SUCCESS)    return BI_SET_ASSIGN_FAIL;
     if(bi_assign(&temp_b, b) != BI_SET_ASSIGN_SUCCESS)    return BI_SET_ASSIGN_FAIL;
@@ -270,28 +272,74 @@ int bi_compare(IN bigint** a, IN bigint** b){
     if(bi_refine(&temp_b) != BI_SET_REFINE_SUCCESS)    return BI_SET_REFINE_FAIL;
 
     // 여기 부호 부터 비교 할 때 -0, 0 이럴 때도 잘 봐야 한다. -> 이거 bi_is_zero로 확인해봐야 할 듯
-    if(temp_a->sign == 0 && temp_b->sign == 1) return 1; // a 양수, b 음수
-    if(temp_a->sign == 1 && temp_b->sign == 0) return -1; // a 음수, b 양수
+    if(temp_a->sign == 0 && temp_b->sign == 1)  // a 양수, b 음수
+    {
+        ret = 1;
+        goto compare_exit;
+    }
+    if(temp_a->sign == 1 && temp_b->sign == 0) // a 음수, b 양수
+    {
+        ret = -1;
+        goto compare_exit;
+    } 
     if(temp_a->sign == 1 && temp_b->sign == 1){ // 둘다 음수인 경우
-        if(temp_a->word_len > temp_b->word_len) return -1; // a < b
-        if(temp_a->word_len < temp_b->word_len) return 1; // a > b
+        if(temp_a->word_len > temp_b->word_len)
+        {
+            ret = -1;  // a < b
+            goto compare_exit;
+        }
+        if(temp_a->word_len < temp_b->word_len)
+        {
+            ret = 1; // a > b
+            goto compare_exit;
+        }
         //길이가 같은 경우
         for(int i = temp_a->word_len - 1 ; i >= 0 ; i--){
-            if(temp_a->a[i] > temp_b->a[i]) return -1; // a < b
-            if(temp_a->a[i] < temp_b->a[i]) return 1; // a > b
+            if(temp_a->a[i] > temp_b->a[i])
+            {
+                ret = -1; // a < b
+                goto compare_exit;
+            } 
+            if(temp_a->a[i] < temp_b->a[i])
+            {
+                ret = 1; // a > b
+                goto compare_exit;
+            } 
         }
     }
     if(temp_a->sign == 0 && temp_b->sign == 0){ // 둘다 양수인 경우
-        if(temp_a->word_len > temp_b->word_len) return 1; // a > b
-        if(temp_a->word_len < temp_b->word_len) return -1; // a < b
+        if(temp_a->word_len > temp_b->word_len)
+        {
+            ret = 1; // a > b
+            goto compare_exit;
+        }
+        if(temp_a->word_len < temp_b->word_len)
+        {
+            ret = -1;
+            goto compare_exit;
+        } 
         //길이가 같은 경우
         for(int i = temp_a->word_len - 1 ; i >= 0 ; i--){
-            if(temp_a->a[i] > temp_b->a[i]) return 1; // a > b
-            if(temp_a->a[i] < temp_b->a[i]) return -1; // a < b
+            if(temp_a->a[i] > temp_b->a[i])
+            {
+                ret = 1; // a > b
+                goto compare_exit;
+            } 
+            if(temp_a->a[i] < temp_b->a[i])
+            {
+                ret = -1; // a < b
+                goto compare_exit;
+            }
         }
     }
 
-    return 0;
+    ret = 0; // 위의 모든 케이스에 해당이 안 되면 두 값은 서로 같은 것
+
+    compare_exit:
+        if(bi_delete(&temp_a) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+        if(bi_delete(&temp_b) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+
+        return ret;
 }
 
 /*************************************************
@@ -1014,66 +1062,72 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
 
     // (t0, t1) <- (a, b)
     result_msg = bi_assign(gcd, a);
-    if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+    if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EEA_EXIT;
     result_msg = bi_assign(&t1, b);
-    if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+    if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EEA_EXIT;
 
     // (u0, v0) <- (1, 0)
     result_msg = bi_new(x, 1);
-    if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    if(result_msg != BI_ALLOC_SUCCESS) goto EEA_EXIT;
     result_msg = bi_new(y, 1);
-    if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    if(result_msg != BI_ALLOC_SUCCESS) goto EEA_EXIT;
     (*x) -> a[0] = 1;
 
     // (u1, v1) <- (0, 1)
     result_msg = bi_new(&u1, 1);
-    if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    if(result_msg != BI_ALLOC_SUCCESS) goto EEA_EXIT;
     result_msg = bi_new(&v1, 1);
-    if(result_msg != BI_ALLOC_SUCCESS) return result_msg;
+    if(result_msg != BI_ALLOC_SUCCESS) goto EEA_EXIT;
     v1 -> a[0] = 1;
 
     // t1 != 0인 동안 반복문 수행
     while(bi_is_zero(&t1) != BI_IS_ZERO){
         //(q, r) <- div(t0, t1)
         result_msg = bi_div(&q, &r, gcd, &t1, div_option);
-        if(result_msg != BI_DIV_SUCCESS) return result_msg;
+        if(result_msg != BI_DIV_SUCCESS) goto EEA_EXIT;
 
         //(t0, t1) <- (t1, r)
         result_msg = bi_assign(gcd, &t1);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EEA_EXIT;
         result_msg = bi_refine(gcd);
-        if(result_msg != BI_SET_REFINE_SUCCESS) return result_msg;
+        if(result_msg != BI_SET_REFINE_SUCCESS) goto EEA_EXIT;
 
         result_msg = bi_assign(&t1, &r);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EEA_EXIT;
 
         //(u2, v2) <- (u0 - q * u1, v0 - q*v1)
         result_msg = bi_mul_karachuba(&temp, &q, &u1, q->word_len / mul_karachuba_ratio); // q * v1 / temp는 r로 재사용 가능
-        if(result_msg != BI_MUL_SUCCESS) return result_msg;
+        if(result_msg != BI_MUL_SUCCESS) goto EEA_EXIT;
         result_msg = bi_refine(&temp);
-        if(result_msg != BI_SET_REFINE_SUCCESS) return result_msg;
+        if(result_msg != BI_SET_REFINE_SUCCESS) goto EEA_EXIT;
         result_msg = bi_sub(&u2, x, &temp); // u0 - q * u1
-        if(result_msg != BI_SUB_SUCCESS) return result_msg;
+        if(result_msg != BI_SUB_SUCCESS) goto EEA_EXIT;
 
         result_msg = bi_mul_karachuba(&temp, &q, &v1, q->word_len / mul_karachuba_ratio); // q * v1 / temp는 q, r로 재사용 가능
-        if(result_msg != BI_MUL_SUCCESS) return result_msg;
+        if(result_msg != BI_MUL_SUCCESS) goto EEA_EXIT;
         result_msg = bi_refine(&temp);
-        if(result_msg != BI_SET_REFINE_SUCCESS) return result_msg;
+        if(result_msg != BI_SET_REFINE_SUCCESS) goto EEA_EXIT;
 
         result_msg = bi_sub(&v2, y, &temp); // v0 - q * v1
-        if(result_msg != BI_SUB_SUCCESS) return result_msg;
+        if(result_msg != BI_SUB_SUCCESS) goto EEA_EXIT;
 
         //(u0, v0) <- (u1, v1)
         result_msg = bi_assign(x, &u1);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EEA_EXIT;
+        result_msg = bi_refine(x);
+        if(result_msg != BI_SET_REFINE_SUCCESS) goto EEA_EXIT;
+
         result_msg = bi_assign(y, &v1);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EEA_EXIT;
+        result_msg = bi_refine(y);
+        if(result_msg != BI_SET_REFINE_SUCCESS) goto EEA_EXIT;
+        
 
         //(u1, v1) <- (u2, v2)
         result_msg = bi_assign(&u1, &u2);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EEA_EXIT;
         result_msg = bi_assign(&v1, &v2);
-        if(result_msg != BI_SET_ASSIGN_SUCCESS) return result_msg;
+        if(result_msg != BI_SET_ASSIGN_SUCCESS) goto EEA_EXIT;
 
         // u2, v2 초기화 -> 최적화 가능
         for(int i = 0; i < u2-> word_len; i++) u2 -> a[i] = 0;
@@ -1082,5 +1136,16 @@ msg bi_EEA(OUT bigint** gcd, OUT bigint** x, OUT bigint** y, IN bigint** a, IN b
 
     result_msg = BI_EEA_SUCCESS;
     // 일단 x,y(u0, v0)가 음수가 돼도 상관없도록 구현함(음수를 허용할지 항상 양수만 나오게 할지는 선택사항)
-    return result_msg;
+
+    EEA_EXIT:
+        if(bi_delete(&t1) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+        if(bi_delete(&u1) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+        if(bi_delete(&u2) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+        if(bi_delete(&v1) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+        if(bi_delete(&v2) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+        if(bi_delete(&q) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+        if(bi_delete(&r) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+        if(bi_delete(&temp) != BI_FREE_SUCCESS) return BI_FREE_FAIL;
+        
+        return result_msg;
 }
