@@ -39,6 +39,5 @@ jobs:
           sage --version
 
       - name: Run SageMath tests
-        working-directory: BigNum
         run: |
           sage sage_test/test.sage | tee sage_output.log
