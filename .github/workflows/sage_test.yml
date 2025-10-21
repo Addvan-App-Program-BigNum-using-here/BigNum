@@ -37,7 +37,7 @@ jobs:
       - name: Verfiy SageMath installation
         run: |
           sage --version
-#
-#      - name: Run SageMath tests
-#        run: |
-#          sage BigNum/sage_test/test.sage | tee sage_output.log
+
+      - name: Run SageMath tests
+        run: |
+          sage BigNum/sage_test/test.sage | tee sage_output.log
