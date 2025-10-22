@@ -12,15 +12,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
       - name: Cache SageMath
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /usr/local/sage
           key: ${{ runner.os }}-sagemath-${{ hashFiles('**/requirements.txt') }}
@@ -34,10 +34,14 @@ jobs:
           sudo apt-get install -y sagemath
           sudo mkdir -p /usr/local/sage
 
-      - name: Verfiy SageMath installation
+      - name: Verify SageMath installation
+        run: sage --version
+
+      - name: Run Make and Sage Tests
         run: |
-          sage --version
-#
-#      - name: Run SageMath tests
-#        run: |
-#          sage BigNum/sage_test/test.sage | tee sage_output.log
+          cd ref/test
+          echo "Running make test..."
+          make test
+
+          echo "Running Sage test..."
+          sage ../../BigNum/sage_test/test.sage | tee ../../sage_output.log
