@@ -1,9 +1,6 @@
 #ifndef UTIL_TEST_H
 #define UTIL_TEST_H
 
-extern clock_t c_start;
-extern clock_t c_end;
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,6 +15,9 @@ extern clock_t c_end;
 #include "../file_io.h"
 #include "../crypto.h"
 #include "random_test.h"
+
+extern clock_t c_start;
+extern clock_t c_end;
 
 /**
  * @brief Test bigint structure allocation and deallocation
