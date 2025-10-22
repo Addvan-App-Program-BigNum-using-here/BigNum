@@ -1,6 +1,5 @@
 #include "crypto_test.h"
 
-clock_t c_start, c_end;
 double crypto_total_time[5] = {0, };
 
 msg cmp_crypto_test(){

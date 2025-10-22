@@ -1,6 +1,9 @@
 #ifndef UTIL_TEST_H
 #define UTIL_TEST_H
 
+extern clock_t c_start;
+extern clock_t c_end;
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

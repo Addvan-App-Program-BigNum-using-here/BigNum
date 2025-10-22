@@ -2,7 +2,6 @@
 
 struct timeval start, end;
 double time_used;
-clock_t c_start, c_end;
 
 msg util_test(){
     if(test_bi_new_delete() != Test_BI_NEW_DELETE_SUCCESS)    return Test_FAIL;
