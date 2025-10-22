@@ -44,4 +44,4 @@ jobs:
           make test
 
           echo "Running Sage test..."
-          sage sage_test/test.sage | tee sage_output.log
+          sage ../../sage_test/test.sage | tee sage_output.log
