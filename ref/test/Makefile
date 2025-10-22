@@ -29,7 +29,7 @@ ifeq ($(OS),Windows_NT)
     CP = copy
     MKDIR = mkdir
     TOUCH = type nul >
-    CFLAGS = -Wall -O3  -Wextra -std=c99 -I..
+    CFLAGS = -Wall -O3 -fPIC -Wextra -std=c99 -I..
     TEST_RUN_CMD = set "PATH=$(LIB_DIR);$(PATH)" && .\$(TEST_PROGRAM)
 else
     UNAME_S := $(shell uname -s)
@@ -50,7 +50,7 @@ else
         CP = cp
         MKDIR = mkdir -p
         TOUCH = touch
-        CFLAGS = -Wall -std=gnu99 -O3 -Wextra -std=c99 -fsanitize=address -I..
+        CFLAGS = -Wall -std=gnu99 -O3 -fPIC -Wextra -std=c99 -fsanitize=address -I..
         LDFLAGS = -g -fsanitize=address -Wl,-rpath,'$$ORIGIN/../lib'
         TEST_RUN_CMD = LD_LIBRARY_PATH=../lib ./$(TEST_PROGRAM)
     else ifeq ($(UNAME_S),Darwin)
@@ -72,10 +72,10 @@ else
         TOUCH = touch
         UNAME_M := $(shell uname -m)
         ifeq ($(UNAME_M),x86_64)
-            CFLAGS = -Wall -O3 -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
+            CFLAGS = -Wall -O3 -fPIC -Wextra -std=c99 -fsanitize=address -arch x86_64 -I..
             LDFLAGS = -g -fsanitize=address -arch x86_64 -Wl,-rpath,@executable_path/../lib
         else ifeq ($(UNAME_M),arm64)
-            CFLAGS = -O3 -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
+            CFLAGS = -O3 -fPIC -Wall -Wextra -std=c99 -fsanitize=address -arch arm64 -I..
             LDFLAGS = -g -fsanitize=address -arch arm64 -Wl,-rpath,@executable_path/../lib
         endif
         TEST_RUN_CMD = DYLD_LIBRARY_PATH=../lib ./$(TEST_PROGRAM)
