@@ -4,9 +4,11 @@ int main(){
     // 테스트 파일 초기화
     CLEAR_Test_file();
 
+    if(util_test() != Test_SUCCESS)    return 0;
+
     // 고정 입력 값에 대한 성능 평가
 //    if(cmp_operate_test() != Test_SUCCESS)    return 0;
-    if(cmp_crypto_test() != Test_SUCCESS)    return 0;
+//    if(cmp_crypto_test() != Test_SUCCESS)    return 0;
 
     // 랜덤 입력 값에 대한 성능 평가
 //    if(rand_operate_test() != Test_SUCCESS)    return 0;

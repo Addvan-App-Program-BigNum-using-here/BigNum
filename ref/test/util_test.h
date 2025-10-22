@@ -19,6 +19,8 @@
 extern clock_t c_start;
 extern clock_t c_end;
 
+msg util_test();
+
 /**
  * @brief Test bigint structure allocation and deallocation
  *
