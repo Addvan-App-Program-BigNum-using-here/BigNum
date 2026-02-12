@@ -16,7 +16,7 @@
 <img src="https://github.com/user-attachments/assets/04c2889c-797f-4016-a895-5e2713595aab" width="660px"></img>
 
 # 2. 소개 영상
-<iframe width="956" height="538" src="https://youtu.be/ga8xQF-FVyk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Video Label](http://img.youtube.com/vi/ga8xQF-FVyk/0.jpg)](https://youtu.be/ga8xQF-FVyk)
 
 # 3. 👩‍👩‍👧‍👧 팀 소개
 
