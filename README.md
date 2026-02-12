@@ -16,6 +16,7 @@
 <img src="https://github.com/user-attachments/assets/04c2889c-797f-4016-a895-5e2713595aab" width="660px"></img>
 
 # 2. 소개 영상
+<iframe width="956" height="538" src="https://youtu.be/ga8xQF-FVyk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 # 3. 👩‍👩‍👧‍👧 팀 소개
 
@@ -138,7 +139,3 @@ if(rand_crypto_test() != Test_SUCCESS)    return 0;
 #### `/ref/operate.h` 파일
 - `mul_karachuba_ratio` : 카라츄바를 사용하는 최대 비율
 - `squ_karachuba_ratio` : 카라츄바 제곱을 사용하는 최대 비율
-
-# 5. 기타
-
-## 최종발표자료
